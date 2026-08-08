@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STATLAB｜ブラウザだけで動く統計分析ダッシュボード</title>
+<meta name="description" content="CSV を読み込むか数値を貼り付けるだけで、記述統計・仮説検定・分散分析・回帰・ロジスティック回帰・ポアソン回帰・決定木・時系列・多層パーセプトロンまで実行。結果の読み方の解説と、初学者向けの手法診断ナビつき。データは外部に送信されません。">
+<meta name="author" content="Mini statistic">
+<meta name="theme-color" content="#070a14">
+<link rel="canonical" href="https://ck121212195.github.io/STATLAB/">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VL4D1215KN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VL4D1215KN');
+</script>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="STATLAB 統計分析ダッシュボード">
+<meta property="og:title" content="STATLAB｜ブラウザだけで動く統計分析ダッシュボード">
+<meta property="og:description" content="記述統計から仮説検定・分散分析・回帰・決定木・時系列・ディープラーニングまでブラウザ内で完結。結果の読み方の解説と手法診断ナビつき。データは外部に送信されません。">
+<meta property="og:url" content="https://ck121212195.github.io/STATLAB/">
+<meta property="og:image" content="https://ck121212195.github.io/STATLAB/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="STATLAB｜ブラウザだけで動く統計分析ダッシュボード">
+<meta name="twitter:description" content="記述統計から仮説検定・分散分析・回帰・決定木・時系列・ディープラーニングまでブラウザ内で完結。結果の読み方の解説と手法診断ナビつき。">
+<meta name="twitter:image" content="https://ck121212195.github.io/STATLAB/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23070a14'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23440154' stroke-width='1.6'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%232a788e' stroke-width='1.6'/%3E%3Ccircle cx='16' cy='16' r='5' fill='none' stroke='%2322a884' stroke-width='1.6'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23fde725'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+</head>
+<body>
+<canvas id="contourField" aria-hidden="true"></canvas>
+
+<div class="shell">
+  <!-- ============ サイドバー ============ -->
+  <nav class="rail" id="rail" aria-label="解析メニュー">
+    <div class="brand"><h1>STATLAB</h1><small>v1.0</small></div>
+    <p class="rail-sub">ブラウザ内で完結。データは<br>どこにも送信されません。</p>
+    <button class="btn ghost railToggle" id="railToggle">メニュー</button>
+
+    <div class="nav-group">
+      <span>はじめに</span>
+      <button class="nav-item" data-sect="navi">やりたいことから探す</button>
+    </div>
+    <div class="nav-group">
+      <span>データ</span>
+      <button class="nav-item" data-sect="data" aria-current="true">データを読み込む</button>
+      <button class="nav-item" data-sect="explore">記述統計とプロット</button>
+      <button class="nav-item" data-sect="dist">確率分布ラボ</button>
+    </div>
+    <div class="nav-group">
+      <span>推測統計</span>
+      <button class="nav-item" data-sect="ttest">平均の検定（t / z）</button>
+      <button class="nav-item" data-sect="anova">分散分析・群間比較</button>
+      <button class="nav-item" data-sect="propvar">母比率・母分散</button>
+      <button class="nav-item" data-sect="cat">カテゴリデータ（χ²）</button>
+    </div>
+    <div class="nav-group">
+      <span>関連と予測</span>
+      <button class="nav-item" data-sect="corr">相関・主成分</button>
+      <button class="nav-item" data-sect="reg">回帰分析</button>
+      <button class="nav-item" data-sect="logit">ロジスティック回帰</button>
+      <button class="nav-item" data-sect="tree">決定木・森</button>
+    </div>
+    <div class="nav-group">
+      <span>時系列と機械学習</span>
+      <button class="nav-item" data-sect="ts">時系列解析</button>
+      <button class="nav-item" data-sect="stock">株価分析</button>
+      <button class="nav-item" data-sect="mlp">多層パーセプトロン</button>
+    </div>
+    <div class="nav-group">
+      <span>ガイド</span>
+      <button class="nav-item" data-sect="guide">統計ハンドブック</button>
+    </div>
+  </nav>
+
+  <!-- ============ メイン ============ -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="crumb" id="crumb">DATA</div>
+        <h2 class="page" id="pageTitle">データを読み込む</h2>
+        <p class="page-lede" id="pageLede"></p>
+      </div>
+      <div class="dataChip"><span class="dot off" id="dsDot"></span><span id="dsInfo">データ未読み込み</span></div>
+    </div>
+
+    <!-- ========== データ ========== -->
+    <section class="sect on" id="sect-data">
+      <div class="grid g2">
+        <div class="panel">
+          <h3>ファイルから読み込む</h3>
+          <p class="hint">CSV / TSV / テキスト。1 行目を列名として扱います。文字コードは UTF-8 と Shift_JIS を自動判別します。</p>
+          <div class="drop" id="drop">
+            <div class="big">ファイルをドロップ</div>
+            <div class="sm">またはクリックして選択（.csv .tsv .txt）</div>
+            <input type="file" id="file" accept=".csv,.tsv,.txt,text/csv" hidden>
+          </div>
+          <p class="hint" style="margin-top:16px">データが手元になければ、以下から選んでください。すべて実在データではなく、現実の構造を再現して生成した練習用データです。</p>
+          <div class="btnrow">
+            <button class="btn ghost" data-sample="mansion">🏠 中古マンション成約</button>
+            <button class="btn ghost" data-sample="churn">📺 サブスク解約</button>
+            <button class="btn ghost" data-sample="power">⚡ 家庭の電気使用量</button>
+            <button class="btn ghost" data-sample="stock">📈 株価・市場・為替</button>
+            <button class="btn ghost" data-sample="abtest">🧪 WebサイトA/Bテスト</button>
+          </div>
+          <div class="note" style="font-size:11.5px;line-height:1.8">
+            <b style="color:var(--v4)">中古マンション</b>（1,200件）… 重回帰・決定木・多層パーセプトロンで価格を予測する<br>
+            <b style="color:var(--v4)">サブスク解約</b>（2,000件）… ロジスティック回帰・ROC 曲線で「辞めそうな人」を見つける<br>
+            <b style="color:var(--v4)">家庭の電気使用量</b>（84か月）… 季節分解・Holt–Winters で来年の電気代を予測する<br>
+            <b style="color:var(--v4)">株価・市場・為替</b>（600営業日）… リスク指標・相関・ベータ推定・テクニカル指標<br>
+            <b style="color:var(--v4)">A/Bテスト</b>（1,500件）… 母比率の差の検定・カイ二乗検定・分散分析で施策の効果を判定する
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>直接入力する</h3>
+          <p class="hint">カンマ・タブ・空白・改行のいずれでも区切れます。1 列だけ貼れば 1 変数として扱います。</p>
+          <div class="field">
+            <label>列名（カンマ区切り・省略可）</label>
+            <input type="text" id="manualHead" placeholder="例：group, score">
+          </div>
+          <div class="field">
+            <label>データ</label>
+            <textarea id="manualBody" placeholder="52.3, 48.9, 61.2&#10;55.1, 49.4, 58.7"></textarea>
+          </div>
+          <div class="btnrow">
+            <button class="btn" id="manualLoad">この内容で読み込む</button>
+            <button class="btn ghost" id="manualClear">消去</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>データプレビュー</h3>
+        <p class="hint" id="previewHint">まだデータがありません。</p>
+        <div id="preview"></div>
+      </div>
+
+      <div class="panel">
+        <h3>列の型と欠測</h3>
+        <div id="colSummary"><div class="empty"><b>データを読み込むと表示されます</b>各列を数値／カテゴリに自動判定し、欠測数を集計します。</div></div>
+      </div>
+    </section>
+
+    <!-- ========== 記述統計 ========== -->
+    <section class="sect" id="sect-explore">
+      <div class="panel">
+        <h3>変数とプロットの選択</h3>
+        <div class="grid g3">
+          <div class="field"><label>数値変数（Y）</label><select id="ex_y"></select></div>
+          <div class="field"><label>グループ変数（省略可）</label><select id="ex_g"></select></div>
+          <div class="field"><label>第2 数値変数（X・散布図用）</label><select id="ex_x"></select></div>
+        </div>
+        <div class="field"><label>プロット</label>
+          <div class="chipset" id="ex_plots">
+            <button class="chip" data-p="hist" aria-pressed="true">ヒストグラム＋KDE</button>
+            <button class="chip" data-p="violin">バイオリン</button>
+            <button class="chip" data-p="box">箱ひげ</button>
+            <button class="chip" data-p="strip">ストリップ／ビースワーム</button>
+            <button class="chip" data-p="ridge">リッジライン</button>
+            <button class="chip" data-p="ecdf">経験累積分布</button>
+            <button class="chip" data-p="qq">Q-Q プロット</button>
+            <button class="chip" data-p="scatter">散布図＋回帰</button>
+            <button class="chip" data-p="density2d">2次元密度（等高線）</button>
+            <button class="chip" data-p="pair">散布図行列</button>
+            <button class="chip" data-p="bar">平均＋誤差棒</button>
+            <button class="chip" data-p="parallel">平行座標</button>
+          </div>
+        </div>
+        <div class="btnrow"><button class="btn" id="ex_run">描画する</button></div>
+      </div>
+      <div class="panel"><h3>基本統計量</h3><div id="ex_stats"><div class="empty"><b>変数を選んで描画してください</b></div></div></div>
+      <div class="panel"><h3>プロット</h3><div id="ex_plot" class="plot tall"></div></div>
+      <div class="panel"><h3>正規性の確認</h3><div id="ex_norm"></div></div>
+      <div class="panel"><h3>結果の読み方</h3><div id="ex_advice" class="advice"></div></div>
+    </section>
+
+    <!-- ========== 分布ラボ ========== -->
+    <section class="sect" id="sect-dist">
+      <div class="panel">
+        <h3>分布とパラメータ</h3>
+        <div class="grid g3">
+          <div class="field"><label>分布</label>
+            <select id="d_kind">
+              <optgroup label="連続">
+                <option value="normal">正規分布 N(μ, σ²)</option>
+                <option value="t">t 分布</option>
+                <option value="chisquare">カイ二乗分布</option>
+                <option value="f">F 分布</option>
+                <option value="exponential">指数分布</option>
+                <option value="uniform">一様分布</option>
+                <option value="lognormal">対数正規分布</option>
+                <option value="gamma">ガンマ分布</option>
+                <option value="beta">ベータ分布</option>
+                <option value="weibull">ワイブル分布</option>
+              </optgroup>
+              <optgroup label="離散">
+                <option value="binomial">二項分布 B(n, p)</option>
+                <option value="poisson">ポアソン分布 Po(λ)</option>
+                <option value="geometric">幾何分布</option>
+                <option value="negbinom">負の二項分布</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="field"><label id="d_l1">母数 1</label><input type="number" id="d_p1" value="0" step="any"></div>
+          <div class="field"><label id="d_l2">母数 2</label><input type="number" id="d_p2" value="1" step="any"></div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label>下側確率を求める x</label><input type="number" id="d_x" value="1.96" step="any"></div>
+          <div class="field"><label>パーセント点を求める確率 p</label><input type="number" id="d_q" value="0.975" step="any" min="0" max="1"></div>
+          <div class="field"><label>データに重ねる（省略可）</label><select id="d_overlay"></select></div>
+        </div>
+        <div class="btnrow"><button class="btn" id="d_run">計算して描画</button>
+          <button class="btn ghost" id="d_fit">選択データに当てはめる（最尤法）</button></div>
+      </div>
+      <div class="panel"><h3>確率</h3><div id="d_stats"></div></div>
+      <div class="panel"><h3>密度関数と累積分布関数</h3>
+        <div class="grid g2"><div id="d_pdf" class="plot"></div><div id="d_cdf" class="plot"></div></div>
+      </div>
+      <div class="panel"><h3>解説</h3><div id="d_advice" class="advice"></div></div>
+    </section>
+
+    <!-- ========== t 検定 ========== -->
+    <section class="sect" id="sect-ttest">
+      <div class="panel">
+        <h3>検定の設定</h3>
+        <div class="grid g3">
+          <div class="field"><label>検定の種類</label>
+            <select id="t_kind">
+              <option value="one">1標本 t 検定（母平均の検定）</option>
+              <option value="two">2標本 t 検定（Welch / Student）</option>
+              <option value="paired">対応のある t 検定</option>
+              <option value="z">1標本 z 検定（母分散既知）</option>
+            </select>
+          </div>
+          <div class="field"><label>変数 1</label><select id="t_v1"></select></div>
+          <div class="field" id="t_v2wrap"><label>変数 2 / グループ</label><select id="t_v2"></select></div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label>帰無仮説の値 μ₀ / 差</label><input type="number" id="t_mu" value="0" step="any"></div>
+          <div class="field"><label>対立仮説</label>
+            <select id="t_alt"><option value="two-sided">両側（≠）</option><option value="greater">右片側（&gt;）</option><option value="less">左片側（&lt;）</option></select>
+          </div>
+          <div class="field"><label>有意水準 α</label>
+            <select id="t_alpha"><option value="0.05">0.05</option><option value="0.01">0.01</option><option value="0.1">0.10</option></select>
+          </div>
+        </div>
+        <div class="grid g3">
+          <div class="field" id="t_sigwrap"><label>既知の母標準偏差 σ</label><input type="number" id="t_sigma" value="1" step="any"></div>
+          <div class="field" id="t_evwrap"><label>分散の扱い（2標本）</label>
+            <select id="t_ev"><option value="welch">Welch（等分散を仮定しない・推奨）</option><option value="student">Student（等分散を仮定）</option></select>
+          </div>
+          <div class="field"><label>グループ変数で2群に分ける</label><select id="t_split"><option value="">使わない（2列を直接比較）</option></select></div>
+        </div>
+        <div class="btnrow"><button class="btn" id="t_run">検定を実行</button></div>
+      </div>
+      <div class="panel"><h3>検定結果</h3><div id="t_out"></div></div>
+      <div class="panel"><h3>可視化</h3><div class="grid g2"><div id="t_plot" class="plot"></div><div id="t_plot2" class="plot"></div></div></div>
+      <div class="panel"><h3>結果の読み方</h3><div id="t_advice" class="advice"></div></div>
+      <div class="panel"><h3>前提条件のチェック</h3><div id="t_assump" class="advice"></div></div>
+    </section>
+
+    <!-- ========== 分散分析 ========== -->
+    <section class="sect" id="sect-anova">
+      <div class="panel">
+        <h3>設定</h3>
+        <div class="grid g3">
+          <div class="field"><label>手法</label>
+            <select id="a_kind">
+              <option value="one">一元配置分散分析</option>
+              <option value="two">二元配置分散分析</option>
+              <option value="kw">Kruskal–Wallis 検定（ノンパラ）</option>
+              <option value="mw">Mann–Whitney U 検定（2群・ノンパラ）</option>
+              <option value="wil">Wilcoxon 符号付き順位検定（対応あり）</option>
+              <option value="rm">反復測定分散分析（対応あり・3条件以上）</option>
+              <option value="friedman">Friedman 検定（対応あり・ノンパラ）</option>
+            </select>
+          </div>
+          <div class="field"><label>目的変数（数値）</label><select id="a_y"></select></div>
+          <div class="field"><label>要因 A（カテゴリ）</label><select id="a_f1"></select></div>
+        </div>
+        <div class="grid g3">
+          <div class="field" id="a_f2wrap"><label>要因 B（二元配置のみ）</label><select id="a_f2"></select></div>
+          <div class="field" id="a_wide" style="display:none"><label>条件の列（対応あり・複数選択）</label><select id="a_cols" multiple></select></div>
+          <div class="field"><label>多重比較の補正</label><select id="a_ph"><option value="holm">Holm（推奨）</option><option value="bonferroni">Bonferroni</option></select></div>
+          <div class="field"><label>有意水準 α</label><select id="a_alpha"><option value="0.05">0.05</option><option value="0.01">0.01</option><option value="0.1">0.10</option></select></div>
+        </div>
+        <div class="btnrow"><button class="btn" id="a_run">分析を実行</button></div>
+      </div>
+      <div class="panel"><h3>分散分析表</h3><div id="a_out"></div></div>
+      <div class="panel"><h3>群ごとの分布</h3><div id="a_plot" class="plot tall"></div></div>
+      <div class="panel"><h3>多重比較</h3><div id="a_post"></div></div>
+      <div class="panel"><h3>結果の読み方</h3><div id="a_advice" class="advice"></div></div>
+      <div class="panel"><h3>等分散性の検定</h3><div id="a_var"></div></div>
+    </section>
+
+    <!-- ========== 母比率・母分散 ========== -->
+    <section class="sect" id="sect-propvar">
+      <div class="grid g2">
+        <div class="panel">
+          <h3>母比率の検定</h3>
+          <p class="hint">数を直接入力します。2 標本にすると比率の差を検定します。</p>
+          <div class="grid g3">
+            <div class="field"><label>成功数 x₁</label><input type="number" id="p_k1" value="45"></div>
+            <div class="field"><label>標本サイズ n₁</label><input type="number" id="p_n1" value="100"></div>
+            <div class="field"><label>比較対象 p₀</label><input type="number" id="p_p0" value="0.5" step="any"></div>
+          </div>
+          <div class="grid g3">
+            <div class="field"><label>成功数 x₂（2標本時）</label><input type="number" id="p_k2" placeholder="空欄なら1標本"></div>
+            <div class="field"><label>標本サイズ n₂</label><input type="number" id="p_n2" placeholder="空欄なら1標本"></div>
+            <div class="field"><label>対立仮説</label>
+              <select id="p_alt"><option value="two-sided">両側</option><option value="greater">右片側</option><option value="less">左片側</option></select>
+            </div>
+          </div>
+          <div class="btnrow"><button class="btn" id="p_run">検定する</button></div>
+          <div id="p_out" style="margin-top:14px"></div>
+        </div>
+        <div class="panel">
+          <h3>母分散の検定</h3>
+          <p class="hint">読み込んだデータの列を使います。1 変数ならカイ二乗検定、2 変数なら F 検定になります。</p>
+          <div class="grid g2">
+            <div class="field"><label>変数 1</label><select id="v_v1"></select></div>
+            <div class="field"><label>変数 2（省略可）</label><select id="v_v2"></select></div>
+          </div>
+          <div class="grid g2">
+            <div class="field"><label>帰無仮説の母分散 σ₀²</label><input type="number" id="v_s2" value="1" step="any"></div>
+            <div class="field"><label>対立仮説</label>
+              <select id="v_alt"><option value="two-sided">両側</option><option value="greater">右片側</option><option value="less">左片側</option></select>
+            </div>
+          </div>
+          <div class="btnrow"><button class="btn" id="v_run">検定する</button></div>
+          <div id="v_out" style="margin-top:14px"></div>
+        </div>
+      </div>
+      <div class="panel"><h3>結果の読み方</h3><div id="pv_advice" class="advice"></div></div>
+      <div class="panel"><h3>検定統計量の分布</h3><div id="pv_plot" class="plot"></div></div>
+    </section>
+
+    <!-- ========== カテゴリ ========== -->
+    <section class="sect" id="sect-cat">
+      <div class="panel">
+        <h3>設定</h3>
+        <div class="grid g3">
+          <div class="field"><label>手法</label>
+            <select id="c_kind">
+              <option value="indep">独立性の検定（クロス集計）</option>
+              <option value="gof">適合度検定</option>
+              <option value="manual">度数を直接入力（クロス表）</option>
+              <option value="mcnemar">McNemar 検定（対応のある2値）</option>
+            </select>
+          </div>
+          <div class="field"><label>行の変数</label><select id="c_r"></select></div>
+          <div class="field"><label>列の変数</label><select id="c_c"></select></div>
+        </div>
+        <div class="field" id="c_manwrap" style="display:none">
+          <label>度数表（行を改行、列をカンマで区切る）</label>
+          <textarea id="c_man" placeholder="30, 20&#10;15, 35"></textarea>
+        </div>
+        <div class="grid g2" id="c_mcwrap" style="display:none">
+          <div class="field"><label>不一致ペア b（1回目○ → 2回目×）</label><input type="number" id="c_b" value="21" min="0"></div>
+          <div class="field"><label>不一致ペア c（1回目× → 2回目○）</label><input type="number" id="c_c2" value="9" min="0"></div>
+        </div>
+        <div class="field" id="c_expwrap" style="display:none">
+          <label>期待比率（適合度検定・カンマ区切り／省略時は均等）</label>
+          <input type="text" id="c_exp" placeholder="例：0.25, 0.25, 0.25, 0.25">
+        </div>
+        <div class="btnrow"><button class="btn" id="c_run">検定する</button></div>
+      </div>
+      <div class="panel"><h3>クロス集計表</h3><div id="c_table"></div></div>
+      <div class="panel"><h3>可視化</h3><div class="grid g2"><div id="c_plot" class="plot"></div><div id="c_plot2" class="plot"></div></div></div>
+      <div class="panel"><h3>結果の読み方</h3><div id="c_advice" class="advice"></div></div>
+    </section>
+
+    <!-- ========== 相関 ========== -->
+    <section class="sect" id="sect-corr">
+      <div class="panel">
+        <h3>設定</h3>
+        <div class="grid g3">
+          <div class="field"><label>変数（複数選択）</label><select id="r_vars" multiple></select></div>
+          <div class="field"><label>相関係数の種類</label>
+            <select id="r_method"><option value="pearson">Pearson（積率相関）</option><option value="spearman">Spearman（順位相関）</option><option value="kendall">Kendall（τ-b）</option></select>
+          </div>
+          <div class="field"><label>偏相関の統制変数（省略可）</label><select id="r_ctrl" multiple></select></div>
+        </div>
+        <div class="btnrow"><button class="btn" id="r_run">相関を計算</button><button class="btn ghost" id="r_pca">主成分分析も実行</button></div>
+      </div>
+      <div class="panel"><h3>相関行列</h3><div class="grid g2"><div id="r_heat" class="plot tall"></div><div id="r_tbl"></div></div></div>
+      <div class="panel"><h3>散布図行列</h3><div id="r_pairs" class="plot tall"></div></div>
+      <div class="panel"><h3>主成分分析</h3><div id="r_pcaout"></div></div>
+      <div class="panel"><h3>結果の読み方</h3><div id="r_advice" class="advice"></div></div>
+    </section>
+
+    <!-- ========== 回帰 ========== -->
+    <section class="sect" id="sect-reg">
+      <div class="panel">
+        <h3>モデルの設定</h3>
+        <div class="grid g3">
+          <div class="field"><label>目的変数 y</label><select id="g_y"></select></div>
+          <div class="field"><label>説明変数 x（複数選択可）</label><select id="g_x" multiple></select></div>
+          <div class="field"><label>多項式の次数（単回帰時）</label>
+            <select id="g_poly"><option value="1">1（線形）</option><option value="2">2（二次）</option><option value="3">3（三次）</option></select>
+          </div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label>信頼水準</label><select id="g_conf"><option value="0.95">95%</option><option value="0.99">99%</option><option value="0.9">90%</option></select></div>
+          <div class="field"><label>モデル</label><select id="g_model"><option value="ols">線形回帰（最小二乗法）</option><option value="poisson">ポアソン回帰（対数リンク・計数データ）</option></select></div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label>目的変数の変換（線形回帰のみ）</label><select id="g_tr"><option value="none">なし</option><option value="log">自然対数</option><option value="sqrt">平方根</option></select></div>
+        </div>
+        <div class="btnrow"><button class="btn" id="g_run">回帰を実行</button></div>
+      </div>
+      <div class="panel"><h3>推定結果</h3><div id="g_out"></div></div>
+      <div class="panel"><h3>回帰診断</h3><div class="grid g2"><div id="g_p1" class="plot"></div><div id="g_p2" class="plot"></div><div id="g_p3" class="plot"></div><div id="g_p4" class="plot"></div></div></div>
+      <div class="panel"><h3>このモデルで予測する</h3><div id="g_predict"><div class="empty"><b>先に回帰を実行してください</b>推定が終わると、新しい条件を入力して予測できるようになります。</div></div></div>
+      <div class="panel"><h3>結果の読み方</h3><div id="g_advice" class="advice"></div></div>
+    </section>
+
+    <!-- ========== ロジスティック ========== -->
+    <section class="sect" id="sect-logit">
+      <div class="panel">
+        <h3>モデルの設定</h3>
+        <div class="grid g3">
+          <div class="field"><label>目的変数（2値）</label><select id="l_y"></select></div>
+          <div class="field"><label>陽性とみなす水準</label><select id="l_pos"></select></div>
+          <div class="field"><label>説明変数（複数選択可）</label><select id="l_x" multiple></select></div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label>判定閾値</label><input type="range" id="l_thr" min="0.05" max="0.95" step="0.01" value="0.5"><div class="crumb" id="l_thrv">0.50</div></div>
+          <div class="field"><label>L2 正則化（分離対策）</label><select id="l_l2"><option value="0">なし</option><option value="0.5">弱め (0.5)</option><option value="2">強め (2.0)</option></select></div>
+          <div class="field"><label>&nbsp;</label><button class="btn" id="l_run" style="width:100%">回帰を実行</button></div>
+        </div>
+      </div>
+      <div class="panel"><h3>推定結果</h3><div id="l_out"></div></div>
+      <div class="panel"><h3>ROC 曲線と予測確率</h3><div class="grid g2"><div id="l_p1" class="plot"></div><div id="l_p2" class="plot"></div></div></div>
+      <div class="panel"><h3>混同行列</h3><div id="l_cm"></div></div>
+      <div class="panel"><h3>このモデルで予測する</h3><div id="l_predict"><div class="empty"><b>先に回帰を実行してください</b>推定が終わると、新しい条件の発生確率を計算できるようになります。</div></div></div>
+      <div class="panel"><h3>結果の読み方</h3><div id="l_advice" class="advice"></div></div>
+    </section>
+
+    <!-- ========== 決定木 ========== -->
+    <section class="sect" id="sect-tree">
+      <div class="panel">
+        <h3>設定</h3>
+        <div class="grid g3">
+          <div class="field"><label>目的変数</label><select id="dt_y"></select></div>
+          <div class="field"><label>説明変数（数値・複数選択）</label><select id="dt_x" multiple></select></div>
+          <div class="field"><label>タスク</label><select id="dt_task"><option value="classification">分類</option><option value="regression">回帰</option></select></div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label>木の最大の深さ</label><input type="number" id="dt_depth" value="3" min="1" max="8"></div>
+          <div class="field"><label>葉の最小サンプル数</label><input type="number" id="dt_leaf" value="5" min="1"></div>
+          <div class="field"><label>検証データの割合</label><input type="number" id="dt_test" value="0.25" step="0.05" min="0.1" max="0.5"></div>
+        </div>
+        <div class="btnrow"><button class="btn" id="dt_run">決定木を作る</button><button class="btn ghost" id="rf_run">ランダムフォレストも実行（100本）</button><button class="btn ghost" id="pi_run">並べ替え重要度と部分依存を計算</button></div>
+      </div>
+      <div class="panel"><h3>木の構造</h3><div id="dt_tree" class="treebox"></div></div>
+      <div class="panel"><h3>精度と変数重要度</h3><div class="grid g2"><div id="dt_out"></div><div id="dt_imp" class="plot"></div></div></div>
+      <div class="panel"><h3>決定境界（説明変数を2つ選んだ場合）</h3><div id="dt_bound" class="plot"></div></div>
+      <div class="panel"><h3>並べ替え重要度と部分依存プロット（PDP）</h3><p class="hint">重要度は「どれだけ効いているか」、部分依存は「どちら向きに効いているか」を示します。</p><div class="grid g2"><div id="dt_perm" class="plot"></div><div id="dt_pdp" class="plot"></div></div></div>
+      <div class="panel"><h3>このモデルで予測する</h3><div id="dt_predict"><div class="empty"><b>先に決定木を作ってください</b>木ができると、新しい条件がどの分岐をたどるかまで表示されます。</div></div></div>
+      <div class="panel"><h3>結果の読み方</h3><div id="dt_advice" class="advice"></div></div>
+    </section>
+
+    <!-- ========== 時系列 ========== -->
+    <section class="sect" id="sect-ts">
+      <div class="panel">
+        <h3>設定</h3>
+        <div class="grid g3">
+          <div class="field"><label>値の列</label><select id="ts_y"></select></div>
+          <div class="field"><label>日付／時点の列（省略可）</label><select id="ts_t"></select></div>
+          <div class="field"><label>季節周期</label><input type="number" id="ts_period" value="12" min="1"></div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label>分解モデル</label><select id="ts_model"><option value="additive">加法</option><option value="multiplicative">乗法</option></select></div>
+          <div class="field"><label>予測期間</label><input type="number" id="ts_h" value="12" min="1"></div>
+          <div class="field"><label>予測手法</label>
+            <select id="ts_method"><option value="hw">Holt–Winters 指数平滑</option><option value="add">加法モデル（Prophet 風・自前実装）</option><option value="ar">AR モデル（次数は下で指定）</option></select>
+          </div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label>AR の次数 p</label><input type="number" id="ts_p" value="2" min="1" max="12"></div>
+          <div class="field"><label>移動平均の窓幅</label><input type="number" id="ts_ma" value="7" min="2"></div>
+          <div class="field"><label>差分の階数 d</label><input type="number" id="ts_d" value="0" min="0" max="2"></div>
+        </div>
+        <div class="btnrow"><button class="btn" id="ts_run">解析する</button></div>
+      </div>
+      <div class="panel"><h3>系列と予測</h3><div id="ts_main" class="plot tall"></div></div>
+      <div class="panel"><h3>成分分解</h3><div id="ts_dec" class="plot tall"></div></div>
+      <div class="panel"><h3>コレログラム</h3><div class="grid g2"><div id="ts_acf" class="plot short"></div><div id="ts_pacf" class="plot short"></div></div></div>
+      <div class="panel"><h3>診断</h3><div id="ts_out"></div></div>
+      <div class="panel"><h3>結果の読み方</h3><div id="ts_advice" class="advice"></div></div>
+    </section>
+
+    <!-- ========== 株価 ========== -->
+    <section class="sect" id="sect-stock">
+      <div class="panel">
+        <h3>設定</h3>
+        <p class="hint">終値の列を選んでください。投資助言ではありません。過去データの記述統計にすぎない点にご注意ください。</p>
+        <div class="grid g3">
+          <div class="field"><label>終値の列</label><select id="s_close"></select></div>
+          <div class="field"><label>日付の列（省略可）</label><select id="s_date"></select></div>
+          <div class="field"><label>年間の取引日数</label><input type="number" id="s_ppy" value="252"></div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label>移動平均（短期／長期）</label><input type="text" id="s_ma" value="25, 75"></div>
+          <div class="field"><label>RSI の期間</label><input type="number" id="s_rsi" value="14"></div>
+          <div class="field"><label>予測期間（加法モデル）</label><input type="number" id="s_h" value="20"></div>
+        </div>
+        <div class="btnrow"><button class="btn" id="s_run">分析する</button></div>
+      </div>
+      <div class="panel"><h3>価格チャートとテクニカル指標</h3><div id="s_chart" class="plot tall"></div></div>
+      <div class="panel"><h3>リスク指標</h3><div id="s_stats"></div></div>
+      <div class="panel"><h3>リターン分布とドローダウン</h3><div class="grid g2"><div id="s_ret" class="plot"></div><div id="s_dd" class="plot"></div></div></div>
+      <div class="panel"><h3>参考予測（加法モデル）</h3><div id="s_fc" class="plot"></div></div>
+      <div class="panel"><h3>結果の読み方</h3><div id="s_advice" class="advice"></div></div>
+    </section>
+
+    <!-- ========== MLP ========== -->
+    <section class="sect" id="sect-mlp">
+      <div class="panel">
+        <h3>ネットワークの設定</h3>
+        <p class="hint">TensorFlow.js がブラウザ内（WebGL）で学習します。データは送信されません。</p>
+        <div class="grid g3">
+          <div class="field"><label>目的変数</label><select id="n_y"></select></div>
+          <div class="field"><label>説明変数（数値・複数選択）</label><select id="n_x" multiple></select></div>
+          <div class="field"><label>タスク</label><select id="n_task"><option value="regression">回帰</option><option value="classification">分類</option></select></div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label>隠れ層の構成（カンマ区切り）</label><input type="text" id="n_hidden" value="32, 16"></div>
+          <div class="field"><label>活性化関数</label><select id="n_act"><option value="relu">ReLU</option><option value="tanh">tanh</option><option value="sigmoid">sigmoid</option><option value="elu">ELU</option></select></div>
+          <div class="field"><label>最適化アルゴリズム</label><select id="n_opt"><option value="adam">Adam</option><option value="rmsprop">RMSprop</option><option value="sgd">SGD</option></select></div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label>エポック数</label><input type="number" id="n_ep" value="150" min="5" max="2000"></div>
+          <div class="field"><label>学習率</label><input type="number" id="n_lr" value="0.01" step="any"></div>
+          <div class="field"><label>バッチサイズ</label><input type="number" id="n_bs" value="16" min="1"></div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label>ドロップアウト率</label><input type="number" id="n_do" value="0" step="0.05" min="0" max="0.7"></div>
+          <div class="field"><label>L2 正則化</label><input type="number" id="n_l2" value="0" step="0.001" min="0"></div>
+          <div class="field"><label>検証データの割合</label><input type="number" id="n_val" value="0.2" step="0.05" min="0.1" max="0.5"></div>
+        </div>
+        <div class="btnrow"><button class="btn" id="n_run">学習を開始</button><span class="pill" id="n_status">待機中</span></div>
+        <div class="progress"><i id="n_bar"></i></div>
+      </div>
+      <div class="panel"><h3>学習曲線</h3><div id="n_curve" class="plot"></div></div>
+      <div class="panel"><h3>予測性能</h3><div class="grid g2"><div id="n_out"></div><div id="n_pred" class="plot"></div></div></div>
+      <div class="panel"><h3>このモデルで予測する</h3><div id="n_predict"><div class="empty"><b>先に学習を実行してください</b>学習したネットワークはページを離れるまで保持され、何度でも予測に使えます。</div></div></div>
+      <div class="panel"><h3>結果の読み方</h3><div id="n_advice" class="advice"></div></div>
+    </section>
+
+    <!-- ========== 診断ナビ ========== -->
+    <section class="sect" id="sect-navi">
+      <div class="panel">
+        <h3>まず 3 ステップ</h3>
+        <div id="navi_steps"></div>
+      </div>
+      <div class="panel">
+        <h3>やりたいことから手法を診断する</h3>
+        <p class="hint">質問に答えていくと、使う手法・STATLAB のどの画面を開くか・結果のどこを見るかまで案内します。統計の用語を知らなくても進めます。</p>
+        <div id="navi_wizard"></div>
+      </div>
+      <div class="panel">
+        <h3>目的別ショートカット</h3>
+        <div id="navi_cards"></div>
+      </div>
+    </section>
+
+    <!-- ========== 統計ハンドブック ========== -->
+    <section class="sect" id="sect-guide">
+      <div class="panel">
+        <h3>統計ハンドブック</h3>
+        <p class="hint">この道具を使ううえで必要な考え方を、教科書としてまとめています。統計検定 3〜2 級の範囲を中心に、実務で迷いやすい点まで扱います。</p>
+        <div class="chipset" id="guide_tabs"></div>
+      </div>
+      <div id="guide_body"></div>
+    </section>
+
+  </main>
+</div>
+
+<script src="assets/core.js"></script>
+<script src="assets/models.js"></script>
+<script src="assets/advice.js"></script>
+<script src="assets/ui.js"></script>
+<script src="assets/guide.js"></script>
+</body>
+</html>
