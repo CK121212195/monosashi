@@ -1,25 +1,1216 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="0; url=https://kazumono.com/rented_house/">
-<link rel="canonical" href="https://kazumono.com/rented_house/">
-<meta name="robots" content="noindex">
-<title>移転しました｜賃貸 vs 持ち家 生涯コスト比較</title>
+<title>賃貸 vs 持ち家 生涯コスト比較シミュレーター｜相続・贈与・死亡時まで通算</title>
+<meta name="description" content="賃貸と持ち家の生涯コストを、住宅ローン控除・固定資産税・団信・相続税・贈与税まで含めて年次で比較。死亡年齢を動かすと相続税と遺族の手取りが即座に再計算されます。2026年7月時点の税制準拠。">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JKXXKXH8DF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-JKXXKXH8DF');
+</script>
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ck121212195.github.io/rented_house/">
+<meta property="og:site_name" content="賃貸 vs 持ち家 生涯コスト比較シミュレーター">
+<meta property="og:title" content="賃貸 vs 持ち家 生涯コスト比較シミュレーター｜相続・贈与・死亡時まで通算">
+<meta property="og:description" content="賃貸と持ち家の生涯コストを、住宅ローン控除・固定資産税・団信・相続税・贈与税まで含めて年次で比較。死亡年齢を動かすと相続税と遺族の手取りが即座に再計算されます。2026年7月時点の税制準拠。">
+<meta property="og:image" content="https://ck121212195.github.io/rented_house/og-image.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="賃貸 vs 持ち家 生涯コスト比較シミュレーター｜相続・贈与・死亡時まで通算">
+<meta name="twitter:description" content="賃貸と持ち家の生涯コストを、住宅ローン控除・固定資産税・団信・相続税・贈与税まで含めて年次で比較。死亡年齢を動かすと相続税と遺族の手取りが即座に再計算されます。2026年7月時点の税制準拠。">
+<meta name="twitter:image" content="https://ck121212195.github.io/rented_house/og-image.png">
+
+<link rel="icon" type="image/png" href="https://ck121212195.github.io/rented_house/favicon.png" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="https://ck121212195.github.io/rented_house/favicon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-body{margin:0;min-height:100vh;display:grid;place-items:center;background:#FAF9F6;color:#18262F;
- font-family:"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.9;padding:24px;text-align:center}
-h1{font-family:"Hiragino Mincho ProN","Yu Mincho",serif;font-weight:600;font-size:22px;letter-spacing:.08em;margin:0 0 14px}
-a{display:inline-block;margin-top:18px;padding:14px 30px;border-radius:999px;background:#33526C;color:#fff;
- text-decoration:none;font-weight:600;letter-spacing:.06em}
+:root{
+  --paper:#E8EBEA;
+  --card:#F8F9F8;
+  --card-2:#F1F3F2;
+  --ink:#14191C;
+  --ink-2:#4C565B;
+  --ink-3:#7C868B;
+  --rule:#C7CFCC;
+  --rule-soft:#DCE2DF;
+  --rent:#17635C;
+  --rent-soft:#D5E4E1;
+  --own:#8E2F3A;
+  --own-soft:#EBD9DB;
+  --brass:#A8862F;
+  --warn:#9C4A18;
+  --radius:3px;
+  --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  --sans:"Zen Kaku Gothic New",-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
+  --serif:"Shippori Mincho B1","Hiragino Mincho ProN",serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:15px;line-height:1.7;
+  font-feature-settings:"palt" 1;
+}
+a{color:var(--rent);text-underline-offset:3px}
+h1,h2,h3{font-family:var(--serif);font-weight:800;line-height:1.35;letter-spacing:.01em;margin:0}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+/* ---------- masthead ---------- */
+.masthead{border-bottom:1px solid var(--ink);background:var(--paper)}
+.masthead-in{max-width:1440px;margin:0 auto;padding:26px 24px 20px;
+  display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;justify-content:space-between}
+.mark{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ink-3);
+  text-transform:uppercase;display:block;margin-bottom:10px}
+h1{font-size:clamp(24px,3.4vw,38px)}
+h1 .slash{color:var(--brass);font-weight:600;padding:0 .25em}
+.sub{color:var(--ink-2);font-size:13.5px;max-width:52ch;margin-top:8px}
+.stamp{font-family:var(--mono);font-size:11px;line-height:1.8;color:var(--ink-2);
+  border:1px solid var(--rule);border-left:3px solid var(--brass);padding:8px 12px;background:var(--card)}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1440px;margin:0 auto;padding:24px;display:grid;
+  grid-template-columns:minmax(320px,388px) minmax(0,1fr);gap:24px;align-items:start}
+@media(max-width:1020px){.wrap{grid-template-columns:1fr;padding:16px;gap:16px}}
+
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius)}
+.controls{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain}
+@media(max-width:1020px){.controls{position:static;max-height:none}}
+.controls::-webkit-scrollbar{width:9px}
+.controls::-webkit-scrollbar-thumb{background:var(--rule);border-radius:9px}
+
+/* ---------- form ---------- */
+fieldset{border:0;border-top:1px solid var(--rule-soft);margin:0;padding:14px 16px 18px}
+fieldset:first-of-type{border-top:0}
+legend{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--ink);
+  text-transform:uppercase;padding:0;margin-bottom:2px;display:flex;align-items:center;gap:8px;width:100%}
+legend::after{content:"";flex:1;height:1px;background:var(--rule-soft)}
+.legend-rent{color:var(--rent)} .legend-own{color:var(--own)}
+.row{display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center;margin-top:10px}
+.row label{font-size:13px;color:var(--ink-2);line-height:1.45}
+.row .hint{display:block;font-size:11px;color:var(--ink-3);line-height:1.4}
+input[type=number],select,input[type=text]{
+  font-family:var(--mono);font-size:13.5px;font-variant-numeric:tabular-nums;
+  width:112px;padding:5px 8px;text-align:right;color:var(--ink);
+  background:#fff;border:1px solid var(--rule);border-radius:2px}
+select{width:100%;text-align:left;grid-column:1/-1;font-family:var(--sans);font-size:13px}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{
+  outline:2px solid var(--brass);outline-offset:2px}
+.row-full{display:block;margin-top:10px}
+.row-full > label{display:block;font-size:13px;color:var(--ink-2);margin-bottom:4px}
+.unit{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-left:4px}
+.check{display:flex;gap:8px;align-items:flex-start;margin-top:9px;font-size:13px;color:var(--ink-2)}
+.check input{margin-top:4px;accent-color:var(--rent)}
+
+/* death slider */
+.deathbox{background:var(--card-2);border:1px solid var(--rule);border-radius:2px;padding:12px 14px;margin-top:12px}
+.deathbox .val{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--ink)}
+.deathbox .val small{font-size:13px;color:var(--ink-2);font-weight:400}
+input[type=range]{width:100%;accent-color:var(--own);margin-top:6px}
+
+/* ---------- verdict ---------- */
+.verdict{padding:22px 24px}
+.verdict-top{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:baseline;justify-content:space-between}
+.verdict h2{font-size:clamp(20px,2.6vw,29px)}
+.verdict h2 em{font-style:normal;padding:0 .12em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.win-rent em{background:linear-gradient(transparent 62%,var(--rent-soft) 62%);color:var(--rent)}
+.win-own em{background:linear-gradient(transparent 62%,var(--own-soft) 62%);color:var(--own)}
+.delta{text-align:right}
+.delta .n{font-family:var(--mono);font-size:clamp(26px,4vw,40px);font-weight:600;line-height:1}
+.delta .l{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase}
+.verdict-note{margin-top:14px;font-size:13px;color:var(--ink-2);border-top:1px solid var(--rule-soft);padding-top:12px}
+
+/* ---------- life bands (signature) ---------- */
+.bands{padding:6px 24px 22px}
+.bands svg{width:100%;height:auto;display:block;overflow:visible}
+.band-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:11.5px;color:var(--ink-2);font-family:var(--mono)}
+.band-legend i{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px;border-radius:1px}
+
+/* ---------- metric grid ---------- */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));border-top:1px solid var(--rule)}
+.metric{padding:14px 18px;border-right:1px solid var(--rule-soft);border-bottom:1px solid var(--rule-soft)}
+.metric:last-child{border-right:0}
+.metric .k{font-size:11.5px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.06em}
+.metric .v{font-family:var(--mono);font-size:20px;font-weight:600;margin-top:3px}
+.metric .d{font-size:11.5px;color:var(--ink-2);margin-top:2px}
+.v-rent{color:var(--rent)} .v-own{color:var(--own)}
+
+/* ---------- sections ---------- */
+section.blk{margin-top:24px}
+.blk-head{display:flex;align-items:baseline;gap:14px;padding:0 4px 10px}
+.blk-head h3{font-size:17px}
+.blk-head .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--brass);text-transform:uppercase}
+.blk-head p{margin:0;font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 12px;text-align:right;border-bottom:1px solid var(--rule-soft);white-space:nowrap}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-3);font-weight:500;
+  background:var(--card-2);position:sticky;top:0;z-index:1}
+td:first-child,th:first-child{text-align:left;white-space:normal}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+tbody tr:hover{background:var(--card-2)}
+tr.total td{border-top:1px solid var(--ink);border-bottom:0;font-weight:700;background:var(--card-2)}
+tr.sub td{color:var(--ink-3)}
+.tbl-scroll{overflow:auto;max-height:420px}
+.pos{color:var(--rent)} .neg{color:var(--own)}
+
+/* chart */
+.chart{padding:16px 18px 8px}
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+
+/* notes */
+.notes{padding:4px 18px 18px}
+.note{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule-soft);font-size:13px;line-height:1.65}
+.note:last-child{border-bottom:0}
+.note .tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:2px 7px;height:fit-content;
+  border:1px solid currentColor;border-radius:2px;white-space:nowrap;margin-top:2px}
+.t-tax{color:var(--brass)} .t-risk{color:var(--warn)} .t-rent{color:var(--rent)} .t-own{color:var(--own)}
+.note b{font-weight:700}
+
+details.src{margin-top:24px;border:1px solid var(--rule);border-radius:var(--radius);background:var(--card)}
+details.src summary{cursor:pointer;padding:12px 18px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--ink-2)}
+details.src[open] summary{border-bottom:1px solid var(--rule-soft)}
+.src-body{padding:14px 18px;font-size:12.5px;color:var(--ink-2);line-height:1.8}
+.src-body ul{margin:6px 0 14px;padding-left:1.1em}
+.src-body li{margin-bottom:3px}
+
+.actions{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px;border-top:1px solid var(--rule-soft)}
+button{font-family:var(--sans);font-size:12.5px;padding:7px 14px;cursor:pointer;
+  background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:2px}
+button.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+button:hover{opacity:.86}
+
+footer{border-top:1px solid var(--rule);margin-top:36px;padding:22px 24px 48px;
+  font-size:12px;color:var(--ink-3);max-width:1440px;margin-left:auto;margin-right:auto}
+@media(prefers-reduced-motion:no-preference){
+  .bar-seg,.line-path{transition:all .35s cubic-bezier(.4,0,.2,1)}
+}
+@media print{.controls,.actions{display:none}.wrap{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div>
-  <h1>賃貸 vs 持ち家 生涯コスト比較 は移転しました</h1>
-  <p>数秒で自動的に移動します。切り替わらない場合は下のボタンからどうぞ。</p>
-  <a href="https://kazumono.com/rented_house/">新しいページへ</a>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <div>
+      <span class="mark">Lifetime Housing Cost / 生涯住居費 通算試算</span>
+      <h1>賃貸<span class="slash">／</span>持ち家<br>生涯コスト比較</h1>
+      <p class="sub">支払い終わった後も、支払い途中で亡くなった場合も、相続税・贈与税まで通算して比べます。「毎月いくら」ではなく「死ぬまでに、そして遺族にいくら残るか」で判定します。</p>
+    </div>
+    <div class="stamp">
+      準拠時点　2026年7月<br>
+      税制　令和8年度改正（2026年3月31日成立）反映<br>
+      通貨　円／表示単位 万円
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ================= CONTROLS ================= -->
+  <form class="panel controls" id="form" autocomplete="off">
+
+    <fieldset>
+      <legend>前提</legend>
+      <div class="row"><label>現在の年齢</label><input type="number" id="age0" value="35" min="18" max="90"></div>
+      <div class="deathbox">
+        <label for="ageDeath" style="font-size:12.5px;color:var(--ink-2)">試算終了＝死亡想定年齢</label>
+        <div class="val"><span class="num" id="ageDeathV">88</span><small> 歳 ／ 残り <span class="num" id="yearsV">53</span> 年</small></div>
+        <input type="range" id="ageDeath" min="45" max="105" value="88">
+        <div style="font-size:11.5px;color:var(--ink-3);margin-top:4px">この年齢で相続が発生したものとして課税計算します。動かすと全部が再計算されます。</div>
+      </div>
+      <div class="row"><label>現在の金融資産<span class="hint">頭金の原資を含む手元の総額</span></label><input type="number" id="assets0" value="1200" step="50"></div>
+      <div class="row"><label>資産運用利回り<span class="hint">住居費の差額を運用する前提の年率</span></label><input type="number" id="rInv" value="3.0" step="0.1"></div>
+      <div class="row"><label>物価・家賃上昇率<span class="hint">年率</span></label><input type="number" id="infl" value="1.0" step="0.1"></div>
+      <div class="row"><label>地価変動率<span class="hint">年率。マイナス可</span></label><input type="number" id="landG" value="0.0" step="0.1"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="legend-rent">賃貸ケース</legend>
+      <div class="row"><label>月額家賃</label><input type="number" id="rent" value="16.5" step="0.5"></div>
+      <div class="row"><label>管理費・共益費<span class="hint">月額</span></label><input type="number" id="rentKanri" value="1.0" step="0.1"></div>
+      <div class="row"><label>駐車場ほか<span class="hint">月額</span></label><input type="number" id="rentPark" value="0" step="0.5"></div>
+      <div class="row"><label>礼金<span class="hint">家賃の何か月分</span></label><input type="number" id="reikin" value="1" step="0.5"></div>
+      <div class="row"><label>敷金<span class="hint">家賃の何か月分。退去時に返還想定</span></label><input type="number" id="shikikin" value="1" step="0.5"></div>
+      <div class="row"><label>更新料<span class="hint">家賃の何か月分</span></label><input type="number" id="koshin" value="1" step="0.5"></div>
+      <div class="row"><label>更新間隔<span class="hint">年</span></label><input type="number" id="koshinY" value="2" min="1"></div>
+      <div class="row"><label>住み替え間隔<span class="hint">年。0で住み替えなし</span></label><input type="number" id="moveY" value="12" min="0"></div>
+      <div class="row"><label>住み替え1回の費用<span class="hint">引越・仲介・原状回復</span></label><input type="number" id="moveCost" value="45" step="5"></div>
+      <div class="row"><label>火災保険<span class="hint">年額</span></label><input type="number" id="rentIns" value="1.0" step="0.5"></div>
+      <div class="row"><label>老後の家賃係数<span class="hint">70歳以降の家賃倍率。住み替え縮小なら0.8など</span></label><input type="number" id="oldRentK" value="0.85" step="0.05"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="legend-own">購入ケース｜物件</legend>
+      <div class="row-full"><label>物件タイプ</label>
+        <select id="ptype">
+          <option value="mansion">新築マンション（RC・区分所有）</option>
+          <option value="house">新築戸建て（木造）</option>
+          <option value="used">中古マンション（RC）</option>
+          <option value="usedhouse">中古戸建て（木造）</option>
+        </select>
+      </div>
+      <div class="row"><label>土地価格<span class="hint">マンションは敷地権相当</span></label><input type="number" id="land" value="2200" step="50"></div>
+      <div class="row"><label>建物価格<span class="hint">税抜き相当</span></label><input type="number" id="bldg" value="2800" step="50"></div>
+      <div class="row"><label>敷地面積<span class="hint">㎡。小規模宅地等の特例の判定に使用</span></label><input type="number" id="landArea" value="70" step="5"></div>
+      <div class="row"><label>専有・延床面積<span class="hint">㎡</span></label><input type="number" id="floorArea" value="72" step="1"></div>
+      <div class="row"><label>築年数<span class="hint">中古の場合。新築は0</span></label><input type="number" id="ageBldg" value="0" min="0"></div>
+      <div class="row-full"><label>住宅性能区分（住宅ローン控除・登録免許税に影響）</label>
+        <select id="perf">
+          <option value="choki">認定長期優良住宅・低炭素住宅</option>
+          <option value="zeh" selected>ZEH水準省エネ住宅</option>
+          <option value="shoene">省エネ基準適合住宅</option>
+          <option value="other">その他（省エネ基準未満）</option>
+        </select>
+      </div>
+      <label class="check"><input type="checkbox" id="kosodate"> 子育て世帯・若者夫婦世帯（19歳未満の子あり、または夫婦いずれかが40歳未満）</label>
+    </fieldset>
+
+    <fieldset>
+      <legend class="legend-own">購入ケース｜資金</legend>
+      <div class="row"><label>頭金</label><input type="number" id="down" value="600" step="50"></div>
+      <div class="row"><label>諸費用<span class="hint">0で自動計算（登録免許税・不動産取得税・仲介手数料等）</span></label><input type="number" id="shohi" value="0" step="10"></div>
+      <div class="row-full"><label>ローン金利タイプ</label>
+        <select id="ltype">
+          <option value="var">変動金利（横ばい）</option>
+          <option value="varUp" selected>変動金利（毎年上昇シナリオ）</option>
+          <option value="varShock">変動金利（数年後に急上昇）</option>
+          <option value="flat">全期間固定・フラット35（機構MBSで調達）</option>
+          <option value="step">固定期間選択型（N年固定→その後上乗せ）</option>
+          <option value="reverse">リ・バース60型（利息のみ返済・元金は死亡時）</option>
+        </select>
+      </div>
+      <div class="row"><label>適用金利<span class="hint">年%。2026年7月の目安：変動 約1.0〜1.3／フラット35 約3.14</span></label><input type="number" id="rate0" value="1.10" step="0.05"></div>
+      <div class="row"><label>金利上昇幅<span class="hint">%/年。上昇・急上昇・固定期間選択で使用</span></label><input type="number" id="rateUp" value="0.15" step="0.05"></div>
+      <div class="row"><label>金利上限<span class="hint">%</span></label><input type="number" id="rateCap" value="3.50" step="0.1"></div>
+      <div class="row"><label>シナリオ発動年 / 固定期間<span class="hint">年</span></label><input type="number" id="shockY" value="10" min="1"></div>
+      <div class="row"><label>返済期間<span class="hint">年</span></label><input type="number" id="term" value="35" min="1" max="50"></div>
+      <label class="check"><input type="checkbox" id="rule5" checked> 5年ルール・125%ルールを適用（返済額は5年据置、改定は1.25倍まで。未払利息が出る場合あり）</label>
+      <label class="check"><input type="checkbox" id="danshin" checked> 団体信用生命保険に加入（死亡時にローンが消える）</label>
+      <div class="row"><label>団信の金利上乗せ<span class="hint">%。がん団信等</span></label><input type="number" id="danshinAdd" value="0" step="0.05"></div>
+      <div class="row"><label>年間の税額控除枠<span class="hint">所得税＋住民税。住宅ローン控除の実際の上限</span></label><input type="number" id="taxRoom" value="28" step="1"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="legend-own">購入ケース｜保有コスト</legend>
+      <div class="row"><label>固定資産税率<span class="hint">%</span></label><input type="number" id="koteiRate" value="1.4" step="0.1"></div>
+      <div class="row"><label>都市計画税率<span class="hint">%</span></label><input type="number" id="toshiRate" value="0.3" step="0.1"></div>
+      <div class="row"><label>管理費・修繕積立金<span class="hint">月額。マンションのみ</span></label><input type="number" id="kanri" value="2.4" step="0.1"></div>
+      <div class="row"><label>積立金の増額率<span class="hint">%/年。段階増額方式の実勢</span></label><input type="number" id="kanriUp" value="2.5" step="0.5"></div>
+      <div class="row"><label>戸建ての修繕引当<span class="hint">年額換算。戸建てのみ</span></label><input type="number" id="repair" value="15" step="1"></div>
+      <div class="row"><label>大規模リフォーム<span class="hint">1回あたり</span></label><input type="number" id="reform" value="500" step="50"></div>
+      <div class="row"><label>リフォーム周期<span class="hint">年。0でなし</span></label><input type="number" id="reformY" value="25" min="0"></div>
+      <div class="row"><label>火災・地震保険<span class="hint">年額</span></label><input type="number" id="ownIns" value="4.0" step="0.5"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>相続・贈与</legend>
+      <div class="row"><label>配偶者</label>
+        <select id="spouse" style="width:auto">
+          <option value="1" selected>いる（一次相続）</option>
+          <option value="0">いない（二次相続・単身）</option>
+        </select>
+      </div>
+      <div class="row"><label>子の人数</label><input type="number" id="kids" value="2" min="0" max="10"></div>
+      <div class="row-full"><label>配偶者の取得割合</label>
+        <select id="spShare">
+          <option value="legal" selected>法定相続分どおり（配偶者の税額軽減をフル活用）</option>
+          <option value="all">全部を配偶者が取得</option>
+          <option value="zero">配偶者は取得しない（子へ集約・二次相続を意識）</option>
+        </select>
+      </div>
+      <div class="row"><label>住宅以外の相続財産<span class="hint">この試算に含まれない資産</span></label><input type="number" id="otherEstate" value="0" step="100"></div>
+      <div class="row"><label>死亡保険金<span class="hint">団信とは別の生命保険</span></label><input type="number" id="lifeIns" value="0" step="100"></div>
+      <label class="check"><input type="checkbox" id="shokibo" checked> 小規模宅地等の特例を適用（特定居住用宅地等・330㎡まで80%減）</label>
+      <label class="check"><input type="checkbox" id="ienaki"> 賃貸ケースで「家なき子」として親の実家を相続する（賃貸継続が要件を満たす前提）</label>
+      <div class="row"><label>その実家の土地評価額</label><input type="number" id="ienakiLand" value="3000" step="100"></div>
+
+      <div class="row-full" style="margin-top:16px"><label>親からの住宅取得等資金の贈与</label>
+        <select id="giftMode">
+          <option value="none" selected>受けない</option>
+          <option value="nonTax">住宅取得等資金の非課税特例を使う（〜2026年12月31日）</option>
+          <option value="seisan">相続時精算課税を使う（基礎控除110万＋特別控除2,500万）</option>
+          <option value="reki">暦年課税でそのまま受ける</option>
+        </select>
+      </div>
+      <div class="row"><label>贈与額</label><input type="number" id="giftAmt" value="500" step="100"></div>
+      <div class="row"><label>毎年の暦年贈与<span class="hint">親から自分へ。生前贈与加算の対象</span></label><input type="number" id="giftYearly" value="0" step="10"></div>
+      <div class="row"><label>贈与者の死亡までの年数<span class="hint">生前贈与加算の判定用</span></label><input type="number" id="giftYears" value="10" min="0"></div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="button" id="csv">年次明細をCSVで保存</button>
+      <button type="button" class="ghost" id="reset">初期値に戻す</button>
+      <button type="button" class="ghost" id="print">印刷・PDF</button>
+    </div>
+  </form>
+
+  <!-- ================= RESULTS ================= -->
+  <main>
+
+    <div class="panel">
+      <div class="verdict" id="verdict">
+        <div class="verdict-top">
+          <h2 id="vTitle">計算中</h2>
+          <div class="delta">
+            <div class="n" id="vDelta">—</div>
+            <div class="l">遺族に残る額の差</div>
+          </div>
+        </div>
+        <p class="verdict-note" id="vNote"></p>
+      </div>
+
+      <div class="bands">
+        <svg id="bandSvg" viewBox="0 0 960 250" role="img" aria-label="賃貸と持ち家の生涯支出の内訳帯"></svg>
+        <div class="band-legend" id="bandLegend"></div>
+      </div>
+
+      <div class="metrics" id="metrics"></div>
+    </div>
+
+    <section class="blk">
+      <div class="blk-head"><span class="kicker">Crossover</span><h3>累計支出と純資産の交差</h3>
+        <p>持ち家は初期が重く後半が軽い。どこで逆転するか。</p></div>
+      <div class="panel chart">
+        <svg id="lineSvg" viewBox="0 0 960 340" role="img" aria-label="累計支出と純資産の推移"></svg>
+      </div>
+    </section>
+
+    <section class="blk">
+      <div class="blk-head"><span class="kicker">Mortality</span><h3>何歳で亡くなるかで結論は変わる</h3>
+        <p>ローン返済中・完済直後・完済後の各時点で相続が起きたら。</p></div>
+      <div class="panel"><div class="tbl-scroll"><table id="scenTbl"></table></div></div>
+    </section>
+
+    <section class="blk">
+      <div class="blk-head"><span class="kicker">Estate</span><h3>相続税の計算過程</h3>
+        <p>課税価格から税額まで、両ケースを並べて表示します。</p></div>
+      <div class="panel"><table id="estateTbl"></table></div>
+    </section>
+
+    <section class="blk">
+      <div class="blk-head"><span class="kicker">Breakdown</span><h3>費目別の生涯合計</h3></div>
+      <div class="panel"><table id="breakTbl"></table></div>
+    </section>
+
+    <section class="blk">
+      <div class="blk-head"><span class="kicker">Notes</span><h3>この条件で効いている制度</h3>
+        <p>入力に応じて、判断を左右する論点だけを出します。</p></div>
+      <div class="panel notes" id="notes"></div>
+    </section>
+
+    <section class="blk">
+      <div class="blk-head"><span class="kicker">Ledger</span><h3>年次明細</h3></div>
+      <div class="panel"><div class="tbl-scroll"><table id="yearTbl"></table></div></div>
+    </section>
+
+    <details class="src">
+      <summary>根拠法令・出典と、この試算の限界　▾</summary>
+      <div class="src-body">
+        <p><b>反映している制度（2026年7月時点）</b></p>
+        <ul>
+          <li>住宅ローン控除（租税特別措置法41条／国税庁 No.1211-1）：控除率0.7%、控除期間13年。令和8年度税制改正で2030年12月31日入居分まで5年延長。2026年入居の新築借入限度額は長期優良・低炭素4,500万円、ZEH水準3,500万円、省エネ基準適合2,000万円、その他は対象外。子育て・若者夫婦世帯は上乗せ（5,000／4,500／3,000万円）。省エネ基準適合の新築は2028年入居以降は原則対象外。</li>
+          <li>住宅取得等資金の贈与の非課税（措法70条の2／国税庁 No.4508）：令和6年1月1日〜令和8年12月31日の贈与につき、省エネ等住宅1,000万円、それ以外500万円。</li>
+          <li>相続時精算課税（相続税法21条の9／国税庁 No.4103）：年110万円の基礎控除（令和6年1月1日以後の贈与）＋特別控除2,500万円、超過分は一律20%。基礎控除分は相続財産に加算しない。住宅取得等資金なら贈与者60歳未満でも選択可（措法70条の2の6、令和8年12月31日まで／No.4503）。</li>
+          <li>生前贈与加算（相続税法19条／国税庁 No.4161）：相続開始日が2026年12月31日以前は3年、2027年1月1日〜2030年12月31日は2024年1月1日以後の贈与すべて、2031年1月1日以後は7年。延長された4年分には合計100万円の控除。</li>
+          <li>相続税の基礎控除・税率（相続税法15条・16条／国税庁 No.4155）：3,000万円＋600万円×法定相続人の数。税率10%〜55%の8段階。配偶者の税額軽減は1億6,000万円または法定相続分まで（No.4158）。死亡保険金の非課税は500万円×法定相続人の数。</li>
+          <li>小規模宅地等の特例（措法69条の4／国税庁 No.4124）：特定居住用宅地等は330㎡まで評価額80%減。</li>
+          <li>団体信用生命保険（東京国税局文書回答／相続税法14条）：団信で返済が免除される住宅ローンは「確実と認められる債務」に当たらず、<b>相続税の債務控除ができません</b>。保険金は金融機関に直接支払われるため、みなし相続財産にもなりません。</li>
+          <li>不動産取得税（地方税法73条の14ほか）：土地・住宅は税率3%、宅地は課税標準1/2（いずれも令和9年3月31日まで）。新築住宅は建物評価額から1,200万円控除（認定長期優良は1,300万円）。</li>
+          <li>固定資産税・都市計画税（地方税法349条の3の2、附則15条の7）：住宅用地は200㎡以下部分が固定1/6・都計1/3、超過部分が固定1/3・都計2/3。新築住宅の建物は一定期間1/2減額（一般3年・中高層耐火5年、認定長期優良は5年・7年）。令和8年度改正で床面積要件が40〜240㎡に緩和され、適用期限が延長されています。</li>
+          <li>被相続人の居住用財産（空き家）の3,000万円特別控除（措法35条3項／国税庁 No.3306）：令和9年12月31日までの譲渡。相続人が3人以上の場合は2,000万円。</li>
+        </ul>
+        <p><b>この試算がやっていないこと</b></p>
+        <ul>
+          <li>自治体ごとの税率差・免税点・独自減免、路線価の個別事情（不整形地・角地・借地権割合）は反映していません。土地の相続税評価は地価×0.8、固定資産税評価は地価×0.7の概算です。</li>
+          <li>建物の評価は経年減価の近似モデルです。実際の固定資産評価額は再建築価格方式で決まります。</li>
+          <li>所得税・住民税の税率、扶養の状況、ふるさと納税等との控除枠の競合は「年間の税額控除枠」という単一の入力に丸めています。</li>
+          <li>二次相続、遺産分割協議の実際の取り分、遺留分、相次相続控除、事業用宅地の併用は考慮していません。</li>
+          <li>災害、離婚、転勤、住宅の建替え、賃貸の入居審査（高齢期の借りにくさ）といった非金銭的リスクは金額化していません。</li>
+        </ul>
+        <p style="border-top:1px solid var(--rule-soft);padding-top:12px">数値は概算です。実際の税額計算・適用可否は税理士、または所轄の税務署・都道府県税事務所・市区町村にご確認ください。制度は改正されます。</p>
+      </div>
+    </details>
+
+  </main>
 </div>
+
+<footer>
+  賃貸／持ち家 生涯コスト比較シミュレーター　—　入力値はブラウザ内でのみ計算され、どこにも送信されません。
+</footer>
+
+<script>
+"use strict";
+/* =========================================================================
+   単位規約：入力は「万円」。内部計算は「円」。表示は万円／億円。
+   ========================================================================= */
+const MAN = 10000;
+const $ = id => document.getElementById(id);
+const num = id => parseFloat($(id).value) || 0;
+const yenOf = id => num(id) * MAN;
+const chk = id => $(id).checked;
+const val = id => $(id).value;
+
+function fmtMan(v){
+  const m = v / MAN;
+  if (Math.abs(m) >= 10000) return (m/10000).toFixed(2) + '億';
+  return Math.round(m).toLocaleString('ja-JP');
+}
+function fmtY(v){
+  const m = v / MAN;
+  return (Math.abs(m) >= 10000) ? fmtMan(v) : fmtMan(v) + '万';
+}
+function sign(v){ return v > 0 ? '+' : ''; }
+
+/* ---------------- 税率テーブル ---------------- */
+const SOZOKU = [ // [上限, 税率, 控除額]
+  [10000000,0.10,0],[30000000,0.15,500000],[50000000,0.20,2000000],
+  [100000000,0.30,7000000],[200000000,0.40,17000000],[300000000,0.45,27000000],
+  [600000000,0.50,42000000],[Infinity,0.55,72000000]
+];
+const ZOYO_TOKUREI = [ // 直系尊属から18歳以上の子・孫へ
+  [2000000,0.10,0],[4000000,0.15,100000],[6000000,0.20,300000],
+  [10000000,0.30,900000],[15000000,0.40,1900000],[30000000,0.45,2650000],
+  [45000000,0.50,4150000],[Infinity,0.55,6400000]
+];
+function applyTable(base, tbl){
+  if (base <= 0) return 0;
+  for (const [cap, rate, ded] of tbl) if (base <= cap) return base*rate - ded;
+  return 0;
+}
+
+/* ---------------- 住宅ローン控除の借入限度額（2026年入居） ---------------- */
+function loanCredit(perf, kosodate, isUsed){
+  // 新築（買取再販を含まない一般ケース）
+  const NEW = { choki:[45000000,50000000], zeh:[35000000,45000000],
+                shoene:[20000000,30000000], other:[0,0] };
+  // 中古は令和8年度改正で拡充。ここは保守的な既定値（要・国交省資料での確認）
+  const USED = { choki:[30000000,35000000], zeh:[30000000,35000000],
+                 shoene:[20000000,20000000], other:[20000000,20000000] };
+  const t = isUsed ? USED[perf] : NEW[perf];
+  const limit = kosodate ? t[1] : t[0];
+  const years = (isUsed && perf === 'other') ? 10 : 13;
+  return { limit, years };
+}
+
+/* ---------------- 建物の評価と時価 ---------------- */
+function bldgTaxRatio(t, wood){ // 固定資産税評価額の経年減価（対 新築評価額）
+  const life = wood ? 27 : 60;   // 経年減価補正率表で下限0.2に達する年数
+  return Math.max(0.20, 1 - 0.80 * Math.min(1, t/life));
+}
+function bldgMarketRatio(t, wood){ // 市場価値の減価
+  const life = wood ? 25 : 47;
+  const floor = wood ? 0 : 0.10;   // 区分所有の建物部分は完全にはゼロにならない
+  return Math.max(floor, 1 - t/life);
+}
+
+/* ---------------- 諸費用の自動計算 ---------------- */
+function autoCosts(P){
+  // 新築分譲は売主直販が通例のため仲介手数料なし。中古のみ計上
+  const chukai = !P.isUsed ? 0
+    : (P.price > 4000000 ? (P.price * 0.03 + 60000) * 1.1 : P.price * 0.05 * 1.1);
+  const landTax = P.land * 0.7;                       // 土地 固定資産税評価額
+  const bldgTax = P.bldg * 0.6;                       // 建物 固定資産税評価額（新築時）
+  // 登録免許税
+  const toroku = (P.isUsed ? landTax*0.015 + bldgTax*0.003
+                           : landTax*0.015 + bldgTax*(P.perf==='choki'?0.001:0.0015))
+                 + P.loan*0.001;
+  // 不動産取得税
+  const bldgDed = (P.perf==='choki' ? 13000000 : 12000000);
+  const acqB = Math.max(0, bldgTax - bldgDed) * 0.03;
+  const landBase = landTax * 0.5;
+  const genGaku = Math.max(45000,
+      (landBase / Math.max(1,P.landArea)) * Math.min(200, P.floorArea*2) * 0.03);
+  const acqL = Math.max(0, landBase*0.03 - genGaku);
+  const inshi = 30000;
+  const shiho = 250000;
+  const jimu  = P.loan * 0.022;                       // 事務手数料 2.2% 型
+  return { chukai, toroku, acq: acqB+acqL, inshi, shiho, jimu,
+           total: chukai+toroku+acqB+acqL+inshi+shiho+jimu };
+}
+
+/* ---------------- ローン返済スケジュール（月次） ---------------- */
+function pmt(bal, r, n){ return r === 0 ? bal/n : bal*r/(1-Math.pow(1+r,-n)); }
+
+function schedule(P){
+  const n = P.term*12;
+  const yearEnd = [], yearPay = [], yearInt = [];
+  let bal = P.loan, unpaid = 0, pay = 0, curRate = P.rate0;
+
+  const rateAtYear = y => {
+    let r = P.rate0;
+    if (P.ltype === 'varUp')    r = Math.min(P.rateCap, P.rate0 + P.rateUp*y);
+    if (P.ltype === 'varShock') r = y >= P.shockY ? Math.min(P.rateCap, P.rate0 + P.rateUp*8) : P.rate0;
+    if (P.ltype === 'step')     r = y >= P.shockY ? Math.min(P.rateCap, P.rate0 + P.rateUp*4) : P.rate0;
+    return (r + P.danshinAdd) / 100 / 12;
+  };
+
+  if (P.ltype === 'reverse'){  // リ・バース60型：利息のみ、元金は死亡時に一括
+    for (let y = 0; y < P.years; y++){
+      const r = rateAtYear(y);
+      const interest = P.loan * r * 12;
+      yearPay.push(interest); yearInt.push(interest); yearEnd.push(P.loan);
+    }
+    return { yearEnd, yearPay, yearInt, unpaid:0, finalBal:P.loan, reverse:true };
+  }
+
+  curRate = rateAtYear(0);
+  pay = pmt(bal, curRate, n);
+  let payFixedUntil = 60;
+
+  for (let m = 0; m < n; m++){
+    const y = Math.floor(m/12);
+    if (m > 0 && m % 12 === 0){
+      const nr = rateAtYear(y);
+      if (nr !== curRate){
+        curRate = nr;
+        if (!P.rule5){
+          pay = pmt(bal + unpaid, curRate, n - m);
+        }
+      }
+    }
+    if (P.rule5 && m > 0 && m % 60 === 0){
+      const ideal = pmt(bal + unpaid, curRate, n - m);
+      pay = Math.min(ideal, pay * 1.25);
+      payFixedUntil = m + 60;
+    }
+    let interest = bal * curRate;
+    let principal = pay - interest;
+    if (principal < 0){ unpaid += -principal; principal = 0; }
+    if (principal > bal) principal = bal;
+    bal -= principal;
+    if (yearPay[y] === undefined){ yearPay[y]=0; yearInt[y]=0; }
+    yearPay[y] += pay; yearInt[y] += interest;
+    if (m % 12 === 11 || m === n-1) yearEnd[y] = bal;
+    if (bal <= 0 && unpaid <= 0) break;
+  }
+  // 期間満了時に未払利息が残る場合は最終年に一括計上
+  if (unpaid > 0){ const last = yearPay.length-1; yearPay[last] += unpaid + bal; }
+  for (let y = 0; y < P.years; y++){
+    if (yearPay[y] === undefined){ yearPay[y]=0; yearInt[y]=0; }
+    if (yearEnd[y] === undefined) yearEnd[y] = (y < P.term) ? bal : 0;
+  }
+  return { yearEnd, yearPay, yearInt, unpaid, finalBal:0, reverse:false };
+}
+
+/* ---------------- 相続税 ---------------- */
+function inheritance(taxable, spouse, kids, spShare){
+  const heirs = Math.max(1, (spouse?1:0) + kids);
+  const kiso = 30000000 + 6000000*heirs;
+  const net = Math.max(0, taxable - kiso);
+  if (net === 0) return { heirs, kiso, net, gross:0, spouseRelief:0, tax:0 };
+
+  let shares = [];
+  if (spouse && kids > 0){ shares.push(0.5); for(let i=0;i<kids;i++) shares.push(0.5/kids); }
+  else if (spouse){ shares.push(1); }
+  else if (kids > 0){ for(let i=0;i<kids;i++) shares.push(1/kids); }
+  else shares.push(1);
+
+  const gross = shares.reduce((s,sh) => s + applyTable(net*sh, SOZOKU), 0);
+
+  let relief = 0;
+  if (spouse){
+    const legal = (kids > 0) ? 0.5 : 1;
+    const take = spShare === 'all' ? 1 : spShare === 'zero' ? 0 : legal;
+    // 1億6,000万円または法定相続分相当額まで非課税
+    const capRatio = Math.min(1, Math.max(legal, 160000000 / Math.max(1, taxable)));
+    relief = gross * Math.min(take, capRatio);
+  }
+  return { heirs, kiso, net, gross, spouseRelief:relief, tax: Math.max(0, gross - relief) };
+}
+
+/* 生前贈与加算：相続開始年（西暦）に応じた加算年数 */
+function addBackYears(deathYear){
+  if (deathYear <= 2026) return 3;
+  if (deathYear <= 2030) return Math.min(7, deathYear - 2024 + 1);
+  return 7;
+}
+
+/* =========================================================================
+   メイン計算
+   ========================================================================= */
+function simulate(){
+  const age0 = num('age0'), ageD = num('ageDeath');
+  const Y = Math.max(1, ageD - age0);
+  const r = num('rInv')/100, g = num('infl')/100, lg = num('landG')/100;
+  const A0 = yenOf('assets0');
+  const ptype = val('ptype');
+  const wood = (ptype === 'house' || ptype === 'usedhouse');
+  const isUsed = (ptype === 'used' || ptype === 'usedhouse');
+  const mansion = (ptype === 'mansion' || ptype === 'used');
+  const perf = val('perf'), kosodate = chk('kosodate');
+  const deathYear = 2026 + Y;
+
+  /* ---------- 贈与 ---------- */
+  const giftMode = val('giftMode'), giftAmt = yenOf('giftAmt');
+  const giftNonTaxCap = (perf==='choki'||perf==='zeh'||perf==='shoene') ? 10000000 : 5000000;
+  let giftTax = 0, giftToEstate = 0, giftCash = 0;
+  if (giftMode === 'nonTax'){
+    giftCash = giftAmt;
+    const over = Math.max(0, giftAmt - giftNonTaxCap);
+    giftTax = applyTable(Math.max(0, over - 1100000), ZOYO_TOKUREI);
+  } else if (giftMode === 'seisan'){
+    giftCash = giftAmt;
+    const afterKiso = Math.max(0, giftAmt - 1100000);
+    giftTax = Math.max(0, afterKiso - 25000000) * 0.20;
+    giftToEstate = afterKiso;                      // 相続時に加算（基礎控除分は加算不要）
+  } else if (giftMode === 'reki'){
+    giftCash = giftAmt;
+    giftTax = applyTable(Math.max(0, giftAmt - 1100000), ZOYO_TOKUREI);
+  }
+  const yearlyGift = yenOf('giftYearly');
+  const giftYears = num('giftYears');
+  const addYears = addBackYears(deathYear);
+  const addBackN = Math.min(giftYears, addYears);
+  const addBack = Math.max(0, yearlyGift*addBackN - (addBackN > 3 ? 1000000 : 0));
+  const yearlyGiftTax = yearlyGift > 1100000
+      ? applyTable(yearlyGift - 1100000, ZOYO_TOKUREI) * giftYears : 0;
+
+  /* ---------- 購入ケース ---------- */
+  const land0 = yenOf('land'), bldg0 = yenOf('bldg');
+  const price = land0 + bldg0;
+  const down = yenOf('down');
+  const loan = Math.max(0, price - down - giftCash);
+  const P = { price, land:land0, bldg:bldg0, loan, isUsed, perf,
+              landArea:num('landArea'), floorArea:num('floorArea'),
+              term:num('term'), years:Y, rate0:num('rate0'), rateUp:num('rateUp'),
+              rateCap:num('rateCap'), shockY:num('shockY'), ltype:val('ltype'),
+              rule5:chk('rule5'), danshinAdd:num('danshinAdd') };
+  const costs = autoCosts(P);
+  const shohi = yenOf('shohi') > 0 ? yenOf('shohi') : costs.total;
+  const sch = schedule(P);
+  const { limit:credLimit, years:credYears } = loanCredit(perf, kosodate, isUsed);
+  const taxRoom = yenOf('taxRoom');
+
+  const ageB0 = num('ageBldg');
+  const kanri0 = yenOf('kanri')*12, kanriUp = num('kanriUp')/100;
+  const repair0 = yenOf('repair'), reform = yenOf('reform'), reformY = num('reformY');
+  const ownIns = yenOf('ownIns');
+  const kRate = num('koteiRate')/100, tRate = num('toshiRate')/100;
+
+  /* ---------- 賃貸ケース ---------- */
+  const rent0 = yenOf('rent')*12, kanriR = yenOf('rentKanri')*12, park = yenOf('rentPark')*12;
+  const reikinM = num('reikin'), shikiM = num('shikikin'), koshinM = num('koshin');
+  const koshinY = Math.max(1,num('koshinY')), moveY = num('moveY');
+  const moveCost = yenOf('moveCost'), rentIns = yenOf('rentIns'), oldK = num('oldRentK');
+
+  /* ---------- 年次ループ ---------- */
+  const rows = [];
+  let aRent = A0 + giftCash - giftTax - yearlyGiftTax;
+  let aOwn  = A0 + giftCash - giftTax - yearlyGiftTax;
+  let cumR = 0, cumO = 0, crossAge = null, sumBudget = 0;
+  const sumR = { rent:0, koshin:0, move:0, ins:0, init:0 };
+  const sumO = { init:0, loan:0, interest:0, tax:0, kanri:0, repair:0, ins:0, credit:0 };
+
+  for (let t = 0; t < Y; t++){
+    const age = age0 + t;
+    const infl = Math.pow(1+g, t);
+    const oldFactor = age >= 70 ? oldK : 1;
+
+    /* --- 賃貸 --- */
+    const rentM = (rent0/12) * infl * oldFactor;
+    let cR = (rent0 + kanriR + park) * infl * oldFactor + rentIns*infl;
+    sumR.rent += (rent0 + kanriR + park) * infl * oldFactor;
+    sumR.ins  += rentIns*infl;
+    if (t === 0){
+      const init = rentM*(reikinM + shikiM + 1*1.1);  // 礼金＋敷金＋仲介1か月
+      cR += init; sumR.init += init;
+    } else if (t % koshinY === 0){
+      const k = rentM*koshinM; cR += k; sumR.koshin += k;
+    }
+    if (moveY > 0 && t > 0 && t % moveY === 0){
+      const mv = moveCost*infl + rentM*(reikinM + 1.1);
+      cR += mv; sumR.move += mv;
+    }
+
+    /* --- 持ち家 --- */
+    let cO = 0;
+    if (t === 0){ cO += down + shohi; sumO.init += down + shohi; }
+    const pay = sch.yearPay[t] || 0, interest = sch.yearInt[t] || 0;
+    cO += pay; sumO.loan += pay - interest; sumO.interest += interest;
+
+    // 固定資産税・都市計画税
+    const landVal = land0 * Math.pow(1+lg, t);
+    const landTaxVal = landVal * 0.7;
+    const bAge = ageB0 + t;
+    const bldgTaxVal = bldg0 * 0.6 * bldgTaxRatio(bAge, wood);
+    const smallArea = Math.min(200, P.landArea), bigArea = Math.max(0, P.landArea-200);
+    const per = P.landArea > 0 ? landTaxVal/P.landArea : 0;
+    const landKotei = (per*smallArea)/6 + (per*bigArea)/3;
+    const landToshi = (per*smallArea)/3 + (per*bigArea)*2/3;
+    let bldgKotei = bldgTaxVal * kRate;
+    const genPeriod = (perf === 'choki') ? (mansion?7:5) : (mansion?5:3);
+    const areaOK = P.floorArea >= 40 && P.floorArea <= 240;
+    if (!isUsed && areaOK && t < genPeriod){
+      const capped = Math.min(1, 120/Math.max(1,P.floorArea));
+      bldgKotei -= bldgTaxVal*kRate*capped*0.5;
+    }
+    const kotei = landKotei*kRate + bldgKotei + (landToshi + bldgTaxVal)*tRate;
+    cO += kotei; sumO.tax += kotei;
+
+    // 維持費
+    if (mansion){
+      const k = kanri0*Math.min(3.0, Math.pow(1+kanriUp,t));  // 段階増額は3倍で頭打ち
+      cO += k; sumO.kanri += k;
+    }
+    else { const rp = repair0*infl; cO += rp; sumO.repair += rp; }
+    if (reformY > 0 && t > 0 && t % reformY === 0){ cO += reform*infl; sumO.repair += reform*infl; }
+    cO += ownIns*infl; sumO.ins += ownIns*infl;
+
+    // 住宅ローン控除
+    let credit = 0;
+    if (t < credYears && credLimit > 0 && !sch.reverse){
+      credit = Math.min(sch.yearEnd[t] || 0, credLimit) * 0.007;
+      credit = Math.min(credit, taxRoom);
+      cO -= credit; sumO.credit += credit;
+    }
+
+    /* --- 差額投資法 ---
+       両ケースに同額の「住居予算」を配分し、実際の支出との差額を運用に回す。
+       予算はその年に高いほうの支出額。安く済んだ側だけが差額を積み上げる。 */
+    const budget = Math.max(cR, cO);
+    sumBudget += budget;
+    cumR += cR; cumO += cO;
+    aRent = (aRent + budget - cR) * (1+r);
+    aOwn  = (aOwn  + budget - cO) * (1+r);
+
+    if (crossAge === null && t > 0 && cumO <= cumR) crossAge = age;
+
+    rows.push({ age, cR, cO, cumR, cumO, aRent, aOwn, budget,
+                bal: sch.yearEnd[t] || 0, kotei, credit, pay, interest,
+                landVal, bldgTaxVal });
+  }
+
+  /* ---------- 死亡時の財産 ---------- */
+  const T = Y;
+  const landEnd = land0 * Math.pow(1+lg, T);
+  const bldgMkt = bldg0 * bldgMarketRatio(ageB0+T, wood);
+  const bldgTaxEnd = bldg0 * 0.6 * bldgTaxRatio(ageB0+T, wood);
+  const balEnd = sch.reverse ? P.loan : (rows.length ? rows[rows.length-1].bal : 0);
+  const danshin = chk('danshin');
+  const other = yenOf('otherEstate'), lifeI = yenOf('lifeIns');
+
+  const spouse = val('spouse') === '1', kids = num('kids'), spShare = val('spShare');
+  const heirs = Math.max(1, (spouse?1:0)+kids);
+  const insTaxFree = Math.min(lifeI, 5000000*heirs);
+  const insTaxable = Math.max(0, lifeI - insTaxFree);
+
+  // --- 相続税評価 ---
+  const landSozoku = landEnd * 0.8;
+  let landAfter = landSozoku;
+  if (chk('shokibo')){
+    const covered = Math.min(330, P.landArea);
+    const ratio = P.landArea > 0 ? covered/P.landArea : 1;
+    landAfter = landSozoku * (1 - 0.8*ratio);
+  }
+  // 団信付きは債務控除できない。ただしリ・バース60型は団信の対象外なので必ず控除する
+  const debtDeduct = (danshin && P.ltype !== 'reverse') ? 0 : balEnd;
+
+  const ownTaxable = Math.max(0, aOwn) + landAfter + bldgTaxEnd + other + insTaxable
+                     + giftToEstate + addBack - debtDeduct;
+
+  let rentLand = 0;
+  if (chk('ienaki')){
+    const il = yenOf('ienakiLand');
+    rentLand = il * 0.8 * 0.2;   // 家なき子で330㎡以内・80%減の想定
+  }
+  const rentTaxable = Math.max(0, aRent) + rentLand + other + insTaxable
+                      + giftToEstate + addBack;
+
+  const iOwn  = inheritance(ownTaxable,  spouse, kids, spShare);
+  const iRent = inheritance(rentTaxable, spouse, kids, spShare);
+
+  // --- 遺族の手取り（時価ベース） ---
+  const ownNetWorth  = aOwn + landEnd + bldgMkt - debtDeduct + lifeI + other;
+  const rentNetWorth = aRent + (chk('ienaki') ? yenOf('ienakiLand') : 0) + lifeI + other;
+  const ownHeir  = ownNetWorth  - iOwn.tax;
+  const rentHeir = rentNetWorth - iRent.tax;
+  const heirGap  = ownHeir - rentHeir;   // 正なら持ち家が多く残る
+
+  return { Y, age0, ageD, rows, cumR, cumO, crossAge, sumR, sumO, costs, shohi, sumBudget, heirGap,
+           sch, credLimit, credYears, loan, balEnd, danshin, P, wood, mansion, isUsed,
+           landEnd, bldgMkt, bldgTaxEnd, landSozoku, landAfter, debtDeduct,
+           ownTaxable, rentTaxable, iOwn, iRent, ownNetWorth, rentNetWorth,
+           ownHeir, rentHeir, aOwn, aRent, heirs,
+           giftMode, giftCash, giftTax, giftToEstate, addBack, addYears, deathYear,
+           insTaxFree, insTaxable, lifeI, other, giftNonTaxCap, perf, kosodate };
+}
+
+/* =========================================================================
+   描画
+   ========================================================================= */
+const SEG_R = [
+  ['rent','家賃・管理費','#17635C'],
+  ['koshin','更新料','#3E8A82'],
+  ['move','住み替え費用','#79ADA7'],
+  ['ins','火災保険','#A9C9C5'],
+  ['init','初期費用（礼敷・仲介）','#CBDFDC']
+];
+const SEG_O = [
+  ['init','頭金・諸費用','#8E2F3A'],
+  ['interest','ローン利息','#AB4B54'],
+  ['loan','ローン元金','#C67078'],
+  ['tax','固定資産税・都市計画税','#D89AA0'],
+  ['kanri','管理費・修繕積立金','#C9A24A'],
+  ['repair','修繕・リフォーム','#DCBE84'],
+  ['ins','火災・地震保険','#E6D5B4']
+];
+
+function render(){
+  const S = simulate();
+  $('ageDeathV').textContent = S.ageD;
+  $('yearsV').textContent = S.Y;
+
+  /* --- 判定 --- */
+  const rentWins = S.heirGap < 0;
+  const diff = Math.abs(S.heirGap);
+  const v = $('verdict');
+  v.className = 'verdict ' + (rentWins ? 'win-rent' : 'win-own');
+  $('vTitle').innerHTML = `${S.ageD}歳で相続が起きるなら、<em>${rentWins?'賃貸':'持ち家'}</em>が有利`;
+  $('vDelta').textContent = fmtY(diff);
+  $('vDelta').className = 'n ' + (rentWins ? 'v-rent':'v-own');
+
+  const crossTxt = S.crossAge
+    ? `名目の累計支出は<b>${S.crossAge}歳</b>で持ち家が賃貸を下回ります。`
+    : `名目の累計支出では、生涯を通じて持ち家が賃貸を上回り続けます。ただし持ち家の支出には元金返済＝資産形成が混ざっているため、支出額だけでは勝敗は決まりません。`;
+  $('vNote').innerHTML =
+    `${crossTxt} 判定は<b>同じ住居予算を使ったときに、相続税を払った後で遺族の手元にいくら残るか</b>で行っています。` +
+    `毎年の予算は両ケースの高いほうに揃え、安く済んだ側は差額を年${num('rInv').toFixed(1)}%で運用する前提です（差額投資法）。` +
+    `遺族の手取りは 賃貸 ${fmtY(S.rentHeir)}／持ち家 ${fmtY(S.ownHeir)}。`;
+
+  /* --- メトリクス --- */
+  $('metrics').innerHTML = [
+    ['生涯住居費（名目）', fmtY(S.cumR), fmtY(S.cumO)],
+    ['死亡時の純資産（時価）', fmtY(S.rentNetWorth), fmtY(S.ownNetWorth)],
+    ['相続税', fmtY(S.iRent.tax), fmtY(S.iOwn.tax)],
+    ['遺族の手取り', fmtY(S.rentHeir), fmtY(S.ownHeir)]
+  ].map(([k, a, b]) => `
+    <div class="metric">
+      <div class="k">${k}</div>
+      <div class="v v-rent">${a}</div><div class="d">賃貸</div>
+      <div class="v v-own" style="margin-top:8px">${b}</div><div class="d">持ち家</div>
+    </div>`).join('');
+
+  drawBands(S);
+  drawLines(S);
+  drawScenarios(S);
+  drawEstate(S);
+  drawBreak(S);
+  drawNotes(S);
+  drawYears(S);
+  window.__S = S;
+  window.__calc = { simulate, inheritance, applyTable, schedule, autoCosts, SOZOKU, ZOYO_TOKUREI };
+}
+
+/* ---------------- 生涯帯 ---------------- */
+function drawBands(S){
+  const W = 960, PADL = 96, PADR = 24, BW = W - PADL - PADR;
+  const max = Math.max(S.cumR, S.cumO, 1);
+  const bars = [
+    { label:'賃貸', total:S.cumR, segs:SEG_R, data:S.sumR, y:44, color:'#17635C' },
+    { label:'持ち家', total:S.cumO, segs:SEG_O, data:S.sumO, y:144, color:'#8E2F3A' }
+  ];
+  let out = `<text x="0" y="18" font-family="IBM Plex Mono" font-size="11" fill="#7C868B" letter-spacing="2">生涯支出の内訳（名目・${S.age0}→${S.ageD}歳）</text>`;
+
+  bars.forEach(b => {
+    let x = PADL;
+    out += `<text x="${PADL-12}" y="${b.y+26}" text-anchor="end" font-family="Shippori Mincho B1" font-size="17" font-weight="800" fill="${b.color}">${b.label}</text>`;
+    out += `<text x="${PADL-12}" y="${b.y+46}" text-anchor="end" font-family="IBM Plex Mono" font-size="12" fill="#4C565B">${fmtY(b.total)}</text>`;
+    b.segs.forEach(([key,name,col]) => {
+      const val = b.data[key] || 0;
+      if (val <= 0) return;
+      const w = Math.max(0.5, val/max*BW);
+      out += `<rect class="bar-seg" x="${x.toFixed(1)}" y="${b.y}" width="${w.toFixed(1)}" height="52" fill="${col}"><title>${name}　${fmtY(val)}</title></rect>`;
+      if (w > 56) out += `<text x="${(x+w/2).toFixed(1)}" y="${b.y+31}" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#fff" opacity=".95">${fmtMan(val)}</text>`;
+      x += w;
+    });
+    if (b.data.credit) {
+      const w = b.data.credit/max*BW;
+      out += `<rect x="${x.toFixed(1)}" y="${b.y+16}" width="${Math.max(1,w).toFixed(1)}" height="20" fill="none" stroke="#A8862F" stroke-dasharray="3 2"/>`;
+      out += `<text x="${(x+w+6).toFixed(1)}" y="${b.y+31}" font-family="IBM Plex Mono" font-size="10.5" fill="#A8862F">住宅ローン控除 −${fmtY(b.data.credit)}</text>`;
+    }
+  });
+
+  // 目盛
+  for (let i = 0; i <= 4; i++){
+    const gx = PADL + BW*i/4;
+    out += `<line x1="${gx}" y1="36" x2="${gx}" y2="212" stroke="#C7CFCC" stroke-width="1" opacity=".6"/>`;
+    out += `<text x="${gx}" y="228" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#7C868B">${fmtY(max*i/4)}</text>`;
+  }
+  $('bandSvg').innerHTML = out;
+
+  const legend = [...SEG_R.map(s=>s), ...SEG_O.map(s=>s)]
+    .filter(([k]) => (S.sumR[k]||0) > 0 || (S.sumO[k]||0) > 0)
+    .map(([k,n,c]) => `<span><i style="background:${c}"></i>${n}</span>`);
+  $('bandLegend').innerHTML = [...new Set(legend)].join('');
+}
+
+/* ---------------- 折れ線 ---------------- */
+function drawLines(S){
+  const W = 960, H = 340, L = 78, R = 20, T = 22, B = 42;
+  const iw = W-L-R, ih = H-T-B;
+  const xs = S.rows.map(r => r.age);
+  const vals = S.rows.flatMap(r => [r.cumR, r.cumO, r.aRent, r.aOwn]);
+  const vmax = Math.max(...vals, 1), vmin = Math.min(...vals, 0);
+  const X = a => L + (a - S.age0)/Math.max(1,(S.ageD - S.age0)) * iw;
+  const Yv = v => T + ih - (v - vmin)/Math.max(1,(vmax - vmin)) * ih;
+  const path = key => 'M' + S.rows.map(r => `${X(r.age).toFixed(1)},${Yv(r[key]).toFixed(1)}`).join('L');
+
+  let out = '';
+  for (let i = 0; i <= 4; i++){
+    const gy = T + ih*i/4, gv = vmax - (vmax-vmin)*i/4;
+    out += `<line x1="${L}" y1="${gy}" x2="${W-R}" y2="${gy}" stroke="#DCE2DF"/>`;
+    out += `<text x="${L-10}" y="${gy+4}" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#7C868B">${fmtY(gv)}</text>`;
+  }
+  const step = S.Y > 40 ? 10 : 5;
+  for (let a = S.age0; a <= S.ageD; a += step){
+    out += `<line x1="${X(a)}" y1="${T}" x2="${X(a)}" y2="${T+ih}" stroke="#DCE2DF" opacity=".55"/>`;
+    out += `<text x="${X(a)}" y="${T+ih+18}" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#7C868B">${a}</text>`;
+  }
+  if (vmin < 0) out += `<line x1="${L}" y1="${Yv(0)}" x2="${W-R}" y2="${Yv(0)}" stroke="#14191C" stroke-width="1"/>`;
+
+  out += `<path class="line-path" d="${path('cumR')}" fill="none" stroke="#17635C" stroke-width="2.4"/>`;
+  out += `<path class="line-path" d="${path('cumO')}" fill="none" stroke="#8E2F3A" stroke-width="2.4"/>`;
+  out += `<path class="line-path" d="${path('aRent')}" fill="none" stroke="#17635C" stroke-width="1.4" stroke-dasharray="5 3" opacity=".75"/>`;
+  out += `<path class="line-path" d="${path('aOwn')}" fill="none" stroke="#8E2F3A" stroke-width="1.4" stroke-dasharray="5 3" opacity=".75"/>`;
+
+  if (S.crossAge){
+    const cx = X(S.crossAge);
+    out += `<line x1="${cx}" y1="${T}" x2="${cx}" y2="${T+ih}" stroke="#A8862F" stroke-width="1.6" stroke-dasharray="2 3"/>`;
+    out += `<circle cx="${cx}" cy="${T-4}" r="3.5" fill="#A8862F"/>`;
+    out += `<text x="${cx+7}" y="${T+12}" font-family="IBM Plex Mono" font-size="11" fill="#A8862F">損益分岐 ${S.crossAge}歳</text>`;
+  }
+  // ローン完済
+  const done = S.age0 + Math.min(S.P.term, S.Y);
+  if (done <= S.ageD && !S.sch.reverse){
+    out += `<line x1="${X(done)}" y1="${T}" x2="${X(done)}" y2="${T+ih}" stroke="#8E2F3A" stroke-width="1" opacity=".45"/>`;
+    out += `<text x="${X(done)+6}" y="${T+ih-8}" font-family="IBM Plex Mono" font-size="10.5" fill="#8E2F3A" opacity=".8">完済 ${done}歳</text>`;
+  }
+  out += `<text x="${L}" y="${T-8}" font-family="IBM Plex Mono" font-size="10.5" fill="#4C565B">実線＝名目の累計支出　破線＝金融資産（共通の住居予算との差額を年${(num('rInv')).toFixed(1)}%で運用）</text>`;
+  $('lineSvg').innerHTML = out;
+}
+
+/* ---------------- 死亡年シナリオ ---------------- */
+function drawScenarios(S){
+  const base = num('ageDeath');
+  const term = num('term'), age0 = num('age0');
+  const cands = [...new Set([
+    age0+5, age0+Math.max(1,Math.floor(term/2)), age0+term-1, age0+term+1,
+    Math.max(age0+2,75), 85, 95
+  ])].filter(a => a > age0 && a <= 105).sort((a,b)=>a-b);
+
+  let out = `<thead><tr><th>死亡年齢</th><th>状況</th>
+    <th>賃貸 遺族手取り</th><th>持ち家 遺族手取り</th>
+    <th>賃貸 相続税</th><th>持ち家 相続税</th><th>判定</th></tr></thead><tbody>`;
+  const keep = $('ageDeath').value;
+  cands.forEach(a => {
+    $('ageDeath').value = a;
+    const s = simulate();
+    const win = s.heirGap < 0 ? '賃貸' : '持ち家';
+    const cls = win === '賃貸' ? 'pos' : 'neg';
+    const t = a - age0;
+    const state = s.sch.reverse ? '元金は死亡時に清算'
+      : t < term ? `返済中・残債 ${fmtY(s.balEnd)}` : '完済後';
+    out += `<tr${a==base?' style="background:#F1F3F2;font-weight:600"':''}>
+      <td class="n">${a}歳</td><td>${state}</td>
+      <td class="n">${fmtY(s.rentHeir)}</td><td class="n">${fmtY(s.ownHeir)}</td>
+      <td class="n">${fmtY(s.iRent.tax)}</td><td class="n">${fmtY(s.iOwn.tax)}</td>
+      <td class="${cls}">${win} ${fmtY(Math.abs(s.heirGap))}有利</td></tr>`;
+  });
+  $('ageDeath').value = keep;
+  $('scenTbl').innerHTML = out + '</tbody>';
+}
+
+/* ---------------- 相続税明細 ---------------- */
+function drawEstate(S){
+  const R = (k, a, b, sub) => `<tr${sub?' class="sub"':''}><td>${k}</td><td class="n">${a}</td><td class="n">${b}</td></tr>`;
+  let out = `<thead><tr><th>相続税の計算（${S.ageD}歳で相続開始・${S.deathYear}年）</th><th>賃貸ケース</th><th>持ち家ケース</th></tr></thead><tbody>`;
+  out += R('金融資産', fmtY(S.aRent), fmtY(S.aOwn));
+  out += R('土地の相続税評価額', S.rentTaxable && chk('ienaki') ? fmtY(yenOf('ienakiLand')*0.8) : '—', fmtY(S.landSozoku));
+  out += R('　小規模宅地等の特例による減額', chk('ienaki') ? '△'+fmtY(yenOf('ienakiLand')*0.8*0.8) : '—',
+           chk('shokibo') ? '△'+fmtY(S.landSozoku - S.landAfter) : '—', true);
+  out += R('建物の相続税評価額', '—', fmtY(S.bldgTaxEnd));
+  out += R('死亡保険金（非課税枠 '+fmtY(S.insTaxFree)+' 控除後）', fmtY(S.insTaxable), fmtY(S.insTaxable));
+  out += R('その他の財産', fmtY(S.other), fmtY(S.other));
+  if (S.giftToEstate) out += R('相続時精算課税による加算', fmtY(S.giftToEstate), fmtY(S.giftToEstate));
+  if (S.addBack) out += R(`生前贈与加算（${S.addYears}年分・${S.deathYear}年基準）`, fmtY(S.addBack), fmtY(S.addBack));
+  out += R('住宅ローン残債の債務控除', '—', S.debtDeduct ? '△'+fmtY(S.debtDeduct) : '0（団信により控除不可）');
+  out += `<tr class="total"><td>課税価格の合計</td><td class="n">${fmtY(S.rentTaxable)}</td><td class="n">${fmtY(S.ownTaxable)}</td></tr>`;
+  out += R(`基礎控除（3,000万＋600万×${S.heirs}人）`, '△'+fmtY(S.iRent.kiso), '△'+fmtY(S.iOwn.kiso));
+  out += R('課税遺産総額', fmtY(S.iRent.net), fmtY(S.iOwn.net));
+  out += R('相続税の総額（法定相続分で按分・速算表）', fmtY(S.iRent.gross), fmtY(S.iOwn.gross));
+  out += R('配偶者の税額軽減', S.iRent.spouseRelief?'△'+fmtY(S.iRent.spouseRelief):'—',
+                              S.iOwn.spouseRelief?'△'+fmtY(S.iOwn.spouseRelief):'—');
+  out += `<tr class="total"><td>納付する相続税</td><td class="n">${fmtY(S.iRent.tax)}</td><td class="n">${fmtY(S.iOwn.tax)}</td></tr>`;
+  $('estateTbl').innerHTML = out + '</tbody>';
+}
+
+/* ---------------- 費目別 ---------------- */
+function drawBreak(S){
+  let out = `<thead><tr><th>費目</th><th>賃貸</th><th>持ち家</th></tr></thead><tbody>`;
+  const rowsR = { rent:'家賃・管理費・駐車場', koshin:'更新料', move:'住み替え費用', ins:'火災保険', init:'初期費用（礼金・敷金・仲介）' };
+  const rowsO = { init:'頭金・諸費用', interest:'ローン利息', loan:'ローン元金返済', tax:'固定資産税・都市計画税',
+                  kanri:'管理費・修繕積立金', repair:'修繕・リフォーム', ins:'火災・地震保険' };
+  const keys = new Set([...Object.keys(rowsR), ...Object.keys(rowsO)]);
+  const order = ['init','rent','loan','interest','tax','kanri','repair','koshin','move','ins'];
+  order.filter(k => keys.has(k)).forEach(k => {
+    const a = S.sumR[k], b = S.sumO[k];
+    const name = (rowsR[k] && rowsO[k]) ? `${rowsR[k]} ／ ${rowsO[k]}` : (rowsR[k] || rowsO[k]);
+    if (!a && !b) return;
+    out += `<tr><td>${name}</td><td class="n">${a?fmtY(a):'—'}</td><td class="n">${b?fmtY(b):'—'}</td></tr>`;
+  });
+  out += `<tr><td>住宅ローン控除</td><td class="n">—</td><td class="n">△${fmtY(S.sumO.credit)}</td></tr>`;
+  out += `<tr class="total"><td>生涯合計（名目）</td><td class="n">${fmtY(S.cumR)}</td><td class="n">${fmtY(S.cumO)}</td></tr>`;
+  $('breakTbl').innerHTML = out + '</tbody>';
+}
+
+/* ---------------- 制度メモ ---------------- */
+function drawNotes(S){
+  const N = [];
+  const push = (tag, cls, html) => N.push({tag, cls, html});
+
+  if (S.danshin && S.balEnd > 0){
+    push('団信','t-risk', `<b>団信付きのローン残債 ${fmtY(S.balEnd)} は、相続税の債務控除ができません。</b>
+      死亡により保険金で完済されることが確実な債務は「確実と認められる債務」に当たらないためです（相続税法14条、東京国税局文書回答）。
+      保険金は金融機関へ直接支払われるので、みなし相続財産にもなりません。
+      結果として遺族は無借金の家を受け取りますが、その家の評価額はまるごと課税価格に乗ります。`);
+  }
+  if (!S.danshin && S.balEnd > 0){
+    push('団信なし','t-own', `団信に入らない場合、残債 ${fmtY(S.balEnd)} は債務控除の対象になり課税価格を圧縮します。
+      ただし返済義務そのものは相続人が承継します。相続税は軽くなっても、返済原資は遺族が用意することになります。`);
+  }
+  if (chk('shokibo') && S.landSozoku > 0){
+    push('措法69の4','t-tax', `小規模宅地等の特例で土地評価が ${fmtY(S.landSozoku)} → ${fmtY(S.landAfter)} に下がっています（330㎡まで80%減）。
+      適用できるのは配偶者、同居親族、または家なき子に限られます。
+      <b>別居の子が持ち家を持っていると使えません</b>。ここが外れると相続税は大きく跳ねます。`);
+  }
+  if (chk('ienaki')){
+    push('家なき子','t-rent', `賃貸を続けていることが、親の実家を相続するときの小規模宅地等の特例（いわゆる家なき子）の要件につながる場合があります。
+      相続開始前3年以内に自己・配偶者・三親等内の親族・特別の関係がある法人の所有する家屋に居住していないこと等が条件です。
+      <b>自分が家を買った時点でこの道は閉じます</b>。実家の相続予定がある人にとっては、持ち家のコストに数百万円単位の見えない上乗せが乗ります。`);
+  }
+  if (S.giftMode === 'nonTax'){
+    push('措法70の2','t-tax', `住宅取得等資金の非課税は ${fmtY(S.giftNonTaxCap)} まで。適用期限は<b>2026年12月31日の贈与まで</b>です（国税庁 No.4508）。
+      翌年3月15日までに取得・居住する等の要件があり、贈与を受ける側の合計所得金額2,000万円以下も必要です。この枠は相続財産にも加算されません。`);
+  }
+  if (S.giftMode === 'seisan'){
+    push('相続時精算課税','t-tax', `年110万円の基礎控除（令和6年1月1日以後の贈与）＋特別控除2,500万円。
+      基礎控除分は相続財産に加算されないため、贈与額のうち ${fmtY(S.giftToEstate)} だけが相続時に戻されます。
+      <b>一度選ぶと暦年課税には戻れません</b>。住宅取得等資金なら贈与者が60歳未満でも選択できます（令和8年12月31日まで）。`);
+  }
+  if (S.addBack > 0){
+    push('生前贈与加算','t-tax', `${S.deathYear}年に相続が開始する前提だと、加算対象期間は<b>${S.addYears}年</b>です。
+      2026年12月31日以前の相続は3年、2027年〜2030年は2024年1月1日以後の贈与すべて、2031年以後は7年。
+      延長された4年分には合計100万円の控除があります（国税庁 No.4161）。今回の加算額は ${fmtY(S.addBack)}。`);
+  }
+  if (S.credLimit === 0){
+    push('住宅ローン控除','t-risk', `選択した性能区分では、2026年入居の新築は住宅ローン控除の対象外です。
+      省エネ基準未満の新築は控除ゼロになります。実質的にZEH水準以上を選ぶかどうかが分岐点です。`);
+  } else {
+    push('住宅ローン控除','t-tax', `借入限度額 ${fmtY(S.credLimit)}、控除率0.7%、控除期間${S.credYears}年。
+      生涯の控除額は ${fmtY(S.sumO.credit)} と試算されました。実際の控除は納めた所得税＋住民税（上限あり）が天井になるため、
+      「年間の税額控除枠」を実態に合わせると精度が上がります。省エネ基準適合の新築は2028年入居以降は原則対象外です。`);
+  }
+  if (S.P.ltype.startsWith('var') && chk('rule5')){
+    const totalInt = S.sumO.interest;
+    push('金利リスク','t-risk', `5年ルール・125%ルールを適用中です。金利が上がっても返済額は5年据え置かれますが、
+      増えた利息は元金の減りを遅らせるだけで消えません。上限を超えると<b>未払利息</b>となり、最終回に一括で顔を出します。
+      この条件での生涯利息は ${fmtY(totalInt)}。ルールを外して比べると、リスクの正体が見えます。`);
+  }
+  if (S.P.ltype === 'flat'){
+    push('モーゲージ債','t-own', `フラット35の原資は、住宅金融支援機構が発行する<b>資産担保証券（機構MBS）</b>です。
+      機構が買い取った住宅ローン債権を信託し、その受益権を裏付けに債券を発行して市場から長期資金を調達しています。
+      だから適用金利は機構債の表面利率（≒長期国債利回り＋スプレッド）に連動し、短期政策金利ではなく長期金利で動きます。
+      2026年7月の最頻金利は年3.14%前後。<b>借り手にとっての意味は単純で、金利は上がらないが、最初から高い</b>ということです。`);
+  }
+  if (S.P.ltype === 'reverse'){
+    push('リ・バース60','t-risk', `毎月は利息のみを払い、元金 ${fmtY(S.P.loan)} は死亡時に一括返済する型です。
+      返済は自宅の売却または相続人による一括弁済で行います。ノンリコース型なら売却額が残債に満たなくても不足分の請求はありませんが、
+      <b>その分、遺族に住宅は残りません</b>。相続財産としての住宅を当てにした設計とは両立しない点に注意してください。
+      なお<b>この型は団信の対象外</b>のため、残債 ${fmtY(S.balEnd)} は相続税の債務控除ができ、純資産からも差し引かれます。`);
+  }
+  if (S.iOwn.tax === 0 && S.iRent.tax === 0){
+    push('非課税','t-tax', `どちらのケースも課税価格が基礎控除（${fmtY(S.iOwn.kiso)}）以下で、相続税はかかりません。
+      この水準では相続税は判断材料になりません。金利・修繕費・住み替え自由度で決めるほうが実質的です。`);
+  }
+  if (S.mansion){
+    push('積立金','t-risk', `管理費・修繕積立金を年${num('kanriUp')}%で増額しています。段階増額方式では初期が安く後半で跳ね上がるのが通例です。
+      生涯合計 ${fmtY(S.sumO.kanri)} は、多くの場合ローン利息に匹敵します。<b>ローン完済後もこの支出は終わりません</b>。`);
+  }
+  if (!S.mansion){
+    push('戸建て','t-own', `修繕は自己責任です。外壁・屋根・給湯・シロアリで年${num('repair')}万円相当を引き当て、
+      ${num('reformY')}年ごとに大規模リフォームを見込んでいます。生涯合計 ${fmtY(S.sumO.repair)}。積立を実際にしないと、老後に一括で来ます。`);
+  }
+  const oldCost = S.rows.filter(r => r.age >= 70).reduce((s,r)=>s+r.cR,0);
+  push('老後','t-rent', `70歳以降の家賃負担は累計 ${fmtY(oldCost)} と試算されました。金額以上に効くのは<b>入居審査</b>です。
+    高齢単身の賃貸は保証会社・連帯保証人・見守りサービスの条件が付くことが増え、選べる物件が減ります。
+    この試算は金額しか扱えません。借りられる前提が崩れるリスクは、別途で考える必要があります。`);
+
+  $('notes').innerHTML = N.map(n =>
+    `<div class="note"><span class="tag ${n.cls}">${n.tag}</span><div>${n.html}</div></div>`).join('');
+}
+
+/* ---------------- 年次明細 ---------------- */
+function drawYears(S){
+  let out = `<thead><tr><th>年齢</th><th>賃貸 年間</th><th>持ち家 年間</th>
+    <th>ローン返済</th><th>うち利息</th><th>ローン残高</th><th>固都税</th><th>控除</th>
+    <th>賃貸 累計</th><th>持ち家 累計</th><th>賃貸 資産</th><th>持ち家 資産</th></tr></thead><tbody>`;
+  S.rows.forEach(r => {
+    out += `<tr><td class="n">${r.age}</td>
+      <td class="n">${fmtMan(r.cR)}</td><td class="n">${fmtMan(r.cO)}</td>
+      <td class="n">${fmtMan(r.pay)}</td><td class="n">${fmtMan(r.interest)}</td>
+      <td class="n">${fmtMan(r.bal)}</td><td class="n">${fmtMan(r.kotei)}</td>
+      <td class="n">${r.credit?'△'+fmtMan(r.credit):'—'}</td>
+      <td class="n">${fmtMan(r.cumR)}</td><td class="n">${fmtMan(r.cumO)}</td>
+      <td class="n">${fmtMan(r.aRent)}</td><td class="n">${fmtMan(r.aOwn)}</td></tr>`;
+  });
+  $('yearTbl').innerHTML = out + '</tbody>';
+}
+
+/* =========================================================================
+   イベント
+   ========================================================================= */
+let timer = null;
+function schedule_render(){ clearTimeout(timer); timer = setTimeout(render, 60); }
+$('form').addEventListener('input', schedule_render);
+$('form').addEventListener('change', schedule_render);
+
+$('ptype').addEventListener('change', () => {
+  const t = val('ptype');
+  const used = (t === 'used' || t === 'usedhouse');
+  const house = (t === 'house' || t === 'usedhouse');
+  $('kanri').value = house ? 0 : 2.4;
+  $('repair').value = house ? 15 : 0;
+  $('ageBldg').value = used ? 15 : 0;
+  if (house){ $('land').value = 1800; $('bldg').value = 2400; $('landArea').value = 110; $('floorArea').value = 105; }
+  else { $('land').value = 2200; $('bldg').value = 2800; $('landArea').value = 70; $('floorArea').value = 72; }
+  schedule_render();
+});
+
+$('csv').addEventListener('click', () => {
+  const S = window.__S;
+  const head = ['年齢','賃貸_年間','持ち家_年間','ローン返済','うち利息','ローン残高','固都税','住宅ローン控除','賃貸_累計','持ち家_累計','賃貸_金融資産','持ち家_金融資産'];
+  const body = S.rows.map(r => [r.age, r.cR, r.cO, r.pay, r.interest, r.bal, r.kotei, r.credit, r.cumR, r.cumO, r.aRent, r.aOwn]
+    .map(v => typeof v === 'number' ? Math.round(v) : v).join(','));
+  const csv = '\uFEFF' + [head.join(','), ...body].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+  a.download = `賃貸vs持ち家_年次明細_${S.age0}-${S.ageD}歳.csv`;
+  a.click(); URL.revokeObjectURL(a.href);
+});
+$('reset').addEventListener('click', () => location.reload());
+$('print').addEventListener('click', () => window.print());
+
+render();
+</script>
 </body>
 </html>
