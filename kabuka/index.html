@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>非上場株式 株価算定シミュレーター｜相続税評価とM&A評価を同時に試算</title>
+<meta name="description" content="取引相場のない株式（自社株）の相続税評価額を、会社規模判定・類似業種比準価額・純資産価額・配当還元・特定の評価会社の判定まで含めて自動計算。DCF法・時価純資産法・年買法・EBITDAマルチプル法によるM&A評価も同時に表示します。財産評価基本通達 令和8年3月25日付改正（法人税額等相当額37%→38%）反映。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EAEDF0; --card:#FBFCFD; --card-2:#F1F4F7; --ink:#131A21; --ink-2:#4E5A65;
+  --ink-3:#828D97; --rule:#C9D1D9; --rule-soft:#DEE4EA;
+  --navy:#1F3251; --navy-soft:#DDE4EF; --teal:#0F6E64; --teal-soft:#D6E7E4;
+  --gold:#A8862F; --gold-soft:#F4EDDA; --crim:#8E2F3A; --crim-soft:#EFDBDD;
+  --radius:3px;
+  --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  --sans:"Zen Kaku Gothic New",-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
+  --serif:"Shippori Mincho B1","Hiragino Mincho ProN",serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.75;font-feature-settings:"palt" 1}
+a{color:var(--teal);text-underline-offset:3px}
+h1,h2,h3{font-family:var(--serif);font-weight:800;line-height:1.35;margin:0}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* masthead */
+.masthead{border-bottom:1px solid var(--ink);background:var(--paper)}
+.masthead-in{max-width:1460px;margin:0 auto;padding:26px 24px 20px;display:flex;
+  flex-wrap:wrap;gap:20px;align-items:flex-end;justify-content:space-between}
+.mark{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ink-3);
+  text-transform:uppercase;display:block;margin-bottom:10px}
+h1{font-size:clamp(23px,3.2vw,36px)}
+h1 .slash{color:var(--gold);font-weight:600;padding:0 .22em}
+.sub{color:var(--ink-2);font-size:13.5px;max-width:56ch;margin-top:9px}
+.stamp{font-family:var(--mono);font-size:11px;line-height:1.85;color:var(--ink-2);
+  border:1px solid var(--rule);border-left:3px solid var(--gold);padding:9px 13px;background:var(--card)}
+
+.wrap{max-width:1460px;margin:0 auto;padding:24px;display:grid;
+  grid-template-columns:minmax(320px,394px) minmax(0,1fr);gap:24px;align-items:start}
+@media(max-width:1060px){.wrap{grid-template-columns:1fr;padding:14px;gap:14px}}
+
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius)}
+.controls{position:sticky;top:14px;max-height:calc(100vh - 28px);overflow-y:auto;overscroll-behavior:contain}
+@media(max-width:1060px){.controls{position:static;max-height:none}}
+.controls::-webkit-scrollbar{width:9px}
+.controls::-webkit-scrollbar-thumb{background:var(--rule);border-radius:9px}
+
+fieldset{border:0;border-top:1px solid var(--rule-soft);margin:0;padding:13px 16px 17px}
+fieldset:first-of-type{border-top:0}
+legend{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--navy);
+  text-transform:uppercase;padding:0;margin-bottom:2px;display:flex;align-items:center;gap:8px;width:100%}
+legend::after{content:"";flex:1;height:1px;background:var(--rule-soft)}
+.lg-teal{color:var(--teal)} .lg-crim{color:var(--crim)} .lg-gold{color:var(--gold)}
+.row{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;margin-top:10px}
+.row label{font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.row .hint{display:block;font-size:10.5px;color:var(--ink-3);line-height:1.45}
+.echo{grid-column:1/-1;text-align:right;font-family:var(--mono);font-size:10.5px;color:var(--gold);
+  margin-top:-2px;min-height:14px}
+input[type=number],input[type=text],input[type=date],select{
+  font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums;width:132px;
+  padding:5px 8px;text-align:right;color:var(--ink);background:#fff;border:1px solid var(--rule);border-radius:2px}
+input[type=date]{width:132px;text-align:center}
+select{width:100%;text-align:left;grid-column:1/-1;font-family:var(--sans);font-size:12.5px}
+.row-full{display:block;margin-top:10px}
+.row-full>label{display:block;font-size:12.5px;color:var(--ink-2);margin-bottom:4px}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.tri{display:grid;grid-template-columns:1fr 82px 82px 82px;gap:5px 6px;align-items:center;margin-top:9px}
+.tri label{font-size:12px;color:var(--ink-2);line-height:1.4}
+.tri input{width:100%;font-size:12px;padding:4px 5px}
+.tri-head{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);text-align:center;letter-spacing:.04em}
+
+/* verdict */
+.verdict{padding:22px 24px}
+.verdict-top{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:baseline;justify-content:space-between}
+.verdict h2{font-size:clamp(18px,2.3vw,25px);color:var(--navy)}
+.verdict h2 em{font-style:normal;background:linear-gradient(transparent 62%,var(--gold-soft) 62%);padding:0 .1em}
+.big{text-align:right}
+.big .n{font-family:var(--mono);font-size:clamp(28px,4.2vw,42px);font-weight:600;line-height:1;color:var(--navy)}
+.big .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase}
+.vnote{margin-top:14px;font-size:13px;color:var(--ink-2);border-top:1px solid var(--rule-soft);padding-top:12px}
+.vnote b{color:var(--ink)}
+
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));border-top:1px solid var(--rule)}
+.metric{padding:13px 17px;border-right:1px solid var(--rule-soft);border-bottom:1px solid var(--rule-soft)}
+.metric:last-child{border-right:0}
+.metric .k{font-size:11px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.05em}
+.metric .v{font-family:var(--mono);font-size:19px;font-weight:600;margin-top:3px;color:var(--navy)}
+.metric .d{font-size:11px;color:var(--ink-2);margin-top:2px}
+
+section.blk{margin-top:22px}
+.blk-head{display:flex;align-items:baseline;gap:13px;padding:0 4px 9px;flex-wrap:wrap}
+.blk-head h3{font-size:17px}
+.blk-head .kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
+.blk-head p{margin:0;font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 12px;text-align:right;border-bottom:1px solid var(--rule-soft);white-space:nowrap}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--ink-3);font-weight:500;background:var(--card-2)}
+td:first-child,th:first-child{text-align:left;white-space:normal}
+tbody tr:hover{background:var(--card-2)}
+tr.total td{border-top:1px solid var(--navy);border-bottom:0;font-weight:700;background:var(--navy-soft)}
+tr.sub td{color:var(--ink-3);font-size:12px}
+tr.hi td{background:var(--gold-soft)}
+.tbl-scroll{overflow:auto}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;padding:2px 7px;border:1px solid currentColor;border-radius:2px;white-space:nowrap}
+.t-ok{color:var(--teal)} .t-ng{color:var(--ink-3)} .t-warn{color:var(--crim)}
+
+/* steps */
+.steps{padding:6px 18px 16px}
+.step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--rule-soft)}
+.step:last-child{border-bottom:0}
+.step .sno{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:#fff;background:var(--navy);
+  padding:3px 0;text-align:center;height:fit-content;border-radius:2px}
+.step h4{margin:0 0 4px;font-size:13.5px;font-family:var(--sans);font-weight:700}
+.step .body{font-size:12.5px;color:var(--ink-2);line-height:1.7}
+.step .body .f{font-family:var(--mono);font-size:12px;color:var(--navy);background:var(--card-2);
+  padding:2px 6px;border-radius:2px;display:inline-block;margin:3px 0}
+.step .res{font-family:var(--mono);font-weight:600;color:var(--teal)}
+
+.notes{padding:4px 18px 16px}
+.note{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule-soft);font-size:12.8px;line-height:1.7}
+.note:last-child{border-bottom:0}
+.note .tg{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;padding:2px 7px;height:fit-content;
+  border:1px solid currentColor;border-radius:2px;white-space:nowrap;margin-top:3px}
+.n-tax{color:var(--gold)} .n-risk{color:var(--crim)} .n-ma{color:var(--teal)} .n-info{color:var(--navy)}
+.note b{font-weight:700}
+
+.chart{padding:16px 18px 20px;border-bottom:1px solid var(--rule-soft)}
+.chart:last-child{border-bottom:0}
+.chart-h{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin-bottom:10px}
+.chart-h b{font-size:13.5px;color:var(--navy)}
+.chart-h span{font-size:11.5px;color:var(--ink-3)}
+svg.cv{display:block;width:100%;height:auto;max-width:820px;margin:0 auto;overflow:visible;
+  font-family:var(--sans)}
+svg.cv text{font-family:var(--sans)}
+svg.cv + svg.cv{margin-top:8px}
+details.src{margin-top:20px;border:1px solid var(--rule);border-radius:var(--radius);background:var(--card)}
+details.src summary{cursor:pointer;padding:12px 18px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--ink-2)}
+details.src[open] summary{border-bottom:1px solid var(--rule-soft)}
+.src-body{padding:14px 18px;font-size:12.5px;color:var(--ink-2);line-height:1.85}
+.src-body ul{margin:6px 0 14px;padding-left:1.1em}
+.src-body li{margin-bottom:4px}
+.src-body dt{font-weight:700;color:var(--ink);margin-top:10px;font-size:13px}
+.src-body dd{margin:2px 0 0;padding-left:0}
+
+.actions{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px;border-top:1px solid var(--rule-soft)}
+button{font-family:var(--sans);font-size:12.5px;padding:7px 14px;cursor:pointer;
+  background:var(--navy);color:#fff;border:1px solid var(--navy);border-radius:2px}
+button.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+button:hover{opacity:.87}
+footer{border-top:1px solid var(--rule);margin-top:34px;padding:22px 24px 46px;font-size:12px;
+  color:var(--ink-3);max-width:1460px;margin-left:auto;margin-right:auto}
+@media print{.controls,.actions{display:none}.wrap{grid-template-columns:1fr}}
+</style>
+<link rel="canonical" href="https://kazumono.com/kabuka/">
+<meta property="og:url" content="https://kazumono.com/kabuka/">
+<!-- AdSense サイト全体タグ：承認後にここへ貼る -->
+</head>
+<body>
+<div style="background:#1F3251;color:#EAEDF0;font:500 13px/1 -apple-system,'Hiragino Sans',sans-serif;padding:11px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap"><a href="/" style="color:#EAEDF0;text-decoration:none;letter-spacing:.14em">← 数字のものさし</a><a href="/#tools" style="color:#A8862F;text-decoration:none">ほかのツール</a><a href="/#excel" style="color:#A8862F;text-decoration:none">Excel版</a><a href="/contact/" style="color:#A8862F;text-decoration:none">お問い合わせ</a></div>
+
+
+<header class="masthead">
+  <div class="masthead-in">
+    <div>
+      <span class="mark">Private Company Share Valuation / 非上場株式 株価算定</span>
+      <h1>相続税評価<span class="slash">／</span>M&amp;A評価<br>株価算定シミュレーター</h1>
+      <p class="sub">会社規模の判定から、類似業種比準価額・純資産価額・配当還元価額・特定の評価会社の判定まで。
+        あわせてDCF法・時価純資産法・年買法・EBITDAマルチプル法によるM&amp;A価格も同時に試算します。計算過程はすべて画面に表示します。</p>
+    </div>
+    <div class="stamp">
+      準拠時点　2026年8月<br>
+      財産評価基本通達　令和8年3月25日付 課評2-28ほか改正反映<br>
+      法人税額等相当額　38％（令和8年4月1日以後）
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<form class="panel controls" id="form" autocomplete="off">
+
+  <fieldset>
+    <legend>会社の基本情報</legend>
+    <div class="row"><label>課税時期（相続開始日・贈与日）<span class="hint">この日付で法人税額等相当額が37％／38％に切り替わります</span></label>
+      <input type="date" id="kazeiDate" value="2026-09-01"></div>
+    <div class="row-full"><label>業種区分</label>
+      <select id="gyoshu">
+        <option value="0">卸売業</option>
+        <option value="1">小売・サービス業</option>
+        <option value="2" selected>卸売業、小売・サービス業以外（製造業・建設業など）</option>
+      </select></div>
+    <div class="row"><label>従業員数（換算後）<span class="hint">継続勤務者数＋その他の年間労働時間÷1,800。役員は除く</span></label>
+      <input type="number" id="jugyoin" value="42" step="1" min="0"></div>
+    <div class="row"><label>直前期末の総資産価額<span class="hint">帳簿価額。円単位</span></label>
+      <input type="number" id="sosisan" value="1250000000" step="10000000"><div class="echo" id="e_sosisan"></div></div>
+    <div class="row"><label>直前期末以前1年間の取引金額<span class="hint">売上高。円単位</span></label>
+      <input type="number" id="torihiki" value="2100000000" step="10000000"><div class="echo" id="e_torihiki"></div></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>株式・資本</legend>
+    <div class="row"><label>直前期末の資本金等の額</label>
+      <input type="number" id="shihonkin" value="50000000" step="1000000"><div class="echo" id="e_shihonkin"></div></div>
+    <div class="row"><label>直前期末の発行済株式数<span class="hint">自己株式控除後</span></label>
+      <input type="number" id="hakkouZen" value="100000" step="1000"></div>
+    <div class="row"><label>課税時期の発行済株式数<span class="hint">純資産価額の計算に使用</span></label>
+      <input type="number" id="hakkouIma" value="100000" step="1000"></div>
+    <div class="row"><label>評価する株式数<span class="hint">相続・贈与で取得した株式数</span></label>
+      <input type="number" id="hyokaKabu" value="30000" step="1000"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>議決権・株主区分</legend>
+    <div class="row"><label>同族株主グループの最大議決権割合<span class="hint">％</span></label>
+      <input type="number" id="gGroup" value="62" step="1" min="0" max="100"></div>
+    <div class="row"><label>取得者本人＋同族関係者の議決権割合<span class="hint">％</span></label>
+      <input type="number" id="gHonnin" value="62" step="1" min="0" max="100"></div>
+    <div class="row"><label>取得者本人の議決権割合（取得後）<span class="hint">％。5％未満かどうかの判定に使用</span></label>
+      <input type="number" id="gKojin" value="25" step="1" min="0" max="100"></div>
+    <div class="row-full"><label>取得者は中心的な同族株主または役員か</label>
+      <select id="chushin"><option value="1" selected>はい</option><option value="0">いいえ</option></select></div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="lg-teal">比準要素（会社側のデータ）</legend>
+    <div class="tri"><span></span><span class="tri-head">直前期</span><span class="tri-head">直前々期</span><span class="tri-head">直前々々期</span></div>
+    <div class="tri"><label>年配当金額<span class="hint">非経常的なものを除く</span></label>
+      <input type="number" id="hai1" value="12000000" step="1000000">
+      <input type="number" id="hai2" value="10000000" step="1000000">
+      <input type="number" id="hai3" value="10000000" step="1000000"></div>
+    <div class="tri"><label>法人税の課税所得金額<span class="hint">非経常的利益を除く</span></label>
+      <input type="number" id="sho1" value="96000000" step="1000000">
+      <input type="number" id="sho2" value="88000000" step="1000000">
+      <input type="number" id="sho3" value="70000000" step="1000000"></div>
+    <div class="tri"><label>＋益金不算入の受取配当等</label>
+      <input type="number" id="fus1" value="1500000" step="100000">
+      <input type="number" id="fus2" value="1400000" step="100000">
+      <input type="number" id="fus3" value="1200000" step="100000"></div>
+    <div class="tri"><label>＋損金算入された繰越欠損金</label>
+      <input type="number" id="kes1" value="0" step="1000000">
+      <input type="number" id="kes2" value="0" step="1000000">
+      <input type="number" id="kes3" value="0" step="1000000"></div>
+    <div class="tri"><label>資本金等の額（各期末）</label>
+      <input type="number" id="shi1" value="50000000" step="1000000">
+      <input type="number" id="shi2" value="50000000" step="1000000">
+      <input type="number" id="shi3" value="50000000" step="1000000"></div>
+    <div class="tri"><label>利益積立金額<span class="hint">別表五(一)</span></label>
+      <input type="number" id="rie1" value="520000000" step="10000000">
+      <input type="number" id="rie2" value="448000000" step="10000000">
+      <input type="number" id="rie3" value="380000000" step="10000000"></div>
+    <div class="row-full"><label>利益金額（Ⓒ）の計算方法</label>
+      <select id="riekiMethod">
+        <option value="1" selected>直前期末以前1年間</option>
+        <option value="2">直前期末以前2年間の平均</option>
+      </select></div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="lg-teal">類似業種の株価等（国税庁公表値）</legend>
+    <div class="row"><label>A 株価<span class="hint">課税時期の月・前月・前々月・前年平均・2年間平均のうち最も低い金額</span></label>
+      <input type="number" id="valA" value="368" step="1"></div>
+    <div class="row"><label>B 1株当たりの年配当金額</label><input type="number" id="valB" value="5.2" step="0.1"></div>
+    <div class="row"><label>C 1株当たりの年利益金額</label><input type="number" id="valC" value="32" step="1"></div>
+    <div class="row"><label>D 1株当たりの簿価純資産価額</label><input type="number" id="valD" value="358" step="1"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="lg-crim">資産・負債（純資産価額の計算用）</legend>
+    <div class="row"><label>相続税評価額による総資産価額</label>
+      <input type="number" id="sozokuSo" value="1830000000" step="10000000"><div class="echo" id="e_sozokuSo"></div></div>
+    <div class="row"><label>帳簿価額による総資産価額</label>
+      <input type="number" id="bokaSo" value="1348000000" step="10000000"><div class="echo" id="e_bokaSo"></div></div>
+    <div class="row"><label>負債合計<span class="hint">未確定の引当金は含めない</span></label>
+      <input type="number" id="fusai" value="772000000" step="10000000"><div class="echo" id="e_fusai"></div></div>
+    <div class="row"><label>うち 土地等（相続税評価額）</label>
+      <input type="number" id="tochiS" value="588000000" step="10000000"><div class="echo" id="e_tochiS"></div></div>
+    <div class="row"><label>うち 株式等（相続税評価額）</label>
+      <input type="number" id="kabuS" value="352000000" step="10000000"><div class="echo" id="e_kabuS"></div></div>
+    <div class="row"><label>うち 株式等（帳簿価額）</label>
+      <input type="number" id="kabuB" value="150000000" step="10000000"><div class="echo" id="e_kabuB"></div></div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="lg-gold">S1＋S2方式の計算（株式等保有特定会社の場合）</legend>
+    <div class="tri"><span></span><span class="tri-head">直前期</span><span class="tri-head">直前々期</span><span></span></div>
+    <div class="tri"><label>受取配当等の額</label>
+      <input type="number" id="uke1" value="18000000" step="1000000">
+      <input type="number" id="uke2" value="16000000" step="1000000"><span></span></div>
+    <div class="tri"><label>営業利益の額<span class="hint">受取配当等を含む場合は控除後</span></label>
+      <input type="number" id="eig1" value="92000000" step="1000000">
+      <input type="number" id="eig2" value="84000000" step="1000000"><span></span></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>特定の評価会社の前提・選択</legend>
+    <div class="row-full"><label>開業後3年未満か</label>
+      <select id="kaigyo3"><option value="0" selected>いいえ</option><option value="1">はい</option></select></div>
+    <div class="row-full"><label>開業前または休業中か</label>
+      <select id="kyugyo"><option value="0" selected>いいえ</option><option value="1">はい</option></select></div>
+    <div class="row-full"><label>純資産価額方式のみで評価するか（納税者の選択）</label>
+      <select id="junOnly"><option value="0" selected>いいえ</option><option value="1">はい</option></select></div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="lg-crim">M&amp;A評価の前提</legend>
+    <div class="row"><label>リスクフリーレート<span class="hint">％</span></label><input type="number" id="rf" value="1.6" step="0.1"></div>
+    <div class="row"><label>市場リスクプレミアム<span class="hint">％</span></label><input type="number" id="erp" value="6.0" step="0.1"></div>
+    <div class="row"><label>β（ベータ）</label><input type="number" id="beta" value="1.05" step="0.05"></div>
+    <div class="row"><label>サイズプレミアム<span class="hint">％</span></label><input type="number" id="sizep" value="4.0" step="0.5"></div>
+    <div class="row"><label>有利子負債コスト<span class="hint">％</span></label><input type="number" id="rd" value="1.4" step="0.1"></div>
+    <div class="row"><label>実効税率<span class="hint">％</span></label><input type="number" id="taxr" value="34" step="1"></div>
+    <div class="row"><label>D÷(D＋E) の比率<span class="hint">％</span></label><input type="number" id="dratio" value="30" step="5"></div>
+    <div class="row"><label>直前期の売上高</label><input type="number" id="uriage" value="2100000000" step="10000000"><div class="echo" id="e_uriage"></div></div>
+    <div class="row"><label>売上高成長率<span class="hint">％/年。5年間とも同じ率で計算します</span></label><input type="number" id="gRate" value="3.0" step="0.5"></div>
+    <div class="row"><label>営業利益率<span class="hint">％。5年間とも同じ率で計算します</span></label><input type="number" id="opm" value="5.3" step="0.1"></div>
+    <div class="row"><label>減価償却費÷売上高<span class="hint">％</span></label><input type="number" id="depR" value="3.0" step="0.1"></div>
+    <div class="row"><label>設備投資÷売上高<span class="hint">％</span></label><input type="number" id="capR" value="3.2" step="0.1"></div>
+    <div class="row"><label>運転資本÷売上高<span class="hint">％</span></label><input type="number" id="wcR" value="18" step="1"></div>
+    <div class="row"><label>永久成長率<span class="hint">％</span></label><input type="number" id="gTerm" value="0.5" step="0.1"></div>
+    <div class="row"><label>非流動性ディスカウント<span class="hint">％</span></label><input type="number" id="hiryudo" value="20" step="5"></div>
+    <div class="row"><label>非事業用資産<span class="hint">余剰現預金・遊休資産等</span></label>
+      <input type="number" id="hiJigyo" value="180000000" step="10000000"><div class="echo" id="e_hiJigyo"></div></div>
+    <div class="row"><label>有利子負債</label>
+      <input type="number" id="yurishi" value="500000000" step="10000000"><div class="echo" id="e_yurishi"></div></div>
+    <div class="row"><label>簿価純資産額<span class="hint">会計上の純資産の部合計</span></label>
+      <input type="number" id="bokaJun" value="570000000" step="10000000"><div class="echo" id="e_bokaJun"></div></div>
+    <div class="row"><label>資産の含み損益<span class="hint">時価−簿価。マイナス可</span></label>
+      <input type="number" id="fukumi" value="461000000" step="10000000"><div class="echo" id="e_fukumi"></div></div>
+    <div class="row"><label>実質営業利益<span class="hint">役員報酬等の適正化後</span></label>
+      <input type="number" id="jisshitsu" value="105000000" step="1000000"><div class="echo" id="e_jisshitsu"></div></div>
+    <div class="row"><label>営業権の年数<span class="hint">年買法。2〜5年が目安</span></label><input type="number" id="nenbai" value="3" step="0.5"></div>
+    <div class="row"><label>減価償却費<span class="hint">EBITDA計算用</span></label>
+      <input type="number" id="depMa" value="63000000" step="1000000"><div class="echo" id="e_depMa"></div></div>
+    <div class="row"><label>EV÷EBITDA 倍率</label><input type="number" id="evMult" value="5.5" step="0.5"></div>
+  </fieldset>
+
+  <div class="actions">
+    <button type="button" id="csv">計算結果をCSVで保存</button>
+    <button type="button" class="ghost" id="reset">初期値に戻す</button>
+    <button type="button" class="ghost" id="print">印刷・PDF</button>
+  </div>
+</form>
+
+<main>
+  <div class="panel">
+    <div class="verdict">
+      <div class="verdict-top">
+        <h2 id="vTitle">計算中</h2>
+        <div class="big"><div class="n" id="vMain">—</div><div class="l">1株当たりの相続税評価額</div></div>
+      </div>
+      <p class="vnote" id="vNote"></p>
+    </div>
+    <div class="metrics" id="metrics"></div>
+  </div>
+
+  <section class="blk">
+    <div class="blk-head"><span class="kicker">Charts</span><h3>数字を、図で確かめる</h3>
+      <p>同じ会社でも、見る目的が変われば株価はこれだけ動きます。</p></div>
+    <div class="panel" id="charts"></div>
+  </section>
+
+  <section class="blk">
+    <div class="blk-head"><span class="kicker">Process</span><h3>計算過程</h3>
+      <p>どの数字がどこから来ているかを、順番に表示します。</p></div>
+    <div class="panel steps" id="steps"></div>
+  </section>
+
+  <section class="blk">
+    <div class="blk-head"><span class="kicker">Methods</span><h3>各方式による1株当たりの価額</h3></div>
+    <div class="panel"><div class="tbl-scroll"><table id="methodTbl"></table></div></div>
+  </section>
+
+  <section class="blk">
+    <div class="blk-head"><span class="kicker">M&amp;A</span><h3>第三者間で売買する場合の価額</h3>
+      <p>相続税評価額とは目的が違う、まったく別の数字です。</p></div>
+    <div class="panel"><div class="tbl-scroll"><table id="maTbl"></table></div></div>
+  </section>
+
+  <section class="blk">
+    <div class="blk-head"><span class="kicker">Notes</span><h3>この条件で効いている論点</h3></div>
+    <div class="panel notes" id="notes"></div>
+  </section>
+
+  <section class="blk">
+    <div class="blk-head"><span class="kicker">Sensitivity</span><h3>何をどれだけ動かすと、株価はどう変わるか</h3>
+      <p>経営判断に直結する3つの切り口です。</p></div>
+    <div class="panel" id="sens"></div>
+  </section>
+
+  <details class="src">
+    <summary>用語解説　▾</summary>
+    <div class="src-body"><dl id="glossary"></dl></div>
+  </details>
+
+  <details class="src">
+    <summary>根拠法令・出典と、この試算の限界　▾</summary>
+    <div class="src-body">
+      <p><b>反映している通達・法令（2026年8月時点）</b></p>
+      <ul>
+        <li>財産評価基本通達178（会社規模の判定）、179（評価の原則・Lの割合）、180〜184（類似業種比準価額）、
+          185〜186-3（純資産価額・法人税額等相当額）、188・188-2（同族株主以外の株主等・配当還元）、
+          189〜189-7（特定の評価会社）</li>
+        <li>令和8年3月25日付 課評2-28ほか2課共同「財産評価基本通達の一部改正について」（法令解釈通達）：
+          純資産価額方式における法人税額等相当額の割合を37％から38％に改正。
+          <b>令和8年4月1日以後に相続、遺贈又は贈与により取得した取引相場のない株式等の評価に適用</b>されます。
+          内訳は、法人税23.2％、地方法人税2.3896％、防衛特別法人税0.928％、事業税7.0％、特別法人事業税2.59％、
+          道府県民税0.232％、市町村民税1.392％の合計37.7316％を四捨五入したものです。</li>
+        <li>相続税法22条（評価の原則）、7条・9条（著しく低い価額での譲受け等によるみなし贈与）</li>
+        <li>法人税法施行令4条（同族関係者の範囲）</li>
+      </ul>
+      <p><b>この試算がやっていないこと</b></p>
+      <ul>
+        <li>土地の個別事情（不整形地、間口狭小、奥行長大、借地権、貸宅地、貸家建付地、地積規模の大きな宅地の評価など）。
+          相続税評価額は利用者の入力値をそのまま使います。</li>
+        <li>課税時期前3年以内に取得した土地等・家屋等を「通常の取引価額」で評価する処理。該当する資産は、
+          あらかじめ時価に置き換えて入力してください。</li>
+        <li>種類株式・議決権制限株式・自己株式・投資育成会社が株主である場合の議決権数の調整。</li>
+        <li>現物出資等受入れ差額の加算、子会社株式を純資産価額方式で評価する場合の法人税額等相当額の控除制限。</li>
+        <li>清算中の会社の評価、株式の割当てを受ける権利等が発生している場合の価額の修正、医療法人の出資の評価。</li>
+        <li>事業承継税制（納税猶予）の適用可否とその効果。</li>
+        <li>DCF法の予測は、5年間とも同じ売上高成長率・営業利益率で計算する簡易版です。
+          年ごとに成長率や利益率を変える場合は、Excel版をご利用ください。
+          なお、Excel版で5年間の成長率・営業利益率をすべて同じ値に揃えると、本シミュレーターと1円単位まで同じ結果になります。</li>
+        <li>同族関係者の範囲、中心的な同族株主・中心的な株主の判定は、入力された議決権割合による簡易判定です。</li>
+      </ul>
+      <p style="border-top:1px solid var(--rule-soft);padding-top:12px">
+        <b>免責事項</b>　本シミュレーターは計算補助ツールであり、税務代理・税務相談・鑑定評価のいずれにも該当しません。
+        表示される数値は概算です。実際の申告・株式の売買・組織再編にあたっては、必ず税理士・公認会計士等の有資格者にご確認ください。
+        本ツールの利用により生じたいかなる損害についても、作成者は責任を負いません。制度は改正されます。
+        ご利用の際は国税庁ホームページで最新情報をご確認ください。</p>
+    </div>
+  </details>
+</main>
+</div>
+
+<footer>
+  非上場株式 株価算定シミュレーター　—　入力値はブラウザ内でのみ計算され、どこにも送信されません。
+</footer>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const n = id => parseFloat($(id).value) || 0;
+const v = id => $(id).value;
+
+/* 端数処理：ROUNDDOWN */
+function rd(x, d){ const m = Math.pow(10, d||0); return Math.floor(x*m + 1e-9)/m; }
+
+function fmtYen(x){
+  if (!isFinite(x)) return "—";
+  const s = x < 0 ? "△" : "";
+  return s + Math.round(Math.abs(x)).toLocaleString("ja-JP") + "円";
+}
+function fmtJp(x){
+  const a = Math.abs(Math.round(x)); if (a === 0) return "0円";
+  const oku = Math.floor(a/1e8), man = Math.floor((a%1e8)/1e4), en = a%1e4;
+  let s = (x<0?"△":"");
+  if (oku) s += oku.toLocaleString("ja-JP")+"億";
+  if (man) s += man.toLocaleString("ja-JP")+"万";
+  if (en || (!oku && !man)) s += en.toLocaleString("ja-JP");
+  return s + "円";
+}
+function pct(x){ return (x*100).toFixed(1)+"%"; }
+
+const KIBO = ["大会社","中会社の大","中会社の中","中会社の小","小会社"];
+const TH_SOSISAN = [[2e9,1.5e9,1.5e9],[4e8,5e8,5e8],[2e8,2.5e8,2.5e8],[7e7,4e7,5e7]];
+const TH_TORIHIKI= [[3e9,2e9,1.5e9],[7e8,5e8,4e8],[3.5e8,2.5e8,2e8],[2e8,6e7,8e7]];
+const L_TBL = [1,0.9,0.75,0.6,0.5];
+
+function simulate(){
+  const g = parseInt(v("gyoshu"));
+  const jugyoin = n("jugyoin"), sosisan = n("sosisan"), torihiki = n("torihiki");
+
+  /* --- 会社規模 --- */
+  let rS = 5, rT = 5;
+  for (let i=0;i<4;i++){ if (sosisan >= TH_SOSISAN[i][g]){ rS = i+1; break; } }
+  for (let i=0;i<4;i++){ if (torihiki >= TH_TORIHIKI[i][g]){ rT = i+1; break; } }
+  const rJ = jugyoin>=70?1: jugyoin>35?2: jugyoin>20?3: jugyoin>5?4:5;
+  const r12 = Math.max(rS, rJ);
+  const rank = jugyoin>=70 ? 1 : Math.min(r12, rT);
+  const L = L_TBL[rank-1];
+  const shinshaku = rank===1?0.7 : rank===5?0.5 : 0.6;
+
+  /* --- 株主区分 --- */
+  const gG = n("gGroup")/100, gH = n("gHonnin")/100, gK = n("gKojin")/100;
+  const chushin = v("chushin")==="1";
+  const isGensokuTarget = gG>=0.3 ? (gG>=0.5 ? gH>=0.5 : gH>=0.3) : gH>=0.15;
+  const useHaito = !isGensokuTarget || (!chushin && gK<0.05);
+
+  /* --- 比準要素 --- */
+  const shihonkin = n("shihonkin"), hakkouZen = n("hakkouZen"), hakkouIma = n("hakkouIma");
+  const shihon1 = hakkouZen>0 ? shihonkin/hakkouZen : 0;
+  const bairitsu = shihon1/50;
+  const k50 = [n("shi1")/50, n("shi2")/50, n("shi3")/50];
+  const hai = [n("hai1"), n("hai2"), n("hai3")];
+  const rieki = [0,1,2].map(i => Math.max(0, n("sho"+(i+1)) + n("fus"+(i+1)) + n("kes"+(i+1))));
+  const boka = [0,1,2].map(i => n("shi"+(i+1)) + n("rie"+(i+1)));
+  const m2 = v("riekiMethod")==="2";
+
+  const Bm = [ k50[0]>0 ? rd((hai[0]+hai[1])/2/k50[0],1) : 0,
+               k50[1]>0 ? rd((hai[1]+hai[2])/2/k50[1],1) : 0 ];
+  const Cm = [ k50[0]>0 ? rd((m2?(rieki[0]+rieki[1])/2:rieki[0])/k50[0],0) : 0,
+               k50[1]>0 ? rd((m2?(rieki[1]+rieki[2])/2:rieki[1])/k50[1],0) : 0 ];
+  const Dm = [ k50[0]>0 ? rd(boka[0]/k50[0],0) : 0,
+               k50[1]>0 ? rd(boka[1]/k50[1],0) : 0 ];
+
+  const A = n("valA"), B = n("valB"), C = n("valC"), D = n("valD");
+  const hb = B>0?rd(Bm[0]/B,2):0, hc = C>0?rd(Cm[0]/C,2):0, hd = D>0?rd(Dm[0]/D,2):0;
+  const hijun = rd((hb+hc+hd)/3, 2);
+  const p50 = rd(A*hijun*shinshaku, 1);
+  const ruiji = rd(p50*bairitsu, 0);
+
+  /* --- 純資産価額 --- */
+  const sozokuSo = n("sozokuSo"), bokaSo = n("bokaSo"), fusai = n("fusai");
+  const tochiS = n("tochiS"), kabuS = n("kabuS"), kabuB = n("kabuB");
+  const kazeiDate = new Date(v("kazeiDate")||"2026-09-01");
+  const ritsu = kazeiDate >= new Date("2026-04-01") ? 0.38 : 0.37;
+  const sozokuJun = sozokuSo - fusai, bokaJunT = bokaSo - fusai;
+  const sagaku = Math.max(0, sozokuJun - bokaJunT);
+  const houjin = rd(sagaku*ritsu, 0);
+  const kazeiKakaku = sozokuJun - houjin;
+  const junGross = hakkouIma>0 ? rd(kazeiKakaku/hakkouIma, 0) : 0;
+  const use80 = gH <= 0.5;
+  const junTekiyo = use80 ? rd(junGross*0.8, 0) : junGross;
+
+  /* --- 配当還元 --- */
+  const haitoKangen = rd(Math.max(2.5, Bm[0])/0.1*bairitsu, 0);
+
+  /* --- 特定の評価会社 --- */
+  const kabuWari = sozokuSo>0 ? kabuS/sozokuSo : 0;
+  const tochiWari = sozokuSo>0 ? tochiS/sozokuSo : 0;
+  let tochiKijun;
+  if (rank===1) tochiKijun = 0.7;
+  else if (rank<=4) tochiKijun = 0.9;
+  else if (sosisan >= (g===0?2e9:1.5e9)) tochiKijun = 0.7;
+  else if (sosisan >= [7e7,4e7,5e7][g]) tochiKijun = 0.9;
+  else tochiKijun = 999;
+
+  const zero1 = (Bm[0]===0?1:0)+(Cm[0]===0?1:0)+(Dm[0]===0?1:0);
+  const zero2 = (Bm[1]===0?1:0)+(Cm[1]===0?1:0)+(Dm[1]===0?1:0);
+  const isHijun1 = (zero1===2 && zero2>=2);
+  const isZenbu0 = (zero1===3);
+  const isKabuTok = kabuWari >= 0.5;
+  const isTochiTok = tochiWari >= tochiKijun;
+  const kaigyo3 = v("kaigyo3")==="1", kyugyo = v("kyugyo")==="1";
+
+  let kubun = "特定の評価会社に該当しない";
+  if (kyugyo) kubun = "開業前又は休業中の会社";
+  else if (kaigyo3 || isZenbu0) kubun = "開業後3年未満の会社等";
+  else if (isTochiTok) kubun = "土地保有特定会社";
+  else if (isKabuTok) kubun = "株式等保有特定会社";
+  else if (isHijun1) kubun = "比準要素数1の会社";
+
+  /* --- S1＋S2 --- */
+  const u1 = n("uke1"), u2 = n("uke2"), e1 = n("eig1"), e2 = n("eig2");
+  const shuju = (u1+u2+e1+e2)>0 ? Math.min(1,(u1+u2)/(u1+u2+e1+e2)) : 0;
+  const s1b = Bm[0]*shuju, s1c = Cm[0]*shuju;
+  const s1d1 = bokaSo>0 ? Dm[0]*kabuB/bokaSo : 0;
+  const s1d2 = k50[0]>0 ? Math.max(0, n("rie1")/k50[0])*shuju : 0;
+  const s1d = Math.min(Dm[0], s1d1+s1d2);
+  const s1hi = rd(( (B>0?rd((Bm[0]-s1b)/B,2):0) + (C>0?rd((Cm[0]-s1c)/C,2):0)
+                  + (D>0?rd((Dm[0]-s1d)/D,2):0) )/3, 2);
+  const s1Ruiji = rd(rd(A*s1hi*shinshaku,1)*bairitsu, 0);
+  const s1SoS = sozokuSo - kabuS, s1BoS = bokaSo - kabuB;
+  const s1Sag = Math.max(0, (s1SoS-fusai)-(s1BoS-fusai));
+  const s1JunG = hakkouIma>0 ? rd(((s1SoS-fusai) - s1Sag*ritsu)/hakkouIma, 0) : 0;
+  const s1JunT = use80 ? rd(s1JunG*0.8,0) : s1JunG;
+  const S1 = rd(rank===1 ? Math.min(s1Ruiji, s1JunG)
+             : rank===5 ? Math.min(s1JunT, s1Ruiji*0.5 + s1JunT*0.5)
+             : Math.min(s1Ruiji, s1JunT)*L + s1JunT*(1-L), 0);
+  const S2 = hakkouIma>0 ? rd((kabuS - Math.max(0, kabuS-kabuB)*ritsu)/hakkouIma, 0) : 0;
+  const S1S2 = S1 + S2;
+
+  /* --- 原則的評価額 --- */
+  const junOnly = v("junOnly")==="1";
+  let gensokuNormal;
+  if (junOnly) gensokuNormal = rank===1 ? junGross : junTekiyo;
+  else if (rank===1) gensokuNormal = Math.min(ruiji, junGross);
+  else if (rank===5) gensokuNormal = Math.min(junTekiyo, ruiji*0.5 + junTekiyo*0.5);
+  else gensokuNormal = Math.min(ruiji, junTekiyo)*L + junTekiyo*(1-L);
+  gensokuNormal = rd(gensokuNormal, 0);
+  const gensokuHijun1 = rd(Math.min(junTekiyo, ruiji*0.25 + junTekiyo*0.75), 0);
+  const gensokuKabu = Math.min(junTekiyo, S1S2);
+
+  let gensoku;
+  if (kubun === "特定の評価会社に該当しない") gensoku = gensokuNormal;
+  else if (kubun === "比準要素数1の会社") gensoku = gensokuHijun1;
+  else if (kubun === "株式等保有特定会社") gensoku = gensokuKabu;
+  else if (kubun === "開業前又は休業中の会社") gensoku = junGross;
+  else gensoku = junTekiyo;
+
+  const haitoFinal = Math.min(haitoKangen, gensoku);
+  const final1 = useHaito ? haitoFinal : gensoku;
+  const hyokaKabu = n("hyokaKabu");
+  const finalTotal = final1 * hyokaKabu;
+
+  /* --- M&A：DCF --- */
+  const rf=n("rf")/100, erp=n("erp")/100, beta=n("beta"), sizep=n("sizep")/100;
+  const rdc=n("rd")/100, tax=n("taxr")/100, dratio=n("dratio")/100;
+  const re = rf + beta*erp + sizep;
+  const wacc = re*(1-dratio) + rdc*(1-tax)*dratio;
+  const gR=n("gRate")/100, opm=n("opm")/100, depR=n("depR")/100,
+        capR=n("capR")/100, wcR=n("wcR")/100, gT=n("gTerm")/100;
+  let sales = n("uriage"), prevSales = sales;
+  const fcf = [], salesArr = [];
+  for (let i=0;i<5;i++){
+    sales = prevSales*(1+gR);
+    const op = sales*opm;
+    const nopat = op*(1-tax);
+    const dep = sales*depR, cap = sales*capR, dwc = (sales-prevSales)*wcR;
+    fcf.push(nopat + dep - cap - dwc);
+    salesArr.push(sales);
+    prevSales = sales;
+  }
+  const pvSum = fcf.reduce((s,f,i)=> s + f/Math.pow(1+wacc, i+1), 0);
+  const tv = wacc>gT ? fcf[4]*(1+gT)/(wacc-gT) : 0;
+  const tvPv = tv/Math.pow(1+wacc,5);
+  const jigyo = pvSum + tvPv;
+  const kigyo = jigyo + n("hiJigyo");
+  const kabunushi = kigyo - n("yurishi");
+  const dcfPre = hakkouIma>0 ? kabunushi/hakkouIma : 0;
+  const dcf1 = Math.round(dcfPre*(1-n("hiryudo")/100));
+
+  /* --- M&A：その他 --- */
+  const fukumi = n("fukumi");
+  const jikaJun = n("bokaJun") + fukumi - Math.max(0,fukumi)*tax;
+  const jika1 = hakkouIma>0 ? Math.round(jikaJun/hakkouIma) : 0;
+  const noren = n("jisshitsu")*n("nenbai");
+  const nenbaiKachi = jikaJun + noren;
+  const nenbai1 = hakkouIma>0 ? Math.round(nenbaiKachi/hakkouIma) : 0;
+  const ebitda = n("jisshitsu") + n("depMa");
+  const ev = ebitda*n("evMult");
+  const ebitdaKachi = ev - n("yurishi") + n("hiJigyo");
+  const ebitda1 = hakkouIma>0 ? Math.round(ebitdaKachi/hakkouIma) : 0;
+  const maArr = [dcf1, jika1, nenbai1, ebitda1];
+  const maLow = Math.min(...maArr), maHigh = Math.max(...maArr);
+  const maAvg = Math.round(maArr.reduce((a,b)=>a+b,0)/4);
+
+  return { g, rank, rS, rJ, rT, r12, L, shinshaku, kibo:KIBO[rank-1],
+    gG, gH, gK, chushin, isGensokuTarget, useHaito,
+    shihon1, bairitsu, k50, Bm, Cm, Dm, A,B,C,D, hb,hc,hd, hijun, p50, ruiji,
+    sozokuSo, bokaSo, fusai, sozokuJun, bokaJunT, sagaku, ritsu, houjin,
+    kazeiKakaku, junGross, junTekiyo, use80, haitoKangen,
+    kabuWari, tochiWari, tochiKijun, zero1, zero2, kubun,
+    shuju, s1Ruiji, s1JunG, s1JunT, S1, S2, S1S2,
+    gensokuNormal, gensokuHijun1, gensokuKabu, gensoku, haitoFinal,
+    final1, finalTotal, hyokaKabu, hakkouIma, junOnly,
+    re, wacc, fcf, salesArr, pvSum, tv, tvPv, jigyo, kigyo, kabunushi, dcfPre, dcf1,
+    jikaJun, jika1, noren, nenbaiKachi, nenbai1, ebitda, ev, ebitdaKachi, ebitda1,
+    maLow, maHigh, maAvg, isHijun1, isKabuTok, isTochiTok, kaigyo3, kyugyo, isZenbu0 };
+}
+
+/* ================= 描画 ================= */
+const ECHO = ["sosisan","torihiki","shihonkin","sozokuSo","bokaSo","fusai","tochiS","kabuS","kabuB",
+              "uriage","hiJigyo","yurishi","bokaJun","fukumi","jisshitsu","depMa"];
+
+function render(){
+  const S = simulate();
+  ECHO.forEach(id => { const el = $("e_"+id); if (el) el.textContent = fmtJp(n(id)); });
+
+  $("vTitle").innerHTML = `1株当たり <em>${fmtYen(S.final1)}</em>　／　評価総額 <em>${fmtYen(S.finalTotal)}</em>`;
+  $("vMain").textContent = fmtYen(S.final1);
+  $("vNote").innerHTML =
+    `会社規模は<b>${S.kibo}</b>（Lの割合 ${pct(S.L)}／斟酌率 ${pct(S.shinshaku)}）、`
+    + `株主区分による評価方式は<b>${S.useHaito?"配当還元方式":"原則的評価方式"}</b>、`
+    + `特定の評価会社の区分は<b>${S.kubun}</b>です。`
+    + `法人税額等相当額の割合は<b>${pct(S.ritsu)}</b>を適用しています`
+    + `（${S.ritsu===0.38?"課税時期が令和8年4月1日以後":"課税時期が令和8年3月31日以前"}）。`;
+
+  $("metrics").innerHTML = [
+    ["類似業種比準価額", S.ruiji, "1株当たり"],
+    ["純資産価額（80％前）", S.junGross, "1株当たり"],
+    ["純資産価額（80％後）", S.junTekiyo, S.use80?"議決権50％以下のため適用":"適用なし"],
+    ["配当還元価額", S.haitoKangen, "1株当たり"],
+    ["M&A評価の平均", S.maAvg, "4手法の平均"]
+  ].map(([k,val,d]) => `<div class="metric"><div class="k">${k}</div>
+      <div class="v">${fmtYen(val)}</div><div class="d">${d}</div></div>`).join("");
+
+  drawCharts(S); drawSteps(S); drawMethods(S); drawMa(S); drawSens(S); drawNotes(S);
+  window.__S = S;
+}
+
+function step(no, title, body){
+  return `<div class="step"><div class="sno">${no}</div><div>
+    <h4>${title}</h4><div class="body">${body}</div></div></div>`;
+}
+
+function drawSteps(S){
+  const gname = ["卸売業","小売・サービス業","卸売業、小売・サービス業以外"][S.g];
+  let h = "";
+  h += step("STEP 1", "会社規模の判定（財基通178・179）",
+    `業種は<b>${gname}</b>。総資産価額による区分は<b>${KIBO[S.rS-1]}</b>、従業員数による区分は<b>${KIBO[S.rJ-1]}</b>、
+     取引金額による区分は<b>${KIBO[S.rT-1]}</b>。<br>
+     総資産と従業員数は<b>下位</b>の区分（${KIBO[S.r12-1]}）を採り、これと取引金額の区分のうち<b>上位</b>を採ります。
+     ${n("jugyoin")>=70?"ただし従業員数が70人以上のため、無条件に大会社です。":""}<br>
+     → 会社規模 <span class="res">${S.kibo}</span>　Lの割合 <span class="res">${pct(S.L)}</span>　斟酌率 <span class="res">${pct(S.shinshaku)}</span>`);
+
+  h += step("STEP 2", "株主区分の判定（財基通188）",
+    `同族株主グループの最大議決権割合 ${pct(S.gG)}、取得者グループ ${pct(S.gH)}、本人 ${pct(S.gK)}。<br>
+     ${S.gG>=0.5 ? "50％超のグループがあるため、そのグループだけが同族株主です。"
+       : S.gG>=0.3 ? "50％超のグループはないため、30％以上のグループが同族株主です。"
+       : "同族株主のいない会社です。議決権15％以上のグループに属するかで判定します。"}<br>
+     ${S.isGensokuTarget ? "取得者は原則的評価の対象に当たります。" : "取得者は原則的評価の対象外です。"}
+     ${S.isGensokuTarget && !S.chushin && S.gK<0.05
+        ? "ただし中心的な同族株主でも役員でもなく、取得後の議決権が5％未満のため、配当還元方式に戻ります。" : ""}<br>
+     → <span class="res">${S.useHaito?"配当還元方式":"原則的評価方式"}</span>`);
+
+  h += step("STEP 3", "特定の評価会社の判定（財基通189）",
+    `<table style="font-size:12px;margin-top:4px">
+      <tr><td>比準要素数1の会社</td><td>直前期の0の数 ${S.zero1}／直前々期 ${S.zero2}</td>
+        <td><span class="tag ${S.isHijun1?"t-warn":"t-ng"}">${S.isHijun1?"該当":"非該当"}</span></td></tr>
+      <tr><td>株式等保有特定会社</td><td>株式等保有割合 ${pct(S.kabuWari)}（基準 50.0%）</td>
+        <td><span class="tag ${S.isKabuTok?"t-warn":"t-ng"}">${S.isKabuTok?"該当":"非該当"}</span></td></tr>
+      <tr><td>土地保有特定会社</td><td>土地保有割合 ${pct(S.tochiWari)}（基準 ${S.tochiKijun===999?"判定対象外":pct(S.tochiKijun)}）</td>
+        <td><span class="tag ${S.isTochiTok?"t-warn":"t-ng"}">${S.isTochiTok?"該当":"非該当"}</span></td></tr>
+      <tr><td>開業後3年未満の会社等</td><td>${S.kaigyo3?"開業後3年未満":(S.isZenbu0?"3要素すべてが0":"—")}</td>
+        <td><span class="tag ${(S.kaigyo3||S.isZenbu0)?"t-warn":"t-ng"}">${(S.kaigyo3||S.isZenbu0)?"該当":"非該当"}</span></td></tr>
+     </table>
+     判定は後の号が優先します（清算中→開業前休業中→開業後3年未満→土地保有→株式等保有→比準要素数1）。<br>
+     → <span class="res">${S.kubun}</span>`);
+
+  h += step("STEP 4", "類似業種比準価額（財基通180）",
+    `1株当たりの資本金等の額 ${fmtYen(S.shihon1)}／50円換算株式数 ${S.k50[0].toLocaleString("ja-JP")}株<br>
+     <span class="f">Ⓑ ${S.Bm[0].toFixed(1)}円　Ⓒ ${S.Cm[0].toLocaleString("ja-JP")}円　Ⓓ ${S.Dm[0].toLocaleString("ja-JP")}円</span><br>
+     <span class="f">Ⓑ÷B=${S.hb.toFixed(2)}　Ⓒ÷C=${S.hc.toFixed(2)}　Ⓓ÷D=${S.hd.toFixed(2)}　→ 比準割合 ${S.hijun.toFixed(2)}</span><br>
+     <span class="f">A ${S.A}円 × ${S.hijun.toFixed(2)} × ${pct(S.shinshaku)} = ${S.p50.toFixed(1)}円（50円当たり）</span><br>
+     <span class="f">${S.p50.toFixed(1)}円 × (${fmtYen(S.shihon1)} ÷ 50円) = ${fmtYen(S.ruiji)}</span><br>
+     → <span class="res">${fmtYen(S.ruiji)}</span>`);
+
+  h += step("STEP 5", "純資産価額（財基通185・186-2）",
+    `<span class="f">相続税評価額による純資産 ${fmtJp(S.sozokuJun)} − 帳簿価額による純資産 ${fmtJp(S.bokaJunT)} = 評価差額 ${fmtJp(S.sagaku)}</span><br>
+     <span class="f">評価差額 ${fmtJp(S.sagaku)} × ${pct(S.ritsu)} = 法人税額等相当額 ${fmtJp(S.houjin)}</span><br>
+     <span class="f">(${fmtJp(S.sozokuJun)} − ${fmtJp(S.houjin)}) ÷ ${S.hakkouIma.toLocaleString("ja-JP")}株 = ${fmtYen(S.junGross)}</span><br>
+     ${S.use80 ? `議決権割合が50％以下のため80％を乗じます　<span class="f">${fmtYen(S.junGross)} × 80％ = ${fmtYen(S.junTekiyo)}</span><br>` : "議決権割合が50％超のため80％評価の適用はありません。<br>"}
+     → <span class="res">${fmtYen(S.junTekiyo)}</span>`);
+
+  let s6 = "";
+  if (S.kubun === "特定の評価会社に該当しない"){
+    if (S.junOnly) s6 = `納税者の選択により純資産価額方式のみを適用します。<br><span class="f">${fmtYen(S.gensokuNormal)}</span>`;
+    else if (S.rank===1) s6 = `大会社は類似業種比準価額。ただし納税者の選択で純資産価額も選べるため、低いほうを採用します。<br>
+      <span class="f">MIN(${fmtYen(S.ruiji)}, ${fmtYen(S.junGross)}) = ${fmtYen(S.gensokuNormal)}</span>`;
+    else if (S.rank===5) s6 = `小会社は純資産価額。ただし納税者の選択でL＝0.50の併用方式も選べます。<br>
+      <span class="f">MIN(${fmtYen(S.junTekiyo)}, ${fmtYen(S.ruiji)}×0.5＋${fmtYen(S.junTekiyo)}×0.5) = ${fmtYen(S.gensokuNormal)}</span>`;
+    else s6 = `中会社は併用方式です。<br>
+      <span class="f">MIN(${fmtYen(S.ruiji)}, ${fmtYen(S.junTekiyo)})×${pct(S.L)} ＋ ${fmtYen(S.junTekiyo)}×${pct(1-S.L)} = ${fmtYen(S.gensokuNormal)}</span>`;
+  } else if (S.kubun === "比準要素数1の会社"){
+    s6 = `純資産価額方式か、L＝0.25の併用方式の低いほうを選べます（財基通189-2）。<br>
+      <span class="f">MIN(${fmtYen(S.junTekiyo)}, ${fmtYen(S.ruiji)}×0.25＋${fmtYen(S.junTekiyo)}×0.75) = ${fmtYen(S.gensoku)}</span>`;
+  } else if (S.kubun === "株式等保有特定会社"){
+    s6 = `純資産価額方式か、S1＋S2方式の低いほうを選べます（財基通189-3）。<br>
+      受取配当金等収受割合 ${pct(S.shuju)}／S1 ${fmtYen(S.S1)}（うち類似 ${fmtYen(S.s1Ruiji)}・純資産 ${fmtYen(S.s1JunT)}）／S2 ${fmtYen(S.S2)}<br>
+      <span class="f">MIN(${fmtYen(S.junTekiyo)}, ${fmtYen(S.S1S2)}) = ${fmtYen(S.gensoku)}</span>`;
+  } else {
+    s6 = `${S.kubun}は純資産価額方式のみです（財基通189-4・189-5）。<br><span class="f">${fmtYen(S.gensoku)}</span>`;
+  }
+  h += step("STEP 6", "原則的評価額の組み立て（財基通179）", s6 + `<br>→ <span class="res">${fmtYen(S.gensoku)}</span>`);
+
+  h += step("STEP 7", "最終評価額",
+    S.useHaito
+      ? `配当還元方式です。配当還元価額 ${fmtYen(S.haitoKangen)} と原則的評価額 ${fmtYen(S.gensoku)} の低いほうを採ります（財基通188-2ただし書）。<br>
+         <span class="f">MIN(${fmtYen(S.haitoKangen)}, ${fmtYen(S.gensoku)}) = ${fmtYen(S.final1)}</span><br>
+         → 1株 <span class="res">${fmtYen(S.final1)}</span>　× ${S.hyokaKabu.toLocaleString("ja-JP")}株 ＝ <span class="res">${fmtYen(S.finalTotal)}</span>`
+      : `原則的評価方式です。<br>
+         → 1株 <span class="res">${fmtYen(S.final1)}</span>　× ${S.hyokaKabu.toLocaleString("ja-JP")}株 ＝ <span class="res">${fmtYen(S.finalTotal)}</span>`);
+
+  $("steps").innerHTML = h;
+}
+
+function drawMethods(S){
+  const rows = [
+    ["類似業種比準価額", S.ruiji, "上場している同業種の平均株価に、自社の配当・利益・簿価純資産を比べて算定"],
+    ["純資産価額（80％評価前）", S.junGross, "大会社が純資産価額方式を選択する場合に使用"],
+    ["純資産価額（80％評価適用後）", S.junTekiyo, "中会社・小会社および特定の評価会社の評価で使用"],
+    ["配当還元価額", S.haitoKangen, "年配当金額 ÷ 10％ ×（1株当たり資本金等の額 ÷ 50円）"],
+    ["S1＋S2（株式等保有特定会社）", S.S1S2, `S1 ${fmtYen(S.S1)} ＋ S2 ${fmtYen(S.S2)}`],
+    ["原則的評価額", S.gensoku, "会社規模と特定の評価会社の区分に応じた価額"]
+  ];
+  let h = `<thead><tr><th>評価方式</th><th>1株当たり</th><th>評価株式数での金額</th><th>内容</th></tr></thead><tbody>`;
+  rows.forEach(([k,val,d]) => {
+    h += `<tr><td>${k}</td><td class="num">${fmtYen(val)}</td>
+      <td class="num">${fmtYen(val*S.hyokaKabu)}</td><td style="white-space:normal;font-size:12px;color:var(--ink-3)">${d}</td></tr>`;
+  });
+  h += `<tr class="total"><td>適用される相続税評価額（${S.useHaito?"配当還元方式":"原則的評価方式"}）</td>
+    <td class="num">${fmtYen(S.final1)}</td><td class="num">${fmtYen(S.finalTotal)}</td><td></td></tr>`;
+  $("methodTbl").innerHTML = h + "</tbody>";
+}
+
+function drawMa(S){
+  let h = `<thead><tr><th>評価手法</th><th>1株当たり</th><th>評価株式数での金額</th><th>算定の要点</th></tr></thead><tbody>`;
+  const rows = [
+    ["DCF法", S.dcf1, `WACC ${pct(S.wacc)}／事業価値 ${fmtJp(S.jigyo)}／株主価値 ${fmtJp(S.kabunushi)}／非流動性ディスカウント ${n("hiryudo")}％`],
+    ["時価純資産法", S.jika1, `簿価純資産 ＋ 含み損益 − 税効果 ＝ ${fmtJp(S.jikaJun)}`],
+    ["年買法（年倍法）", S.nenbai1, `時価純資産 ${fmtJp(S.jikaJun)} ＋ 営業権 ${fmtJp(S.noren)}`],
+    ["EBITDAマルチプル法", S.ebitda1, `EBITDA ${fmtJp(S.ebitda)} × ${n("evMult")}倍 − 有利子負債 ＋ 現預金等`]
+  ];
+  rows.forEach(([k,val,d]) => {
+    h += `<tr><td>${k}</td><td class="num">${fmtYen(val)}</td><td class="num">${fmtYen(val*S.hyokaKabu)}</td>
+      <td style="white-space:normal;font-size:12px;color:var(--ink-3)">${d}</td></tr>`;
+  });
+  h += `<tr class="hi"><td><b>M&amp;A価格レンジ</b></td><td class="num">${fmtYen(S.maLow)}</td>
+    <td class="num">${fmtYen(S.maHigh)}</td><td style="white-space:normal;font-size:12px">左が下限、右が上限</td></tr>`;
+  h += `<tr class="total"><td>4手法の平均</td><td class="num">${fmtYen(S.maAvg)}</td>
+    <td class="num">${fmtYen(S.maAvg*S.hyokaKabu)}</td>
+    <td style="white-space:normal;font-size:12px">相続税評価額の
+      ${S.final1>0 ? (S.maAvg/S.final1).toFixed(2) : "—"} 倍</td></tr>`;
+  $("maTbl").innerHTML = h + "</tbody>";
+}
+
+function drawNotes(S){
+  const N = [];
+  const push = (tg,cls,html) => N.push({tg,cls,html});
+
+  if (S.ritsu === 0.38){
+    push("186-2","n-tax", `<b>純資産価額の計算で控除する法人税額等相当額の割合は38％です。</b>
+      令和7年度税制改正で防衛特別法人税が創設されたことに伴い、令和8年3月25日付の通達改正で37％から引き上げられました。
+      <b>令和8年4月1日以後に相続・遺贈・贈与により取得した株式</b>に適用されます。
+      内訳は法人税23.2％、地方法人税2.3896％、防衛特別法人税0.928％、事業税7.0％、特別法人事業税2.59％、
+      道府県民税0.232％、市町村民税1.392％の合計37.7316％です。
+      今回の試算では、この1％の違いで1株当たり ${fmtYen(rd((S.sozokuJun - rd(S.sagaku*0.37,0))/Math.max(1,S.hakkouIma),0) - S.junGross)} の差が出ています。`);
+  } else {
+    push("186-2","n-tax", `課税時期が令和8年3月31日以前のため、法人税額等相当額の割合は<b>37％</b>です。
+      令和8年4月1日以後に相続・遺贈・贈与により取得する場合は38％になり、純資産価額はその分下がります。
+      課税時期が年度末付近にかかる場合は、どちらが適用されるかを必ず確認してください。`);
+  }
+
+  if (S.useHaito){
+    push("188-2","n-info", `<b>この取得者は配当還元方式で評価できます。</b>
+      原則的評価額 ${fmtYen(S.gensoku)} に対して配当還元価額は ${fmtYen(S.haitoKangen)}、
+      ${S.haitoKangen>0 && S.gensoku>0 ? "その差は約"+(S.gensoku/Math.max(1,S.haitoKangen)).toFixed(1)+"倍です。" : ""}
+      同じ会社の同じ株式でも、誰が取得するかで評価額はこれだけ変わります。
+      事業承継では、後継者以外の親族に渡す株式にこの方式が使えるかどうかが大きな分かれ目になります。
+      ただし議決権割合の判定を誤ると税務調査で否認されます。株主名簿と定款を必ず確認してください。`);
+  }
+
+  if (S.kubun === "株式等保有特定会社"){
+    push("189-3","n-risk", `<b>株式等保有特定会社に該当しています（株式等保有割合 ${pct(S.kabuWari)}）。</b>
+      類似業種比準価額を単独で使えなくなり、純資産価額方式かS1＋S2方式のいずれか低いほうになります。
+      今回はS1＋S2が ${fmtYen(S.S1S2)}、純資産価額が ${fmtYen(S.junTekiyo)} で、
+      <b>${S.S1S2 < S.junTekiyo ? "S1＋S2方式" : "純資産価額方式"}</b>が有利です。
+      持株会社の設計では、株式等保有割合を50％未満に抑えられるかが分岐点になります。
+      事業用不動産を持株会社に残す、借入で事業資産を取得するなどの方法がありますが、
+      合理的な理由なく課税時期の直前に資産構成を変えると、その変動はなかったものとして判定されます（財基通189なお書き）。`);
+  } else if (S.kabuWari >= 0.4){
+    push("189-3","n-risk", `株式等保有割合が ${pct(S.kabuWari)} で、株式等保有特定会社の基準（50％）に近づいています。
+      子会社株式の価値が上がると自動的に該当してしまうため、ホールディングス化を検討している場合は
+      この割合の推移を毎期モニタリングしてください。`);
+  }
+
+  if (S.kubun === "土地保有特定会社"){
+    push("189-4","n-risk", `<b>土地保有特定会社に該当しています（土地保有割合 ${pct(S.tochiWari)}／基準 ${pct(S.tochiKijun)}）。</b>
+      純資産価額方式のみとなり、類似業種比準価額は使えません。
+      不動産の含み益がそのまま株価に反映されるため、評価額が大きく跳ね上がります。`);
+  }
+
+  if (S.kubun === "比準要素数1の会社"){
+    push("189-2","n-risk", `<b>比準要素数1の会社に該当しています。</b>
+      無配・赤字が続くと該当し、類似業種比準価額のウェイトが0.25に制限されます。
+      皮肉なことに、業績が悪い会社ほど純資産価額に引っ張られて株価が高くなることがあります。
+      配当を復活させる、利益を1円でも出すといった対応で、翌期以降は非該当にできる場合があります。`);
+  }
+
+  if (S.rank === 1 && S.ruiji < S.junGross){
+    push("株価対策","n-tax", `大会社のため、類似業種比準価額 ${fmtYen(S.ruiji)} と純資産価額 ${fmtYen(S.junGross)} の
+      低いほうを選べます。今回は類似業種比準価額が ${fmtYen(S.junGross - S.ruiji)} 低く、こちらが採用されています。
+      <b>会社規模を大きく保つこと自体が株価対策になります</b>。
+      従業員数が70人以上になれば、総資産や取引金額にかかわらず大会社です。`);
+  }
+  if (S.rank >= 4 && S.ruiji < S.junTekiyo){
+    push("株価対策","n-tax", `会社規模が ${S.kibo} のため、類似業種比準価額のウェイト（Lの割合）は ${pct(S.L)} にとどまります。
+      仮に会社規模がひとつ上の区分になれば、Lが上がって評価額は下がります。
+      従業員数・総資産・取引金額のどれを動かせば区分が変わるかを確認する価値があります。`);
+  }
+
+  push("比準要素","n-info", `3つの比準要素のうち、実務で最も動かしやすいのは<b>利益金額（Ⓒ）</b>です。
+    現在のⒸは ${S.Cm[0].toLocaleString("ja-JP")}円、Ⓒ÷Cは ${S.hc.toFixed(2)} で、比準割合 ${S.hijun.toFixed(2)} のうち
+    ${S.hijun>0 ? Math.round(S.hc/3/S.hijun*100) : 0}％を占めています。
+    役員退職金の支給、含み損のある資産の売却、大規模な設備投資などで課税所得が下がると比準価額も下がります。
+    ただし事業上の合理性がないと、同族会社の行為計算の否認（法人税法132条）の対象になり得ます。`);
+
+  push("A株価","n-tax", `類似業種の株価Aは、課税時期の属する月・前月・前々月・前年平均・課税時期の属する月以前2年間の平均の
+    5つのうち<b>最も低い金額を選べます</b>（財基通182）。株式市場が下落した局面では、この選択だけで評価額を下げられます。
+    また業種目は小分類が原則ですが、その業種目が属する中分類・大分類を選ぶこともできます（財基通181）。
+    どの階層を選ぶかで金額が変わるため、必ず全パターンを試算してください。`);
+
+  const bai = S.final1>0 ? S.maAvg/S.final1 : 0;
+  push("M&A","n-ma", `M&A評価額の平均は ${fmtYen(S.maAvg)}、相続税評価額は ${fmtYen(S.final1)} で、
+    その比は<b>${bai.toFixed(2)}倍</b>です。
+    ${bai > 1.3 ? "収益力が評価額に十分反映されていない状態です。第三者に売却したほうが手取りが大きくなる可能性があります。"
+      : bai < 0.8 ? "相続税評価額のほうが高くなっています。含み益のある資産を多く持ちながら利益が出ていない会社に典型的な形です。"
+      : "両者は近い水準にあります。"}
+    ただしM&A評価はWACCや事業計画の前提に強く依存します。1つの数字ではなくレンジで見てください。`);
+
+  push("みなし贈与","n-risk", `同族関係者間で自社株を売買する場合、相続税評価額から著しく離れた価額で取引すると、
+    差額が贈与とみなされることがあります（相続税法7条・9条）。
+    法人が関係する場合は法人税法上の時価も問題になり、所得税・法人税・贈与税が同時に課税されるおそれがあります。
+    <b>売買価額の設定は、必ず税理士と事前に相談してください。</b>`);
+
+  $("notes").innerHTML = N.map(x =>
+    `<div class="note"><span class="tg ${x.cls}">${x.tg}</span><div>${x.html}</div></div>`).join("");
+}
+
+/* ================= SVGチャート ================= */
+const CH = {navy:"#1F3251", navy2:"#5B7BA8", teal:"#0F6E64", teal2:"#6FB3AA",
+            gold:"#A8862F", crim:"#8E2F3A", gray:"#C2CBD4", grayL:"#E3E8ED",
+            ink:"#131A21", ink2:"#4E5A65", ink3:"#828D97", rule:"#DEE4EA"};
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const SVG = (w,h,inner,cls) =>
+  `<svg class="cv ${cls||""}" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"
+    preserveAspectRatio="xMidYMid meet" role="img" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+const TXT = (x,y,t,{s=12,c=CH.ink2,a="start",w=400,ff=null}={}) =>
+  `<text x="${x}" y="${y}" font-size="${s}" fill="${c}" text-anchor="${a}" font-weight="${w}"
+    dominant-baseline="middle"${ff?` font-family="${ff}"`:""}>${esc(t)}</text>`;
+
+/* 横棒グラフ */
+function svgHBars(items, o){
+  o = o || {};
+  const w = o.w || 760, rowH = o.rowH || 34, labelW = o.labelW || 216, valW = o.valW || 118;
+  const fmt = o.fmt || fmtYen;
+  const barW = w - labelW - valW - 16;
+  const mx = o.max || Math.max(...items.map(i => Math.abs(i.v)), 1);
+  const h = items.length * rowH + 26;
+  let s = "";
+  if (o.ref !== undefined){
+    const rx = labelW + Math.min(1, o.ref/mx) * barW;
+    s += `<line x1="${rx}" y1="4" x2="${rx}" y2="${items.length*rowH+8}" stroke="${CH.crim}"
+           stroke-width="1.2" stroke-dasharray="4 3"/>`
+       + TXT(rx, items.length*rowH+18, o.refLabel || "", {s:10.5, c:CH.crim, a:"middle"});
+  }
+  items.forEach((it,i) => {
+    const y = 8 + i*rowH, bw = Math.max(2, Math.abs(it.v)/mx*barW);
+    s += TXT(labelW-10, y+rowH/2-4, it.k, {s:11.5, c:it.hi?CH.navy:CH.ink2, a:"end", w:it.hi?700:400});
+    s += `<rect x="${labelW}" y="${y+6}" width="${barW}" height="${rowH-18}" fill="${CH.grayL}" rx="1"/>`;
+    s += `<rect x="${labelW}" y="${y+6}" width="${bw}" height="${rowH-18}" fill="${it.c||CH.navy}" rx="1"/>`;
+    s += TXT(labelW+barW+10, y+rowH/2-4, fmt(it.v),
+             {s:12, c:it.hi?CH.gold:CH.ink, a:"start", w:it.hi?700:500});
+  });
+  return SVG(w, h, s);
+}
+
+/* 縦棒グラフ */
+function svgVBars(items, o){
+  o = o || {};
+  const w = o.w || 760, h = o.h || 230, padL = 8, padB = 46, padT = 26;
+  const fmt = o.fmt || fmtJp;
+  const mx = Math.max(...items.map(i => Math.abs(i.v)), 1);
+  const bw = (w - padL*2) / items.length;
+  let s = `<line x1="${padL}" y1="${h-padB}" x2="${w-padL}" y2="${h-padB}" stroke="${CH.rule}"/>`;
+  items.forEach((it,i) => {
+    const bh = Math.max(2, Math.abs(it.v)/mx*(h-padB-padT));
+    const x = padL + i*bw + bw*0.18, bwid = bw*0.64;
+    s += `<rect x="${x}" y="${h-padB-bh}" width="${bwid}" height="${bh}" fill="${it.c||CH.navy}" rx="1"/>`;
+    s += TXT(x+bwid/2, h-padB-bh-11, fmt(it.v), {s:11, c:CH.ink, a:"middle", w:600});
+    String(it.k).split("\n").forEach((ln,j) =>
+      { s += TXT(x+bwid/2, h-padB+14+j*14, ln, {s:11, c:CH.ink2, a:"middle"}); });
+  });
+  return SVG(w, h, s);
+}
+
+/* 折れ線グラフ */
+function svgLine(pts, o){
+  o = o || {};
+  const w = o.w || 760, h = o.h || 250, padL = 14, padR = 14, padB = 46, padT = 30;
+  const fmt = o.fmt || fmtYen;
+  const vs = pts.map(p => p.v);
+  const mn = Math.min(...vs), mx = Math.max(...vs);
+  const lo = mn - (mx-mn)*0.22 || 0, hi = mx + (mx-mn)*0.18 || 1;
+  const X = i => padL + i*(w-padL-padR)/(pts.length-1);
+  const Y = v => h - padB - (v-lo)/(hi-lo || 1)*(h-padB-padT);
+  let d = pts.map((p,i) => `${i?"L":"M"}${X(i).toFixed(1)},${Y(p.v).toFixed(1)}`).join(" ");
+  let area = d + ` L${X(pts.length-1).toFixed(1)},${h-padB} L${X(0).toFixed(1)},${h-padB} Z`;
+  let s = `<line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="${CH.rule}"/>`;
+  s += `<path d="${area}" fill="${CH.teal}" opacity="0.08"/>`;
+  s += `<path d="${d}" fill="none" stroke="${CH.teal}" stroke-width="2.2"/>`;
+  pts.forEach((p,i) => {
+    const hiP = !!p.hi;
+    s += `<circle cx="${X(i)}" cy="${Y(p.v)}" r="${hiP?6:4}" fill="${hiP?CH.gold:CH.teal}"
+           stroke="#fff" stroke-width="1.6"/>`;
+    s += TXT(X(i), Y(p.v)-16, fmt(p.v), {s:10.5, c:hiP?CH.gold:CH.ink2, a:"middle", w:hiP?700:500});
+    s += TXT(X(i), h-padB+16, p.k, {s:11, c:hiP?CH.gold:CH.ink2, a:"middle", w:hiP?700:400});
+  });
+  return SVG(w, h, s);
+}
+
+/* 5段階ポジションバー */
+function svgSteps(labels, active, o){
+  o = o || {};
+  const w = o.w || 760, h = 62, padL = 8;
+  const seg = (w - padL*2) / labels.length;
+  let s = TXT(padL, 14, o.title || "", {s:11.5, c:CH.ink2, w:600});
+  labels.forEach((lb,i) => {
+    const x = padL + i*seg, on = (i === active);
+    s += `<rect x="${x+2}" y="26" width="${seg-4}" height="22" rx="2"
+           fill="${on?CH.navy:CH.grayL}"/>`;
+    s += TXT(x+seg/2, 37, lb, {s:11, c:on?"#fff":CH.ink3, a:"middle", w:on?700:400});
+  });
+  if (o.note) s += TXT(w-padL, 14, o.note, {s:11, c:CH.gold, a:"end", w:600});
+  return SVG(w, h, s);
+}
+
+/* ゲージ（判定基準ライン付き） */
+function svgGauge(rows, o){
+  o = o || {};
+  const w = o.w || 760, rowH = 54, padL = 8, labelW = 168, valW = 96;
+  const barW = w - labelW - valW - 16;
+  let s = "";
+  rows.forEach((r,i) => {
+    const y = 10 + i*rowH;
+    const frac = Math.min(1, r.v / Math.max(r.t, 0.0001));
+    const bw = Math.max(2, Math.min(1, r.v) * barW);
+    const tx = labelW + Math.min(1, r.t) * barW;
+    const hit = r.v >= r.t;
+    s += TXT(labelW-10, y+15, r.k, {s:11.5, c:CH.ink2, a:"end", w:600});
+    s += `<rect x="${labelW}" y="${y+5}" width="${barW}" height="21" rx="2" fill="${CH.grayL}"/>`;
+    s += `<rect x="${labelW}" y="${y+5}" width="${bw}" height="21" rx="2"
+           fill="${hit?CH.crim:CH.teal}"/>`;
+    s += `<line x1="${tx}" y1="${y}" x2="${tx}" y2="${y+31}" stroke="${CH.navy}" stroke-width="1.6"/>`;
+    s += TXT(tx, y+40, "判定基準 " + (r.t>=9 ? "対象外" : pct(r.t)), {s:10, c:CH.navy, a:"middle"});
+    s += TXT(labelW+barW+10, y+15, pct(r.v), {s:13, c:hit?CH.crim:CH.ink, a:"start", w:700});
+  });
+  return SVG(w, 10 + rows.length*rowH + 6, s);
+}
+
+/* ウォーターフォール */
+function svgWaterfall(steps, o){
+  o = o || {};
+  const w = o.w || 760, h = 250, padL = 8, padB = 52, padT = 24;
+  let run = 0; const bars = [];
+  steps.forEach(st => {
+    if (st.total){ bars.push({k:st.k, y0:0, y1:run, v:run, total:true, c:st.c||CH.navy}); }
+    else { const s0 = run; run += st.v; bars.push({k:st.k, y0:Math.min(s0,run), y1:Math.max(s0,run),
+             v:st.v, c:st.v<0?CH.crim:(st.c||CH.teal2)}); }
+  });
+  const mx = Math.max(...bars.map(b => b.y1), 1);
+  const bw = (w - padL*2)/bars.length;
+  const Y = v => h - padB - v/mx*(h-padB-padT);
+  let s = `<line x1="${padL}" y1="${h-padB}" x2="${w-padL}" y2="${h-padB}" stroke="${CH.rule}"/>`;
+  bars.forEach((b,i) => {
+    const x = padL + i*bw + bw*0.2, bwid = bw*0.6;
+    const yTop = Y(b.y1), yBot = Y(b.y0);
+    s += `<rect x="${x}" y="${yTop}" width="${bwid}" height="${Math.max(2,yBot-yTop)}"
+           fill="${b.c}" rx="1"/>`;
+    s += TXT(x+bwid/2, yTop-11, fmtJp(b.v), {s:10.5, c:CH.ink, a:"middle", w:600});
+    b.k.split("\n").forEach((ln,j) =>
+      { s += TXT(x+bwid/2, h-padB+14+j*13, ln, {s:10.5, c:CH.ink2, a:"middle"}); });
+    if (i < bars.length-1)
+      s += `<line x1="${x+bwid}" y1="${b.total?Y(b.y1):Y(b.y1)}" x2="${x+bw}" y2="${b.total?Y(b.y1):Y(b.y1)}"
+             stroke="${CH.ink3}" stroke-dasharray="3 3" stroke-width="1"/>`;
+  });
+  return SVG(w, h, s);
+}
+
+/* ドーナツ */
+function svgDonut(items, o){
+  o = o || {};
+  const w = o.w || 700, h = 250, cx = 168, cy = 122, R = 94, r0 = 56;
+  const tot = items.reduce((a,b) => a + Math.max(0,b.v), 0) || 1;
+  let ang = -Math.PI/2, s = "";
+  items.forEach((it,i) => {
+    const a2 = ang + Math.max(0,it.v)/tot*Math.PI*2;
+    const big = (a2-ang) > Math.PI ? 1 : 0;
+    const p = (a,r) => [cx + Math.cos(a)*r, cy + Math.sin(a)*r];
+    const [x1,y1] = p(ang,R), [x2,y2] = p(a2,R), [x3,y3] = p(a2,r0), [x4,y4] = p(ang,r0);
+    s += `<path d="M${x1},${y1} A${R},${R} 0 ${big} 1 ${x2},${y2} L${x3},${y3}
+           A${r0},${r0} 0 ${big} 0 ${x4},${y4} Z" fill="${it.c}"/>`;
+    ang = a2;
+  });
+  items.forEach((it,i) => {
+    const y = 82 + i*34;
+    s += `<rect x="300" y="${y-8}" width="12" height="12" fill="${it.c}" rx="1"/>`;
+    s += TXT(320, y-1, it.k, {s:12, c:CH.ink2});
+    s += TXT(320, y+15, fmtJp(it.v) + "（" + Math.round(Math.max(0,it.v)/tot*100) + "％）",
+             {s:12.5, c:CH.ink, w:700});
+  });
+  return SVG(w, h, s);
+}
+
+function card(title, sub, body){
+  return `<div class="chart"><div class="chart-h"><b>${title}</b>${sub?`<span>${sub}</span>`:""}</div>${body}</div>`;
+}
+
+/* ---- 感応度計算 ---- */
+function ruijiFor(S, cVal, shin){
+  const hc = S.C>0 ? rd(cVal/S.C,2) : 0;
+  const hij = rd((S.hb + hc + S.hd)/3, 2);
+  return rd(rd(S.A*hij*shin,1)*S.bairitsu, 0);
+}
+function gensokuFor(S, ruiji, rank, L){
+  if (rank===1) return rd(Math.min(ruiji, S.junGross), 0);
+  if (rank===5) return rd(Math.min(S.junTekiyo, ruiji*0.5 + S.junTekiyo*0.5), 0);
+  return rd(Math.min(ruiji, S.junTekiyo)*L + S.junTekiyo*(1-L), 0);
+}
+
+/* ---- 描画本体 ---- */
+function drawCharts(S){
+  const KB = ["大会社","中会社の大","中会社の中","中会社の小","小会社"];
+  let h = "";
+
+  /* 1. メイン比較 */
+  h += card("相続税評価額と、M&amp;Aで付く株価", "1株当たり",
+    svgHBars([
+      {k:"相続税評価額（税務上）", v:S.final1, c:CH.gold, hi:true},
+      {k:"DCF法", v:S.dcf1, c:CH.navy},
+      {k:"時価純資産法", v:S.jika1, c:CH.navy2},
+      {k:"年買法（年倍法）", v:S.nenbai1, c:CH.navy2},
+      {k:"EBITDAマルチプル法", v:S.ebitda1, c:CH.navy2}
+    ]));
+
+  /* 2. 相続税評価の方式別 */
+  h += card("評価方式ごとの1株当たりの価額", "どの方式が適用されるかで、ここまで変わります",
+    svgHBars([
+      {k:"類似業種比準価額", v:S.ruiji, c:CH.teal},
+      {k:"純資産価額（80％評価前）", v:S.junGross, c:CH.teal2},
+      {k:"純資産価額（80％評価後）", v:S.junTekiyo, c:CH.teal2},
+      {k:"配当還元価額", v:S.haitoKangen, c:CH.gray},
+      {k:"S1＋S2", v:S.S1S2, c:CH.gray},
+      {k:"★ 適用される評価額", v:S.final1, c:CH.gold, hi:true}
+    ]));
+
+  /* 3. 会社規模のポジション */
+  const rS = (()=>{ let x=5; for(let i=0;i<4;i++) if(n("sosisan")>=TH_SOSISAN[i][S.g]){x=i+1;break;} return x;})();
+  const rT = (()=>{ let x=5; for(let i=0;i<4;i++) if(n("torihiki")>=TH_TORIHIKI[i][S.g]){x=i+1;break;} return x;})();
+  const jg = n("jugyoin");
+  const rJ = jg>=70?1: jg>35?2: jg>20?3: jg>5?4:5;
+  h += card("会社規模はどこに位置しているか", "3つの基準それぞれの区分と、最終判定",
+    svgSteps(KB, rS-1, {title:"① 総資産価額（帳簿価額）", note:fmtJp(n("sosisan"))})
+    + svgSteps(KB, rJ-1, {title:"② 従業員数", note:jg.toLocaleString("ja-JP")+"人"})
+    + svgSteps(KB, rT-1, {title:"③ 取引金額（売上高）", note:fmtJp(n("torihiki"))})
+    + svgSteps(KB, S.rank-1, {title:"→ 最終判定", note:"Lの割合 "+pct(S.L)+"／斟酌率 "+pct(S.shinshaku)}));
+
+  /* 4. 比準要素 */
+  h += card("自社と類似業種（上場会社平均）の比較", "1株50円当たりの金額",
+    svgHBars([
+      {k:"配当金額　Ⓑ ／ B", v:S.Bm[0], c:CH.teal},
+      {k:"利益金額　Ⓒ ／ C", v:S.Cm[0], c:CH.teal},
+      {k:"簿価純資産　Ⓓ ／ D", v:S.Dm[0], c:CH.teal}
+    ], {fmt:x=>x.toFixed(1)+"円", max:Math.max(S.Bm[0],S.Cm[0],S.Dm[0],S.B,S.C,S.D)})
+    + svgHBars([
+      {k:"類似業種 B（配当）", v:S.B, c:CH.gray},
+      {k:"類似業種 C（利益）", v:S.C, c:CH.gray},
+      {k:"類似業種 D（簿価純資産）", v:S.D, c:CH.gray}
+    ], {fmt:x=>x.toFixed(1)+"円", max:Math.max(S.Bm[0],S.Cm[0],S.Dm[0],S.B,S.C,S.D)}));
+
+  h += card("比準割合の内訳", "1.00が上場会社の平均水準。1.00を超えている要素が株価を押し上げています",
+    svgHBars([
+      {k:"配当　Ⓑ÷B", v:S.hb, c:CH.navy2},
+      {k:"利益　Ⓒ÷C", v:S.hc, c:CH.navy2},
+      {k:"簿価純資産　Ⓓ÷D", v:S.hd, c:CH.navy2},
+      {k:"平均（比準割合）", v:S.hijun, c:CH.gold, hi:true}
+    ], {fmt:x=>x.toFixed(2), ref:1, refLabel:"上場会社平均 1.00",
+        max:Math.max(S.hb,S.hc,S.hd,S.hijun,1.2)}));
+
+  /* 5. 純資産価額のウォーターフォール */
+  h += card("純資産価額ができるまで", "総資産から、課税価格になるまでの流れ",
+    svgWaterfall([
+      {k:"相続税評価額\nによる総資産", v:S.sozokuSo},
+      {k:"△ 負債合計", v:-S.fusai},
+      {k:"＝ 相続税評価額\nによる純資産", total:true, c:CH.navy},
+      {k:"△ 法人税額等\n相当額 "+pct(S.ritsu), v:-(S.sozokuJun - S.kazeiKakaku)},
+      {k:"＝ 課税価格に\n算入される純資産", total:true, c:CH.gold}
+    ]));
+
+  h += card("含み益（評価差額）はいくらか", "2本の棒の差が含み益です",
+    svgVBars([
+      {k:"相続税評価額\nベースの純資産", v:S.sozokuJun, c:CH.navy},
+      {k:"帳簿価額\nベースの純資産", v:S.bokaJunT, c:CH.gray},
+      {k:"含み益\n（評価差額）", v:S.sagaku, c:CH.crim}
+    ]));
+
+  /* 6. 特定の評価会社ゲージ */
+  h += card("特定の評価会社の判定ライン", "縦線を超えると該当します",
+    svgGauge([
+      {k:"株式等保有割合", v:S.kabuWari, t:0.5},
+      {k:"土地保有割合", v:S.tochiWari, t:S.tochiKijun}
+    ]));
+
+  /* 7. DCF */
+  h += card("フリーキャッシュフローの推移", "5年間の予測",
+    svgVBars(S.fcf.map((v,i) => ({k:(i+1)+"年目", v:v, c:CH.teal2})), {h:210}));
+  h += card("事業価値の内訳", "6年目以降（継続価値）が占める割合",
+    svgDonut([
+      {k:"予測期間5年間のFCF", v:S.pvSum, c:CH.teal},
+      {k:"継続価値（6年目以降）", v:S.tvPv, c:CH.navy2}
+    ]));
+
+  $("charts").innerHTML = h;
+}
+
+function drawSens(S){
+  const RATES = [-0.5,-0.3,-0.15,0,0.15,0.3,0.5];
+  const sho1 = n("sho1"), fus1 = n("fus1"), kes1 = n("kes1"), k50 = n("shi1")/50;
+  const pts = RATES.map(x => {
+    const rieki = Math.max(0, sho1*(1+x) + fus1 + kes1);
+    const c = k50>0 ? rd(rieki/k50, 0) : 0;
+    const ru = ruijiFor(S, c, S.shinshaku);
+    return {k:(x>0?"+":"")+Math.round(x*100)+"%", v:gensokuFor(S, ru, S.rank, S.L), hi:(x===0)};
+  });
+  const KB = ["大会社","中会社の大","中会社の中","中会社の小","小会社"];
+  const bars = KB.map((k,i) => {
+    const rank = i+1;
+    const shin = rank===1?0.7 : rank===5?0.5 : 0.6;
+    const L = [1,0.9,0.75,0.6,0.5][i];
+    const ru = rd(rd(S.A*S.hijun*shin,1)*S.bairitsu, 0);
+    return {k:k, v:gensokuFor(S, ru, rank, L),
+            c:(rank===S.rank)?CH.gold:CH.navy2};
+  });
+  const wr = [-0.02,-0.01,0,0.01,0.02], gr = [-0.01,-0.005,0,0.005,0.01];
+  let tbl = `<div class="tbl-scroll"><table><thead><tr><th>WACC ＼ 永久成長率</th>`
+    + gr.map(g => `<th>${((n("gTerm")/100+g)*100).toFixed(2)}%</th>`).join("") + `</tr></thead><tbody>`;
+  wr.forEach(dw => {
+    const w = S.wacc + dw;
+    tbl += `<tr><td><b>${(w*100).toFixed(2)}%</b></td>`;
+    gr.forEach(dg => {
+      const g = n("gTerm")/100 + dg;
+      let cell = "—";
+      if (w > g){
+        const pv = S.fcf.reduce((s,f,i) => s + f/Math.pow(1+w,i+1), 0);
+        const tvv = S.fcf[4]*(1+g)/(w-g)/Math.pow(1+w,5);
+        const kk = pv + tvv + n("hiJigyo") - n("yurishi");
+        cell = fmtYen(Math.round(kk/Math.max(1,S.hakkouIma)*(1-n("hiryudo")/100)));
+      }
+      const isC = (dw===0 && dg===0);
+      tbl += `<td class="num"${isC?' style="background:var(--gold-soft);font-weight:700"':""}>${cell}</td>`;
+    });
+    tbl += `</tr>`;
+  });
+  tbl += `</tbody></table></div>`;
+
+  $("sens").innerHTML =
+    card("課税所得を動かすと、株価はどう変わるか",
+      "横軸は直前期の課税所得金額の増減率。金色が現状です",
+      svgLine(pts, {h:250}))
+  + card("会社規模が変わると、株価はどう変わるか",
+      "他の条件は同じままで、会社規模だけを変えた場合の1株当たり評価額。金色が現在の区分です",
+      svgVBars(bars, {h:230, fmt:fmtYen}))
+  + card("WACCと永久成長率を動かしたときのDCF株価",
+      "1株当たり。金色が現在の前提です", tbl);
+}
+
+/* ---- 用語解説 ---- */
+const GLOSSARY = [
+  ["取引相場のない株式", "証券取引所に上場しておらず、市場での売買価格がない株式。日本の会社の大多数がこれにあたります。"],
+  ["原則的評価方式", "会社を支配する立場にある同族株主等が取得した株式に使う評価方法。類似業種比準方式・純資産価額方式・その併用方式があります。"],
+  ["配当還元方式", "経営に関与しない少数株主が取得した株式に使う特例的な評価方法。年配当金額を10％で割り戻します。"],
+  ["斟酌率", "類似業種比準価額の計算の最後に掛ける割引率。大会社0.7、中会社0.6、小会社0.5。非上場株式の流動性の低さなどを考慮しています。"],
+  ["Lの割合", "中会社の評価で、類似業種比準価額のウェイトを示す割合。中会社の大0.90、中0.75、小0.60。小会社が併用方式を選ぶ場合は0.50。"],
+  ["評価差額に対する法人税額等相当額", "相続税評価額による純資産と帳簿価額による純資産の差（含み益）に一定割合を掛けて差し引く金額。令和8年4月1日以後の相続・遺贈・贈与は38％、それ以前は37％。"],
+  ["特定の評価会社", "資産の保有状況や営業の状態が特殊なため、通常の評価方法が使えない会社。6種類あります。"],
+  ["株式等保有特定会社", "総資産（相続税評価額）に占める株式等の割合が50％以上の会社。持株会社が該当しやすい類型です。"],
+  ["S1＋S2方式", "株式等保有特定会社の特例的な計算方法。S2は株式等そのものの純資産価額、S1は株式等以外の部分を通常どおり評価した金額。"],
+  ["受取配当金等収受割合", "S1の計算に使う割合。直前期末以前2年間の受取配当等 ÷（受取配当等＋営業利益）、1を上限とします。"],
+  ["土地保有特定会社", "総資産（相続税評価額）に占める土地等の割合が一定以上の会社。基準は大会社70％、中会社90％。"],
+  ["比準要素数1の会社", "直前期末のⒷ・Ⓒ・Ⓓのうち2つが0で、かつ直前々期末でも2つ以上が0である会社。"],
+  ["中心的な同族株主", "本人・配偶者・直系血族・兄弟姉妹・一親等の姻族の議決権が25％以上である場合の、その株主。"],
+  ["DCF法", "会社が将来生み出すフリーキャッシュフローをWACCで現在価値に割り引いて企業価値を求める方法。"],
+  ["WACC", "加重平均資本コスト。株主が期待するリターンと借入金利を、資本構成で加重平均した割引率。"],
+  ["フリーキャッシュフロー", "税引後営業利益 ＋ 減価償却費 − 設備投資 − 運転資本の増加。株主と債権者の両方に分配できる現金です。"],
+  ["継続価値", "予測期間より後の価値をまとめて表した金額。5年目のFCF×(1＋永久成長率)÷(WACC−永久成長率)。"],
+  ["時価純資産法", "資産・負債を時価に洗い替えて純資産を求める方法。M&A価格の下限の目安として使われます。"],
+  ["年買法（年倍法）", "時価純資産に「実質営業利益の◯年分」を営業権として上乗せする方法。中小企業のM&Aで最も広く使われています。"],
+  ["EBITDA", "営業利益 ＋ 減価償却費。会社が本業で稼ぐ現金に近い数字です。"],
+  ["非流動性ディスカウント", "非上場株式はすぐに換金できないため、上場株式より低く評価する割引。実務では10〜30％程度。"],
+  ["実質営業利益（正常収益力）", "オーナーへの過大な役員報酬や私的な費用を適正水準に引き直した後の営業利益。"]
+];
+$("glossary").innerHTML = GLOSSARY.map(([t,d]) => `<dt>${t}</dt><dd>${d}</dd>`).join("");
+
+/* ---- イベント ---- */
+let timer = null;
+const later = () => { clearTimeout(timer); timer = setTimeout(render, 60); };
+$("form").addEventListener("input", later);
+$("form").addEventListener("change", later);
+$("reset").addEventListener("click", () => location.reload());
+$("print").addEventListener("click", () => window.print());
+$("csv").addEventListener("click", () => {
+  const S = window.__S;
+  const rows = [
+    ["項目","値"],
+    ["会社規模", S.kibo], ["Lの割合", S.L], ["斟酌率", S.shinshaku],
+    ["株主区分による評価方式", S.useHaito?"配当還元方式":"原則的評価方式"],
+    ["特定の評価会社の区分", S.kubun],
+    ["Ⓑ 1株当たり配当金額", S.Bm[0]], ["Ⓒ 1株当たり利益金額", S.Cm[0]],
+    ["Ⓓ 1株当たり簿価純資産", S.Dm[0]], ["比準割合", S.hijun],
+    ["類似業種比準価額", S.ruiji],
+    ["法人税額等相当額の割合", S.ritsu],
+    ["純資産価額（80%前）", S.junGross], ["純資産価額（80%後）", S.junTekiyo],
+    ["配当還元価額", S.haitoKangen],
+    ["S1", S.S1], ["S2", S.S2], ["S1+S2", S.S1S2],
+    ["原則的評価額", S.gensoku],
+    ["1株当たり相続税評価額", S.final1], ["相続税評価額 総額", S.finalTotal],
+    ["WACC", S.wacc], ["DCF法 1株", S.dcf1], ["時価純資産法 1株", S.jika1],
+    ["年買法 1株", S.nenbai1], ["EBITDA法 1株", S.ebitda1],
+    ["M&A レンジ下限", S.maLow], ["M&A レンジ上限", S.maHigh], ["M&A 平均", S.maAvg]
+  ];
+  const csv = "\uFEFF" + rows.map(r => r.join(",")).join("\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv"}));
+  a.download = "非上場株式_株価算定結果.csv";
+  a.click(); URL.revokeObjectURL(a.href);
+});
+
+render();
+</script>
+</body>
+</html>

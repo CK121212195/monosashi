@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>リース FO判定 簡易版｜現在価値基準90%と耐用年数基準75%で自動判定｜数字のものさし</title>
+<meta name="description" content="リース取引がファイナンス・リースかオペレーティング・リースかを、現在価値基準と経済的耐用年数基準から自動判定。2027年4月からの新リース会計基準についても解説しています。">
+<link rel="canonical" href="https://kazumono.com/lease-fo/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="リース FO判定 簡易版｜現在価値基準90%と耐用年数基準75%で自動判定">
+<meta property="og:description" content="リース取引がファイナンス・リースかオペレーティング・リースかを、現在価値基準と経済的耐用年数基準から自動判定。2027年4月からの新リース会計基準についても解説しています。">
+<meta property="og:url" content="https://kazumono.com/lease-fo/">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- AdSense サイト全体タグ：承認後にここへ貼る -->
+
+<style>
+:root{
+  --paper:#FAF9F6; --card:#FFFFFF;
+  --ink:#18262F; --ink-soft:#33495B; --ink-faint:#5B7085;
+  --sea-deep:#33526C; --sea:#527695; --sky:#84D2F5; --aqua:#B0F1F0; --mist:#DFF6F1;
+  --dawn:#FEEEDF; --rose:#F4C3D3; --bloom:#F8A3BF; --plum:#B67AB4;
+  --peridot:#82B33A; --lime:#D4E157; --mint:#E8F5E9; --warn:#B5623F;
+  --line:rgba(24,38,47,.18);
+  --shadow:0 1px 2px rgba(24,38,47,.05), 0 10px 26px rgba(24,38,47,.07);
+  --shadow-lift:0 3px 6px rgba(24,38,47,.07), 0 20px 44px rgba(24,38,47,.14);
+  --serif:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Times New Roman",serif;
+  --sans:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Noto Sans JP",sans-serif;
+  --num:"Helvetica Neue",Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:16.5px;line-height:1.92;letter-spacing:.015em;-webkit-font-smoothing:antialiased;}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.26;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23g)' opacity='0.22'/></svg>");}
+.page{position:relative;z-index:1;}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 24px;}
+.column{width:100%;max-width:820px;margin:0 auto;padding:0 24px;}
+a{color:inherit;}
+:focus-visible{outline:2.5px solid var(--sea-deep);outline-offset:3px;border-radius:4px;}
+.skip{position:absolute;left:-9999px;background:var(--sea-deep);color:#fff;padding:12px 20px;z-index:99;}
+.skip:focus{left:0;}
+.masthead{position:sticky;top:0;z-index:20;background:rgba(250,249,246,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.masthead__inner{display:flex;align-items:center;justify-content:space-between;gap:24px;height:70px;}
+.brand{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.16em;text-decoration:none;color:var(--ink);white-space:nowrap;}
+.brand span{color:var(--sea-deep);}
+.nav{display:flex;gap:26px;}
+.nav a{font-size:14px;font-weight:500;letter-spacing:.1em;text-decoration:none;color:var(--ink-soft);border-bottom:2px solid transparent;padding:6px 0;transition:color .2s,border-color .2s;}
+.nav a:hover{color:var(--ink);border-bottom-color:var(--bloom);}
+.crumbs{font-size:13px;color:var(--ink-soft);margin:34px 0 0;}
+.crumbs a{text-decoration:none;}
+.head{padding:22px 0 34px;position:relative;}
+.head__mark{position:absolute;top:-14px;right:-24px;width:156px;height:156px;border-radius:50%;background:var(--mist);pointer-events:none;}
+.badge{position:relative;display:inline-block;font-size:12px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:999px;background:var(--rose);margin:0 0 16px;}
+.head h1{font-family:var(--serif);font-weight:600;font-size:clamp(26px,4.2vw,38px);line-height:1.55;letter-spacing:.04em;margin:0 0 18px;position:relative;}
+.head p{margin:0;font-size:16.5px;line-height:2;position:relative;max-width:34em;}
+.head__safe{display:inline-flex;align-items:center;gap:9px;margin-top:22px;padding:9px 18px;border-radius:999px;background:var(--mint);font-size:13.5px;font-weight:600;position:relative;}
+.head__safe::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--peridot);}
+.alert{border-left:4px solid var(--warn);background:rgba(254,238,223,.75);border-radius:0 16px 16px 0;padding:24px 28px;margin:0 0 28px;}
+.alert h2{font-family:var(--serif);font-weight:600;font-size:17.5px;letter-spacing:.06em;margin:0 0 10px;}
+.alert p{margin:0 0 12px;font-size:14.5px;line-height:1.9;color:var(--ink-soft);}
+.alert p:last-child{margin:0;}
+.alert strong{color:var(--ink);}
+.calc{background:var(--card);border:1.5px solid var(--line);border-radius:24px;padding:36px 32px;box-shadow:var(--shadow);margin:0 0 20px;}
+.calc h2{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.08em;margin:0 0 8px;}
+.calc__hint{margin:0 0 26px;font-size:14px;color:var(--ink-soft);}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;}
+.field label{display:block;font-size:14px;font-weight:600;margin:0 0 7px;}
+.field small{display:block;font-size:12.5px;font-weight:400;color:var(--ink-faint);line-height:1.6;margin-top:2px;}
+.field input{width:100%;padding:13px 15px;font-size:16px;font-family:var(--num);border:1.5px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);text-align:right;}
+.field input:focus{border-color:var(--sea-deep);outline:none;background:#fff;}
+.checks{margin:24px 0 0;display:grid;gap:12px;}
+.check{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;line-height:1.75;cursor:pointer;}
+.check input{width:20px;height:20px;margin:4px 0 0;accent-color:#33526C;flex:none;}
+.check small{display:block;font-size:12.5px;color:var(--ink-faint);}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;align-items:center;}
+.btn-run{display:inline-flex;align-items:center;gap:10px;padding:16px 34px;border:none;border-radius:999px;background:var(--sea-deep);color:#fff;font-family:var(--sans);font-size:16px;font-weight:600;letter-spacing:.08em;cursor:pointer;box-shadow:0 10px 24px rgba(51,82,108,.34);transition:transform .2s,box-shadow .2s;}
+.btn-run:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(51,82,108,.42);}
+.btn-sample{background:none;border:1.5px solid var(--line);border-radius:999px;padding:13px 22px;font-family:var(--sans);font-size:14px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:border-color .2s,color .2s;}
+.btn-sample:hover{border-color:var(--sea-deep);color:var(--ink);}
+.err{margin:16px 0 0;font-size:14px;color:var(--warn);font-weight:600;display:none;}
+.result{display:none;background:linear-gradient(150deg,var(--mist),rgba(255,255,255,.92));border:1.5px solid var(--line);border-left:6px solid var(--sea);border-radius:22px;padding:34px 32px;margin:0;}
+.result.is-fl{border-left-color:var(--plum);}
+.result.is-ol{border-left-color:var(--peridot);}
+.result__label{font-family:var(--num);font-size:11.5px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 10px;}
+.result__figure{font-family:var(--num);font-size:clamp(32px,5.6vw,46px);font-weight:700;margin:0 0 4px;font-variant-numeric:tabular-nums;line-height:1.25;}
+.result__figure .u{font-size:.42em;font-weight:600;margin-left:.3em;}
+.result__grade{font-family:var(--serif);font-weight:600;font-size:clamp(24px,4.4vw,34px);letter-spacing:.05em;margin:0 0 6px;line-height:1.45;}
+.result__sub{margin:0 0 26px;font-size:14.5px;color:var(--ink-soft);}
+.figs{width:100%;border-collapse:collapse;font-size:14.5px;background:rgba(255,255,255,.78);border-radius:14px;overflow:hidden;margin:0 0 24px;}
+.figs th,.figs td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--line);}
+.figs th{font-weight:600;width:56%;}
+.figs td{font-family:var(--num);font-variant-numeric:tabular-nums;text-align:right;}
+.figs tr:last-child th,.figs tr:last-child td{border-bottom:none;}
+.figs tr.tot th,.figs tr.tot td{font-weight:700;background:rgba(223,246,241,.6);}
+.bar{height:9px;border-radius:999px;background:rgba(24,38,47,.1);overflow:hidden;margin:6px 0 16px;}
+.bar i{display:block;height:100%;border-radius:999px;background:var(--c,var(--sea));transition:width .5s cubic-bezier(.2,.7,.3,1);}
+.axis__top{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;}
+.axis__name{font-weight:600;}
+.axis__val{font-family:var(--num);font-variant-numeric:tabular-nums;color:var(--ink-soft);font-size:13.5px;}
+.remarks{list-style:none;margin:0;padding:0;}
+.remarks li{position:relative;padding-left:22px;margin:9px 0;font-size:15px;line-height:1.85;}
+.remarks li::before{content:"";position:absolute;left:0;top:.7em;width:8px;height:8px;border-radius:50%;background:var(--c,var(--sea));}
+.upsell{position:relative;overflow:hidden;display:block;text-decoration:none;background:var(--card);
+  border:1.5px solid var(--line);border-left:5px solid var(--plum);border-radius:22px;
+  padding:34px 32px;margin:26px 0 0;box-shadow:var(--shadow);transition:transform .26s,box-shadow .26s;}
+.upsell::after{content:"";position:absolute;top:-46px;right:-46px;width:150px;height:150px;border-radius:50%;
+  background:linear-gradient(135deg,var(--rose),var(--plum));opacity:.9;transition:transform .38s;}
+.upsell:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift);}
+.upsell:hover::after{transform:scale(1.35);}
+.upsell__badge{position:relative;display:inline-block;font-size:12px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:999px;background:var(--plum);color:#fff;margin:0 0 16px;}
+.upsell__name{position:relative;font-family:var(--serif);font-weight:600;font-size:22px;letter-spacing:.04em;line-height:1.6;margin:0 0 12px;}
+.upsell__desc{position:relative;font-size:15px;line-height:1.9;margin:0 0 20px;max-width:33em;}
+.upsell__go{position:relative;font-size:15px;font-weight:600;letter-spacing:.06em;color:var(--sea-deep);}
+.cmp{width:100%;border-collapse:collapse;font-size:14.5px;background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);margin:26px 0 0;}
+.cmp th,.cmp td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--line);}
+.cmp thead th{background:var(--mist);font-weight:700;}
+.cmp tbody th{font-weight:500;color:var(--ink-soft);}
+.cmp td{text-align:center;font-weight:600;}
+.cmp .no{color:var(--ink-faint);font-weight:400;}
+.cmp tr:last-child th,.cmp tr:last-child td{border-bottom:none;}
+.about{margin:64px 0 0;}
+.about h2{font-family:var(--serif);font-weight:600;font-size:clamp(21px,3vw,26px);letter-spacing:.08em;margin:0 0 22px;padding-bottom:14px;border-bottom:1px solid var(--line);}
+.about h3{font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:.05em;margin:38px 0 12px;}
+.about h3::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--bloom);margin-right:11px;vertical-align:middle;}
+.about p{margin:0 0 22px;}
+.about ul,.about ol{margin:0 0 22px;padding-left:1.4em;}
+.about li{margin:8px 0;}
+.about code{font-family:var(--num);background:var(--mist);padding:2px 8px;border-radius:6px;font-size:14.5px;}
+.adslot{margin:56px 0 0;text-align:center;}
+.adslot__label{font-family:var(--num);font-size:10.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 10px;}
+.disclaimer{margin:44px 0 0;border-left:4px solid var(--peridot);background:rgba(232,245,233,.7);border-radius:0 16px 16px 0;padding:24px 28px;}
+.disclaimer h3{font-family:var(--serif);font-weight:600;font-size:16.5px;letter-spacing:.08em;margin:0 0 10px;}
+.disclaimer p{margin:0 0 12px;font-size:14px;line-height:1.92;color:var(--ink-soft);}
+.disclaimer p:last-child{margin:0;}
+.foot{margin-top:90px;border-top:1px solid var(--line);padding:44px 0 56px;}
+.foot__inner{display:flex;flex-wrap:wrap;gap:26px;justify-content:space-between;align-items:center;}
+.foot__links{display:flex;flex-wrap:wrap;gap:26px;}
+.foot__links a{font-size:14px;font-weight:500;color:var(--ink-soft);text-decoration:none;}
+.copy{font-family:var(--num);font-size:12.5px;color:var(--ink-faint);margin:0;}
+@media (max-width:820px){
+  .nav a:nth-child(n+3){display:none;}
+  .head__mark{display:none;}
+  .calc,.result,.upsell{padding:26px 20px;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">本文へ移動</a>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="wrap masthead__inner">
+      <a class="brand" href="/">数字の<span>ものさし</span></a>
+      <nav class="nav" aria-label="サイト内">
+        <a href="/#tools">ツール</a>
+        <a href="/#excel">Excel版</a>
+        <a href="/contact/">お問い合わせ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="column">
+
+      <p class="crumbs"><a href="/">ホーム</a> ／ <a href="/#tools">ツール</a> ／ リース</p>
+
+      <header class="head">
+        <span class="head__mark" aria-hidden="true"></span>
+        <span class="badge">簡易版</span>
+        <h1>リース FO判定 簡易版</h1>
+        <p>現在価値基準と経済的耐用年数基準から、ファイナンス・リースかオペレーティング・リースかを判定します。所有権移転の有無まで含めて表示します。</p>
+        <span class="head__safe">入力内容は送信されません。すべてブラウザの中で計算します</span>
+      </header>
+
+      <section class="alert">
+        <h2>2027年4月から、借手のFO判定はなくなります</h2>
+        <p>新リース会計基準（企業会計基準第34号）が<strong>2027年4月1日以後に開始する事業年度から適用</strong>されます。借手はファイナンスとオペレーティングの区分が廃止され、<strong>原則としてすべてのリースについて使用権資産とリース負債を計上</strong>することになります。2025年4月1日以後開始する年度からの早期適用も可能です。</p>
+        <p>対象は主に上場企業や会計監査人設置会社で、中小企業は現時点では強制適用の対象外です。また、短期リースや少額リースには計上を免除する規定があります。</p>
+        <p>したがってこのツールは、<strong>①中小企業会計指針に基づく処理を続ける会社 ②適用前の期間 ③貸手側の区分</strong>で使うものとお考えください。新基準の下で使用権資産とリース負債をいくら計上するかは、Excel版が対応しています。</p>
+      </section>
+
+      <section class="calc">
+        <h2>契約条件を入力する</h2>
+        <p class="calc__hint">単位は円。割引率は、貸手の計算利子率が不明な場合は追加借入利子率を入れてください。</p>
+
+        <div class="grid">
+          <div class="field">
+            <label for="cash">見積現金購入価額<small>円・現金で買った場合の価額</small></label>
+            <input id="cash" type="number" inputmode="numeric" placeholder="5000000">
+          </div>
+          <div class="field">
+            <label for="pmt">月額リース料<small>円</small></label>
+            <input id="pmt" type="number" inputmode="numeric" placeholder="92000">
+          </div>
+          <div class="field">
+            <label for="months">リース期間<small>か月</small></label>
+            <input id="months" type="number" inputmode="numeric" placeholder="60">
+          </div>
+          <div class="field">
+            <label for="rate">割引率<small>%／年</small></label>
+            <input id="rate" type="number" inputmode="decimal" step="0.01" placeholder="3.0">
+          </div>
+          <div class="field">
+            <label for="life">経済的耐用年数<small>年</small></label>
+            <input id="life" type="number" inputmode="decimal" step="0.1" placeholder="8">
+          </div>
+        </div>
+
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="c1"><span>所有権移転条項がある<small>期間満了時に所有権が借手へ移転する定めがある</small></span></label>
+          <label class="check"><input type="checkbox" id="c2"><span>割安購入選択権がある<small>著しく有利な価額で買い取れる権利があり、行使が確実に予想される</small></span></label>
+          <label class="check"><input type="checkbox" id="c3"><span>特別仕様物件である<small>借手の用途に合わせた特別仕様で、他への転用が困難</small></span></label>
+        </div>
+
+        <div class="actions">
+          <button class="btn-run" type="button" id="run">判定する</button>
+          <button class="btn-sample" type="button" id="s1">FLの例</button>
+          <button class="btn-sample" type="button" id="s2">OLの例</button>
+        </div>
+        <p class="err" id="err"></p>
+      </section>
+
+      <section class="result" id="result" aria-live="polite">
+        <p class="result__label">classification</p>
+        <p class="result__grade" id="grade">—</p>
+        <p class="result__sub" id="sub"></p>
+
+        <div class="axis__top"><span class="axis__name">現在価値基準</span><span class="axis__val" id="v1">—</span></div>
+        <div class="bar"><i id="b1" style="--c:#B67AB4"></i></div>
+
+        <div class="axis__top"><span class="axis__name">経済的耐用年数基準</span><span class="axis__val" id="v2">—</span></div>
+        <div class="bar"><i id="b2" style="--c:#527695"></i></div>
+
+        <table class="figs" id="figs"></table>
+        <ul class="remarks" id="remarks"></ul>
+      </section>
+
+      <a class="upsell" href="https://note.com/pythonddd/n/naf5e186ac81e" target="_blank" rel="noopener">
+        <span class="upsell__badge">Excel版</span>
+        <h2 class="upsell__name">2027年4月のオンバランスに、いくら乗るか</h2>
+        <p class="upsell__desc">判定だけでは、決算にどう出るかは分かりません。新基準の下で使用権資産とリース負債をいくら計上し、減価償却費と利息費用が各期にどう配分されるか。FO判定と一括して計算するシートです。契約が何本もある会社ほど、事前に総額を掴んでおく必要があります。</p>
+        <span class="upsell__go">noteで詳しく見る →</span>
+      </a>
+
+      <table class="cmp">
+        <thead><tr><th>できること</th><th>この簡易判定</th><th>Excel版</th></tr></thead>
+        <tbody>
+          <tr><th>現在価値基準・耐用年数基準の判定</th><td>○</td><td>○</td></tr>
+          <tr><th>所有権移転の有無</th><td>○</td><td>○</td></tr>
+          <tr><th>使用権資産・リース負債の計上額</th><td class="no">—</td><td>自動計算</td></tr>
+          <tr><th>減価償却費・利息費用の期別配分</th><td class="no">—</td><td>償却スケジュール</td></tr>
+          <tr><th>複数契約の一括処理</th><td class="no">1件ずつ</td><td>一覧で一括</td></tr>
+          <tr><th>短期・少額リースの免除判定</th><td class="no">—</td><td>対応</td></tr>
+          <tr><th>仕訳例</th><td class="no">—</td><td>収録</td></tr>
+        </tbody>
+      </table>
+
+      <section class="about">
+        <h2>この判定の前提</h2>
+        <p>従来のリース会計（企業会計基準第13号）では、リース取引を次の順序で分類します。この簡易判定も同じ順序をたどっています。</p>
+
+        <h3>判定の順序</h3>
+        <ol>
+          <li><strong>所有権移転の有無を見る</strong>：所有権移転条項、割安購入選択権、特別仕様物件のいずれかに該当すれば「所有権移転ファイナンス・リース」です。この時点で確定します。</li>
+          <li><strong>現在価値基準</strong>：リース料総額の現在価値が、見積現金購入価額の<code>おおむね90%以上</code>ならファイナンス・リースです。</li>
+          <li><strong>経済的耐用年数基準</strong>：リース期間が経済的耐用年数の<code>おおむね75%以上</code>ならファイナンス・リースです。</li>
+          <li>どちらの基準も下回れば、オペレーティング・リースとなります。</li>
+        </ol>
+        <p>2つの基準は<strong>いずれかを満たせばファイナンス・リース</strong>です。両方を満たす必要はありません。</p>
+
+        <h3>90%と75%の意味</h3>
+        <p>この2つの基準は、要するに「実質的に買ったのと同じか」を判定しています。支払総額の現在価値が購入価額とほぼ同じなら、金額の面で買ったのと変わりません。使用期間が耐用年数の大部分を占めるなら、使い切っているという点で買ったのと変わりません。<strong>形式は賃貸借でも、実質が売買なら売買として処理する</strong>。それがFO判定の思想です。</p>
+        <p>新基準が借手の区分を廃止したのは、この判定が形式的な線引きになりやすく、90%や75%をわずかに下回るよう契約を設計すればオフバランスにできてしまう、という問題があったためです。</p>
+
+        <h3>この判定に含めていないもの</h3>
+        <ul>
+          <li>維持管理費用相当額の控除。実務では、リース料に含まれる固定資産税・保険料相当額を除いて現在価値を計算します。</li>
+          <li>残価保証がある場合の取扱い。</li>
+          <li>延長オプション・解約オプションを考慮したリース期間の見積り。</li>
+          <li>貸手側の会計処理（リース投資資産・リース債権）。</li>
+          <li>税務上の取扱い。会計上の判定と法人税法上のリース取引の判定は一致しないことがあります。</li>
+        </ul>
+      </section>
+
+      <div class="adslot">
+        <p class="adslot__label">sponsored</p>
+        <!-- AdSense 広告ユニットをここに -->
+      </div>
+
+      <section class="disclaimer">
+        <h3>ご利用にあたって</h3>
+        <p>本ツールの判定は一般的な基準による目安であり、個別の契約に対する会計上の結論を保証するものではありません。「おおむね90%」「おおむね75%」という基準は幅を持つ概念であり、境界付近では総合的な判断が必要です。</p>
+        <p>実際の会計処理は、契約書の内容を確認のうえ、顧問税理士・公認会計士にご相談ください。本ツールの利用により生じたいかなる損害についても、作成者は責任を負いかねます。</p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__inner">
+      <nav class="foot__links" aria-label="フッター">
+        <a href="/about/">運営者情報</a>
+        <a href="/privacy/">プライバシーポリシー</a>
+        <a href="/contact/">お問い合わせ</a>
+        <a href="/sitemap.xml">サイトマップ</a>
+      </nav>
+      <p class="copy">© 2026 数字のものさし</p>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  function v(id){ var n = parseFloat($(id).value); return isFinite(n) ? n : 0; }
+  function y(n){ return Math.round(n).toLocaleString("ja-JP"); }
+
+  function run(){
+    var C = v("cash"), P = v("pmt"), n = v("months"), r = v("rate")/100, life = v("life");
+    var c1 = $("c1").checked, c2 = $("c2").checked, c3 = $("c3").checked;
+    var err = $("err");
+    if(C <= 0 || P <= 0 || n <= 0 || life <= 0){
+      err.textContent = "見積現金購入価額・月額リース料・リース期間・経済的耐用年数は、0より大きい数値を入れてください。";
+      err.style.display = "block"; return;
+    }
+    err.style.display = "none";
+
+    var i = r/12;
+    var pv = (i === 0) ? P * n : P * (1 - Math.pow(1+i, -n)) / i;
+    var pvRatio = pv / C * 100;
+    var lifeRatio = (n/12) / life * 100;
+
+    var transfer = (c1 || c2 || c3);
+    var isFL = transfer || pvRatio >= 90 || lifeRatio >= 75;
+
+    var grade, cls, color, why;
+    if(transfer){
+      grade = "所有権移転ファイナンス・リース";
+      cls = "is-fl"; color = "#B67AB4";
+      why = "所有権移転条項・割安購入選択権・特別仕様物件のいずれかに該当するため、基準の数値によらず所有権移転ファイナンス・リースとなります。";
+    } else if(isFL){
+      grade = "所有権移転外ファイナンス・リース";
+      cls = "is-fl"; color = "#B67AB4";
+      var hit = [];
+      if(pvRatio >= 90) hit.push("現在価値基準（90%以上）");
+      if(lifeRatio >= 75) hit.push("経済的耐用年数基準（75%以上）");
+      why = hit.join(" と ") + " を満たしています。いずれか一方を満たせばファイナンス・リースです。";
+    } else {
+      grade = "オペレーティング・リース";
+      cls = "is-ol"; color = "#82B33A";
+      why = "現在価値基準・経済的耐用年数基準のいずれも下回っています。";
+    }
+
+    var res = $("result");
+    res.className = "result " + cls;
+    res.style.display = "block";
+    $("grade").textContent = grade;
+    $("grade").style.color = color;
+    $("sub").textContent = why;
+
+    $("v1").textContent = pvRatio.toFixed(1) + " % ／ 基準 90%";
+    $("v2").textContent = lifeRatio.toFixed(1) + " % ／ 基準 75%";
+    $("b1").style.width = Math.min(pvRatio, 120) / 1.2 + "%";
+    $("b2").style.width = Math.min(lifeRatio, 120) / 1.2 + "%";
+    $("b1").style.setProperty("--c", pvRatio >= 90 ? "#B67AB4" : "#84D2F5");
+    $("b2").style.setProperty("--c", lifeRatio >= 75 ? "#B67AB4" : "#84D2F5");
+
+    $("figs").innerHTML =
+      '<tr><th>リース料総額</th><td>' + y(P*n) + ' 円</td></tr>' +
+      '<tr><th>リース料総額の現在価値</th><td>' + y(pv) + ' 円</td></tr>' +
+      '<tr><th>見積現金購入価額</th><td>' + y(C) + ' 円</td></tr>' +
+      '<tr class="tot"><th>現在価値の割合</th><td>' + pvRatio.toFixed(1) + ' %</td></tr>' +
+      '<tr><th>リース期間</th><td>' + (n/12).toFixed(1) + ' 年</td></tr>' +
+      '<tr><th>経済的耐用年数</th><td>' + life.toFixed(1) + ' 年</td></tr>' +
+      '<tr class="tot"><th>耐用年数に対する割合</th><td>' + lifeRatio.toFixed(1) + ' %</td></tr>';
+
+    var rem = [];
+    if(isFL){
+      rem.push("ファイナンス・リースは、売買取引に準じた処理となります。リース資産とリース債務を計上します。");
+      if(!transfer) rem.push("所有権移転外のため、償却はリース期間定額法（残存価額ゼロ）が原則です。");
+    } else {
+      rem.push("オペレーティング・リースは、従来基準では通常の賃貸借処理となり、支払リース料を費用計上します。");
+    }
+    if(Math.abs(pvRatio - 90) <= 3 || Math.abs(lifeRatio - 75) <= 3){
+      rem.push("基準値の近傍にあります。「おおむね」90%・75%という表現は幅を持つ概念のため、この水準では顧問会計士への確認をおすすめします。");
+    }
+    rem.push("2027年4月1日以後に開始する事業年度からは、借手はこの区分によらず原則すべてのリースをオンバランスします。");
+    $("remarks").innerHTML = rem.map(function(t){ return '<li style="--c:' + color + '">' + t + '</li>'; }).join("");
+
+    res.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function fill(c, p, n, r, l, a, b, cc){
+    $("cash").value = c; $("pmt").value = p; $("months").value = n;
+    $("rate").value = r; $("life").value = l;
+    $("c1").checked = a; $("c2").checked = b; $("c3").checked = cc;
+  }
+
+  $("run").addEventListener("click", run);
+  $("s1").addEventListener("click", function(){ fill(5000000, 92000, 60, 3.0, 6, false, false, false); run(); });
+  $("s2").addEventListener("click", function(){ fill(5000000, 62000, 36, 3.0, 10, false, false, false); run(); });
+  ["cash","pmt","months","rate","life"].forEach(function(id){
+    $(id).addEventListener("keydown", function(e){ if(e.key === "Enter") run(); });
+  });
+})();
+</script>
+
+</body>
+</html>
