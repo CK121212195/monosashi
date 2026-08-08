@@ -12,9 +12,18 @@
 <meta property="og:title" content="運営者情報｜数字のものさし">
 <meta property="og:description" content="財務経理、金融機関での法人営業・制度対応、企業信用調査を経て独立。このサイトを作っている人と、その理由について。">
 <meta property="og:url" content="https://kazumono.com/about/">
+<meta property="og:image" content="https://kazumono.com/assets/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="数字のものさし">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#33526C">
 
-<!-- AdSense サイト全体タグ：承認後にここへ貼る -->
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2146116373822311" crossorigin="anonymous"></script>
 
 <style>
 :root{
@@ -162,6 +171,28 @@ a{color:inherit;}
   .eryael{padding:26px 20px;}
   .eryael__origin dl{grid-template-columns:1fr;gap:2px;}
   .eryael__origin dd{margin:0 0 10px;}
+}
+
+/* ===== 装飾円を文字の背面へ ===== */
+.hero{isolation:isolate;}
+.hero__blob{z-index:-1;}
+.hero .wrap{position:relative;z-index:1;}
+.head__mark{z-index:-1;}
+.head{isolation:isolate;}
+
+/* ===== モバイルの装飾円 ===== */
+@media (max-width:820px){
+  .hero__blob--a{width:190px;height:190px;top:-70px;right:-70px;opacity:.55;}
+  .hero__blob--b{display:none;}
+  .hero__blob--c{width:80px;height:80px;bottom:-24px;left:-30px;opacity:.6;}
+  .hero{padding:52px 0 46px;}
+  .hero h1{font-size:clamp(25px,7.2vw,34px);line-height:1.5;max-width:none;}
+  .hero p{font-size:15px;}
+  .eyebrow{font-size:10.5px;letter-spacing:.22em;word-break:break-word;}
+}
+@media (max-width:400px){
+  .hero__blob--a{width:150px;height:150px;top:-60px;right:-60px;}
+  .hero h1{font-size:24px;letter-spacing:.02em;}
 }
 </style>
 <!-- Google tag (gtag.js) -->
