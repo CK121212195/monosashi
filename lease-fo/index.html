@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<script>if(location.protocol==='http:'){location.replace('https://'+location.host+location.pathname+location.search+location.hash);}</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>リース FO判定 簡易版｜現在価値基準90%と耐用年数基準75%で自動判定｜数字のものさし</title>
@@ -144,6 +146,39 @@ a{color:inherit;}
   .calc,.result,.upsell{padding:26px 20px;}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+
+/* ===== 表の横スクロール ===== */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 28px;}
+.tw table{margin-bottom:0;min-width:420px;}
+
+/* ===== アバター ===== */
+.pic{display:block;border-radius:50%;background:linear-gradient(135deg,var(--dawn),var(--rose));object-fit:cover;}
+.pic--l{width:96px;height:96px;}
+.pic--s{width:66px;height:66px;}
+
+/* ===== モバイル最適化 ===== */
+@media (max-width:820px){
+  body::before{display:none;}
+  .masthead{background:var(--paper);backdrop-filter:none;-webkit-backdrop-filter:none;}
+  .masthead__inner{height:auto;min-height:58px;padding:10px 0;flex-wrap:wrap;gap:6px 16px;}
+  .brand{font-size:17px;letter-spacing:.1em;}
+  .nav{gap:16px;flex-wrap:wrap;}
+  .nav a{font-size:12.5px;letter-spacing:.02em;padding:2px 0;border-bottom-width:2px;}
+  .nav a:nth-child(n+3){display:inline-block;}
+  .wrap,.column{padding-left:18px;padding-right:18px;}
+  h1,h2,h3,p,li,td,th,.post__title,.tool__name,.shop__name{overflow-wrap:anywhere;}
+  .tools,.shop,.channels{grid-template-columns:1fr;}
+  .toc{padding:22px 20px;}
+  .btn{padding:14px 22px;font-size:14px;}
+  .grid{grid-template-columns:1fr;}
+  .actions{gap:10px;}
+  .btn-run,.btn-sample{width:100%;justify-content:center;}
+}
+@media (max-width:400px){
+  .brand{font-size:16px;letter-spacing:.06em;}
+  .nav{gap:12px;}
+  .nav a{font-size:11.5px;}
+}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
@@ -243,7 +278,7 @@ a{color:inherit;}
         <div class="axis__top"><span class="axis__name">経済的耐用年数基準</span><span class="axis__val" id="v2">—</span></div>
         <div class="bar"><i id="b2" style="--c:#527695"></i></div>
 
-        <table class="figs" id="figs"></table>
+        <div class="tw"><table class="figs" id="figs"></table></div>
         <ul class="remarks" id="remarks"></ul>
       </section>
 
@@ -254,7 +289,7 @@ a{color:inherit;}
         <span class="upsell__go">noteで詳しく見る →</span>
       </a>
 
-      <table class="cmp">
+      <div class="tw"><table class="cmp">
         <thead><tr><th>できること</th><th>この簡易判定</th><th>Excel版</th></tr></thead>
         <tbody>
           <tr><th>現在価値基準・耐用年数基準の判定</th><td>○</td><td>○</td></tr>
@@ -265,7 +300,7 @@ a{color:inherit;}
           <tr><th>短期・少額リースの免除判定</th><td class="no">—</td><td>対応</td></tr>
           <tr><th>仕訳例</th><td class="no">—</td><td>収録</td></tr>
         </tbody>
-      </table>
+      </table></div>
 
       <section class="about">
         <h2>この判定の前提</h2>

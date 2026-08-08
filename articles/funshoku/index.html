@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<script>if(location.protocol==='http:'){location.replace('https://'+location.host+location.pathname+location.search+location.hash);}</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>粉飾の兆候は数字のどこに出るか｜売掛金と在庫の増え方を見る｜数字のものさし</title>
@@ -203,6 +205,39 @@ tr:last-child td{border-bottom:none;}
   .pager{grid-template-columns:1fr;}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important;}}
+
+/* ===== 表の横スクロール ===== */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 28px;}
+.tw table{margin-bottom:0;min-width:420px;}
+
+/* ===== アバター ===== */
+.pic{display:block;border-radius:50%;background:linear-gradient(135deg,var(--dawn),var(--rose));object-fit:cover;}
+.pic--l{width:96px;height:96px;}
+.pic--s{width:66px;height:66px;}
+
+/* ===== モバイル最適化 ===== */
+@media (max-width:820px){
+  body::before{display:none;}
+  .masthead{background:var(--paper);backdrop-filter:none;-webkit-backdrop-filter:none;}
+  .masthead__inner{height:auto;min-height:58px;padding:10px 0;flex-wrap:wrap;gap:6px 16px;}
+  .brand{font-size:17px;letter-spacing:.1em;}
+  .nav{gap:16px;flex-wrap:wrap;}
+  .nav a{font-size:12.5px;letter-spacing:.02em;padding:2px 0;border-bottom-width:2px;}
+  .nav a:nth-child(n+3){display:inline-block;}
+  .wrap,.column{padding-left:18px;padding-right:18px;}
+  h1,h2,h3,p,li,td,th,.post__title,.tool__name,.shop__name{overflow-wrap:anywhere;}
+  .tools,.shop,.channels{grid-template-columns:1fr;}
+  .toc{padding:22px 20px;}
+  .btn{padding:14px 22px;font-size:14px;}
+  .grid{grid-template-columns:1fr;}
+  .actions{gap:10px;}
+  .btn-run,.btn-sample{width:100%;justify-content:center;}
+}
+@media (max-width:400px){
+  .brand{font-size:16px;letter-spacing:.06em;}
+  .nav{gap:12px;}
+  .nav a{font-size:11.5px;}
+}
 </style>
 </head>
 <body>
@@ -270,7 +305,7 @@ tr:last-child td{border-bottom:none;}
 
         <h2 id="s2">売上と売掛金の伸びを並べる</h2>
         <p>やることは単純です。3期分の売上高と売掛金（受取手形を含む）を並べ、それぞれの増減率を出します。</p>
-        <table>
+        <div class="tw"><table>
           <thead><tr><th>パターン</th><th>売上</th><th>売掛金</th><th>見立て</th></tr></thead>
           <tbody>
             <tr><td>正常</td><td>+10%</td><td>+10%前後</td><td>取引が素直に伸びている</td></tr>
@@ -278,7 +313,7 @@ tr:last-child td{border-bottom:none;}
             <tr><td>要注意</td><td>横ばい</td><td>+30%</td><td>回収サイトが延びた、または不良債権が滞留</td></tr>
             <tr><td>好転</td><td>+10%</td><td>−5%</td><td>回収条件が改善した可能性</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p>より分かりやすいのは<strong>売上債権回転期間</strong>です。売掛金と受取手形の合計を月商で割ると、代金が回収されるまでの月数が出ます。</p>
         <p>この数字が<strong>年々じわじわ伸びている会社</strong>が、いちばん警戒すべき形です。急に跳ねる会社は事情が説明できることが多いのですが、毎期0.2か月ずつ伸びていくような動きは、内部で何かが少しずつ蓄積していることを示します。</p>
 
@@ -298,7 +333,7 @@ tr:last-child td{border-bottom:none;}
 
         <h2 id="s4">数値で追ってみる</h2>
         <p>実際に並べると、どう見えるか。単位は百万円で、仮の数字です。</p>
-        <table>
+        <div class="tw"><table>
           <thead><tr><th>項目</th><th>第1期</th><th>第2期</th><th>第3期</th></tr></thead>
           <tbody>
             <tr><td>売上高</td><td>1,200</td><td>1,320</td><td>1,400</td></tr>
@@ -309,20 +344,20 @@ tr:last-child td{border-bottom:none;}
             <tr class="tot"><td>売上債権回転期間</td><td>2.0か月</td><td>2.4か月</td><td>3.0か月</td></tr>
             <tr class="tot"><td>棚卸資産回転期間</td><td>1.5か月</td><td>1.8か月</td><td>2.4か月</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p>売上は3期で17%しか伸びていません。ところが売上債権は75%、棚卸資産は87%増えています。<strong>回転期間はどちらも毎期きれいに伸びている。</strong>これが「じわじわ」の形です。</p>
         <p>1期だけを見れば、どれも異常な水準ではありません。売上債権2.4か月も、在庫1.8か月も、業種によっては普通です。<strong>3期並べて初めて、方向が見える。</strong>これが与信判断で3期分を求める理由です。</p>
 
         <h2 id="s5">2つを掛け合わせると精度が上がる</h2>
         <p>売掛金と在庫を別々に見るより、<strong>両方をまとめて「運転資金」として見る</strong>ほうが実態に近づきます。</p>
         <p>売上債権と棚卸資産の合計から仕入債務を引いたものが、事業を回すために寝ている資金です。先ほどの数字で計算すると、こうなります。</p>
-        <table>
+        <div class="tw"><table>
           <thead><tr><th>項目</th><th>第1期</th><th>第2期</th><th>第3期</th></tr></thead>
           <tbody>
             <tr><td>売上債権＋棚卸資産−仕入債務</td><td>170</td><td>270</td><td>430</td></tr>
             <tr class="tot"><td>第1期からの増加率</td><td>—</td><td>+59%</td><td>+153%</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p>売上が17%しか伸びていないのに、寝ている資金は153%増えています。<strong>この会社は成長しているのではなく、資金を食われている。</strong>そう読むのが正しい姿です。</p>
         <p>そしてこの増加分260は、どこかから調達しなければ埋まりません。借入が増えているか、支払を延ばしているか、手元現金が減っているか。<strong>貸借対照表の左側で起きたことは、必ず右側に跡が残ります。</strong>その対応関係が説明できない決算書は、どこかに無理があります。</p>
 
@@ -384,7 +419,7 @@ tr:last-child td{border-bottom:none;}
       </section>
 
       <div class="byline">
-        <div class="byline__mark" aria-hidden="true">数</div>
+        <img class="pic pic--s" src="/assets/eryael.png" width="480" height="480" alt="エリエール" loading="lazy">
         <div>
           <h3>エリエール</h3>
           <p>財務経理、金融機関での法人営業・制度対応、企業信用調査を経て独立。会社の数字を作る側、貸す側、調べる側の三方向から決算書を見てきました。</p>

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<script>if(location.protocol==='http:'){location.replace('https://'+location.host+location.pathname+location.search+location.hash);}</script>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>非上場株式 株価算定シミュレーター｜相続税評価とM&A評価を同時に試算</title>
@@ -155,6 +157,39 @@ button:hover{opacity:.87}
 footer{border-top:1px solid var(--rule);margin-top:34px;padding:22px 24px 46px;font-size:12px;
   color:var(--ink-3);max-width:1460px;margin-left:auto;margin-right:auto}
 @media print{.controls,.actions{display:none}.wrap{grid-template-columns:1fr}}
+
+/* ===== 表の横スクロール ===== */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 28px;}
+.tw table{margin-bottom:0;min-width:420px;}
+
+/* ===== アバター ===== */
+.pic{display:block;border-radius:50%;background:linear-gradient(135deg,var(--dawn),var(--rose));object-fit:cover;}
+.pic--l{width:96px;height:96px;}
+.pic--s{width:66px;height:66px;}
+
+/* ===== モバイル最適化 ===== */
+@media (max-width:820px){
+  body::before{display:none;}
+  .masthead{background:var(--paper);backdrop-filter:none;-webkit-backdrop-filter:none;}
+  .masthead__inner{height:auto;min-height:58px;padding:10px 0;flex-wrap:wrap;gap:6px 16px;}
+  .brand{font-size:17px;letter-spacing:.1em;}
+  .nav{gap:16px;flex-wrap:wrap;}
+  .nav a{font-size:12.5px;letter-spacing:.02em;padding:2px 0;border-bottom-width:2px;}
+  .nav a:nth-child(n+3){display:inline-block;}
+  .wrap,.column{padding-left:18px;padding-right:18px;}
+  h1,h2,h3,p,li,td,th,.post__title,.tool__name,.shop__name{overflow-wrap:anywhere;}
+  .tools,.shop,.channels{grid-template-columns:1fr;}
+  .toc{padding:22px 20px;}
+  .btn{padding:14px 22px;font-size:14px;}
+  .grid{grid-template-columns:1fr;}
+  .actions{gap:10px;}
+  .btn-run,.btn-sample{width:100%;justify-content:center;}
+}
+@media (max-width:400px){
+  .brand{font-size:16px;letter-spacing:.06em;}
+  .nav{gap:12px;}
+  .nav a{font-size:11.5px;}
+}
 </style>
 <link rel="canonical" href="https://kazumono.com/kabuka/">
 <meta property="og:url" content="https://kazumono.com/kabuka/">
@@ -379,13 +414,13 @@ footer{border-top:1px solid var(--rule);margin-top:34px;padding:22px 24px 46px;f
 
   <section class="blk">
     <div class="blk-head"><span class="kicker">Methods</span><h3>各方式による1株当たりの価額</h3></div>
-    <div class="panel"><div class="tbl-scroll"><table id="methodTbl"></table></div></div>
+    <div class="panel"><div class="tbl-scroll"><div class="tw"><table id="methodTbl"></table></div></div></div>
   </section>
 
   <section class="blk">
     <div class="blk-head"><span class="kicker">M&amp;A</span><h3>第三者間で売買する場合の価額</h3>
       <p>相続税評価額とは目的が違う、まったく別の数字です。</p></div>
-    <div class="panel"><div class="tbl-scroll"><table id="maTbl"></table></div></div>
+    <div class="panel"><div class="tbl-scroll"><div class="tw"><table id="maTbl"></table></div></div></div>
   </section>
 
   <section class="blk">
@@ -718,7 +753,7 @@ function drawSteps(S){
      → <span class="res">${S.useHaito?"配当還元方式":"原則的評価方式"}</span>`);
 
   h += step("STEP 3", "特定の評価会社の判定（財基通189）",
-    `<table style="font-size:12px;margin-top:4px">
+    `<div class="tw"><table style="font-size:12px;margin-top:4px">
       <tr><td>比準要素数1の会社</td><td>直前期の0の数 ${S.zero1}／直前々期 ${S.zero2}</td>
         <td><span class="tag ${S.isHijun1?"t-warn":"t-ng"}">${S.isHijun1?"該当":"非該当"}</span></td></tr>
       <tr><td>株式等保有特定会社</td><td>株式等保有割合 ${pct(S.kabuWari)}（基準 50.0%）</td>
@@ -727,7 +762,7 @@ function drawSteps(S){
         <td><span class="tag ${S.isTochiTok?"t-warn":"t-ng"}">${S.isTochiTok?"該当":"非該当"}</span></td></tr>
       <tr><td>開業後3年未満の会社等</td><td>${S.kaigyo3?"開業後3年未満":(S.isZenbu0?"3要素すべてが0":"—")}</td>
         <td><span class="tag ${(S.kaigyo3||S.isZenbu0)?"t-warn":"t-ng"}">${(S.kaigyo3||S.isZenbu0)?"該当":"非該当"}</span></td></tr>
-     </table>
+     </table></div>
      判定は後の号が優先します（清算中→開業前休業中→開業後3年未満→土地保有→株式等保有→比準要素数1）。<br>
      → <span class="res">${S.kubun}</span>`);
 
@@ -1216,7 +1251,7 @@ function drawSens(S){
             c:(rank===S.rank)?CH.gold:CH.navy2};
   });
   const wr = [-0.02,-0.01,0,0.01,0.02], gr = [-0.01,-0.005,0,0.005,0.01];
-  let tbl = `<div class="tbl-scroll"><table><thead><tr><th>WACC ＼ 永久成長率</th>`
+  let tbl = `<div class="tbl-scroll"><div class="tw"><table><thead><tr><th>WACC ＼ 永久成長率</th>`
     + gr.map(g => `<th>${((n("gTerm")/100+g)*100).toFixed(2)}%</th>`).join("") + `</tr></thead><tbody>`;
   wr.forEach(dw => {
     const w = S.wacc + dw;
@@ -1235,7 +1270,7 @@ function drawSens(S){
     });
     tbl += `</tr>`;
   });
-  tbl += `</tbody></table></div>`;
+  tbl += `</tbody></table></div></div>`;
 
   $("sens").innerHTML =
     card("課税所得を動かすと、株価はどう変わるか",

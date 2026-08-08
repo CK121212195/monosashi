@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<script>if(location.protocol==='http:'){location.replace('https://'+location.host+location.pathname+location.search+location.hash);}</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>運営者情報｜数字のものさし</title>
@@ -110,6 +112,57 @@ a{color:inherit;}
 .timeline strong{display:block;font-family:var(--serif);font-weight:600;font-size:17px;letter-spacing:.04em;margin-bottom:2px;background:none;}
 .timeline span{font-size:14.5px;color:var(--ink-soft);}
 @media (max-width:820px){.profile{grid-template-columns:1fr;gap:20px;}}
+
+/* ===== 表の横スクロール ===== */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 28px;}
+.tw table{margin-bottom:0;min-width:420px;}
+
+/* ===== アバター ===== */
+.pic{display:block;border-radius:50%;background:linear-gradient(135deg,var(--dawn),var(--rose));object-fit:cover;}
+.pic--l{width:96px;height:96px;}
+.pic--s{width:66px;height:66px;}
+
+/* ===== モバイル最適化 ===== */
+@media (max-width:820px){
+  body::before{display:none;}
+  .masthead{background:var(--paper);backdrop-filter:none;-webkit-backdrop-filter:none;}
+  .masthead__inner{height:auto;min-height:58px;padding:10px 0;flex-wrap:wrap;gap:6px 16px;}
+  .brand{font-size:17px;letter-spacing:.1em;}
+  .nav{gap:16px;flex-wrap:wrap;}
+  .nav a{font-size:12.5px;letter-spacing:.02em;padding:2px 0;border-bottom-width:2px;}
+  .nav a:nth-child(n+3){display:inline-block;}
+  .wrap,.column{padding-left:18px;padding-right:18px;}
+  h1,h2,h3,p,li,td,th,.post__title,.tool__name,.shop__name{overflow-wrap:anywhere;}
+  .tools,.shop,.channels{grid-template-columns:1fr;}
+  .toc{padding:22px 20px;}
+  .btn{padding:14px 22px;font-size:14px;}
+  .grid{grid-template-columns:1fr;}
+  .actions{gap:10px;}
+  .btn-run,.btn-sample{width:100%;justify-content:center;}
+}
+@media (max-width:400px){
+  .brand{font-size:16px;letter-spacing:.06em;}
+  .nav{gap:12px;}
+  .nav a{font-size:11.5px;}
+}
+
+.eryael{margin:64px 0 0;background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:34px 32px;box-shadow:var(--shadow);}
+.eryael h2{margin:0 0 6px;border:none;padding:0;font-size:20px;}
+.eryael h2::before{display:none;}
+.eryael__role{margin:0 0 20px;font-size:13.5px;font-weight:600;color:var(--sea-deep);letter-spacing:.06em;}
+.eryael__quote{margin:0 0 22px;padding-left:18px;border-left:3px solid var(--rose);font-family:var(--serif);font-size:16.5px;letter-spacing:.04em;line-height:1.9;}
+.eryael p{margin:0 0 18px;font-size:15px;line-height:1.95;}
+.eryael__origin{background:rgba(223,246,241,.5);border-radius:14px;padding:20px 22px;margin:0 0 20px;}
+.eryael__origin dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:14.5px;}
+.eryael__origin dt{font-weight:700;font-family:var(--num);letter-spacing:.04em;white-space:nowrap;}
+.eryael__origin dd{margin:0;}
+.eryael__poses{width:100%;height:auto;display:block;border-radius:14px;margin:0 0 8px;}
+.eryael__note{margin:0;font-size:12.5px;color:var(--ink-faint);}
+@media (max-width:820px){
+  .eryael{padding:26px 20px;}
+  .eryael__origin dl{grid-template-columns:1fr;gap:2px;}
+  .eryael__origin dd{margin:0 0 10px;}
+}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
@@ -152,7 +205,7 @@ a{color:inherit;}
 
         <div class="card">
           <div class="profile">
-            <div class="profile__mark" aria-hidden="true">数</div>
+            <img class="pic pic--l" src="/assets/eryael.png" width="480" height="480" alt="エリエール" loading="lazy">
             <div>
               <h2>エリエール</h2>
               <p class="profile__role">財務経理 → 金融機関 → 企業信用調査 → 独立</p>
@@ -212,6 +265,29 @@ a{color:inherit;}
 
         <h2>ご意見・ご指摘について</h2>
         <p>計算式の誤り、制度改正への未対応、記事の事実誤認など、お気づきの点があればぜひお知らせください。特に計算に関わる指摘は最優先で確認し、修正します。<a href="/contact/">お問い合わせページ</a>からご連絡いただけます。</p>
+
+
+        <section class="eryael">
+          <h2>このサイトの案内役｜エリエール</h2>
+          <p class="eryael__role">Eryael ／ 探求者・若き賢者</p>
+          <p class="eryael__quote">「知識とは、世界を支える礎である」</p>
+
+          <p>分厚い書物と古の巻物を携え、世界の謎を解き明かそうと旅をする若き賢者。胸に光る「開かれた本」の紋章は、知識を独占するのではなく、広く分け与える者であることを示しています。</p>
+          <p>普段は顎に手を当てて静かに思索に耽る穏やかな青年ですが、いざ人々の前に立てば、堂々とした身振りで熱心に真理を説く一面を見せます。</p>
+
+          <div class="eryael__origin">
+            <dl>
+              <dt>Eri</dt><dd>大地、岩盤、決して揺るがない基礎</dd>
+              <dt>Ael</dt><dd>論理、法、刻まれた記録</dd>
+              <dt>Eri-Ael</dt><dd>大地に深く根ざした、決して揺るがない不変の真理</dd>
+            </dl>
+          </div>
+
+          <p>風に流されるような曖昧な噂ではなく、歴史の地層に刻まれた確固たる事実だけを積み上げ、人々の知の土台を築いていく。名前には、そういう姿勢が込められています。</p>
+
+          <img class="eryael__poses" src="/assets/eryael-poses.png" width="880" height="1210" alt="エリエールのさまざまな表情とポーズ" loading="lazy">
+          <p class="eryael__note">※ 当サイトのイメージキャラクターです。記事の内容は運営者本人が執筆しています。</p>
+        </section>
 
         <div class="meta">
           <p>最終更新日：2026年8月7日</p>
