@@ -1,1 +1,1989 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>統計のものさし｜統計検定2級レベル 実戦100問</title>
+<meta name="description" content="統計検定2級の出題形式に合わせたオリジナル100問。統計ソフトの出力読解、数式を選ぶ設問、記述I〜IIIの正誤判定、散布図・分割表の読み取りまで対応。1問ごとに解法の手順・考え方・引っかかりどころを解説します。">
+<meta name="author" content="数字のものさし">
+<link rel="canonical" href="https://kazumono.com/toukei2/">
+<meta property="og:url" content="https://kazumono.com/toukei2/">
+<meta property="og:site_name" content="数字のものさし">
+<meta property="og:image" content="https://kazumono.com/assets/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#33526C">
+<meta property="og:type" content="website">
+<meta property="og:title" content="統計のものさし｜統計検定2級レベル 実戦100問">
+<meta property="og:description" content="本番の出題形式に合わせたオリジナル100問。解法の手順を1問ずつ分解して解説。制限時間なし、進捗は自動保存。">
+<meta property="og:locale" content="ja_JP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LearningResource",
+"name":"統計のものさし 統計検定2級レベル 実戦100問",
+"description":"統計検定2級の出題範囲と出題形式に対応したオリジナル100問。統計ソフト出力の読解、数式選択、記述の正誤判定、図表読解を含む。",
+"educationalLevel":"大学基礎課程","learningResourceType":"練習問題","inLanguage":"ja","isAccessibleForFree":true,
+"teaches":["記述統計","確率分布","統計的推定","仮説検定","カイ二乗検定","回帰分析"],
+"url":"https://kazumono.com/toukei2/","author":{"@type":"Organization","name":"数字のものさし","url":"https://kazumono.com/"},"provider":{"@type":"Organization","name":"数字のものさし","url":"https://kazumono.com/"}}
+</script>
+<style>
+:root{
+  --paper:#FAF9F6;--pale:#DFF6F1;--mint:#B0F1F0;--sky:#84D2F5;--deep:#527695;
+  --ink:#2B3B47;--sub:#6B7F8C;--line:#DDE6EA;--rule:#C9D6DD;
+  --leaf:#82B33A;--lime:#D4E157;--rose:#F8A3BF;--plum:#B67AB4;--miss:#C4707F;
+  --r:14px;--shadow:0 2px 14px rgba(82,118,149,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic UI",Meiryo,sans-serif;
+  font-size:16px;line-height:1.85;-webkit-text-size-adjust:100%}
+.wrap{max-width:780px;margin:0 auto;padding:0 18px 100px}
+h1,h2{font-family:"Shippori Mincho B1","Yu Mincho",serif;font-weight:700;letter-spacing:.04em}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-feature-settings:"tnum"}
 
+header{background:linear-gradient(170deg,var(--pale) 0%,#F4FBFA 62%,var(--paper) 100%);border-bottom:1px solid var(--line)}
+.hd{max-width:780px;margin:0 auto;padding:22px 18px 12px}
+.brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.brand h1{font-size:1.34rem;line-height:1.4}
+.brand .tag{font-size:.72rem;color:var(--deep);border:1px solid var(--sky);border-radius:999px;padding:1px 9px;letter-spacing:.06em}
+.lede{font-size:.86rem;color:var(--sub);margin-top:7px}
+
+/* 到達度メーター */
+.meter{margin:16px 0 4px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px 16px 8px;box-shadow:var(--shadow)}
+.meter-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.meter-lab{font-size:.7rem;color:var(--sub);letter-spacing:.14em}
+.meter-val{font-family:"IBM Plex Mono",monospace;font-size:2.3rem;font-weight:500;line-height:1;color:var(--deep)}
+.meter-val small{font-size:.8rem;color:var(--sub);margin-left:4px;font-family:inherit}
+.meter-stat{text-align:right;font-size:.74rem;color:var(--sub);line-height:1.6}
+.meter-stat b{font-family:"IBM Plex Mono",monospace;font-size:1.05rem;color:var(--ink);font-weight:500}
+svg.curve{display:block;width:100%;height:auto}
+.curve .axis{stroke:var(--line);stroke-width:1}
+.curve .tick{fill:var(--sub);font-size:9px;font-family:"IBM Plex Mono",monospace}
+.marker{transition:transform .9s cubic-bezier(.22,1,.36,1)}
+
+nav.tabs{display:flex;gap:4px;max-width:780px;margin:0 auto;padding:0 18px}
+nav.tabs button{flex:1;background:none;border:none;border-bottom:2px solid transparent;
+  padding:11px 4px;font-family:inherit;font-size:.82rem;color:var(--sub);cursor:pointer;letter-spacing:.04em}
+nav.tabs button[aria-selected="true"]{color:var(--deep);border-bottom-color:var(--deep);font-weight:700}
+nav.tabs button:focus-visible{outline:2px solid var(--sky);outline-offset:-2px}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px 18px;box-shadow:var(--shadow);margin-top:18px}
+.qmeta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{font-size:.68rem;letter-spacing:.06em;padding:2px 9px;border-radius:999px;background:var(--pale);color:var(--deep);white-space:nowrap}
+.chip.scene{background:#fff;border:1px solid var(--line);color:var(--sub)}
+.chip.d1{background:#EEF9E9;color:#5E8C28}
+.chip.d2{background:#E8F4FB;color:#3D7EA6}
+.chip.d3{background:#F7EAF3;color:#8E5288}
+.qno{font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--sub);margin-left:auto}
+.lead{font-size:.97rem;line-height:1.95;margin-bottom:14px}
+.qtext{font-size:1.0rem;line-height:1.95;margin:14px 0 16px;font-weight:500}
+
+/* R出力 */
+pre.rout{background:#F5F8F9;border:1px solid var(--rule);border-radius:9px;padding:13px 14px;margin:12px 0;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.735rem;line-height:1.72;
+  overflow-x:auto;white-space:pre;color:#26333D}
+pre.rout::before{content:"出力結果";display:block;font-size:.62rem;letter-spacing:.14em;color:var(--sub);margin-bottom:7px;font-family:"Zen Kaku Gothic New",sans-serif}
+
+/* 図表 */
+svg.fig{display:block;width:100%;max-width:360px;margin:12px auto;background:#fff}
+.ax{font-size:9px;fill:var(--sub);font-family:"IBM Plex Mono",monospace}
+.axl{font-size:10.5px;fill:var(--ink)}
+.tblwrap{margin:12px 0;overflow-x:auto}
+table.dtbl{border-collapse:collapse;font-size:.87rem;margin:0 auto;background:#fff}
+table.dtbl caption{font-size:.78rem;color:var(--sub);margin-bottom:6px}
+table.dtbl th,table.dtbl td{border:1px solid var(--rule);padding:6px 13px;text-align:center;
+  font-family:"IBM Plex Mono",monospace;font-weight:400}
+table.dtbl thead th{background:#F2F8F9;font-family:inherit;font-size:.82rem}
+table.dtbl th.lh{background:#F2F8F9;font-family:inherit;font-size:.82rem;font-weight:500}
+.src{font-size:.7rem;color:var(--sub);text-align:right;margin-top:4px}
+
+/* 分数・根号 */
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 3px;line-height:1.35}
+.fr>i{font-style:normal;border-bottom:1px solid currentColor;padding:0 5px 1px}
+.fr>b{font-weight:400;padding:1px 5px 0}
+.ovl{border-top:1px solid currentColor;padding:1px 3px 0;display:inline-block;margin-left:-1px}
+
+/* 選択肢 */
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;
+  background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:13px 14px;
+  font-family:inherit;font-size:.94rem;line-height:1.75;color:var(--ink);cursor:pointer;
+  transition:border-color .16s,background .16s}
+.opt:hover:not(:disabled){border-color:var(--sky);background:#FCFEFF}
+.opt:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+.opt:disabled{cursor:default}
+.opt .key{flex:none;width:25px;height:25px;border-radius:7px;background:var(--pale);color:var(--deep);
+  display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-size:.8rem;margin-top:2px}
+.opt.correct{border-color:var(--leaf);background:#F4FAEE}
+.opt.correct .key{background:var(--leaf);color:#fff}
+.opt.wrong{border-color:var(--miss);background:#FDF4F6}
+.opt.wrong .key{background:var(--miss);color:#fff}
+.opt.dim{opacity:.5}
+
+/* 解説 */
+.verdict{display:flex;align-items:center;gap:9px;margin:18px 0 12px;font-size:.95rem;font-weight:700}
+.verdict.ok{color:var(--leaf)} .verdict.ng{color:var(--miss)}
+.verdict .combo{margin-left:auto;font-size:.74rem;font-weight:400;color:var(--plum);background:#FAF0F6;border-radius:999px;padding:2px 10px}
+.exp{border-top:1px dashed var(--line);padding-top:16px}
+.blk{margin-bottom:16px}
+.blk>h3{font-size:.7rem;letter-spacing:.14em;color:var(--sub);font-weight:500;margin-bottom:7px;
+  font-family:"Zen Kaku Gothic New",sans-serif}
+ol.steps{list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding-left:31px;margin-bottom:9px;font-size:.9rem;line-height:1.8}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:3px;width:21px;height:21px;
+  background:var(--deep);color:#fff;border-radius:6px;display:grid;place-items:center;
+  font-family:"IBM Plex Mono",monospace;font-size:.7rem}
+.expbody{font-size:.92rem;line-height:1.95;color:#37474F}
+.expbody b{color:var(--ink);font-weight:700}
+.trap{background:#FDF6F8;border-left:3px solid var(--miss);border-radius:0 9px 9px 0;padding:11px 14px;font-size:.87rem;line-height:1.85}
+.point{background:linear-gradient(100deg,#FCF6E9,#FEFBF4);border:1px solid #F0E4CC;border-radius:10px;padding:11px 14px;font-size:.88rem}
+.point span{font-size:.66rem;letter-spacing:.14em;color:#A98A4F;display:block;margin-bottom:2px}
+
+.row{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}
+.btn{flex:1;min-width:120px;border:none;border-radius:11px;padding:13px 16px;
+  font-family:inherit;font-size:.92rem;font-weight:700;cursor:pointer;letter-spacing:.03em;transition:filter .15s}
+.btn:hover{filter:brightness(1.05)}
+.btn:focus-visible{outline:2px solid var(--deep);outline-offset:2px}
+.btn.primary{background:var(--deep);color:#fff}
+.btn.ghost{background:#fff;border:1.5px solid var(--line);color:var(--sub)}
+.btn.soft{background:var(--pale);color:var(--deep)}
+
+.pbar{height:5px;background:var(--pale);border-radius:99px;overflow:hidden;margin-top:14px}
+.pbar i{display:block;height:100%;background:linear-gradient(90deg,var(--mint),var(--sky));transition:width .5s;border-radius:99px}
+
+.radar-wrap{display:flex;justify-content:center;padding:6px 0 2px}
+svg.radar{width:100%;max-width:340px;height:auto}
+.radar .grid{fill:none;stroke:var(--line);stroke-width:1}
+.radar .area{fill:rgba(132,210,245,.34);stroke:var(--deep);stroke-width:1.6;stroke-linejoin:round;transition:all .6s}
+.radar .lab{font-size:8.5px;fill:var(--sub);font-family:inherit}
+
+.catlist{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.catrow{display:flex;align-items:center;gap:11px;font-size:.85rem}
+.catrow .nm{flex:none;width:9.4em}
+.catrow .bar{flex:1;height:7px;background:var(--pale);border-radius:99px;overflow:hidden}
+.catrow .bar i{display:block;height:100%;background:var(--sky);border-radius:99px;transition:width .5s}
+.catrow .bar i.done{background:var(--leaf)}
+.catrow .nu{flex:none;width:3.6em;text-align:right;font-family:"IBM Plex Mono",monospace;font-size:.79rem;color:var(--sub)}
+.catrow button{flex:none;background:none;border:1px solid var(--line);border-radius:7px;color:var(--deep);
+  font-family:inherit;font-size:.72rem;padding:3px 9px;cursor:pointer}
+.catrow button:hover{background:var(--pale)}
+
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(102px,1fr));gap:10px;margin-top:12px}
+.badge{border:1px solid var(--line);border-radius:12px;padding:13px 8px;text-align:center;background:#fff}
+.badge.got{border-color:var(--rose);background:linear-gradient(165deg,#FEF6FA,#fff)}
+.badge .ic{font-size:1.5rem;line-height:1.5;filter:grayscale(1);opacity:.28}
+.badge.got .ic{filter:none;opacity:1}
+.badge .nm{font-size:.75rem;font-weight:700;margin-top:2px}
+.badge .ds{font-size:.65rem;color:var(--sub);line-height:1.55;margin-top:3px}
+.badge:not(.got) .nm,.badge:not(.got) .ds{color:#B3BFC6}
+
+.sect-t{font-size:.94rem;margin:26px 0 2px;display:flex;align-items:center;gap:9px}
+.sect-t::after{content:"";flex:1;height:1px;background:var(--line)}
+.note{font-size:.77rem;color:var(--sub);line-height:1.8;margin-top:8px}
+.hide{display:none!important}
+.empty{text-align:center;color:var(--sub);font-size:.88rem;padding:34px 12px}
+footer{border-top:1px solid var(--line);margin-top:44px;padding:22px 0 8px;font-size:.74rem;color:var(--sub);line-height:1.9}
+footer b{color:var(--ink);display:block;margin-bottom:3px;font-size:.78rem}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,26px);
+  background:var(--ink);color:#fff;border-radius:999px;padding:10px 22px;font-size:.85rem;
+  opacity:0;pointer-events:none;transition:all .34s cubic-bezier(.22,1,.36,1);z-index:60;
+  box-shadow:0 6px 22px rgba(43,59,71,.3);max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:520px){
+  .brand h1{font-size:1.14rem}.meter-val{font-size:2rem}
+  .catrow .nm{width:7.2em;font-size:.79rem}.catrow button{display:none}
+  pre.rout{font-size:.66rem}
+  table.dtbl th,table.dtbl td{padding:5px 8px;font-size:.8rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd">
+    <div class="brand">
+      <h1>統計のものさし</h1>
+      <span class="tag">統計検定®2級レベル 実戦100問</span>
+    </div>
+    <p class="lede">本番の出題形式に合わせたオリジナル問題です。制限時間はありません。1問ごとに、解法の手順を分解して解説します。</p>
+    <div class="meter">
+      <div class="meter-top">
+        <div>
+          <div class="meter-lab">現在の到達度</div>
+          <div class="meter-val"><span id="hensa">40.0</span><small>相当</small></div>
+        </div>
+        <div class="meter-stat">
+          正解済み <b id="mCorrect">0</b> / 100 問<br>
+          連続学習 <b id="mDays">0</b> 日目
+        </div>
+      </div>
+      <svg class="curve" viewBox="0 0 460 96" role="img" aria-label="到達度メーター">
+        <defs><linearGradient id="gFill" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#DFF6F1"/><stop offset="55%" stop-color="#B0F1F0"/><stop offset="100%" stop-color="#84D2F5"/>
+        </linearGradient></defs>
+        <path id="bellFill" fill="url(#gFill)" opacity=".65"></path>
+        <path id="bellLine" fill="none" stroke="#527695" stroke-width="1.4" opacity=".55"></path>
+        <line class="axis" x1="20" y1="78" x2="440" y2="78"></line>
+        <g id="ticks"></g>
+        <g class="marker" id="marker">
+          <line x1="0" y1="14" x2="0" y2="78" stroke="#527695" stroke-width="1.5" stroke-dasharray="3 3"></line>
+          <circle cx="0" cy="14" r="6.5" fill="#527695" stroke="#fff" stroke-width="2.5"></circle>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="learn">問題を解く</button>
+    <button role="tab" aria-selected="false" data-tab="stats">成績</button>
+    <button role="tab" aria-selected="false" data-tab="badge">称号</button>
+    <button role="tab" aria-selected="false" data-tab="about">この教材について</button>
+  </nav>
+</header>
+
+<div class="wrap">
+  <section id="tab-learn">
+    <div class="card" id="qcard"></div>
+    <div class="pbar"><i id="pbar" style="width:0%"></i></div>
+    <p class="note" id="modeNote"></p>
+  </section>
+
+  <section id="tab-stats" class="hide">
+    <div class="card">
+      <h2 class="sect-t" style="margin-top:0">分野別の到達度</h2>
+      <div class="radar-wrap">
+        <svg class="radar" viewBox="0 0 300 270" role="img" aria-label="分野別到達度">
+          <g id="radarGrid"></g><polygon class="area" id="radarArea" points=""></polygon><g id="radarLab"></g>
+        </svg>
+      </div>
+      <div class="catlist" id="catList"></div>
+      <h2 class="sect-t">記録</h2>
+      <div class="catlist" id="recList"></div>
+      <div class="row">
+        <button class="btn soft" id="btnReview">間違えた問題だけ復習する</button>
+        <button class="btn ghost" style="flex:0 0 auto" id="btnReset">記録を消す</button>
+      </div>
+      <p class="note">学習の記録はこの端末のブラウザにのみ保存されます。サーバーには送信されません。</p>
+    </div>
+  </section>
+
+  <section id="tab-badge" class="hide">
+    <div class="card">
+      <h2 class="sect-t" style="margin-top:0">獲得した称号</h2>
+      <p class="note" style="margin-top:2px">解き進めると自動で増えていきます。急ぐ必要はありません。</p>
+      <div class="badges" id="badgeList"></div>
+    </div>
+  </section>
+
+  <section id="tab-about" class="hide">
+    <div class="card">
+      <h2 class="sect-t" style="margin-top:0">この教材について</h2>
+      <div class="expbody">
+        <p>統計検定2級の出題範囲と<b>出題形式</b>に合わせて作成した、オリジナル100問です。過去問や市販問題集の複製・翻案は一切含みません。</p>
+        <p style="margin-top:12px">本番で頻出する形式を再現しています。統計ソフトの出力からの読み取り、計算式そのものを選ぶ設問、記述I〜IIIの正誤の組合せ、（ア）（イ）（ウ）の穴埋め、散布図・箱ひげ図・分割表の読解。いずれも、答えの数値を暗記しても解けない形式です。</p>
+        <p style="margin-top:12px">分野の配分は10分野で、1変数データ12問・2変数データ8問・データ収集法7問・確率10問・確率分布12問・標本分布8問・推定12問・仮説検定16問・カイ二乗検定7問・回帰分析8問。実際の配分に近づけてあります。</p>
+      </div>
+      <h2 class="sect-t">解説の構成</h2>
+      <div class="expbody">
+        <p>1問ごとに4つの要素で構成しています。</p>
+        <p style="margin-top:10px"><b>解き方の手順</b>：計算を分解し、どこから手をつけるかを番号順に示します。式を覚えるより、手順を覚えるほうが本番で再現できます。</p>
+        <p style="margin-top:8px"><b>考え方</b>：なぜその式になるのか、背景にある理屈を説明します。</p>
+        <p style="margin-top:8px"><b>引っかかりどころ</b>：典型的な誤答と、その原因を明示します。</p>
+        <p style="margin-top:8px"><b>おさえどころ</b>：一行にまとめた結論です。</p>
+      </div>
+      <h2 class="sect-t">挫折しないための設計</h2>
+      <div class="expbody">
+        <p><b>制限時間はありません。</b>進捗は自動保存されるので、いつ中断しても構いません。</p>
+        <p style="margin-top:10px"><b>分からないときは解説へ進めます。</b>正解を選ばなくても「解説を読む」から考え方を確認できます。手が止まったまま悩み続けるより、読んで進むほうが身につきます。</p>
+        <p style="margin-top:10px"><b>出題は基礎から順に進みます。</b>いきなり応用問題に当たって挫折しないよう、易しい問題から出題されます。</p>
+      </div>
+      <h2 class="sect-t">用語について</h2>
+      <div class="expbody">
+        <p><b>到達度（偏差値相当）</b>：正解済みの問題数から算出した、この教材内だけの指標です。40から始まり、100問すべて正解で75になります。実際の試験の偏差値や合否とは関係ありません。</p>
+        <p style="margin-top:10px"><b>選択肢は4つ</b>です。実際の試験では4〜5肢の設問が出題されます。</p>
+      </div>
+      <h2 class="sect-t">免責事項</h2>
+      <div class="expbody" style="font-size:.85rem">
+        <p>本サイトは統計学の学習を目的とした<b>非公式の教材</b>です。一般財団法人統計質保証推進協会、日本統計学会、その他試験の実施団体とは一切関係がありません。「統計検定」は一般財団法人統計質保証推進協会の登録商標であり、本サイトでは試験の名称を示す目的でのみ使用しています。</p>
+        <p style="margin-top:10px">問題文中のデータ・企業・数値はすべて架空のものです。実在の組織や統計調査とは関係ありません。</p>
+        <p style="margin-top:10px">掲載内容は作成時点の一般的な統計学の理論に基づいていますが、正確性・完全性を保証するものではありません。試験の出題範囲や形式は変更される場合があります。受験にあたっては必ず試験実施団体の公式情報をご確認ください。</p>
+        <p style="margin-top:10px">本サイトの利用によって生じたいかなる損害についても、制作者は責任を負いかねます。問題文・解説文・図表・デザインを含む本サイトの内容の著作権は制作者に帰属します。無断での複製・転載・再配布はご遠慮ください。</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <b>統計のものさし</b>
+    <a href="https://kazumono.com/" style="color:var(--deep)">数字のものさし</a> の無料ツールです。<br>
+    非公式の学習教材です。「統計検定」は一般財団法人統計質保証推進協会の登録商標です。<br>
+    問題・解説・図表はすべてオリジナルです。過去問等の複製は含みません。データはすべて架空のものです。
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   図表描画エンジン
+   問題データの fig を受け取り、SVG文字列を返す
+   ============================================================ */
+const FIG = (function(){
+  const C = {ink:"#2B3B47", sub:"#6B7F8C", line:"#C9D6DD", deep:"#527695", sky:"#84D2F5",
+             mint:"#B0F1F0", leaf:"#82B33A", rose:"#F8A3BF", plum:"#B67AB4"};
+
+  function frame(W,H,ml,mr,mt,mb){
+    return {W,H,L:ml,R:W-mr,T:mt,B:H-mb};
+  }
+  function axes(f, xr, yr, xlab, ylab, xticks, yticks, fmt){
+    fmt = fmt || (v=>String(Math.round(v*1000)/1000));
+    const X = v => f.L + (v-xr[0])/(xr[1]-xr[0])*(f.R-f.L);
+    const Y = v => f.B - (v-yr[0])/(yr[1]-yr[0])*(f.B-f.T);
+    let s = '<line x1="'+f.L+'" y1="'+f.B+'" x2="'+f.R+'" y2="'+f.B+'" stroke="'+C.ink+'" stroke-width="1"/>'
+          + '<line x1="'+f.L+'" y1="'+f.T+'" x2="'+f.L+'" y2="'+f.B+'" stroke="'+C.ink+'" stroke-width="1"/>';
+    (xticks||[]).forEach(v=>{
+      s += '<line x1="'+X(v).toFixed(1)+'" y1="'+f.B+'" x2="'+X(v).toFixed(1)+'" y2="'+(f.B+4)+'" stroke="'+C.ink+'" stroke-width="1"/>'
+         + '<text x="'+X(v).toFixed(1)+'" y="'+(f.B+15)+'" text-anchor="middle" class="ax">'+fmt(v)+'</text>';
+    });
+    (yticks||[]).forEach(v=>{
+      s += '<line x1="'+(f.L-4)+'" y1="'+Y(v).toFixed(1)+'" x2="'+f.L+'" y2="'+Y(v).toFixed(1)+'" stroke="'+C.ink+'" stroke-width="1"/>'
+         + '<text x="'+(f.L-7)+'" y="'+(Y(v)+3.5).toFixed(1)+'" text-anchor="end" class="ax">'+fmt(v)+'</text>';
+    });
+    if(xlab) s += '<text x="'+((f.L+f.R)/2)+'" y="'+(f.B+31)+'" text-anchor="middle" class="axl">'+xlab+'</text>';
+    if(ylab) s += '<text transform="translate('+(f.L-30)+','+((f.T+f.B)/2)+') rotate(-90)" text-anchor="middle" class="axl">'+ylab+'</text>';
+    return {s,X,Y};
+  }
+  const wrap = (W,H,inner,alt) =>
+    '<svg class="fig" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+(alt||"図")+'">'+inner+'</svg>';
+
+  /* ---- 散布図（回帰直線つき） ---- */
+  function scatter(g){
+    const f=frame(330,250,52,14,14,46);
+    const a=axes(f,g.xr,g.yr,g.x,g.y,g.xt,g.yt,g.fmt);
+    let s=a.s;
+    if(g.line){
+      const [x0,x1]=g.xr, y0=g.line[0]+g.line[1]*x0, y1=g.line[0]+g.line[1]*x1;
+      const cy0=Math.max(g.yr[0],Math.min(g.yr[1],y0)), cy1=Math.max(g.yr[0],Math.min(g.yr[1],y1));
+      const cx0=g.line[1]!==0?(cy0-g.line[0])/g.line[1]:x0, cx1=g.line[1]!==0?(cy1-g.line[0])/g.line[1]:x1;
+      s+='<line x1="'+a.X(cx0).toFixed(1)+'" y1="'+a.Y(cy0).toFixed(1)+'" x2="'+a.X(cx1).toFixed(1)+'" y2="'+a.Y(cy1).toFixed(1)+
+         '" stroke="'+C.deep+'" stroke-width="1.3" stroke-dasharray="5 3"/>';
+    }
+    g.pts.forEach(p=>{ s+='<circle cx="'+a.X(p[0]).toFixed(1)+'" cy="'+a.Y(p[1]).toFixed(1)+
+      '" r="2.6" fill="none" stroke="'+C.deep+'" stroke-width="1"/>'; });
+    return wrap(330,250,s,"散布図");
+  }
+
+  /* ---- 箱ひげ図 ---- */
+  function box(g){
+    const n=g.groups.length, f=frame(330,250,52,14,16,46);
+    const a=axes(f,[0,n],g.yr,"",g.y,[],g.yt,g.fmt);
+    let s=a.s, w=(f.R-f.L)/n*0.42;
+    g.groups.forEach((b,i)=>{
+      const cx=f.L+(f.R-f.L)*(i+0.5)/n;
+      const [mn,q1,md,q3,mx]=b.v;
+      s+='<line x1="'+cx+'" y1="'+a.Y(mn).toFixed(1)+'" x2="'+cx+'" y2="'+a.Y(q1).toFixed(1)+'" stroke="'+C.ink+'"/>'
+       + '<line x1="'+cx+'" y1="'+a.Y(q3).toFixed(1)+'" x2="'+cx+'" y2="'+a.Y(mx).toFixed(1)+'" stroke="'+C.ink+'"/>'
+       + '<line x1="'+(cx-w*0.5)+'" y1="'+a.Y(mn).toFixed(1)+'" x2="'+(cx+w*0.5)+'" y2="'+a.Y(mn).toFixed(1)+'" stroke="'+C.ink+'"/>'
+       + '<line x1="'+(cx-w*0.5)+'" y1="'+a.Y(mx).toFixed(1)+'" x2="'+(cx+w*0.5)+'" y2="'+a.Y(mx).toFixed(1)+'" stroke="'+C.ink+'"/>'
+       + '<rect x="'+(cx-w)+'" y="'+a.Y(q3).toFixed(1)+'" width="'+(w*2)+'" height="'+(a.Y(q1)-a.Y(q3)).toFixed(1)+
+         '" fill="'+C.mint+'" fill-opacity=".5" stroke="'+C.ink+'" stroke-width="1"/>'
+       + '<line x1="'+(cx-w)+'" y1="'+a.Y(md).toFixed(1)+'" x2="'+(cx+w)+'" y2="'+a.Y(md).toFixed(1)+'" stroke="'+C.ink+'" stroke-width="1.8"/>'
+       + '<text x="'+cx+'" y="'+(f.B+15)+'" text-anchor="middle" class="ax">'+b.n+'</text>';
+      (b.out||[]).forEach(o=>{ s+='<circle cx="'+cx+'" cy="'+a.Y(o).toFixed(1)+'" r="2.4" fill="none" stroke="'+C.ink+'"/>'; });
+    });
+    return wrap(330,250,s,"箱ひげ図");
+  }
+
+  /* ---- ヒストグラム ---- */
+  function hist(g){
+    const f=frame(330,250,52,14,14,46);
+    const mx=Math.max.apply(null,g.c), yr=[0,mx*1.15];
+    const yt=g.yt||[0,Math.round(mx/2),mx];
+    const a=axes(f,[g.b[0],g.b[g.b.length-1]],yr,g.x,g.y||"度数",g.xt||g.b,yt,g.fmt);
+    let s=a.s;
+    for(let i=0;i<g.c.length;i++){
+      const x0=a.X(g.b[i]), x1=a.X(g.b[i+1]), y=a.Y(g.c[i]);
+      s+='<rect x="'+x0.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+(x1-x0).toFixed(1)+'" height="'+(a.Y(0)-y).toFixed(1)+
+         '" fill="'+C.mint+'" fill-opacity=".55" stroke="'+C.deep+'" stroke-width="1"/>';
+    }
+    return wrap(330,250,s,"ヒストグラム");
+  }
+
+  /* ---- 正規分布（斜線部つき） ---- */
+  function norm(g){
+    const f=frame(330,170,20,20,16,42);
+    const lo=g.r?g.r[0]:-3.4, hi=g.r?g.r[1]:3.4;
+    const X=v=>f.L+(v-lo)/(hi-lo)*(f.R-f.L), Y=v=>f.B-v*(f.B-f.T)*0.92;
+    const d=x=>Math.exp(-x*x/2);
+    let path="",i;
+    for(i=lo;i<=hi;i+=0.05) path+=(i===lo?"M ":"L ")+X(i).toFixed(1)+" "+Y(d(i)).toFixed(1)+" ";
+    let s="";
+    if(g.sh){
+      const [s0,s1]=[Math.max(lo,g.sh[0]),Math.min(hi,g.sh[1])];
+      let p="M "+X(s0).toFixed(1)+" "+f.B+" ";
+      for(i=s0;i<=s1;i+=0.05) p+="L "+X(i).toFixed(1)+" "+Y(d(i)).toFixed(1)+" ";
+      p+="L "+X(s1).toFixed(1)+" "+f.B+" Z";
+      s+='<path d="'+p+'" fill="'+C.sky+'" fill-opacity=".45"/>';
+    }
+    if(g.sh2){
+      const [s0,s1]=[Math.max(lo,g.sh2[0]),Math.min(hi,g.sh2[1])];
+      let p="M "+X(s0).toFixed(1)+" "+f.B+" ";
+      for(i=s0;i<=s1;i+=0.05) p+="L "+X(i).toFixed(1)+" "+Y(d(i)).toFixed(1)+" ";
+      p+="L "+X(s1).toFixed(1)+" "+f.B+" Z";
+      s+='<path d="'+p+'" fill="'+C.sky+'" fill-opacity=".45"/>';
+    }
+    s+='<path d="'+path+'" fill="none" stroke="'+C.deep+'" stroke-width="1.4"/>'
+     + '<line x1="'+f.L+'" y1="'+f.B+'" x2="'+f.R+'" y2="'+f.B+'" stroke="'+C.ink+'"/>';
+    (g.mk||[]).forEach(m=>{
+      s+='<line x1="'+X(m[0]).toFixed(1)+'" y1="'+f.B+'" x2="'+X(m[0]).toFixed(1)+'" y2="'+Y(d(m[0])).toFixed(1)+
+         '" stroke="'+C.ink+'" stroke-width="1" stroke-dasharray="3 2"/>'
+       + '<text x="'+X(m[0]).toFixed(1)+'" y="'+(f.B+15)+'" text-anchor="middle" class="ax">'+m[1]+'</text>';
+    });
+    return wrap(330,170,s,"正規分布");
+  }
+
+  /* ---- 棒グラフ ---- */
+  function bar(g){
+    const f=frame(330,230,52,14,14,46), n=g.v.length;
+    const mx=Math.max.apply(null,g.v), yr=[0,mx*1.15];
+    const a=axes(f,[0,n],yr,"",g.y,[],g.yt||[0,Math.round(mx/2),mx],g.fmt);
+    let s=a.s, w=(f.R-f.L)/n*0.55;
+    g.v.forEach((v,i)=>{
+      const cx=f.L+(f.R-f.L)*(i+0.5)/n;
+      s+='<rect x="'+(cx-w/2).toFixed(1)+'" y="'+a.Y(v).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+(a.Y(0)-a.Y(v)).toFixed(1)+
+         '" fill="'+C.sky+'" fill-opacity=".6" stroke="'+C.deep+'" stroke-width="1"/>'
+       + '<text x="'+cx.toFixed(1)+'" y="'+(f.B+15)+'" text-anchor="middle" class="ax">'+g.n[i]+'</text>';
+    });
+    return wrap(330,230,s,"棒グラフ");
+  }
+
+  /* ---- 折れ線（時系列） ---- */
+  function lineC(g){
+    const f=frame(330,230,52,14,14,46), n=g.v.length;
+    const mn=Math.min.apply(null,g.v), mx=Math.max.apply(null,g.v);
+    const pad=(mx-mn)*0.18||1, yr=g.yr||[mn-pad,mx+pad];
+    const dyt=g.yt||[Math.ceil(yr[0]),Math.round((yr[0]+yr[1])/2),Math.floor(yr[1])];
+    const a=axes(f,[0,n-1],yr,g.x||"",g.y,[],dyt,g.fmt);
+    let s=a.s, p="";
+    g.v.forEach((v,i)=>{ p+=(i?"L ":"M ")+a.X(i).toFixed(1)+" "+a.Y(v).toFixed(1)+" "; });
+    s+='<path d="'+p+'" fill="none" stroke="'+C.deep+'" stroke-width="1.6"/>';
+    if(g.v2){
+      let p2="";
+      g.v2.forEach((v,i)=>{ p2+=(i?"L ":"M ")+a.X(i).toFixed(1)+" "+a.Y(v).toFixed(1)+" "; });
+      s+='<path d="'+p2+'" fill="none" stroke="'+C.plum+'" stroke-width="1.5" stroke-dasharray="5 3"/>';
+    }
+    g.v.forEach((v,i)=>{ s+='<circle cx="'+a.X(i).toFixed(1)+'" cy="'+a.Y(v).toFixed(1)+'" r="2.6" fill="#fff" stroke="'+C.deep+'" stroke-width="1.2"/>'; });
+    (g.n||[]).forEach((t,i)=>{ s+='<text x="'+a.X(i).toFixed(1)+'" y="'+(f.B+15)+'" text-anchor="middle" class="ax">'+t+'</text>'; });
+    return wrap(330,230,s,"折れ線グラフ");
+  }
+
+  return function(g){
+    if(!g) return "";
+    switch(g.t){
+      case "scatter": return scatter(g);
+      case "box":     return box(g);
+      case "hist":    return hist(g);
+      case "norm":    return norm(g);
+      case "bar":     return bar(g);
+      case "line":    return lineC(g);
+      default: return "";
+    }
+  };
+})();
+
+/* 分割表・数値表の描画 */
+function TBL(t){
+  if(!t) return "";
+  let s='<div class="tblwrap"><table class="dtbl">';
+  if(t.cap) s+='<caption>'+t.cap+'</caption>';
+  if(t.head) s+='<thead><tr>'+t.head.map((h,i)=>'<th'+(i===0?' class="lh"':'')+'>'+h+'</th>').join("")+'</tr></thead>';
+  s+='<tbody>'+t.rows.map(r=>'<tr>'+r.map((c,i)=>
+      i===0?'<th class="lh">'+c+'</th>':'<td>'+c+'</td>').join("")+'</tr>').join("")+'</tbody></table>';
+  if(t.src) s+='<div class="src">'+t.src+'</div>';
+  return s+'</div>';
+}
+
+const QA = [
+/* ===================== 1変数データ（12問） ===================== */
+{id:1,cat:"kijutsu",diff:1,scene:"通勤時間の分布",
+lead:"次のヒストグラムは、ある企業の従業員88人の片道通勤時間をまとめたものである。",
+fig:{t:"hist",x:"通勤時間(分)",b:[0,20,40,60,80,100],c:[8,24,31,19,6],xt:[0,20,40,60,80,100],yt:[0,15,31]},
+q:"このデータの中央値が含まれる階級として、最も適切なものを一つ選べ。",
+choices:["0分以上20分未満","20分以上40分未満","40分以上60分未満","60分以上80分未満"],ans:2,
+how:["総度数を確認する。8+24+31+19+6 = 88",
+     "中央値の位置は (88+1)÷2 = 44.5 番目。実務上は44番目と45番目の間",
+     "累積度数を下から積む。20分未満：8、40分未満：8+24 = 32、60分未満：32+31 = 63",
+     "44.5番目は32を超え63以下なので、40分以上60分未満の階級に入る"],
+exp:"ヒストグラムから代表値を読むときは、必ず<b>累積度数</b>を作ります。度数が最大の階級（＝最頻値の階級）と中央値の階級は一致するとは限りません。<br><br>この分布は左寄りにやや裾を引いた形で、最頻値の階級（40〜60分）と中央値の階級がたまたま一致していますが、常にそうなるわけではありません。",
+trap:"「山が一番高い階級」を反射的に選ばないこと。問われているのは中央値であり、累積で数える必要があります。",
+point:"ヒストグラムから中央値を読むときは累積度数。最頻値の階級とは別物。"},
+
+{id:2,cat:"kijutsu",diff:2,scene:"3店舗の客単価",
+lead:"次の箱ひげ図は、ある飲食チェーンの3店舗における1か月分の日次客単価をまとめたものである。",
+fig:{t:"box",y:"客単価(円)",yr:[700,1600],yt:[800,1000,1200,1400,1600],
+  groups:[{n:"A店",v:[820,980,1080,1200,1420]},{n:"B店",v:[760,900,940,1010,1180],out:[1520]},{n:"C店",v:[900,1090,1180,1290,1480]}]},
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　四分位範囲がもっとも小さいのはB店である。<br>II　中央値がもっとも大きいのはC店である。<br>III　B店には、上側の外れ値とみなされる日が存在する。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：箱の高さ（Q₃−Q₁）を比べる。A店 1200−980 = 220、B店 1010−900 = 110、C店 1290−1090 = 200。B店が最小",
+     "II：箱の中の太線の高さを比べる。A店 1080、B店 940、C店 1180。C店が最大",
+     "III：B店の箱の上に、ひげから離れた点が1つ描かれている。これが外れ値の印",
+     "I・II・IIIすべて正しい"],
+exp:"箱ひげ図の読み取りは、見る場所が3つに決まっています。<b>箱の高さ</b>が四分位範囲、<b>箱の中の太線</b>が中央値、<b>ひげの外の点</b>が外れ値です。<br><br>B店は客単価のばらつきが小さく安定していますが、1日だけ突出して高い日がありました。団体予約などの特殊要因が想像できます。",
+trap:"ひげの長さ（最大値−最小値）と四分位範囲を混同しないこと。IQRはあくまで箱の高さです。",
+point:"箱の高さ＝IQR、太線＝中央値、ひげの外の点＝外れ値。"},
+
+{id:3,cat:"kijutsu",diff:1,scene:"世帯の食費",
+lead:"ある地域の50世帯について、1か月の食費を調べて次の度数分布表を得た。",
+tbl:{cap:"1か月の食費（万円）",head:["階級","階級値","度数"],
+  rows:[["2以上4未満","3","6"],["4以上6未満","5","18"],["6以上8未満","7","16"],["8以上10未満","9","10"],["計","—","50"]]},
+q:"この度数分布表から計算される平均食費として、最も適切なものを一つ選べ。",
+choices:["6.00万円","6.20万円","6.44万円","5.80万円"],ans:1,
+how:["各階級について（階級値 × 度数）を計算する",
+     "3×6 = 18、5×18 = 90、7×16 = 112、9×10 = 90",
+     "合計 18+90+112+90 = 310",
+     "310 ÷ 50 = 6.20万円"],
+exp:"度数分布表からの平均は、階級値による<b>加重平均</b>です。「階級内のデータは階級値に集中している」とみなす近似計算になります。<br><br>元データから直接計算した平均とは、通常わずかにずれます。試験では階級値が与えられるので、それをそのまま使えば構いません。",
+trap:"階級値の単純平均（3+5+7+9）÷4 = 6.00 としないこと。度数で重みづけしなければ意味がありません。",
+point:"度数分布表の平均は Σ(階級値×度数) ÷ Σ度数。"},
+
+{id:4,cat:"kijutsu",diff:1,scene:"検品の測定値",
+lead:"ある部品5個の長さを測定したところ、次の値を得た（単位：mm）。<br><br><span class='mono'>48, 52, 50, 55, 45</span>",
+q:"この5個を標本とみなしたときの不偏分散として、最も適切なものを一つ選べ。",
+choices:["12.4","15.5","3.94","62.0"],ans:1,
+how:["平均を求める。(48+52+50+55+45) ÷ 5 = 250 ÷ 5 = 50",
+     "各値の偏差を求める。−2, +2, 0, +5, −5",
+     "偏差の2乗和を求める。4+4+0+25+25 = 62",
+     "不偏分散は n−1 = 4 で割る。62 ÷ 4 = 15.5"],
+exp:"不偏分散は<b>n−1で割る</b>のが決まりです。標本平均 x̄ を偏差の基準に使ったことで、ばらつきが実際より小さく出てしまうため、その補正として分母を1つ減らします。<br><br>この n−1 は<b>自由度</b>とも呼ばれます。x̄ が確定している以上、5つの偏差のうち自由に動けるのは4つだけだからです。",
+trap:"62 ÷ 5 = 12.4 は標本分散（記述用）です。「標本から母集団を推測する」文脈では n−1 を使います。選択肢の3.94は標準偏差 √15.5 です。",
+point:"推測が目的なら n−1 で割る。標準偏差にするには最後に√を取る。"},
+
+{id:5,cat:"kijutsu",diff:1,scene:"2つの生産ライン",
+lead:"2つの生産ラインで作られる製品の重量を測定し、次の結果を得た。",
+tbl:{head:["","平均(g)","標準偏差(g)"],rows:[["ラインA","250","7.5"],["ラインB","800","20.0"]]},
+q:"重量の相対的なばらつきが大きいのはどちらのラインか。判断の根拠とともに最も適切なものを一つ選べ。",
+choices:["ラインB。標準偏差が20.0gとAより大きいため","ラインA。変動係数が0.030でBの0.025より大きいため","ラインB。変動係数が0.080でAの0.025より大きいため","平均が異なるため比較できない"],ans:1,
+how:["変動係数 CV = 標準偏差 ÷ 平均 を両方について計算する",
+     "ラインA：7.5 ÷ 250 = 0.030",
+     "ラインB：20.0 ÷ 800 = 0.025",
+     "CVが大きいラインAのほうが、相対的なばらつきが大きい"],
+exp:"標準偏差だけを見るとラインBが大きく見えますが、そもそも製品の重量が3倍以上あります。<b>規模の違うものを比べるときは変動係数</b>を使います。<br><br>変動係数は単位を持たない無名数なので、重量と個数、円とドルのように単位が異なるデータどうしでも比較できます。",
+trap:"変動係数は平均が0に近いと極端に大きくなり、意味を失います。気温（摂氏）のように0が任意に決まる尺度では使えません。",
+point:"規模が違うばらつきの比較は、標準偏差ではなく変動係数。"},
+
+{id:6,cat:"kijutsu",diff:1,scene:"2教科の成績",
+lead:"ある模試で、A君の国語は78点（平均62点、標準偏差8点）、数学は72点（平均54点、標準偏差12点）であった。",
+q:"A君にとって、集団内での相対的な位置がより高いのはどちらの教科か。zスコアの値とともに最も適切なものを一つ選べ。",
+choices:["国語。z = 2.00 で数学の z = 1.50 より大きい","数学。z = 1.50 で国語の z = 1.00 より大きい","国語。z = 1.00 で数学の z = 0.50 より大きい","素点が高い国語のほうが位置は高い"],ans:0,
+how:["zスコア z = (x − 平均) ÷ 標準偏差 で標準化する",
+     "国語：(78 − 62) ÷ 8 = 16 ÷ 8 = 2.00",
+     "数学：(72 − 54) ÷ 12 = 18 ÷ 12 = 1.50",
+     "zが大きい国語のほうが、集団内の位置が高い"],
+exp:"標準化は「平均から標準偏差いくつ分離れているか」を測る操作です。これにより、平均もばらつきも違うテストを同じ土俵に乗せられます。<br><br>偏差値に直すと国語は 50+10×2.00 = 70、数学は 50+10×1.50 = 65 です。",
+trap:"素点の差（78 vs 72）で判断しないこと。数学は平均が低くばらつきも大きいため、同じ差でも意味が異なります。",
+point:"zスコアは (値 − 平均) ÷ 標準偏差。テスト間の比較はこれで行う。"},
+
+{id:7,cat:"kijutsu",diff:2,scene:"単位の換算",
+lead:"ある商品の重量 X（単位：kg）は、平均12kg、分散4である。この重量をグラム単位に換算し、さらに包装材50gを加えた総重量を Y = 1000X + 50（単位：g）とする。",
+q:"Y の平均と標準偏差の組合せとして、最も適切なものを一つ選べ。",
+choices:["平均12,050g・標準偏差2,000g","平均12,050g・標準偏差2,050g","平均12,000g・標準偏差2,000g","平均12,050g・標準偏差4,000g"],ans:0,
+how:["平均は式にそのまま代入できる。E(Y) = 1000 × 12 + 50 = 12,050g",
+     "分散は定数の足し算では変わらず、係数が2乗で効く。V(Y) = 1000² × 4 = 4,000,000",
+     "標準偏差は分散の平方根。√4,000,000 = 2,000g",
+     "別解：SD(X) = √4 = 2kg なので SD(Y) = 1000 × 2 = 2,000g"],
+exp:"線形変換 Y = aX + b では、平均は <b>aE(X)+b</b>、分散は <b>a²V(X)</b>、標準偏差は <b>|a|·SD(X)</b> となります。<br><br>定数 b が分散に効かないのは直感的にも自然です。全員に一律50gを足しても、相互の差は変わらないからです。",
+trap:"標準偏差に +50 を加えて2,050gとしないこと。ばらつきに定数の足し算は効きません。",
+point:"平均には b が効く。ばらつきには a だけが効く。"},
+
+{id:8,cat:"kijutsu",diff:1,scene:"売上の成長率",
+lead:"ある企業の売上高は、3年間で 100億円から 172.8億円に増加した。",
+q:"この期間の年平均成長率として、最も適切なものを一つ選べ。",
+choices:["24.3%","20.0%","19.3%","72.8%"],ans:1,
+how:["3年間の倍率を求める。172.8 ÷ 100 = 1.728",
+     "年あたりの倍率を r とすると r³ = 1.728",
+     "r = 1.728^(1/3) = 1.20（1.2³ = 1.728 で検算できる）",
+     "年平均成長率は 20.0%"],
+exp:"成長率のように<b>掛け算で積み上がる量</b>の平均には、算術平均ではなく<b>幾何平均</b>を使います。<br><br>検算すると、100 → 120 → 144 → 172.8。確かに合います。",
+trap:"72.8% ÷ 3 = 24.3% としないこと。これは複利の効果を無視した誤りで、実際より過大になります。",
+point:"率の平均は幾何平均。n年で k倍なら年平均成長率は k^(1/n) − 1。"},
+
+{id:9,cat:"kijutsu",diff:1,scene:"問い合わせ対応時間",
+lead:"あるコールセンターの通話時間について、第1四分位数が4分、第3四分位数が10分であった。箱ひげ図では、四分位範囲の1.5倍を超えて外れる値を外れ値とみなす。",
+q:"上側で外れ値とみなされる通話時間の境界として、最も適切なものを一つ選べ。",
+choices:["15分","16分","19分","25分"],ans:2,
+how:["四分位範囲を求める。IQR = 10 − 4 = 6分",
+     "上側の境界 = Q₃ + 1.5 × IQR",
+     "= 10 + 1.5 × 6 = 10 + 9 = 19分",
+     "19分を超える通話が外れ値の候補となる"],
+exp:"この「1.5倍」は理論的な必然ではなく、実務で広く使われている慣習的な基準です。正規分布ならおよそ0.7%が外れ値として拾われる水準になります。<br><br>下側の境界は 4 − 1.5×6 = −5分。通話時間は負にならないので、下側の外れ値は生じません。",
+trap:"Q₃ に IQR をそのまま足して16分としないこと。1.5倍を掛けるのを忘れないでください。",
+point:"外れ値の境界は Q₁−1.5IQR と Q₃+1.5IQR。"},
+
+{id:10,cat:"kijutsu",diff:2,scene:"サービス利用回数",
+lead:"次のヒストグラムは、あるサービスの利用者1人あたりの月間利用回数をまとめたものである。",
+fig:{t:"hist",x:"月間利用回数",b:[0,5,10,15,20,25,30],c:[46,28,15,8,4,2],xt:[0,5,10,15,20,25,30],yt:[0,23,46]},
+q:"この分布における平均値・中央値・最頻値の大小関係として、最も適切なものを一つ選べ。",
+choices:["平均値 < 中央値 < 最頻値","最頻値 < 中央値 < 平均値","中央値 < 最頻値 < 平均値","3つとも一致する"],ans:1,
+how:["ヒストグラムの形を確認する。左に山があり、右へ長く裾を引いている（右に歪んだ分布）",
+     "最頻値は度数が最大の階級、すなわちもっとも左にある",
+     "平均値は右側の裾にある少数の大きな値に引っ張られ、もっとも右にくる",
+     "中央値はその中間。最頻値 < 中央値 < 平均値"],
+exp:"右に裾を引く分布（正の歪度）では、<b>最頻値 < 中央値 < 平均値</b>の順になります。年収、利用回数、待ち時間など、実務で扱うデータの多くがこの形です。<br><br>覚え方としては「平均値がいちばん裾に引っ張られる」と理解しておけば、左に歪んだ分布でも順序を逆にするだけで対応できます。",
+trap:"平均値は外れ値に弱いため、こうした分布では「平均」を代表値として報告すると実態より高い印象を与えます。中央値の併記が望まれます。",
+point:"右に歪む → 最頻値 < 中央値 < 平均値。平均がいちばん裾に寄る。"},
+
+{id:11,cat:"kijutsu",diff:2,scene:"四半期売上の推移",
+lead:"ある小売店の四半期売上高（億円）の推移は次のとおりである。実線が実績、破線が移動平均を表す。",
+fig:{t:"line",y:"売上高(億円)",n:["1Q","2Q","3Q","4Q","1Q","2Q","3Q","4Q"],
+  v:[82,95,88,131,86,101,93,138],v2:[null,null,99,100,101.5,102.5,104.5,null],yr:[70,145],yt:[80,100,120,140]},
+q:"この時系列データに対して移動平均を用いる主な目的として、最も適切なものを一つ選べ。",
+choices:["外れ値を自動的に除去するため","季節変動や不規則変動をならして、基調の傾向を把握するため","将来の値を確定的に予測するため","データの分散を大きくして差を見やすくするため"],ans:1,
+how:["実績（実線）を見ると、毎年4Qに大きく跳ね上がる規則的な変動がある",
+     "この周期的な動きは季節変動であり、基調の傾向を見えにくくしている",
+     "移動平均（破線）は前後の期を平均することで、この周期を打ち消す",
+     "結果として、緩やかに右肩上がりという基調が読み取れるようになる"],
+exp:"時系列データは一般に <b>傾向変動・季節変動・不規則変動</b>に分解して考えます。移動平均は、季節変動の周期と同じ項数（四半期データなら4項）で平均を取ることで、季節性を消す手法です。<br><br>この図では、実績が上下に激しく振れているにもかかわらず、移動平均は99 → 104.5と一貫して上昇しています。基調としては成長していると判断できます。",
+trap:"移動平均は平滑化の手法であって、予測手法ではありません。また項数を増やすほど滑らかになりますが、変化への反応が遅れます。",
+point:"移動平均は季節変動をならして基調を見る道具。予測式ではない。"},
+
+{id:12,cat:"kijutsu",diff:1,scene:"部署別の平均年齢",
+lead:"ある企業の3部署について、社員数と平均年齢は次のとおりである。",
+tbl:{head:["部署","社員数","平均年齢"],rows:[["営業部","60人","38.0歳"],["技術部","90人","33.0歳"],["管理部","50人","45.0歳"]]},
+q:"全社員200人の平均年齢として、最も適切なものを一つ選べ。",
+choices:["38.7歳","37.5歳","36.5歳","38.0歳"],ans:1,
+how:["各部署の年齢合計を求める",
+     "営業部：60 × 38.0 = 2,280　技術部：90 × 33.0 = 2,970　管理部：50 × 45.0 = 2,250",
+     "総合計 2,280 + 2,970 + 2,250 = 7,500",
+     "7,500 ÷ 200 = 37.5歳"],
+exp:"群別の平均をまとめるときは、必ず<b>人数で重みづけ</b>します。<br><br>単純平均の (38.0+33.0+45.0) ÷ 3 = 38.67歳とは1歳以上ずれます。人数のもっとも多い技術部（33.0歳）に引っ張られて、単純平均より低くなるためです。",
+trap:"部署ごとの平均をそのまま平均しないこと。人数が異なる以上、加重平均でなければなりません。",
+point:"群別平均の合成は加重平均。Σ(人数×平均) ÷ Σ人数。"},
+
+/* ===================== 2変数データ（8問） ===================== */
+{id:13,cat:"nihensu",diff:2,scene:"気温とアイス販売",
+lead:"次の散布図は、ある店舗における日別の最高気温とアイスクリーム販売数の関係を示したものである。破線は最小二乗法による回帰直線である。",
+fig:{t:"scatter",x:"最高気温(℃)",y:"販売数(個)",xr:[14,36],yr:[0,320],xt:[15,20,25,30,35],yt:[0,100,200,300],
+  line:[-118,11.5],pts:[[16,62],[18,88],[19,95],[21,128],[22,140],[23,138],[24,162],[25,175],[26,168],[27,196],[28,210],[29,205],[30,238],[31,246],[32,258],[33,272],[34,290],[20,105],[26,182],[29,222],[17,70],[35,296]]},
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　気温と販売数の間には正の相関がみられる。<br>II　この散布図から、気温の上昇が販売数の増加を引き起こしていると断定できる。<br>III　回帰直線の傾きは正である。",
+choices:["Iのみ正しい","IとIIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:1,
+how:["I：点が右上がりに並んでいるので正の相関がある。正しい",
+     "II：観察データにすぎず、無作為化された実験ではない。因果は断定できない。誤り",
+     "III：破線が右上がりなので傾きは正。正しい",
+     "IとIIIのみ正しい"],
+exp:"相関係数や回帰直線が示すのは<b>2変数が一緒に動く度合い</b>だけです。因果関係を主張するには、無作為割付による実験か、交絡因子を丁寧に統制した分析が必要になります。<br><br>この例では因果が実際にありそうですが、それは統計ではなく<b>常識や理論による判断</b>です。散布図そのものからは導けません。",
+trap:"「相関 ≠ 因果」は試験で繰り返し問われます。散布図がきれいに直線的でも、因果を主張する選択肢は原則として誤りです。",
+point:"散布図から言えるのは相関の向きと強さまで。因果は言えない。"},
+
+{id:14,cat:"nihensu",diff:1,scene:"学習時間と得点",
+lead:"20人の生徒について、週あたりの学習時間 x（時間）と模試の得点 y（点）を調べ、次の統計量を得た。",
+tbl:{head:["統計量","値"],rows:[["x の標準偏差 s<sub>x</sub>","4.0"],["y の標準偏差 s<sub>y</sub>","15.0"],["x と y の共分散 s<sub>xy</sub>","42.0"]]},
+q:"x と y の相関係数として、最も適切なものを一つ選べ。",
+choices:["0.70","0.42","0.63","2.80"],ans:0,
+how:["相関係数 r = s_xy ÷ (s_x × s_y)",
+     "分母を計算する。4.0 × 15.0 = 60.0",
+     "r = 42.0 ÷ 60.0",
+     "r = 0.70"],
+exp:"共分散をそのまま見ても大小の判断ができません。単位が「時間×点」という解釈しにくいものになり、単位を変えれば値も変わってしまうためです。<br><br>2つの標準偏差の積で割ることで単位が打ち消され、<b>−1から+1の範囲</b>に正規化されます。これが相関係数を使う理由です。",
+trap:"分母を s_x + s_y や s_x² としないこと。分母は2つの標準偏差の<b>積</b>です。",
+point:"r = 共分散 ÷（標準偏差の積）。必ず −1 ≦ r ≦ 1 に収まる。"},
+
+{id:15,cat:"nihensu",diff:2,scene:"単位の変更",
+lead:"ある調査で、身長（cm）と体重（kg）の相関係数を計算したところ 0.68 であった。ここで、身長の単位をメートル、体重の単位をポンドに変更して計算し直すことにした。",
+q:"変更後の相関係数として、最も適切なものを一つ選べ。",
+choices:["単位換算の係数を掛けた値になる","0.68 のまま変わらない","0.0068 になる","計算し直さなければ分からない"],ans:1,
+how:["単位の変更は、データ全体を正の定数倍することにあたる",
+     "共分散（分子）は、2つの定数の積の分だけ大きくなる",
+     "標準偏差の積（分母）も、まったく同じ分だけ大きくなる",
+     "分子と分母で打ち消し合うため、相関係数は変わらない"],
+exp:"相関係数は<b>正の定数倍と平行移動に対して不変</b>です。この性質があるからこそ、単位や尺度の異なるデータの関連を横並びで比較できます。<br><br>なお、負の定数を掛けた場合（符号を反転させた場合）は、相関係数の符号だけが反転します。絶対値は変わりません。",
+trap:"共分散は単位に依存して激変します。不変なのは相関係数のほうです。この違いが問われます。",
+point:"相関係数は単位に依存しない。共分散は依存する。"},
+
+{id:16,cat:"nihensu",diff:2,scene:"来店客数と気温",
+lead:"5日間について、最高気温 x（℃）と来店客数 y（人）を記録し、次のデータを得た。x の平均は26、y の平均は120である。",
+tbl:{head:["日","x（℃）","y（人）"],rows:[["1","22","95"],["2","24","108"],["3","26","118"],["4","28","132"],["5","30","147"]]},
+q:"x と y の不偏共分散を求める式として、最も適切なものを一つ選べ。",
+choices:["{(22−26)(95−120) + … + (30−26)(147−120)} ÷ 5","{(22−26)(95−120) + … + (30−26)(147−120)} ÷ 4","{(22−26)² + … + (30−26)²} ÷ 4","{(22−26)(95−120) + … + (30−26)(147−120)}² ÷ 4"],ans:1,
+how:["共分散は、x の偏差と y の偏差の積を平均したもの",
+     "各日の偏差の積を計算する。(−4)(−25) = 100、(−2)(−12) = 24、0×(−2) = 0、2×12 = 24、4×27 = 108",
+     "偏差積の合計は 100+24+0+24+108 = 256",
+     "不偏共分散は n−1 = 4 で割るので 256 ÷ 4 = 64"],
+exp:"分散が「偏差の2乗の平均」であるのに対し、共分散は<b>「2つの変数の偏差の積の平均」</b>です。同じ方向に動けば積が正、逆方向なら負になります。<br><br>不偏共分散も不偏分散と同じく、分母は n ではなく <b>n−1</b> です。標本平均を2つ使っているように見えますが、自由度は1つしか減りません。",
+trap:"分母を n（÷5）にすると標本共分散、偏差を2乗すると x の分散、式全体を2乗すればまったくの別物になります。分母と、2乗か積かを慎重に見分けてください。",
+point:"共分散は偏差の積の和 ÷ (n−1)。分散は偏差の2乗の和 ÷ (n−1)。"},
+
+{id:17,cat:"nihensu",diff:2,scene:"施策と継続率",
+lead:"あるサービスで、新しい案内メールの配信有無と、翌月の継続状況の関係を集計して次の表を得た。",
+tbl:{cap:"案内メールと継続の関係（人）",head:["","継続","解約","計"],
+  rows:[["配信あり","180","120","300"],["配信なし","150","250","400"],["計","330","370","700"]]},
+q:"「配信あり」の「継続」に関するオッズ比として、最も適切なものを一つ選べ。",
+choices:["1.60","2.50","0.40","1.50"],ans:1,
+how:["配信ありのオッズを求める。継続 ÷ 解約 = 180 ÷ 120 = 1.50",
+     "配信なしのオッズを求める。150 ÷ 250 = 0.60",
+     "オッズ比 = 1.50 ÷ 0.60",
+     "= 2.50"],
+exp:"オッズは「起きた数 ÷ 起きなかった数」であり、<b>全体で割る割合とは分母が違います</b>。ここを取り違えると値が変わります。<br><br>オッズ比2.50は「配信ありの群は、配信なしの群に比べて継続のオッズが2.5倍」と読みます。<br><br>参考までにリスク比なら (180/300) ÷ (150/400) = 0.60 ÷ 0.375 = 1.60 です。",
+trap:"リスク比1.60を選ぶのが典型的な誤りです。オッズの分母は「解約数」であって「合計」ではありません。",
+point:"オッズ = 起きた数 ÷ 起きなかった数。割合とは分母が違う。"},
+
+{id:18,cat:"nihensu",diff:2,scene:"見かけの関連",
+lead:"ある自治体のデータを分析したところ、「消防車の出動台数」と「火災の損害額」の間に強い正の相関（r = 0.86）が確認された。",
+q:"この結果の解釈として、最も適切なものを一つ選べ。",
+choices:["消防車を多く出動させると損害額が増えるので、出動台数を減らすべきである","火災の規模という第3の変数が、両方に影響している可能性が高い","相関係数0.86は偶然であり、意味を持たない","損害額を先に把握してから出動台数を決めるべきである"],ans:1,
+how:["両方の変数に共通して影響する要因がないかを考える",
+     "火災の規模が大きいほど、消防車は多く出動する",
+     "同時に、火災の規模が大きいほど損害額も大きくなる",
+     "つまり「火災の規模」が交絡因子であり、両者の相関は見かけのもの"],
+exp:"曝露と結果の両方に影響する第3の変数を<b>交絡因子</b>、それによって生じる見かけ上の相関を<b>疑似相関</b>と呼びます。<br><br>強い相関を見たときの手順は決まっています。まず「両方に効く共通要因はないか」を疑う。次に、その要因を層別したりモデルに含めたりして、関連が残るかを確認する。この2段階です。",
+trap:"相関の強さは因果の証拠になりません。r = 0.99 でも疑似相関は成立します。",
+point:"強い相関を見たら、まず交絡因子を探す。"},
+
+{id:19,cat:"nihensu",diff:2,scene:"広告費と売上",
+lead:"ある企業の月次データについて、広告費 x（万円）と売上 y（万円）を分析し、次の統計量を得た。",
+tbl:{head:["統計量","値"],rows:[["x の平均 x̄","50"],["y の平均 ȳ","820"],["x の分散 s<sub>x</sub>²","64"],["共分散 s<sub>xy</sub>","208"]]},
+q:"y を x で説明する回帰直線 y = a + bx の傾き b と切片 a の組合せとして、最も適切なものを一つ選べ。",
+choices:["b = 3.25、a = 657.5","b = 3.25、a = 820.0","b = 0.31、a = 804.6","b = 4.16、a = 612.0"],ans:0,
+how:["傾きは 共分散 ÷ 説明変数の分散。b = 208 ÷ 64 = 3.25",
+     "回帰直線は必ず点 (x̄, ȳ) を通る。この性質から切片を求める",
+     "ȳ = a + b·x̄ より a = ȳ − b·x̄",
+     "a = 820 − 3.25 × 50 = 820 − 162.5 = 657.5"],
+exp:"最小二乗法による回帰直線には2つの重要な性質があります。<br><br>1つは<b>傾き b = s_xy / s_x²</b>。分母が y の分散ではなく<b>説明変数 x の分散</b>である点が要です。<br><br>もう1つは<b>必ず重心 (x̄, ȳ) を通る</b>こと。これを使えば切片は引き算だけで求まります。",
+trap:"分母を s_y² にすると、x を y で説明する別の回帰直線になってしまいます。回帰には向きがあります。",
+point:"傾きは s_xy / s_x²。切片は ȳ − b·x̄。直線は必ず重心を通る。"},
+
+{id:20,cat:"nihensu",diff:1,scene:"モデルの説明力",
+lead:"ある単回帰分析において、説明変数と目的変数の相関係数は −0.75 であった。",
+q:"この回帰モデルの決定係数と、その解釈の組合せとして最も適切なものを一つ選べ。",
+choices:["0.75。目的変数の変動の75%を説明できる","0.5625。目的変数の変動の約56%を説明できる","−0.5625。負の説明力を持つ","0.866。目的変数の変動の約87%を説明できる"],ans:1,
+how:["単回帰では、決定係数は相関係数の2乗に等しい",
+     "R² = (−0.75)² = 0.5625",
+     "2乗するので符号は必ず正になる",
+     "目的変数の全変動のうち約56%が回帰式で説明される"],
+exp:"相関係数 −0.75 は直感的にかなり強い関連に見えますが、説明力に直すと<b>56%</b>にすぎません。残りの44%は、この説明変数では説明できていない部分です。<br><br>この落差は実務でも重要です。「相関が強い」という印象と「どれだけ説明できるか」は別の話だからです。",
+trap:"決定係数は0以上1以下です。負の相関でも2乗するので必ず正になります。また R² が高いことがモデルの良さを意味するとは限りません。",
+point:"単回帰では R² = r²。相関0.75でも説明力は56%。"}
+];
+
+const QB = [
+/* ===================== データ収集法（7問） ===================== */
+{id:21,cat:"shushu",diff:2,scene:"従業員意識調査",
+lead:"従業員2,000人（本社400人・工場1,200人・営業所400人）の企業で、200人を抽出して意識調査を行う。各部門から人数比に応じて本社40人・工場120人・営業所40人を無作為に選んだ。",
+q:"この抽出方法の名称と、単純無作為抽出法に対する利点の組合せとして、最も適切なものを一つ選べ。",
+choices:["層化抽出法。部門構成の偏りを防ぎ、同じ標本サイズでも推定精度が高まる","集落抽出法。調査コストを大幅に削減できる","系統抽出法。抽出作業が機械的で簡便になる","有意抽出法。調査者の知見を反映できる"],ans:0,
+how:["母集団をあらかじめ性質の似たグループ（層）に分けている",
+     "各層の中から、それぞれ無作為に抽出している",
+     "この手続きが層化抽出法にあたる",
+     "層内が均質であるほど誤差が小さくなり、単純無作為抽出より推定精度が高まる"],
+exp:"層化抽出法の要点は<b>「層に分けてから、各層の中で無作為に選ぶ」</b>ことです。単純無作為抽出では「たまたま営業所が1人も選ばれない」といった偶然の偏りが起こりえますが、層化はこれを構造的に防ぎます。<br><br>混同しやすい<b>集落抽出法</b>は「工場を丸ごと1つ選んで全員調べる」ように、グループ単位で選ぶ方法です。移動コストは安く済みますが、集落内が似た人ばかりだと精度は落ちます。",
+trap:"層化と集落はどちらも「グループに分ける」ので混同されがちです。<b>層化は層の中から選ぶ、集落は層ごと選ぶ</b>と覚えてください。",
+point:"層化＝層の中から選ぶ。集落＝層ごと選ぶ。精度は層化が有利。"},
+
+{id:22,cat:"shushu",diff:2,scene:"名簿からの抽出",
+lead:"8,000人の会員名簿から160人を抽出する。最初の50人の中から乱数で1人（たとえば17番）を選び、以降 67番、117番、167番…と一定の間隔で抽出した。",
+q:"この方法について、次の記述I〜IIIのうち正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　この方法は系統抽出法と呼ばれる。<br>II　抽出間隔は50である。<br>III　名簿の並び順に周期性がある場合、深刻な偏りが生じうる。",
+choices:["Iのみ正しい","IとIIのみ正しい","IとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：一定間隔で機械的に抽出する方法は系統抽出法。正しい",
+     "II：抽出間隔 k = N ÷ n = 8,000 ÷ 160 = 50。正しい",
+     "III：名簿が「男・女・男・女…」のように並び、間隔が偶数だと全員同じ性別になる。正しい",
+     "すべて正しい"],
+exp:"系統抽出法は単純無作為抽出より手間が少なく、名簿がランダムに並んでいれば十分な精度が得られます。実務でよく使われる方法です。<br><br>ただし<b>名簿の並び順に、抽出間隔と同じ周期がある</b>と致命的な偏りが生じます。実施前に必ず並び順を確認してください。",
+trap:"抽出間隔は「n ÷ N」ではなく「<b>N ÷ n</b>」です。母集団を標本サイズで割ります。",
+point:"系統抽出の間隔は N÷n。名簿の周期性だけが弱点。"},
+
+{id:23,cat:"shushu",diff:3,scene:"教材の効果検証",
+lead:"新しい学習教材の効果を検証する2つの計画がある。<br><br>計画A：教材を自費で購入した生徒と購入しなかった生徒の、半年後の成績を比較する。<br>計画B：応募者200人をくじで100人ずつに分け、一方に教材を配布して半年後の成績を比較する。",
+q:"因果関係の主張に適した計画と、その理由の組合せとして最も適切なものを一つ選べ。",
+choices:["計画A。実際の購買行動を反映しており現実的だから","計画B。無作為割付により、測定していない要因まで両群に均等に散らばるから","計画B。標本サイズが200人と大きいから","どちらも同じ。比較を行っていれば因果は主張できる"],ans:1,
+how:["計画Aは観察研究。教材を買う生徒は元々学習意欲が高い可能性がある",
+     "成績差が教材の効果か意欲の効果か、区別できない（選択バイアス）",
+     "計画Bは無作為化比較試験。割付をくじで決めている",
+     "意欲・学力・家庭環境など未測定の要因まで、確率的に両群へ均等に散らばる"],
+exp:"無作為化の真の価値は、<b>観測できない交絡因子まで統制できる</b>点にあります。統計モデルで調整できるのは「測定した変数」だけですが、無作為割付は測定していない変数にも効きます。<br><br>これが、実験研究が観察研究より因果推論に強い理由です。",
+trap:"標本サイズを増やしても選択バイアスは解消しません。偏った集団から大量に抽出しても、偏ったままです。",
+point:"因果を言うなら無作為割付。観察研究では交絡が残る。"},
+
+{id:24,cat:"shushu",diff:3,scene:"圃場での比較実験",
+lead:"3種類の肥料の効果を、日当たりに傾斜のある畑で比較する実験を計画している。",
+q:"フィッシャーの3原則に<b>含まれない</b>ものを一つ選べ。",
+choices:["反復。同一条件の区画を複数用意し、誤差の大きさを見積もる","無作為化。どの区画にどの肥料を割り当てるかを乱数で決める","局所管理。日当たりの似た区画をブロックにまとめ、その中で比較する","盲検化。評価者に肥料の種類を伏せて測定させる"],ans:3,
+how:["フィッシャーの3原則は 反復・無作為化・局所管理 の3つ",
+     "反復がないと、差が処理によるものか偶然かを判断できない",
+     "無作為化は系統的な偏りを防ぐ",
+     "局所管理は既知の変動要因（この場合は日当たり）でブロックを作り、誤差を小さくする"],
+exp:"<b>局所管理</b>がやや理解しにくい概念です。畑に日当たりの傾斜がある場合、その傾斜方向にブロックを作り、各ブロック内に3種類の肥料をすべて配置します。こうすると日当たりの影響がブロック間の差に吸収され、肥料の比較が精密になります。<br><br><b>盲検化</b>は重要な手法ですが、これは主に人を対象とする研究で思い込み（プラセボ効果や観察者バイアス）を防ぐためのもので、3原則には含まれません。",
+trap:"「盲検化は大事な手法だから3原則に入るはず」と考えないこと。3原則は反復・無作為化・局所管理の3つで固定です。",
+point:"3原則は反復・無作為化・局所管理。盲検化は別枠。"},
+
+{id:25,cat:"shushu",diff:2,scene:"ネット上のアンケート",
+lead:"あるニュースサイトが、記事下に「この政策を支持しますか」という投票ボタンを設置し、10,000人の回答を「世論」として報じた。",
+q:"この調査の最大の問題点として、最も適切なものを一つ選べ。",
+choices:["標本サイズ10,000人では母集団の推定に不足している","回答者が自ら参加を決めているため、母集団を代表する標本になっていない","選択肢が2つしかなく、中間的な意見を拾えていない","集計期間が明示されていない"],ans:1,
+how:["このサイトを閲覧する層は、そのサイトの論調に近い人に偏っている",
+     "さらに、わざわざ投票する人は強い意見を持つ人に偏る",
+     "二重に偏った集団からの回答であり、無作為標本ではない",
+     "これを自己選択バイアスと呼ぶ"],
+exp:"決定的に重要なのは、<b>標本サイズを増やしてもこの偏りは一切解消しない</b>ことです。10,000人を100,000人にしても、偏った母集団から偏った標本を取っているだけで、推定値は真の値からずれたままになります。<br><br>統計的推測が成立する前提は「無作為抽出」であって「大量のデータ」ではありません。むしろ標本サイズが大きいほど、誤った値の周りに狭い信頼区間ができてしまい、有害ですらあります。",
+trap:"「n が大きいから信頼できる」という直感は誤りです。抽出方法の妥当性が先決です。",
+point:"抽出が偏っていれば、n をいくら増やしても直らない。"},
+
+{id:26,cat:"shushu",diff:3,scene:"サプリメントの評判",
+lead:"「このサプリを毎日飲む人は、飲まない人より平均入院日数が3日短い」という調査結果が発表された。この調査は、既存の健康診断受診者データを後から集計したものである。",
+q:"この結果を因果として受け取るべきでない理由として、最も本質的なものを一つ選べ。",
+choices:["3日という差が小さすぎるから","サプリを継続購入できる経済力や健康意識が、両方に影響する交絡因子でありうるから","入院日数は正規分布に従わないから","標本サイズが記載されていないから"],ans:1,
+how:["サプリを毎日買い続けられる人の特徴を考える",
+     "経済的余裕があり、健康意識が高い傾向がある",
+     "そうした人は運動もし、定期健診も受け、食事にも気を配る",
+     "「経済力・健康意識」がサプリ摂取と健康状態の両方に影響している"],
+exp:"観察研究では、<b>曝露を選ぶ人と選ばない人がそもそも違う</b>という問題が常につきまといます。この場合、観測された3日の差は、サプリの効果かもしれませんし、生活習慣全般の効果かもしれません。データだけでは切り分けられません。<br><br>切り分けるには無作為化比較試験が必要ですが、長期の健康アウトカムを評価する実験は現実には困難です。だからこそ、この種の主張には慎重さが求められます。",
+trap:"「大規模データだから信頼できる」という主張に注意してください。交絡は標本サイズでは解決しません。",
+point:"観察研究の結論は「関連がある」まで。因果には踏み込めない。"},
+
+{id:27,cat:"shushu",diff:2,scene:"新薬の臨床試験",
+lead:"新薬の有効性を検証する臨床試験において、被験者にも担当医師にも、投与されているのが実薬か偽薬かを知らせない方法がとられた。",
+q:"この方法の名称と、防ごうとしている2種類の偏りの組合せとして、最も適切なものを一つ選べ。",
+choices:["二重盲検法。被験者の思い込みと、評価者の判断の偏りの両方","単盲検法。被験者の思い込みのみ","無作為化。割付の偏りのみ","層化法。群間の背景要因の偏りのみ"],ans:0,
+how:["被験者と評価者の双方に割付を伏せる方法が二重盲検法",
+     "被験者側：実薬だと思うだけで症状が改善しうる（プラセボ効果）",
+     "評価者側：新薬群だと知っていると症状を軽く評価しがち（観察者バイアス）",
+     "両方に伏せることで、この2つを同時に防ぐ"],
+exp:"盲検化と無作為化は<b>目的が異なる別の工夫</b>です。無作為化は「割付の偏り」を防ぎ、盲検化は「評価の偏り」を防ぎます。両方を組み合わせたものが、臨床試験の標準設計です。<br><br>被験者だけに伏せる場合は単盲検法、割付を統計解析者にも伏せる場合は三重盲検法と呼ばれます。",
+trap:"「盲検化していれば無作為化は不要」ではありません。両者は補い合う関係です。",
+point:"無作為化は割付の偏り対策、盲検化は評価の偏り対策。"},
+
+/* ===================== 確率（10問） ===================== */
+{id:28,cat:"kakuritsu",diff:1,scene:"傘と天気",
+lead:"ある朝、駅にいる人のうち35%が傘を持っていた。傘を持っている人のうち60%は折りたたみ傘であった。",
+q:"駅にいる人から無作為に1人を選んだとき、その人が「傘を持っていて、かつ折りたたみ傘である」確率として、最も適切なものを一つ選べ。",
+choices:["0.60","0.35","0.21","0.95"],ans:2,
+how:["求めるのは同時確率 P(傘あり ∩ 折りたたみ)",
+     "乗法定理 P(A ∩ B) = P(A) × P(B | A) を使う",
+     "P(傘あり) = 0.35、P(折りたたみ | 傘あり) = 0.60",
+     "0.35 × 0.60 = 0.21"],
+exp:"条件付き確率で最も重要なのは<b>「分母がどの集団か」</b>です。60%は「傘を持っている人の中での割合」であって、駅にいる全員の中での割合ではありません。<br><br>全体を100人とすると、傘あり35人、そのうち折りたたみは21人。全体に対する割合は21%です。",
+trap:"0.60をそのまま答えにするのが典型的な誤りです。条件付き確率をそのまま全体の割合として扱わないでください。",
+point:"P(A∩B) = P(A) × P(B|A)。条件付き確率は分母が違う。"},
+
+{id:29,cat:"kakuritsu",diff:3,scene:"スクリーニング検査",
+lead:"ある疾患の有病率は2%である。検査の感度（疾患のある人が陽性となる確率）は95%、偽陽性率（疾患のない人が誤って陽性となる確率）は10%である。",
+q:"検査で陽性となった人が実際にその疾患である確率（陽性的中率）として、最も適切なものを一つ選べ。",
+choices:["約95%","約88%","約16%","約2%"],ans:2,
+how:["母集団を10,000人と仮定して人数で考える",
+     "疾患あり 200人 → うち陽性は 200 × 0.95 = 190人",
+     "疾患なし 9,800人 → うち陽性は 9,800 × 0.10 = 980人",
+     "陽性者の合計 190 + 980 = 1,170人。うち真に疾患があるのは190人",
+     "190 ÷ 1,170 ≒ 0.162（約16%）"],
+exp:"感度95%という高性能の検査でも、陽性者の8割以上は疾患を持たない人になります。<br><br>理由は単純で、<b>疾患のない人の母数が圧倒的に多い</b>からです。10%の誤りでも、9,800人に掛かれば980人という大きな数になります。190人の真陽性を、980人の偽陽性が飲み込んでしまうのです。<br><br>ベイズの定理を式で書くと P(D|+) = P(+|D)P(D) ÷ P(+) ですが、<b>人数に置き換えて考えるほうが確実</b>で、計算も速くなります。",
+trap:"感度と陽性的中率を混同しないこと。感度は P(陽性|疾患あり)、陽性的中率は P(疾患あり|陽性) で、条件が逆です。",
+point:"有病率が低いと、高性能な検査でも陽性的中率は低い。"},
+
+{id:30,cat:"kakuritsu",diff:1,scene:"2台の設備",
+lead:"ある工場で、設備Aが1年以内に故障する確率は0.08、設備Bが1年以内に故障する確率は0.05である。2台の故障は互いに独立とする。",
+q:"1年以内に少なくとも一方が故障する確率として、最も適切なものを一つ選べ。",
+choices:["0.130","0.126","0.874","0.004"],ans:1,
+how:["「少なくとも一方」は場合分けが煩雑なので、余事象を使う",
+     "余事象は「両方とも故障しない」",
+     "P(Aが無事) = 0.92、P(Bが無事) = 0.95。独立なので 0.92 × 0.95 = 0.874",
+     "求める確率 = 1 − 0.874 = 0.126"],
+exp:"「少なくとも」という語を見たら、まず<b>余事象</b>を疑ってください。直接数えると場合分けが増えますが、余事象なら1回の掛け算で済みます。<br><br>0.08 + 0.05 = 0.13 としないのは、両方が故障する場合（0.004）を二重に数えてしまうからです。加法定理で正確に書けば 0.08 + 0.05 − 0.004 = 0.126 となり、余事象の結果と一致します。",
+trap:"独立性が成り立たない場面（同じ落雷で両方壊れるなど）では、この掛け算は使えません。前提を確認してください。",
+point:"「少なくとも一方」は 1 −（どちらも起きない確率）。"},
+
+{id:31,cat:"kakuritsu",diff:2,scene:"抽選への挑戦",
+lead:"ある抽選で当選する確率は1回あたり 1/8 である。独立に4回応募する。",
+q:"少なくとも1回当選する確率として、最も適切なものを一つ選べ。",
+choices:["0.500","0.414","0.586","0.125"],ans:1,
+how:["余事象「4回とも外れる」を計算する",
+     "1回外れる確率は 7/8 = 0.875",
+     "4回とも外れる確率は 0.875⁴ ≒ 0.5862",
+     "1 − 0.5862 = 0.4138（約41.4%）"],
+exp:"「1/8 × 4 = 1/2 = 50%」としたくなりますが、これは誤りです。この計算では8回応募すると確率が100%になってしまい、明らかにおかしいと分かります。<br><br>正しくは、当選確率が p の抽選に n 回応募したとき、<b>少なくとも1回当たる確率は 1 − (1−p)ⁿ</b>です。<br><br>興味深いことに、n = 1/p 回応募しても確率は約63%にしかなりません（1 − 1/e ≒ 0.632）。「期待値の回数だけ試せば当たるはず」という感覚は、統計的には成り立ちません。",
+trap:"確率を単純に足さないこと。足し算が使えるのは互いに排反な事象だけです。",
+point:"「少なくとも1回」は 1 − (1−p)ⁿ。足し算ではない。"},
+
+{id:32,cat:"kakuritsu",diff:1,scene:"サービスの重複契約",
+lead:"ある調査で、動画配信サービスAの契約者は全体の55%、サービスBの契約者は40%、両方を契約している人は22%であった。",
+q:"AまたはBの少なくとも一方を契約している人の割合として、最も適切なものを一つ選べ。",
+choices:["95%","73%","22%","62%"],ans:1,
+how:["加法定理 P(A ∪ B) = P(A) + P(B) − P(A ∩ B) を使う",
+     "単純に足すと 55 + 40 = 95% だが、両方契約の22%を2回数えている",
+     "重複分を1回引く。0.55 + 0.40 − 0.22 = 0.73",
+     "73%"],
+exp:"内訳を確認すると、Aのみ33% ＋ Bのみ18% ＋ 両方22% ＝ 73%、どちらも契約なしが27%。合計100%で辻褄が合います。<br><br>ちなみに、もし独立なら両方契約は 0.55 × 0.40 = 0.22 になります。この問題では実際に22%なので、<b>AとBの契約は独立</b>だと分かります。片方を契約しているかどうかは、もう片方の契約確率に影響していません。",
+trap:"重なりを引き忘れて95%とすると、100%に近づきすぎて不自然です。検算で気づけます。",
+point:"和事象は重なりを1回引く。P(A∪B) = P(A)+P(B)−P(A∩B)。"},
+
+{id:33,cat:"kakuritsu",diff:1,scene:"景品つきくじ",
+lead:"1回400円のくじがある。当たりの構成は次のとおりで、それ以外はハズレ（0円）である。",
+tbl:{head:["等級","賞金","確率"],rows:[["1等","10,000円","0.01"],["2等","2,000円","0.05"],["3等","500円","0.20"],["ハズレ","0円","0.74"]]},
+q:"このくじを1回引いたときの賞金の期待値として、最も適切なものを一つ選べ。",
+choices:["400円","300円","250円","310円"],ans:1,
+how:["期待値 E(X) = Σ（値 × その確率）",
+     "10,000 × 0.01 = 100",
+     "2,000 × 0.05 = 100",
+     "500 × 0.20 = 100",
+     "0 × 0.74 = 0　合計 300円"],
+exp:"参加費400円に対して期待値は300円なので、1回あたり平均100円の損失です。<br><br>重要なのは、期待値が<b>「次の1回で得られる額」ではない</b>ことです。実際には74%の確率で0円になります。期待値は非常に多くの回数を繰り返したときの1回あたりの平均であって、個別の結果の予測ではありません。<br><br>確率の合計が 0.01+0.05+0.20+0.74 = 1.00 になることも、計算前に確認する習慣をつけてください。",
+trap:"参加費400円を賞金から引いて計算しないこと。問われているのは「賞金の期待値」です。純利益の期待値なら −100円になります。",
+point:"期待値は長期平均。次の1回の予測ではない。"},
+
+{id:34,cat:"kakuritsu",diff:2,scene:"2つの確率変数",
+lead:"2つの確率変数 X と Y について、次の値が分かっている。<br><br><span class='mono'>E[X] = 4.0　E[Y] = 2.5　E[XY] = 11.2　V[X] = 2.0　V[Y] = 4.5</span>",
+q:"E[X²] と Cov[X, Y] の組合せとして、最も適切なものを一つ選べ。",
+choices:["E[X²] = 16.0、Cov[X,Y] = 11.2","E[X²] = 18.0、Cov[X,Y] = 1.2","E[X²] = 2.0、Cov[X,Y] = 1.2","E[X²] = 18.0、Cov[X,Y] = 11.2"],ans:1,
+how:["分散の定義式 V[X] = E[X²] − (E[X])² を変形する",
+     "E[X²] = V[X] + (E[X])² = 2.0 + 4.0² = 2.0 + 16.0 = 18.0",
+     "共分散の定義式 Cov[X,Y] = E[XY] − E[X]E[Y] を使う",
+     "Cov[X,Y] = 11.2 − 4.0 × 2.5 = 11.2 − 10.0 = 1.2"],
+exp:"この2つの変形は頻出なので、形で覚えてしまうのが得策です。<br><br><b>V[X] = E[X²] − (E[X])²</b>　「2乗の期待値 − 期待値の2乗」<br><b>Cov[X,Y] = E[XY] − E[X]E[Y]</b>　「積の期待値 − 期待値の積」<br><br>構造がそっくりであることに気づけば、片方を覚えれば両方使えます。実際、Cov[X,X] = E[X²] − (E[X])² = V[X] であり、分散は共分散の特別な場合です。",
+trap:"E[X²] と (E[X])² は別物です。一般に E[X²] ≧ (E[X])² で、等号は X が定数のときだけ成立します。",
+point:"V[X] = E[X²]−(E[X])²、Cov = E[XY]−E[X]E[Y]。形がそっくり。"},
+
+{id:35,cat:"kakuritsu",diff:3,scene:"2つの確率変数（続き）",
+lead:"前問と同じ設定（E[X] = 4.0、E[Y] = 2.5、V[X] = 2.0、V[Y] = 4.5、Cov[X,Y] = 1.2）のもとで、次の一次変換を行う。<br><br><span class='mono'>U = 2X + 5　　V = −3Y + 1</span>",
+q:"Cov[U, V] と相関係数 r[U, V] の組合せとして、最も適切なものを一つ選べ。",
+choices:["Cov[U,V] = 7.2、r[U,V] = 0.40","Cov[U,V] = −7.2、r[U,V] = −0.40","Cov[U,V] = −7.2、r[U,V] = 0.40","Cov[U,V] = 1.2、r[U,V] = −0.40"],ans:1,
+how:["共分散の性質 Cov[aX+b, cY+d] = ac · Cov[X,Y] を使う。定数 b, d は消える",
+     "Cov[U,V] = 2 × (−3) × 1.2 = −7.2",
+     "元の相関係数を求める。r[X,Y] = 1.2 ÷ (√2.0 × √4.5) = 1.2 ÷ √9.0 = 1.2 ÷ 3.0 = 0.40",
+     "相関係数は係数の符号の積だけ影響を受ける。2 は正、−3 は負なので符号が反転し、r[U,V] = −0.40"],
+exp:"一次変換に対する振る舞いを整理します。<br><br>・<b>共分散</b>：係数の積 ac が掛かる。定数項は消える<br>・<b>相関係数</b>：絶対値は不変。符号だけが ac の符号で決まる<br><br>相関係数の絶対値が変わらないのは、分子の共分散が |ac| 倍になると同時に、分母の標準偏差の積も |a||c| = |ac| 倍になり、打ち消し合うからです。<br><br>ここでは −3 という負の係数によって Y の向きが反転したため、相関の符号だけが正から負に変わりました。",
+trap:"符号を落として +0.40 とするのが典型的な誤りです。負の係数が奇数個あれば符号が反転します。",
+point:"一次変換で相関係数の絶対値は不変。符号は係数の積の符号で決まる。"},
+
+{id:36,cat:"kakuritsu",diff:2,scene:"2品目の売上合計",
+lead:"ある店舗の1日のコーヒー売上 X（分散 225）とパン売上 Y（分散 64）は互いに独立である。",
+q:"合計売上 X + Y の標準偏差として、最も適切なものを一つ選べ。",
+choices:["23","17","289","15.1"],ans:1,
+how:["独立なら分散は足せる。V(X+Y) = V(X) + V(Y)",
+     "V(X+Y) = 225 + 64 = 289",
+     "標準偏差は分散の平方根。√289 = 17",
+     "なお SD(X) = 15、SD(Y) = 8 だが、15 + 8 = 23 は誤り"],
+exp:"<b>足せるのは分散であって、標準偏差ではありません</b>。合計のばらつきは、個々のばらつきの単純な和よりも小さくなります。<br><br>直感的には、コーヒーが多く売れた日にパンが少ない日もあり、変動が部分的に打ち消し合うためです。分散投資でリスクが下がる原理と同じ構造です。<br><br>15・8・17 は直角三角形の辺の比になっています。標準偏差は「斜辺のように合成される」とイメージすると、足し算にならない理由が腑に落ちます。",
+trap:"差 X − Y の場合も、分散は<b>足し算</b>で 289 になります。引き算にはなりません。符号は分散に効きません。",
+point:"分散は足せる、標準偏差は足せない。差のときも分散は足す。"},
+
+{id:37,cat:"kakuritsu",diff:3,scene:"3工場の不良品",
+lead:"ある製品は3つの工場で製造されている。各工場のシェアと不良率は次のとおりである。",
+tbl:{head:["工場","シェア","不良率"],rows:[["A","50%","1.0%"],["B","30%","2.0%"],["C","20%","4.5%"]]},
+q:"無作為に選んだ1個が不良品であったとき、それが工場Cの製品である確率として、最も適切なものを一つ選べ。",
+choices:["20.0%","45.0%","20.5%","46.4%"],ans:1,
+how:["まず全確率の定理で、不良品である確率を求める",
+     "A：0.50 × 0.010 = 0.0050　B：0.30 × 0.020 = 0.0060　C：0.20 × 0.045 = 0.0090",
+     "P(不良) = 0.0050 + 0.0060 + 0.0090 = 0.0200",
+     "ベイズの定理より P(C | 不良) = 0.0090 ÷ 0.0200 = 0.45（45.0%）"],
+exp:"ベイズの定理の実務的な使い方は<b>「原因の確率を後ろ向きに求める」</b>ことです。ここでは結果（不良品）から原因（どの工場か）を推定しています。<br><br>注目すべきは、シェア20%にすぎない工場Cが、不良品の<b>45%</b>を生み出している点です。不良率が他工場の2倍以上あるためで、改善の優先順位はCに置くべきだと判断できます。<br><br>10,000個で考えると、A工場50個・B工場60個・C工場90個の不良品、合計200個。90 ÷ 200 = 45%と、人数（個数）に置き換えても同じです。",
+trap:"シェアの20%をそのまま答えとしないこと。不良率が異なる以上、不良品に占めるCの割合はシェアと一致しません。",
+point:"ベイズは「結果から原因を逆算」。分母は全確率の定理で求める。"},
+
+/* ===================== 確率分布（前半3問） ===================== */
+{id:38,cat:"bunpu",diff:1,scene:"クーポンの利用",
+lead:"配布したクーポン1枚が使用される確率は0.25で、各クーポンの使用は独立とする。400枚を配布した。",
+q:"使用される枚数を X とするとき、E[X] と SD[X] の組合せとして、最も適切なものを一つ選べ。",
+choices:["E[X] = 100、SD[X] = 75","E[X] = 100、SD[X] = 8.66","E[X] = 100、SD[X] = 10","E[X] = 25、SD[X] = 8.66"],ans:1,
+how:["各クーポンは「使われる／使われない」の2値。独立に400回繰り返すので二項分布 B(400, 0.25)",
+     "E[X] = np = 400 × 0.25 = 100",
+     "V[X] = np(1−p) = 400 × 0.25 × 0.75 = 75",
+     "SD[X] = √75 ≒ 8.66"],
+exp:"二項分布が使える条件は4つあります。<b>試行回数 n が固定・各試行が2値・成功確率 p が一定・各試行が独立</b>。1つでも崩れると使えません。<br><br>たとえば「1人が複数枚使う」状況では独立性が崩れ、実際のばらつきは二項分布の予測より大きくなります。",
+trap:"75 は分散であって標準偏差ではありません。√を取り忘れる誤りが最も多く見られます。",
+point:"二項分布は E=np、V=np(1−p)。SDにするには√を取る。"},
+
+{id:39,cat:"bunpu",diff:2,scene:"商品の購入者数",
+lead:"来店客がある商品を購入する確率は0.3で、客どうしは独立とする。6人の客が来店した。",
+q:"ちょうど2人が購入する確率として、最も適切なものを一つ選べ。",
+choices:["0.0595","0.3241","0.0900","0.1852"],ans:1,
+how:["二項分布の確率 P(X=k) = ₙCₖ pᵏ (1−p)ⁿ⁻ᵏ に n=6, p=0.3, k=2 を代入",
+     "組合せ ₆C₂ = (6×5) ÷ (2×1) = 15",
+     "購入する2人の確率 0.3² = 0.09、購入しない4人の確率 0.7⁴ = 0.2401",
+     "15 × 0.09 × 0.2401 ≒ 0.3241"],
+exp:"組合せ ₙCₖ を掛ける意味は、<b>「6人のうちどの2人が買うか」の並び方の数</b>です。1通りだけの確率（0.09 × 0.2401 = 0.0216）に、15通り分を掛けます。<br><br>期待値は 6 × 0.3 = 1.8人なので、2人購入がもっとも起こりやすい結果です。約32%という値は妥当な水準といえます。",
+trap:"組合せを掛け忘れて 0.0216 とする誤りが典型的です。二項分布の確率には必ず ₙCₖ が付きます。",
+point:"P(X=k) = ₙCₖ pᵏ(1−p)ⁿ⁻ᵏ。組合せを忘れない。"},
+
+{id:40,cat:"bunpu",diff:3,scene:"窓口への来客",
+lead:"ある窓口には1時間あたり平均4人が来訪し、来訪数はポアソン分布に従うとする。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　この分布の分散は4である。<br>II　1時間に1人も来ない確率は e⁻⁴ である。<br>III　30分間の来訪数は、平均2のポアソン分布に従う。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：ポアソン分布は E(X) = V(X) = λ。λ = 4 なので分散も4。正しい",
+     "II：P(X=0) = e^(−λ)·λ⁰/0! = e^(−4)。正しい",
+     "III：ポアソン分布は時間区間に比例して λ が変わる。30分なら λ = 2。正しい",
+     "すべて正しい"],
+exp:"記述IIIの性質は<b>再生性</b>と呼ばれ、実務で重要です。「1時間あたり4人」なら、30分なら2人、2時間なら8人と、区間の長さに比例して λ を調整できます。<br><br>記述Iの「平均＝分散」はポアソン分布の診断にも使えます。実データで分散が平均より明らかに大きい場合（過分散）、発生率そのものが変動している可能性があり、負の二項分布などを検討します。<br><br>e⁻⁴ ≒ 0.0183 なので、1人も来ない1時間は約55時間に1回の頻度です。",
+trap:"λ は「単位時間あたり」の値です。時間の単位を変えたら λ も変えなければなりません。",
+point:"ポアソンは平均＝分散＝λ。区間を変えたら λ も比例して変える。"}
+];
+
+const QC = [
+/* ===================== 確率分布（続き9問） ===================== */
+{id:41,cat:"bunpu",diff:2,scene:"成人男性の身長",
+lead:"ある集団の成人男性の身長は、平均171cm、標準偏差6cmの正規分布に従うとする。下図の斜線部は、求める確率に対応する領域である。",
+fig:{t:"norm",sh:[1.0,3.4],mk:[[0,"171"],[1.0,"177"]]},
+q:"身長が177cm以上である人の割合として、最も適切なものを一つ選べ。標準正規分布において P(Z ≥ 1.00) = 0.1587 とする。",
+choices:["約31.7%","約15.9%","約84.1%","約2.3%"],ans:1,
+how:["標準化する。z = (177 − 171) ÷ 6 = 1.00",
+     "求めるのは P(X ≥ 177) = P(Z ≥ 1.00)",
+     "与えられた値より 0.1587",
+     "約15.9%"],
+exp:"正規分布の問題は<b>「標準化して、数値表を引く」</b>の2段階に固定されます。標準化 z = (x − μ) ÷ σ は「平均から標準偏差いくつ分離れているか」を測る操作です。<br><br>検算には68–95–99.7ルールが使えます。±1σ の内側が約68%なので、外側は32%。左右対称なので片側は約16%。与えられた0.1587と整合します。",
+trap:"「以上」は片側です。32%（両側）をそのまま答えないこと。図を描いて斜線部が片側か両側かを確認する習慣をつけてください。",
+point:"正規分布は標準化 → 数値表。片側か両側かを図で確認。"},
+
+{id:42,cat:"bunpu",diff:2,scene:"製品重量の規格",
+lead:"ある製品の重量は平均500g、標準偏差8gの正規分布に従う。規格は「484g以上516g以下」である。下図の斜線部は規格内の領域を表す。",
+fig:{t:"norm",sh:[-2.0,2.0],mk:[[-2.0,"484"],[0,"500"],[2.0,"516"]]},
+q:"規格から外れる製品の割合として、最も適切なものを一つ選べ。標準正規分布において P(Z ≥ 2.00) = 0.0228 とする。",
+choices:["約2.3%","約4.6%","約95.4%","約9.1%"],ans:1,
+how:["両端を標準化する。(516 − 500) ÷ 8 = +2.00、(484 − 500) ÷ 8 = −2.00",
+     "規格内は P(−2.00 ≤ Z ≤ 2.00)",
+     "規格外は上側と下側の2つ。片側が0.0228",
+     "正規分布は左右対称なので 0.0228 × 2 = 0.0456（約4.6%）"],
+exp:"規格外の割合は<b>両側</b>を合計します。片側だけの2.28%としないよう注意してください。<br><br>この「平均±2σ で約95%」という関係は、後の信頼区間や仮説検定でそのまま使われます。厳密に95%となるのは ±1.96σ ですが、実務では±2σで十分な近似です。<br><br>製造業では、規格幅と工程のばらつきの比を<b>工程能力指数 Cp</b> として管理します。この例では Cp = (516−484) ÷ (6×8) = 32 ÷ 48 = 0.67 で、一般に1.33以上が望ましいとされる水準を下回っています。",
+trap:"「規格から外れる」を片側だけで答えないこと。上下両方を足します。",
+point:"両側の確率は片側の2倍。左右対称性を使う。"},
+
+{id:43,cat:"bunpu",diff:1,scene:"バスの待ち時間",
+lead:"バスが12分間隔で運行しており、乗客はランダムな時刻に停留所へ到着する。待ち時間 X は区間 [0, 12] の一様分布に従うとみなせる。",
+q:"待ち時間の平均と分散の組合せとして、最も適切なものを一つ選べ。",
+choices:["平均6分・分散12.0","平均6分・分散36.0","平均6分・分散144.0","平均12分・分散12.0"],ans:0,
+how:["一様分布 U(a,b) の平均は (a+b) ÷ 2",
+     "(0 + 12) ÷ 2 = 6分",
+     "分散は (b−a)² ÷ 12",
+     "(12 − 0)² ÷ 12 = 144 ÷ 12 = 12.0"],
+exp:"分母の12は公式として覚えるほかありませんが、感覚的な検算はできます。標準偏差は √12 ≒ 3.46分で、区間幅12分の約29%。一様に散らばった分布としては妥当な大きさです。<br><br>もし分散を36（＝6²）とすると標準偏差が6分になり、区間の半分がばらつきということになって明らかに過大です。",
+trap:"分散の公式の分母を4や2としないこと。一様分布は12です。",
+point:"一様分布 U(a,b) は平均 (a+b)/2、分散 (b−a)²/12。"},
+
+{id:44,cat:"bunpu",diff:3,scene:"機器の寿命",
+lead:"ある電子部品の寿命は、平均8,000時間の指数分布に従うとする。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　16,000時間を超えて使える確率は e⁻² である。<br>II　この分布は左右対称である。<br>III　8,000時間使用した部品が、さらに8,000時間もつ確率は、新品が8,000時間もつ確率と等しい。",
+choices:["Iのみ正しい","IとIIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:1,
+how:["I：λ = 1/8,000。P(X > t) = e^(−λt) より P(X > 16,000) = e^(−2)。正しい",
+     "II：指数分布は右に大きく歪んだ分布で、対称ではない。誤り",
+     "III：指数分布の無記憶性そのもの。正しい",
+     "IとIIIのみ正しい"],
+exp:"指数分布の際立った特徴が<b>無記憶性</b>です。どれだけ使用しても、残りの寿命の分布は新品と変わりません。経年劣化をまったく表現できないため、摩耗のある機械部品には不向きなモデルです。偶発的な故障（電子部品の突発故障など）に適しています。<br><br>また、平均寿命を超えられる確率は e⁻¹ ≒ 36.8%にすぎません。右に歪んでいるため、<b>過半数が平均に達しないまま故障します</b>。「平均寿命8,000時間」を「半数が8,000時間もつ」と読むのは誤りです。",
+trap:"平均と中央値を混同しないこと。指数分布の中央値は平均の約0.693倍（8,000 × 0.693 ≒ 5,545時間）です。",
+point:"指数分布は右に歪み、無記憶性を持つ。平均を超えるのは約37%。"},
+
+{id:45,cat:"bunpu",diff:2,scene:"アンケートの回答数",
+lead:"あるアンケートの回収率は0.4である。1,000通を発送したときの回収数 X を正規分布で近似する。",
+q:"X の分布を近似する正規分布のパラメータとして、最も適切なものを一つ選べ。",
+choices:["N(400, 240)","N(400, 400)","N(400, 15.49)","N(400, 240²)"],ans:0,
+how:["X は二項分布 B(1000, 0.4) に従う",
+     "平均 np = 1000 × 0.4 = 400",
+     "分散 np(1−p) = 1000 × 0.4 × 0.6 = 240",
+     "正規近似は N(np, np(1−p)) なので N(400, 240)"],
+exp:"正規近似が使える目安は <b>np ≥ 5 かつ n(1−p) ≥ 5</b>。ここでは400と600なので十分満たしています。<br><br>N(μ, σ²) の第2引数は<b>分散</b>であり、標準偏差ではありません。標準偏差は √240 ≒ 15.49 ですが、これを第2引数に書くのは表記の誤りです。<br><br>この近似から「回収数が370通を下回る確率」なども計算できます。z = (370 − 400) ÷ 15.49 ≒ −1.94 なので約2.6%です。",
+trap:"N(μ, σ²) の第2引数を標準偏差と取り違えないこと。試験では σ² 表記が標準です。",
+point:"二項分布の正規近似は N(np, np(1−p))。第2引数は分散。"},
+
+{id:46,cat:"bunpu",diff:2,scene:"2科目の合計点",
+lead:"ある試験の数学の得点 X は N(60, 12²)、英語の得点 Y は N(55, 9²) に従い、互いに独立である。",
+q:"合計点 X + Y の分布として、最も適切なものを一つ選べ。",
+choices:["N(115, 21²)","N(115, 15²)","N(115, 225)","N(115, 441)"],ans:1,
+how:["正規分布どうしの和は正規分布になる（再生性）",
+     "平均は足せる。60 + 55 = 115",
+     "独立なので分散も足せる。12² + 9² = 144 + 81 = 225",
+     "標準偏差は √225 = 15 なので N(115, 15²)"],
+exp:"標準偏差は足せません。12 + 9 = 21 は誤りです。<br><br>12・9・15 は3:4:5 の直角三角形と同じ比になっています。標準偏差が<b>斜辺のように合成される</b>と捉えると、単純加算にならない理由が直感的に理解できます。<br><br>なお N(115, 225) も分散表記としては正しい値です。σ² の形（15²）と数値そのもの（225）はどちらも実務で見かけるので、表記の形を揃えて判断してください。",
+trap:"差 X − Y の場合も分散は<b>足し算</b>で225になります。V(X−Y) = V(X) + V(Y) であり、引き算にはなりません。",
+point:"正規分布の和も正規分布。分散は足す、標準偏差は足さない。"},
+
+{id:47,cat:"bunpu",diff:1,scene:"初回成功までの試行",
+lead:"ある作業の成功確率は1回あたり0.25で、各試行は独立である。成功するまで繰り返す。",
+q:"初めて成功するまでの試行回数の期待値として、最も適切なものを一つ選べ。",
+choices:["2回","3回","4回","0.25回"],ans:2,
+how:["初回成功までの試行回数は幾何分布に従う",
+     "幾何分布の期待値は 1 ÷ p",
+     "1 ÷ 0.25 = 4回"],
+exp:"4回に1回成功するなら、平均4回で成功する。直感どおりの結果です。<br><br>ただし「4回やれば必ず成功する」わけではありません。4回とも失敗する確率は 0.75⁴ ≒ 31.6% もあり、3回に1回はそうなります。<br><br>幾何分布も指数分布と同様に<b>無記憶性</b>を持ちます。10回連続で失敗した後でも、次に成功する確率は0.25のまま。「そろそろ成功するはず」という感覚は統計的には成り立たず、これを<b>ギャンブラーの誤謬</b>と呼びます。",
+trap:"期待値は「必ずそこで起きる回数」ではありません。分布の平均にすぎず、実際には大きくばらつきます。",
+point:"幾何分布の期待値は 1/p。ただし保証された回数ではない。"},
+
+{id:48,cat:"bunpu",diff:2,scene:"サイコロの合計",
+lead:"公正なサイコロを2個同時に投げ、出た目の合計を X とする。",
+q:"X の期待値と分散の組合せとして、最も適切なものを一つ選べ。1個のサイコロの目の期待値は3.5、分散は35/12 である。",
+choices:["E[X] = 7、V[X] = 35/12","E[X] = 7、V[X] = 35/6","E[X] = 3.5、V[X] = 35/6","E[X] = 7、V[X] = 35/3"],ans:1,
+how:["2個のサイコロの目を X₁、X₂ とすると X = X₁ + X₂",
+     "期待値の線形性より E[X] = 3.5 + 3.5 = 7",
+     "2個は独立なので分散も足せる",
+     "V[X] = 35/12 + 35/12 = 70/12 = 35/6"],
+exp:"期待値の線形性は<b>独立性を必要としません</b>。E[X+Y] = E[X] + E[Y] は常に成り立ちます。<br><br>いっぽう分散を足せるのは<b>独立な場合だけ</b>です。一般には V(X+Y) = V(X) + V(Y) + 2Cov(X,Y) となり、共分散の項が加わります。<br><br>この非対称性は統計学のあちこちで効いてきます。「期待値は無条件、分散は独立性が必要」と押さえてください。",
+trap:"「2個だから2倍」を分散にも機械的に当てはめるのは、独立だから偶然正しくなっているだけです。独立でなければ成り立ちません。",
+point:"期待値の加法性は無条件。分散の加法性は独立が前提。"},
+
+{id:49,cat:"bunpu",diff:3,scene:"分布の選択",
+lead:"次の4つの状況について、当てはめるべき確率分布を考える。<br><br>ア　1時間あたりの地震回数<br>イ　100回の検査のうち不合格となる件数<br>ウ　装置が故障するまでの時間<br>エ　0秒から60秒のどこかで等しく起こりうる事象の発生時刻",
+q:"ア〜エに当てはまる分布の組合せとして、最も適切なものを一つ選べ。",
+choices:["ア ポアソン・イ 二項・ウ 指数・エ 一様","ア 二項・イ ポアソン・ウ 一様・エ 指数","ア 指数・イ 二項・ウ ポアソン・エ 一様","ア ポアソン・イ 指数・ウ 二項・エ 一様"],ans:0,
+how:["ア：一定時間内にまれな事象が何回起きるかの回数 → ポアソン分布",
+     "イ：試行回数が固定され、各回が合格／不合格の2値 → 二項分布",
+     "ウ：事象が起きるまでの待ち時間 → 指数分布",
+     "エ：区間内で等しく起こりうる → 一様分布"],
+exp:"分布の選択は<b>「何を数えているか」</b>で決まります。<br><br>・<b>回数</b>で、試行回数が固定されている → 二項分布<br>・<b>回数</b>で、試行回数の概念がなく単位時間あたり → ポアソン分布<br>・<b>時間</b>（次の事象までの待ち時間）→ 指数分布<br>・<b>区間内で一様</b> → 一様分布<br><br>ポアソン分布と指数分布は表裏の関係にあります。同じ現象について「回数」を見ればポアソン、「間隔」を見れば指数になります。",
+trap:"ポアソンと指数の取り違えが最も多く見られます。<b>回数か時間か</b>で判別してください。",
+point:"回数×試行固定→二項、回数×単位時間→ポアソン、待ち時間→指数。"},
+
+/* ===================== 標本分布（8問） ===================== */
+{id:50,cat:"hyohon",diff:1,scene:"品質検査の精度",
+lead:"母標準偏差が σ = 24 であることが分かっている集団から、n 個を無作為抽出して標本平均を求める。",
+q:"標本平均の標準偏差（標準誤差）を 2 以下にするために必要な最小の n として、最も適切なものを一つ選べ。",
+choices:["12","48","144","576"],ans:2,
+how:["標準誤差 SE = σ ÷ √n",
+     "24 ÷ √n ≤ 2 を解く",
+     "√n ≥ 12",
+     "n ≥ 144"],
+exp:"分母が n ではなく <b>√n</b> であることが、統計調査のコスト構造を決定づけています。<br><br>精度を2倍にしたければ標本サイズは4倍、10倍にしたければ100倍必要です。ある水準を超えると、標本を増やす費用対効果は急激に悪化します。<br><br>この式は「母集団の大きさ N」を含まない点も重要です。母集団が1億人でも1万人でも、必要な n はほぼ同じになります。",
+trap:"24 ÷ 2 = 12 として n = 12 とする誤りが典型です。√を外す操作を忘れないでください。",
+point:"SE = σ/√n。精度を k 倍にするには n を k² 倍。"},
+
+{id:51,cat:"hyohon",diff:2,scene:"サイコロの平均",
+lead:"1個のサイコロを n 回投げ、出た目の平均 X̄ を記録する。元の分布（1〜6の一様分布）は正規分布とはまったく異なる形をしている。",
+q:"n を十分大きくしたときの X̄ の分布について、最も適切なものを一つ選べ。",
+choices:["元の一様分布と同じ形のまま、平均だけが3.5に近づく","近似的に正規分布に従い、その分散は元の分散の 1/n になる","一点3.5に収束し、分布としての広がりを持たなくなる","元の分布が正規分布でないため、何も言えない"],ans:1,
+how:["中心極限定理を適用する",
+     "元の分布の形にかかわらず、標本平均の分布は正規分布に近づく",
+     "平均は母平均 μ = 3.5 に等しい",
+     "分散は σ²/n。n が大きいほど鋭くなるが、0にはならない"],
+exp:"<b>中心極限定理</b>は統計的推測の土台です。元の分布がどんな形であっても（平均と分散が存在すれば）、標本平均は正規分布に近づきます。<br><br>この定理があるからこそ、母集団の分布形が分からない状況でも、標本平均については正規分布を前提とした推定や検定ができます。<br><br>目安は n ≥ 30 程度ですが、元の分布の歪みが強いほど大きな n が必要になります。",
+trap:"「一点に収束する」は大数の法則の話で、n → ∞ の極限の性質です。有限の n では分布としての広がりが残ります。",
+point:"中心極限定理：元の分布が何でも、標本平均は N(μ, σ²/n) に近づく。"},
+
+{id:52,cat:"hyohon",diff:1,scene:"支持率調査の誤差",
+lead:"ある政策の支持率を調べるため、625人を無作為抽出したところ支持は45%であった。",
+q:"標本比率の標準誤差として、最も適切なものを一つ選べ。",
+choices:["0.0199","0.0004","0.0398","0.0159"],ans:0,
+how:["標本比率の標準誤差は √( p̂(1−p̂) ÷ n )",
+     "分子 p̂(1−p̂) = 0.45 × 0.55 = 0.2475",
+     "0.2475 ÷ 625 = 0.000396",
+     "√0.000396 ≒ 0.0199（約2.0%）"],
+exp:"報道でよく見る「誤差±4ポイント」といった表現は、この標準誤差のおよそ2倍（95%信頼区間の幅の半分）にあたります。ここでは 1.96 × 0.0199 ≒ 0.039、つまり±3.9ポイントです。<br><br>p̂(1−p̂) は p̂ = 0.5 のときに最大値0.25を取ります。「五分五分」のときがもっとも結果が読みにくく、0や1に近づくほど誤差は小さくなります。",
+trap:"最後に√を取り忘れて0.0004とする誤りが典型です。分散と標準誤差を取り違えています。",
+point:"比率の標準誤差は √(p̂(1−p̂)/n)。最後に√を取る。"},
+
+{id:53,cat:"hyohon",diff:3,scene:"母分散が未知のとき",
+lead:"母標準偏差が未知の正規母集団から n = 12 の標本を抽出し、母平均を推定する。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　使用するのは自由度11のt分布である。<br>II　t分布は標準正規分布より裾が厚い。<br>III　自由度が大きくなると、t分布は標準正規分布に近づく。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：自由度は n − 1 = 11。正しい",
+     "II：σ の代わりに s を使う分だけ不確実性が増え、裾が厚くなる。正しい",
+     "III：n が大きいと s が σ に近づくため、t分布は標準正規分布に収束する。正しい",
+     "すべて正しい"],
+exp:"t分布の裾が厚い理由は<b>不確実性が二重</b>だからです。母平均を推定する不確実性に加え、母標準偏差を s で推定する不確実性が上乗せされます。その分だけ極端な値が出やすくなります。<br><br>自由度が n − 1 になるのは、標本平均 x̄ を1つ推定に使ったためです。x̄ が確定すると、n個の偏差のうち最後の1つは自動的に決まります。<br><br>実務的には、自由度30以上あれば正規分布とほぼ見分けがつきません。",
+trap:"自由度を n（＝12）としないこと。母平均の推定では常に n − 1 です。",
+point:"σ 未知なら t分布、自由度 n−1。裾が厚く、区間は広くなる。"},
+
+{id:54,cat:"hyohon",diff:3,scene:"分散に関する統計量",
+lead:"正規母集団 N(μ, σ²) から大きさ n の標本を取り、不偏分散 s² を計算する。",
+q:"統計量 (n−1)s² / σ² が従う分布と、その特徴の組合せとして最も適切なものを一つ選べ。",
+choices:["自由度 n−1 のt分布。左右対称","自由度 n−1 のカイ二乗分布。非負の値のみを取り、右に歪む","自由度 n のカイ二乗分布。左右対称","自由度 (n−1, n−1) のF分布。右に歪む"],ans:1,
+how:["不偏分散を標準化したこの統計量は、カイ二乗分布に従う",
+     "自由度は n − 1（標本平均を使ったため1つ減る）",
+     "分散は2乗和なので負にならず、分布も0以上の範囲にのみ存在する",
+     "左右対称ではなく、右に長い裾を引く"],
+exp:"カイ二乗分布が<b>非負かつ右に歪む</b>ことは、母分散の信頼区間の形に直結します。母平均のように「推定値 ± 幅」という対称な形にはならず、上側と下側で別々の分位点を読む必要があります。<br><br>自由度が大きくなると徐々に対称に近づき、正規分布に似た形になります。<br><br>カイ二乗分布は、分散の推定・検定に加え、適合度検定と独立性の検定でも使われます。",
+trap:"自由度を n としないこと。また「左右対称」はカイ二乗分布には当てはまりません。",
+point:"(n−1)s²/σ² 〜 χ²(n−1)。非負で右に歪む。"},
+
+{id:55,cat:"hyohon",diff:2,scene:"2群のばらつきの比較",
+lead:"2つの正規母集団から、それぞれ大きさ n₁ = 16、n₂ = 21 の標本を取り、不偏分散 s₁²、s₂² を得た。母分散が等しいかどうかを検定したい。",
+q:"用いる統計量とその分布の自由度の組合せとして、最も適切なものを一つ選べ。",
+choices:["s₁² − s₂²。自由度 (15, 20) のF分布","s₁² / s₂²。自由度 (15, 20) のF分布","s₁² / s₂²。自由度 (16, 21) のF分布","s₁² + s₂²。自由度 35 のカイ二乗分布"],ans:1,
+how:["分散の比較には差ではなく比を用いる",
+     "F = s₁² / s₂²",
+     "自由度は分子・分母それぞれ n − 1",
+     "(16−1, 21−1) = (15, 20)"],
+exp:"差ではなく比を使う理由は、それぞれの不偏分散がカイ二乗分布に従うからです。<b>カイ二乗分布に従う量どうしの比が、ちょうどF分布になる</b>という関係があります。<br><br>F分布は<b>自由度を2つ持つ</b>点が特徴です。分子の自由度と分母の自由度を取り違えると、読む数値表の場所が変わってしまいます。<br><br>帰無仮説「母分散が等しい」が正しければ F は1の近くの値を取ります。1から大きく離れれば、分散が異なると判断します。",
+trap:"自由度を n そのものとしないこと。F分布でも各群 n − 1 です。",
+point:"分散の比較は比。F分布は分子・分母それぞれ n−1 の自由度を持つ。"},
+
+{id:56,cat:"hyohon",diff:3,scene:"推定量の性質",
+lead:"母数 θ を推定する推定量 θ̂ について考える。",
+q:"「不偏性」と「一致性」の説明の組合せとして、最も適切なものを一つ選べ。",
+choices:["不偏性：n を大きくすると θ に近づく／一致性：期待値が θ と一致する","不偏性：期待値が θ と一致する／一致性：n を大きくすると θ に確率収束する","不偏性：分散が最小である／一致性：期待値が θ と一致する","不偏性：期待値が θ と一致する／一致性：分散が最小である"],ans:1,
+how:["不偏性は E(θ̂) = θ。標本サイズによらず成り立つ性質",
+     "一致性は n → ∞ のとき θ̂ → θ（確率収束）。極限の性質",
+     "この2つは論理的に独立で、片方だけ満たす推定量もある",
+     "「分散が最小」は有効性という別の概念"],
+exp:"射撃にたとえると理解しやすくなります。<br><br><b>不偏性</b>は「着弾の中心が的の中心と一致している」状態。1発ごとは外れますが、系統的なずれ（バイアス）がありません。ただし、ばらつきが大きくてもよいので命中率が高いとは限りません。<br><br><b>一致性</b>は「弾数を増やせば的の中心に集まっていく」状態です。<br><br>実務上は一致性のほうがより本質的な要件とされます。多少偏っていても、データを増やせば真の値に収束するなら実用に耐えるからです。逆に一致性がなければ、いくらデータを集めても正解に届きません。",
+trap:"「不偏だから正確」ではありません。不偏でも分散が大きければ、個々の推定値は大きく外れます。",
+point:"不偏性＝平均すれば当たる。一致性＝増やせば当たる。別の概念。"},
+
+{id:57,cat:"hyohon",diff:1,scene:"標本サイズと精度",
+lead:"ある調査で標本サイズを100人から900人に増やした。",
+q:"標本平均の標準誤差の変化として、最も適切なものを一つ選べ。",
+choices:["9分の1になる","3分の1になる","変わらない","9倍になる"],ans:1,
+how:["SE = σ ÷ √n なので、n が k 倍になると SE は 1/√k 倍",
+     "n が 100 → 900 で 9倍",
+     "SE は 1/√9 = 1/3 倍",
+     "3分の1になる"],
+exp:"9倍のデータを集めても、精度は3倍にしかなりません。<b>平方根の法則</b>と呼ばれるこの関係が、調査設計の現実を規定しています。<br><br>・精度2倍 → n は4倍<br>・精度3倍 → n は9倍<br>・精度10倍 → n は100倍<br><br>調査費用は n にほぼ比例するため、精度を上げるほど費用対効果は悪化します。実務では「意思決定に必要な精度」を先に決め、そこから逆算して n を定めるのが定石です。",
+trap:"「9倍にしたから9分の1」ではありません。効くのは √n です。",
+point:"標準誤差は 1/√n に比例。9倍のデータで精度は3倍。"},
+
+/* ===================== 推定（前半3問） ===================== */
+{id:58,cat:"suitei",diff:2,scene:"通販の平均購入額",
+lead:"ある通販サイトで400人の購入額を調べたところ、標本平均は6,200円であった。母標準偏差は1,600円と分かっている。",
+q:"母平均の95%信頼区間を表す式として、最も適切なものを一つ選べ。",
+choices:["6200 ± 1.96 × <span class='fr'><i>1600</i><b>400</b></span>","6200 ± 1.96 × <span class='fr'><i>1600</i><b>√400</b></span>","6200 ± 1.96 × 1600","6200 ± 1.96 × <span class='fr'><i>1600</i><b>√399</b></span>"],ans:1,
+how:["母標準偏差 σ が既知なので、標準正規分布を使う",
+     "標準誤差は σ ÷ √n = 1600 ÷ √400 = 1600 ÷ 20 = 80円",
+     "95%信頼区間は 標本平均 ± 1.96 × 標準誤差",
+     "6200 ± 1.96 × 80 = 6200 ± 156.8 → [6043.2, 6356.8]"],
+exp:"信頼区間の構造は常に<b>「推定値 ±（分布の値）×（標準誤差）」</b>の3要素です。この形さえ押さえれば、母平均でも母比率でも同じ枠組みで扱えます。<br><br>分母が n ではなく √n である点が要です。n のまま割ると 1600 ÷ 400 = 4円となり、区間が不自然に狭くなります。<br><br>また、σ が既知なので t分布ではなく標準正規分布（1.96）を使います。自由度 n−1 = 399 は登場しません。",
+trap:"σ をそのまま掛ける式は「個人の購入額が入る範囲」であって、母平均の区間ではありません。推定対象が何かを意識してください。",
+point:"信頼区間 ＝ 推定値 ±（分布の値）×（σ/√n）。分母は√n。"},
+
+{id:59,cat:"suitei",diff:3,scene:"信頼区間の意味",
+lead:"ある調査から、母平均の95%信頼区間として [48.2, 51.8] が得られた。",
+q:"この結果の解釈として、最も適切なものを一つ選べ。",
+choices:["母平均がこの区間に入る確率は95%である","同じ手続きで調査を繰り返せば、得られる区間のうち約95%が母平均を含む","データの95%がこの区間に入る","次に観測される1つの値が、95%の確率でこの区間に入る"],ans:1,
+how:["母平均 μ は動かない定数である",
+     "得られた区間 [48.2, 51.8] も、すでに確定した定数である",
+     "定数と定数の関係は「含むか含まないか」だけで、確率0か1しかない",
+     "95%は、区間を作る手続きを繰り返したときの性能を表す"],
+exp:"やや直感に反しますが、これが頻度論的な信頼区間の定義です。<br><br>95%は<b>個別の区間の性質ではなく、区間を作る手続きの性質</b>です。「この方法で区間を作れば、長期的には95%の確率で真値を捉える」という保証であって、今回の1本が当たっているかは分かりません。<br><br>「データの95%が入る」は分布そのものの話で、信頼区間とは別物です。「次の1つの値が入る」は<b>予測区間</b>と呼ばれる、信頼区間よりずっと広い区間の話になります。この3つの混同は極めて頻繁に起こります。",
+trap:"「母平均が入る確率95%」という表現は日常的に使われますが、頻度論の枠組みでは厳密には誤りです。試験ではこの区別が問われます。",
+point:"95%は手続きの性能。個別の区間についての確率ではない。"},
+
+{id:60,cat:"suitei",diff:1,scene:"信頼水準の変更",
+lead:"同一のデータについて、95%信頼区間と99%信頼区間の両方を計算した。",
+q:"2つの区間の関係として、最も適切なものを一つ選べ。95%点は1.96、99%点は2.58とする。",
+choices:["99%区間のほうが、95%区間より約1.3倍広い","99%区間のほうが、95%区間より狭い","2つの区間の幅は等しい","データが同じなら区間も完全に一致する"],ans:0,
+how:["区間の幅は「分布の値 × 標準誤差 × 2」で決まる",
+     "標準誤差は同じデータなので共通",
+     "幅の比は 2.58 ÷ 1.96 ≒ 1.32",
+     "99%区間のほうが約1.3倍広い"],
+exp:"確実性を上げれば区間は広がります。<b>確実性と精度はトレードオフ</b>の関係にあるからです。<br><br>極端に言えば「区間を [−∞, +∞] にすれば信頼水準100%」ですが、そんな区間には何の情報もありません。逆に区間を1点に絞れば信頼水準はほぼ0になります。<br><br>このトレードオフから抜け出す唯一の方法が<b>標本サイズを増やす</b>ことです。n を増やせば標準誤差が縮み、信頼水準を保ったまま区間を狭くできます。",
+trap:"「99%のほうが確実だから区間も絞れる」という直感は逆です。確実にするには網を広げる必要があります。",
+point:"信頼水準を上げると区間は広がる。逃げ道は標本サイズだけ。"}
+];
+
+const QD = [
+/* ===================== 推定（続き9問） ===================== */
+{id:61,cat:"suitei",diff:2,scene:"視聴率調査",
+lead:"ある番組の視聴率を調べるため900世帯を無作為抽出したところ、視聴していたのは180世帯（20.0%）であった。",
+q:"母比率の95%信頼区間を表す式として、最も適切なものを一つ選べ。",
+choices:["0.20 ± 1.96 × <span class='fr'><i>0.20 × 0.80</i><b>900</b></span>","0.20 ± 1.96 × √<span class='ovl'><span class='fr'><i>0.20 × 0.80</i><b>900</b></span></span>","0.20 ± 1.96 × √<span class='ovl'><span class='fr'><i>0.20 × 0.80</i><b>899</b></span></span>","0.20 ± 1.96 × √<span class='ovl'>0.20 × 0.80</span>"],ans:1,
+how:["母比率の標準誤差は √( p̂(1−p̂) ÷ n )",
+     "p̂(1−p̂) = 0.20 × 0.80 = 0.16",
+     "0.16 ÷ 900 = 0.0001778、√を取ると 0.01333",
+     "0.20 ± 1.96 × 0.01333 = 0.20 ± 0.0261 → [0.174, 0.226]"],
+exp:"母比率の信頼区間も、構造は母平均とまったく同じ<b>「推定値 ±（分布の値）×（標準誤差）」</b>です。違うのは標準誤差の中身だけです。<br><br>√を取り忘れる誤りが最も多く見られます。√の中は分散にあたる量なので、必ず平方根を取ってください。<br><br>また、比率の推定では分母は n であって n−1 ではありません。ここは母平均の t分布のケースとは異なります。",
+trap:"視聴率20%に対して誤差は±2.6ポイント。「前週から1ポイント上昇」といった報道は、誤差の範囲内であることが多いと分かります。",
+point:"比率の信頼区間は p̂ ± 1.96√(p̂(1−p̂)/n)。√を忘れない。"},
+
+{id:62,cat:"suitei",diff:3,scene:"調査の事前設計",
+lead:"ある比率を、誤差±3ポイント以内（信頼水準95%）で推定したい。真の比率が不明なため、最も安全側の見積もりを用いる。",
+q:"必要な標本サイズとして、最も適切なものを一つ選べ。",
+choices:["約430人","約1,070人","約2,140人","約4,270人"],ans:1,
+how:["必要標本サイズは n ≥ (1.96 ÷ E)² × p(1−p)",
+     "p が不明なので、p(1−p) が最大となる p = 0.5 を使う（p(1−p) = 0.25）",
+     "(1.96 ÷ 0.03)² = 65.333² = 4,268.4",
+     "4,268.4 × 0.25 = 1,067.1 → 約1,070人"],
+exp:"p = 0.5 を使うのは、p(1−p) がこのとき最大値0.25を取るからです。真の比率が分からない段階では、<b>最悪の場合を想定した安全側の設計</b>になります。<br><br>注目すべきは、この式に<b>母集団の大きさ N が登場しない</b>ことです。人口1億人の国でも人口1万人の町でも、必要な標本サイズはほぼ同じになります。「1億人を1,000人で推し量れるのか」という直感的な違和感は、統計的には杞憂です。<br><br>厳密には有限母集団修正がありますが、n が N に比べて十分小さければ無視できます。",
+trap:"p = 0.5 は「真の比率が0.5だと仮定している」のではなく、「どんな値でも足りるように多めに見積もっている」という意味です。",
+point:"必要標本サイズは (1.96/E)²×0.25。母集団の大きさには依存しない。"},
+
+{id:63,cat:"suitei",diff:2,scene:"少数標本での推定",
+lead:"ある部品16個の強度を測定したところ、標本平均は248MPa、不偏分散は144であった。母集団は正規分布に従うとする。自由度15のt分布の上側2.5%点は2.131である。",
+q:"母平均の95%信頼区間を表す式として、最も適切なものを一つ選べ。",
+choices:["248 ± 2.131 × <span class='fr'><i>144</i><b>√16</b></span>","248 ± 2.131 × <span class='fr'><i>12</i><b>√16</b></span>","248 ± 1.96 × <span class='fr'><i>12</i><b>√16</b></span>","248 ± 2.131 × <span class='fr'><i>12</i><b>√15</b></span>"],ans:1,
+how:["母標準偏差が未知なので t分布を使う。自由度は n − 1 = 15",
+     "不偏分散144の平方根が標本標準偏差。s = √144 = 12",
+     "標準誤差は s ÷ √n = 12 ÷ 4 = 3",
+     "248 ± 2.131 × 3 = 248 ± 6.39 → [241.6, 254.4]"],
+exp:"この問題には落とし穴が3つ仕込まれています。<br><br>1つめは<b>分散と標準偏差の取り違え</b>。与えられた144は分散なので、√を取って12にします。<br><br>2つめは<b>t分布か正規分布か</b>。σ が未知なので1.96ではなく2.131を使います。<br><br>3つめは<b>分母の√n</b>。自由度は15ですが、標準誤差の分母は √16 です。自由度と標本サイズを混同しないでください。",
+trap:"自由度15につられて分母を √15 としないこと。自由度は t の値を読むときにだけ使います。",
+point:"σ未知 → t分布（自由度n−1）。ただし標準誤差の分母は √n。"},
+
+{id:64,cat:"suitei",diff:3,scene:"2群の差の推定",
+lead:"2つの店舗の顧客満足度（100点満点）を調査した。両群は独立で、母分散は既知とする。",
+tbl:{head:["店舗","標本サイズ","標本平均","母分散"],rows:[["A店","100","72.0","64"],["B店","150","68.0","81"]]},
+q:"母平均の差（A − B）の95%信頼区間を表す式として、最も適切なものを一つ選べ。",
+choices:["4.0 ± 1.96 × √<span class='ovl'><span class='fr'><i>64</i><b>100</b></span> + <span class='fr'><i>81</i><b>150</b></span></span>","4.0 ± 1.96 × √<span class='ovl'><span class='fr'><i>64</i><b>100</b></span> − <span class='fr'><i>81</i><b>150</b></span></span>","4.0 ± 1.96 × (<span class='fr'><i>8</i><b>10</b></span> + <span class='fr'><i>9</i><b>√150</b></span>)","4.0 ± 1.96 × √<span class='ovl'><span class='fr'><i>64 + 81</i><b>250</b></span></span>"],ans:0,
+how:["点推定値は差そのもの。72.0 − 68.0 = 4.0",
+     "独立な2群の差の分散は、それぞれの分散の和になる",
+     "V(X̄_A − X̄_B) = 64/100 + 81/150 = 0.64 + 0.54 = 1.18",
+     "標準誤差は √1.18 ≒ 1.086。4.0 ± 1.96 × 1.086 = 4.0 ± 2.13 → [1.87, 6.13]"],
+exp:"最重要の論点は<b>「差」なのに分散は足す</b>ことです。V(X − Y) = V(X) + V(Y)（独立の場合）であり、引き算にはなりません。<br><br>直感的には、両方の推定に不確実性があるので、差を取ると不確実性は<b>累積する</b>と理解してください。打ち消し合うことはありません。<br><br>この区間が0を含まないので、「有意水準5%でA店の満足度が高い」と検定的にも結論できます。信頼区間と両側検定は表裏の関係にあります。",
+trap:"標準誤差どうしを足す形は誤りです。足せるのは分散であって標準誤差ではありません。",
+point:"差の推定でも分散は足す。標準誤差は足さない。"},
+
+{id:65,cat:"suitei",diff:3,scene:"2つの比率の差",
+lead:"広告Aは800人中200人（25.0%）、広告Bは600人中120人（20.0%）がクリックした。両群は独立である。",
+q:"母比率の差（A − B）の95%信頼区間を求めるための標準誤差として、最も適切なものを一つ選べ。",
+choices:["√<span class='ovl'><span class='fr'><i>0.25×0.75</i><b>800</b></span> + <span class='fr'><i>0.20×0.80</i><b>600</b></span></span>","√<span class='ovl'><span class='fr'><i>0.25×0.75</i><b>800</b></span> − <span class='fr'><i>0.20×0.80</i><b>600</b></span></span>","√<span class='ovl'>0.229 × 0.771 × (<span class='fr'><i>1</i><b>800</b></span> + <span class='fr'><i>1</i><b>600</b></span>)</span>","√<span class='ovl'><span class='fr'><i>0.05 × 0.95</i><b>1400</b></span></span>"],ans:0,
+how:["区間推定では、各群の比率をそれぞれ独立に推定する",
+     "A群の分散：0.25 × 0.75 ÷ 800 = 0.0002344",
+     "B群の分散：0.20 × 0.80 ÷ 600 = 0.0002667",
+     "独立なので分散を足す。合計0.0005011、√を取ると 0.02238"],
+exp:"ここは<b>区間推定と仮説検定で扱いが分かれる</b>重要な論点です。<br><br><b>区間推定</b>では、2つの母比率が等しいという仮定を置かないので、各群の p̂ をそのまま使い、分散を足します。<br><br><b>仮説検定</b>では帰無仮説「2つの母比率は等しい」を前提とするため、両群をプールした比率 p̄ = (200+120)÷(800+600) = 0.2286 を使い、p̄(1−p̄)(1/n₁+1/n₂) の形になります。<br><br>どちらの文脈にいるかで、使う式が変わります。",
+trap:"プール比率 p̄ を使った式は検定用であり、区間推定には用いません。設問が「区間推定」か「検定」かを確認してください。",
+point:"比率の差：区間推定は各群のp̂、検定はプール比率p̄。"},
+
+{id:66,cat:"suitei",diff:3,scene:"ばらつきの区間推定",
+lead:"正規母集団から大きさ n の標本を取り、母分散 σ² の信頼区間を構成する。",
+q:"この信頼区間の形について、最も適切なものを一つ選べ。",
+choices:["s² ± t × 標準誤差 の形で、推定値を中心に左右対称","カイ二乗分布の2つの分位点で s² を割る形で、左右非対称","F分布の分位点を用い、推定値を中心に左右対称","正規分布の1.96を用いた対称な区間"],ans:1,
+how:["(n−1)s²/σ² が自由度 n−1 のカイ二乗分布に従うことを利用する",
+     "この統計量が上下の分位点の間に入る確率が95%となるよう不等式を立てる",
+     "σ² について解くと、(n−1)s² を分位点で割る形になる",
+     "カイ二乗分布が右に歪んでいるため、区間は左右非対称になる"],
+exp:"母平均の信頼区間は「推定値 ± 幅」という対称な形でしたが、<b>母分散では成り立ちません</b>。<br><br>理由は2つあります。カイ二乗分布そのものが左右非対称であること、そして区間の構成が<b>割り算</b>になることです。分母が大きいほど値は小さくなるため、上側の分位点が下限を、下側の分位点が上限を作ります。左右が入れ替わるように見える点が混乱しやすいところです。<br><br>また、この方法は<b>母集団の正規性に敏感</b>です。正規分布から外れると精度が大きく落ちるため、事前の分布確認が欠かせません。",
+trap:"「± の形にならない」ことを覚えておけば、選択肢を大きく絞れます。",
+point:"分散の信頼区間は非対称。カイ二乗分位点で割る形になる。"},
+
+{id:67,cat:"suitei",diff:2,scene:"区間幅の設計",
+lead:"現在の調査では、母平均の95%信頼区間の幅が ±4.0 であった。これを ±1.0 にしたい。信頼水準は変えないものとする。",
+q:"必要な標本サイズの倍率として、最も適切なものを一つ選べ。",
+choices:["4倍","8倍","16倍","2倍"],ans:2,
+how:["区間の半幅は 1.96 × σ/√n に比例する",
+     "半幅を 1/4 にしたいので、√n を 4倍にする必要がある",
+     "√n が4倍 → n は 4² = 16倍",
+     "16倍"],
+exp:"精度と標本サイズの関係は<b>2乗</b>で効きます。<br><br>・半幅 1/2 → n は 4倍<br>・半幅 1/4 → n は 16倍<br>・半幅 1/10 → n は 100倍<br><br>調査費用は n にほぼ比例するため、高い精度を求めるほど費用は急激に膨らみます。実務では「意思決定に必要な精度はどこまでか」を先に決めることが、コスト管理の要になります。",
+trap:"「4分の1にしたいから4倍」ではありません。√n が効くので、その2乗で16倍です。",
+point:"区間幅を 1/k にするには、標本サイズは k² 倍。"},
+
+{id:68,cat:"suitei",diff:1,scene:"推定値の伝え方",
+lead:"ある調査結果を報告する際、「平均世帯人数は2.41人」とだけ伝える方法と、「平均世帯人数は2.34人から2.48人の範囲と推定される」と伝える方法がある。",
+q:"後者の利点として、最も適切なものを一つ選べ。",
+choices:["数値の印象が強くなり説得力が増すから","推定の不確実性の大きさが同時に伝わるから","計算が簡単で誤りが起きにくいから","必ず真の値を含むと保証できるから"],ans:1,
+how:["点推定は1つの値だけを示す。どれだけ信頼できるかの情報がない",
+     "区間推定は推定値に加え、推定の不確実性の幅を示す",
+     "受け手は「この調査から言えるのはここまで」という限界を判断できる",
+     "意思決定の材料として、区間のほうが情報量が多い"],
+exp:"点推定「2.41人」だけを示されると、受け手はそれをかなり正確な値だと受け取ります。しかし標本が変われば2.38にも2.45にもなり得ます。<br><br>意思決定の場面では、この差が決定的になります。同じ点推定2.41でも、区間が [2.34, 2.48] と [2.10, 2.72] では、取るべき行動が変わるからです。<br><br>点推定と区間推定は対立する手法ではなく、<b>併記するのが望ましい形</b>です。",
+trap:"信頼区間は「必ず真値を含む」ものではありません。95%の手続きなら、20回に1回は外します。",
+point:"点推定だけでは、その数字がどれだけ頼れるか伝わらない。"},
+
+{id:69,cat:"suitei",diff:3,scene:"区間推定と検定の関係",
+lead:"ある母平均について、95%信頼区間として [2.3, 7.9] が得られた。",
+q:"この区間から直ちに判断できることとして、最も適切なものを一つ選べ。",
+choices:["帰無仮説 μ = 0 は、有意水準5%の両側検定で棄却される","帰無仮説 μ = 5 は、有意水準5%の両側検定で棄却される","帰無仮説 μ = 0 は棄却できない","信頼区間からは検定について何も言えない"],ans:0,
+how:["95%信頼区間と有意水準5%の両側検定は表裏の関係にある",
+     "信頼区間に含まれる値は、帰無仮説として棄却されない",
+     "信頼区間に含まれない値は、帰無仮説として棄却される",
+     "0 は [2.3, 7.9] に含まれないので、μ = 0 は棄却される。5 は含まれるので棄却されない"],
+exp:"信頼区間は<b>「棄却されない帰無仮説の集合」</b>と読むことができます。この対応関係を知っていると、区間から検定の結論を即座に導けます。<br><br>実務的にはこの読み方が非常に有用です。p値は「有意かどうか」しか教えてくれませんが、信頼区間は<b>効果の大きさとその不確実性</b>を同時に示します。<br><br>近年、多くの学術分野で「p値だけでなく信頼区間を報告すべき」とされるのは、この情報量の差によります。",
+trap:"この対応が成り立つのは、信頼水準と有意水準が対応している場合（95%と5%など）に限られます。",
+point:"信頼区間は「棄却されない帰無仮説の集合」。検定と表裏。"},
+
+/* ===================== 仮説検定（前半11問） ===================== */
+{id:70,cat:"kentei",diff:1,scene:"仮説の立て方",
+lead:"従来のパッケージでの1日平均売上は120個であった。新パッケージに変更した効果を検証したい。",
+q:"「売上が変化したかどうか」を調べる場合の仮説設定として、最も適切なものを一つ選べ。",
+choices:["H₀：μ = 120、H₁：μ ≠ 120","H₀：μ ≠ 120、H₁：μ = 120","H₀：μ = 120、H₁：μ > 120","H₀：μ > 120、H₁：μ ≤ 120"],ans:0,
+how:["帰無仮説は「差がない」を等号の形で立てる。H₀：μ = 120",
+     "「変化したか」は増加も減少も対象となる",
+     "したがって対立仮説は両側 H₁：μ ≠ 120",
+     "もし「増えたか」だけを問うなら H₁：μ > 120 の片側検定になる"],
+exp:"帰無仮説を<b>必ず等号で置く</b>のには理由があります。等号があって初めて「H₀ が正しいとき統計量がどう分布するか」を計算でき、p値が求まるからです。「μ ≠ 120」では分布が定まりません。<br><br>片側にするか両側にするかは<b>データを見る前に</b>決めなければなりません。結果を見てから有利な側を選ぶのは有意水準を実質的に倍に緩める操作であり、p-hacking と呼ばれる不正な手続きです。<br><br>そのため、事前登録された計画がない限り<b>両側検定を既定</b>とするのが安全な運用です。",
+trap:"対立仮説に等号を含めないこと。H₀ と H₁ は排反で、等号は必ず H₀ 側に置きます。",
+point:"H₀ は必ず等号。片側か両側かはデータを見る前に決める。"},
+
+{id:71,cat:"kentei",diff:3,scene:"p値の意味",
+lead:"ある検定で p値 = 0.023 が得られた。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　帰無仮説が正しい確率は2.3%である。<br>II　帰無仮説が正しいと仮定したとき、観測値以上に極端な結果が得られる確率が2.3%である。<br>III　有意水準5%なら帰無仮説は棄却される。",
+choices:["Iのみ正しい","IIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:2,
+how:["I：p値は P(H₀|データ) ではない。帰無仮説が正しい確率ではない。誤り",
+     "II：p値の定義そのもの。P(観測値以上に極端 | H₀ が真)。正しい",
+     "III：0.023 < 0.05 なので棄却される。正しい",
+     "IIとIIIのみ正しい"],
+exp:"最重要の区別は、p値が <b>P(データ | H₀)</b> であって <b>P(H₀ | データ)</b> ではないことです。この2つはまったく別の量で、混同は統計学でもっとも頻繁に起こる誤解です。<br><br>両者の関係はベイズの定理で結ばれますが、P(H₀|データ) を求めるには事前確率が必要になり、それは頻度論の枠組みの外にあります。<br><br>p値が小さいことは「H₀ のもとでは説明しにくいデータが出た」という意味に留まります。それ以上でも以下でもありません。",
+trap:"「p = 0.023 だから95%以上の確率で効果がある」という言い方は誤りです。p値は効果の確率ではありません。",
+point:"p値は P(データ|H₀)。P(H₀|データ) ではない。"},
+
+{id:72,cat:"kentei",diff:1,scene:"2種類の誤り",
+lead:"火災報知器を仮説検定にたとえる。帰無仮説を「火事は起きていない」とする。",
+q:"次の対応の組合せとして、最も適切なものを一つ選べ。<br><br>ア　火事が起きていないのに報知器が鳴る<br>イ　火事が起きているのに報知器が鳴らない",
+choices:["ア 第1種の過誤（α）・イ 第2種の過誤（β）","ア 第2種の過誤（β）・イ 第1種の過誤（α）","ア 検出力・イ 有意水準","ア 有意水準・イ 検出力"],ans:0,
+how:["ア：H₀（火事なし）が真なのに棄却してしまう → 第1種の過誤",
+     "その確率が有意水準 α",
+     "イ：H₀ が偽なのに棄却できない → 第2種の過誤",
+     "その確率が β。検出力は 1 − β"],
+exp:"実務的な意味を押さえると忘れません。<br><br><b>第1種の過誤（あわてもの）</b>：効果がないのに「効果があった」と発表してしまう。新薬承認や品質管理では深刻です。<br><br><b>第2種の過誤（ぼんやりもの）</b>：本当は効果があるのに「効果は認められなかった」と結論してしまう。有望な発見を取り逃がします。<br><br>通常の検定は α を主に制御する設計になっており、β は放置されがちです。研究計画の段階で検出力を設計することが望まれます。",
+trap:"α と β は同時に下げられません。片方を下げれば他方が上がります。両方下げる唯一の方法は標本サイズを増やすことです。",
+point:"第1種＝ないのにあると言う。第2種＝あるのにないと言う。"},
+
+{id:73,cat:"kentei",diff:3,scene:"有意水準を厳しくすると",
+lead:"ある検定において、有意水準を5%から1%に変更した。標本サイズなど他の条件は同じとする。",
+q:"この変更による影響として、最も適切なものを一つ選べ。",
+choices:["第1種の過誤・第2種の過誤ともに減少する","第1種の過誤は減少し、第2種の過誤は増加する","第1種の過誤は増加し、第2種の過誤は減少する","どちらも変化しない"],ans:1,
+how:["有意水準を厳しくすると、棄却域が狭くなる",
+     "H₀ を誤って棄却する確率（α）は 5% → 1% に減少",
+     "同時に、棄却のハードルが上がるため本物の差も見逃しやすくなる",
+     "第2種の過誤（β）は増加する"],
+exp:"火災報知器の感度を鈍くすれば、誤報は減りますが本当の火事も見逃しやすくなる。まったく同じ構造です。<br><br>この二律背反から抜け出す方法はただ一つ、<b>標本サイズを増やす</b>ことです。n が増えると標本平均の分布が鋭くなり、α を保ったまま β を下げられます。<br><br>研究計画の段階で「検出したい差の大きさ」から必要な n を逆算する作業を<b>検出力分析</b>と呼びます。これを怠ると、「差がなかった」のか「差を見つけられる設計ではなかった」のか区別できない調査になります。",
+trap:"「厳しくすれば全体的に正確になる」という直感は誤りです。トレードオフが働きます。",
+point:"α と β はシーソー。両方下げたければ n を増やす。"},
+
+{id:74,cat:"kentei",diff:3,scene:"検出力の設計",
+lead:"ある臨床試験の計画段階で、検出したい効果量が定まっている。",
+q:"検出力を高める方法として、<b>適切でない</b>ものを一つ選べ。",
+choices:["標本サイズを増やす","測定精度を高めて誤差の標準偏差を小さくする","有意水準を5%から10%に緩める","有意水準を5%から1%に厳しくする"],ans:3,
+how:["検出力 = 1 − β。本当に差があるとき、それを検出できる確率",
+     "標本サイズを増やす → 分布が鋭くなり検出力が上がる",
+     "σ を小さくする → 同じ差でも統計量が大きくなり検出力が上がる",
+     "α を厳しくする → 棄却域が狭まり、検出力は下がる"],
+exp:"検出力を左右する4つの要素を整理します。<br><br>・<b>標本サイズ n</b>：大きいほど検出力が上がる（もっとも直接的）<br>・<b>効果量</b>：検出したい差が大きいほど上がる<br>・<b>ばらつき σ</b>：小さいほど上がる<br>・<b>有意水準 α</b>：緩いほど上がる（ただし第1種の過誤が増える）<br><br>慣例として検出力80%以上が望ましいとされます。検出力50%では、実在する差の半分を見逃す計算になり、調査として心もとない水準です。",
+trap:"α を緩めれば検出力は上がりますが、その代償として偽陽性が増えます。実務では推奨されません。",
+point:"検出力＝1−β。n を増やすのが正攻法。α を緩めるのは代償が大きい。"},
+
+{id:75,cat:"kentei",diff:1,scene:"内容量の検査",
+lead:"「内容量は平均500g」と表示された商品を144個測定したところ、標本平均は504.5gであった。母標準偏差は18gと分かっている。有意水準5%の両側検定を行う。",
+q:"検定統計量 z の値として、最も適切なものを一つ選べ。",
+choices:["0.25","3.00","4.50","36.0"],ans:1,
+how:["標準誤差を求める。SE = 18 ÷ √144 = 18 ÷ 12 = 1.5g",
+     "検定統計量 z = (標本平均 − 仮説値) ÷ 標準誤差",
+     "z = (504.5 − 500) ÷ 1.5 = 4.5 ÷ 1.5",
+     "z = 3.00"],
+exp:"検定統計量は<b>「観測された差が、標準誤差の何個分か」</b>を測っています。<br><br>z = 3.00 は両側5%の臨界値1.96を大きく超えるので、帰無仮説は棄却されます。<br><br>ここで注意したいのは、4.5gという差そのものは小さいのに有意になった点です。標本サイズが144個と大きいため、<b>わずかな差でも統計的には検出できます</b>。統計的有意性と実務上の重要性は別問題であり、4.5gの過剰充填が経営的に問題かどうかは統計の外側の判断です。",
+trap:"分母に σ をそのまま置いて 4.5 ÷ 18 = 0.25 としないこと。分母は標準誤差 σ/√n です。",
+point:"検定統計量 ＝（観測値 − 仮説値）÷ 標準誤差。"},
+
+{id:76,cat:"kentei",diff:2,scene:"研修効果の検証",
+lead:"研修受講者25人のテスト結果は、標本平均78.4点、不偏分散100であった。全国平均75点を上回るかを、有意水準5%の片側検定で調べる。自由度24のt分布の上側5%点は1.711である。",
+q:"検定統計量 t の値と結論の組合せとして、最も適切なものを一つ選べ。",
+choices:["t = 1.70。帰無仮説は棄却できない","t = 0.34。帰無仮説は棄却できない","t = 1.70。帰無仮説を棄却する","t = 8.50。帰無仮説を棄却する"],ans:0,
+how:["不偏分散100の平方根が標本標準偏差。s = 10",
+     "標準誤差は s ÷ √n = 10 ÷ √25 = 10 ÷ 5 = 2.0",
+     "t = (78.4 − 75) ÷ 2.0 = 3.4 ÷ 2.0 = 1.70",
+     "1.70 < 1.711 なので、棄却域に入らない。棄却できない"],
+exp:"t = 1.70 と臨界値 1.711 は<b>きわどい差</b>です。わずかに届かず、有意とは判定されません。<br><br>この結果の正しい読み方は「効果がないと証明された」ではなく<b>「今回のデータでは効果を示す十分な証拠が得られなかった」</b>です。3.4点の差は実在するかもしれませんが、25人では偶然の範囲と区別できません。<br><br>仮に同じ平均・同じ分散が n = 36 で得られていれば、SE = 1.667、t = 2.04 となり有意になります。標本サイズが結論を左右する典型例です。",
+trap:"与えられた100は分散です。√を取って標準偏差10にしてから標準誤差を計算してください。",
+point:"分散が与えられたら、まず√を取る。境界付近では慎重に比較。"},
+
+{id:77,cat:"kentei",diff:3,scene:"有意でなかったとき",
+lead:"新薬と偽薬を比較する試験で、p値 = 0.28（有意水準5%）という結果が得られた。",
+q:"この結果の解釈として、最も適切なものを一つ選べ。",
+choices:["新薬に効果がないことが証明された","新薬と偽薬は同等であると結論できる","効果があるとは言えないが、効果がないと証明されたわけでもない","検定手法が不適切だったので、別の手法で再検定すべきである"],ans:2,
+how:["有意でない理由は2つ考えられる",
+     "1つは本当に効果がない場合",
+     "もう1つは効果はあるが標本サイズが小さく検出できなかった場合（第2種の過誤）",
+     "検定はこの2つを区別できないため、「効果がない」とは結論できない"],
+exp:"<b>証拠の不在は、不在の証拠ではありません。</b><br><br>有意でなかったときこそ<b>信頼区間</b>を見るべきです。効果の差の区間が [−0.1, +0.2] と狭ければ「効果があってもごく小さい」と言えますが、[−5, +8] と広ければ「何も分からなかった」だけです。同じ「有意差なし」でも、意味はまったく違います。<br><br>なお、真に「同等である」ことを示したい場合は、<b>同等性試験</b>という別の枠組みを使います。通常の検定を流用しても同等性の主張はできません。",
+trap:"結果が不都合だからといって、別の手法で再検定を繰り返すのは p-hacking です。手法は事前に決めます。",
+point:"有意でない ＝ 差がない証拠、ではない。信頼区間で幅を確認する。"},
+
+{id:78,cat:"kentei",diff:2,scene:"2群の平均の比較",
+lead:"2つの独立な群について、A群（n = 12、不偏分散 18）、B群（n = 18、不偏分散 24）のデータを得た。母分散が等しいと仮定した2標本t検定を行う。",
+q:"プールした分散 s²ₚ として、最も適切なものを一つ選べ。",
+choices:["21.00","21.64","42.00","20.36"],ans:1,
+how:["プール分散は自由度による加重平均",
+     "s²ₚ = {(n₁−1)s₁² + (n₂−1)s₂²} ÷ (n₁ + n₂ − 2)",
+     "分子：11 × 18 + 17 × 24 = 198 + 408 = 606",
+     "分母：12 + 18 − 2 = 28。606 ÷ 28 ≒ 21.64"],
+exp:"単純平均の (18 + 24) ÷ 2 = 21.00 ではありません。標本サイズの大きいB群のほうに重みがかかるため、21より24寄りの値になります。<br><br>プール分散を使う前提は<b>「両群の母分散が等しい」</b>ことです。この仮定が疑わしい場合は<b>ウェルチのt検定</b>を使います。ウェルチは分散が等しくなくても妥当な結果を与え、等しい場合でも性能が大きく落ちないため、<b>近年はウェルチを既定とする考え方が主流</b>です。<br><br>なお、この検定の自由度は n₁ + n₂ − 2 = 28 です。",
+trap:"重みは標本サイズ n ではなく<b>自由度 n−1</b> です。分子は 11 と 17 を使います。",
+point:"プール分散は自由度による加重平均。分母は n₁+n₂−2。"},
+
+{id:79,cat:"kentei",diff:3,scene:"前後比較の設計",
+lead:"あるトレーニングプログラムの効果を検証するため、参加者30人について開始前と3か月後の記録を測定した。",
+q:"適切な検定手法と、その理由の組合せとして最も適切なものを一つ選べ。",
+choices:["独立2標本t検定。2つの平均を比べるため","対応のあるt検定。同一個人の前後を比べており、個人差を相殺できるため","カイ二乗検定。2つの状態を比べるため","F検定。分散の変化を見るため"],ans:1,
+how:["同じ人について2つの測定値がある。データは対応している",
+     "各人の差 dᵢ =（後）−（前）を計算する",
+     "差の平均が0かどうかを1標本t検定で調べる",
+     "自由度は n − 1 = 29"],
+exp:"独立2標本t検定を使ってはいけない理由は、<b>検出力が大きく落ちる</b>からです。<br><br>記録には元々大きな個人差があります。独立2群として扱うと、この個人差がすべて誤差に混ざり込みます。いっぽう差を取れば、個人差は<b>きれいに相殺され</b>、残るのはプログラムの効果だけになります。<br><br>同じデータでも、対応を活かすほうがはるかに敏感な検定になります。データの構造を無視した手法選択は、情報の浪費です。",
+trap:"「2つの平均を比べる」という表面的な形だけで独立2標本t検定を選ばないこと。対応の有無を必ず確認してください。",
+point:"同一対象の前後比較は、差を取って1標本t検定。"},
+
+{id:80,cat:"kentei",diff:1,scene:"コインの公正さ",
+lead:"あるコインを900回投げたところ、表が477回（53.0%）出た。「表と裏の出る確率は等しい」という帰無仮説を、有意水準5%の両側検定で調べる。",
+q:"検定統計量 z の値として、最も適切なものを一つ選べ。",
+choices:["1.80","0.60","1.20","3.00"],ans:0,
+how:["帰無仮説のもとでの標準誤差を求める。p₀ = 0.5 を使う",
+     "SE = √(0.5 × 0.5 ÷ 900) = √0.000278 = 0.016667",
+     "p̂ = 477 ÷ 900 = 0.53",
+     "z = (0.53 − 0.50) ÷ 0.016667 = 0.03 ÷ 0.016667 = 1.80"],
+exp:"標準誤差の計算に<b>観測値 p̂ ではなく帰無仮説の値 p₀ = 0.5 を使う</b>点が重要です。検定は「H₀ が正しいと仮定した世界」での確率を計算するからです。<br><br>いっぽう信頼区間を作るときは、仮定する値がないので p̂ を使います。ここが検定と推定で扱いが分かれる論点です。<br><br>z = 1.80 は両側5%の臨界値1.96に届かないので、帰無仮説は棄却されません。53%という結果は、公正なコインでも900回中には十分起こりうる範囲です。",
+trap:"p̂ = 0.53 を標準誤差の計算に使うと SE = 0.016633、z = 1.804 とわずかに変わります。検定では p₀ を使うのが正しい手続きです。",
+point:"比率の検定では標準誤差に p₀ を使う。信頼区間では p̂ を使う。"}
+];
+
+const QE = [
+/* ===================== 仮説検定（続き5問） ===================== */
+{id:81,cat:"kentei",diff:3,scene:"2つの広告の比較",
+lead:"広告Aは1,000人中150人（15.0%）、広告Bは1,000人中120人（12.0%）がクリックした。2つの母比率に差があるかを有意水準5%の両側検定で調べる。",
+q:"検定統計量 z を求める式として、最も適切なものを一つ選べ。",
+choices:["<span class='fr'><i>0.15 − 0.12</i><b>√<span class='ovl'>0.135 × 0.865 × (1/1000 + 1/1000)</span></b></span>","<span class='fr'><i>0.15 − 0.12</i><b>√<span class='ovl'>0.15 × 0.85 × (1/1000 + 1/1000)</span></b></span>","<span class='fr'><i>0.15 − 0.12</i><b>√<span class='ovl'>0.135 × 0.865 / 2000</span></b></span>","<span class='fr'><i>0.15 − 0.12</i><b>0.135 × 0.865</b></span>"],ans:0,
+how:["帰無仮説は「2つの母比率は等しい」。等しいと仮定するので、共通の比率を両群あわせて推定する",
+     "プール比率 p̄ = (150 + 120) ÷ (1000 + 1000) = 270 ÷ 2000 = 0.135",
+     "標準誤差 SE = √( p̄(1−p̄) × (1/n₁ + 1/n₂) ) = √(0.135 × 0.865 × 0.002) ≒ 0.01528",
+     "z = 0.03 ÷ 0.01528 ≒ 1.96。臨界値ちょうど付近の値となる"],
+exp:"比率の差の検定では、帰無仮説のもとで<b>両群をプールした比率 p̄</b> を使います。「2つは等しい」と仮定する以上、その共通の値は全データから推定するのが筋だからです。<br><br>分母を「÷2000」とするのは誤りです。2群それぞれの標準誤差を合成するので <b>(1/n₁ + 1/n₂)</b> の形になります。今回は n が等しいため 2/1000 = 0.002 ですが、n が異なれば単純な合計にはなりません。<br><br>なお区間推定の場合はプールせず、各群の p̂ をそのまま使います（Q65参照）。",
+trap:"検定はプール比率、区間推定は各群の比率。文脈で使い分けます。",
+point:"比率の差の検定は p̄ をプール。分母は √(p̄(1−p̄)(1/n₁+1/n₂))。"},
+
+{id:82,cat:"kentei",diff:2,scene:"ばらつきの検定",
+lead:"「母分散は25である」という仮説を検証するため、大きさ21の標本を取ったところ不偏分散は40であった。母集団は正規分布に従う。自由度20のカイ二乗分布の上側5%点は31.41である。",
+q:"検定統計量と結論の組合せとして、最も適切なものを一つ選べ。",
+choices:["χ² = 32.0。上側5%点を超えるので棄却する","χ² = 33.6。上側5%点を超えるので棄却する","χ² = 1.6。棄却できない","χ² = 33.6。上側5%点を超えないので棄却できない"],ans:1,
+how:["検定統計量は χ² = (n−1)s² ÷ σ₀²",
+     "(21 − 1) × 40 = 800",
+     "800 ÷ 25 = 32.0",
+     "31.41 と比較すると 32.0 > 31.41 なので棄却する"],
+exp:"検定統計量は χ² = (n−1)s² ÷ σ₀² = 20 × 40 ÷ 25 = <b>32.0</b> です。上側5%点31.41を超えるため、有意水準5%で帰無仮説は棄却されます。<br><br>不偏分散40は仮説値25の1.6倍もありますが、それでもかろうじて有意になる程度です。<b>分散の検定は平均の検定より、はるかに多くのデータを必要とします</b>。<br><br>また、この検定は母集団の正規性に強く依存します。正規分布から外れると結果の信頼性が大きく損なわれるため、事前の分布確認が欠かせません。",
+trap:"(n−1) を掛け忘れて 40 ÷ 25 = 1.6 とする誤りが典型です。自由度を掛けます。",
+point:"χ² = (n−1)s²/σ₀²。自由度 n−1 を掛けるのを忘れない。"},
+
+{id:83,cat:"kentei",diff:3,scene:"検定の穴埋め",
+lead:"あるくじについて「1等が出る確率は15%」と表示されている。200回引いたところ1等は22回（11.0%）であった。有意水準5%の両側検定を行う。<br><br>「帰無仮説のもとで検定統計量は近似的に（ア）に従い、その値は（イ）となる。ゆえに有意水準5%で帰無仮説を（ウ）。」",
+q:"（ア）（イ）（ウ）にあてはまるものの組合せとして、最も適切なものを一つ選べ。",
+choices:["（ア）標準正規分布　（イ）−1.58　（ウ）棄却できない","（ア）標準正規分布　（イ）−1.58　（ウ）棄却する","（ア）自由度199のt分布　（イ）−1.58　（ウ）棄却できない","（ア）標準正規分布　（イ）−2.67　（ウ）棄却する"],ans:0,
+how:["（ア）比率の検定は、二項分布の正規近似により標準正規分布を用いる",
+     "（イ）帰無仮説の p₀ = 0.15 で標準誤差を計算する。SE = √(0.15×0.85÷200) = √0.0006375 ≒ 0.02525",
+     "z = (0.11 − 0.15) ÷ 0.02525 = −0.04 ÷ 0.02525 ≒ −1.58",
+     "（ウ）|−1.58| < 1.96 なので棄却できない"],
+exp:"符号がマイナスになるのは、観測値が仮説値を下回っているからです。両側検定では<b>絶対値で比較</b>します。<br><br>正規近似の条件 np₀ ≥ 5 かつ n(1−p₀) ≥ 5 は、200×0.15 = 30、200×0.85 = 170 で十分満たしています。<br><br>結論は「表示が誤りとは言えない」であって「表示は正しい」ではありません。11%という結果は15%のくじでも十分起こりうる範囲、というだけです。",
+trap:"標準誤差に観測値 0.11 を使うと SE = 0.02212、z = −1.81 となり、依然として棄却されませんが値は変わります。検定では p₀ を使います。",
+point:"比率の検定は標準正規分布。両側なら絶対値で臨界値と比較。"},
+
+{id:84,cat:"kentei",diff:3,scene:"多重比較の問題",
+lead:"ある研究で、20個の異なる項目について、それぞれ独立に有意水準5%の検定を行った。実際にはどの項目にも真の差がないものとする。",
+q:"少なくとも1つの項目で誤って有意と判定される確率として、最も適切なものを一つ選べ。",
+choices:["5%","64%","100%","0.25%"],ans:1,
+how:["1回の検定で誤って有意とならない確率は 1 − 0.05 = 0.95",
+     "20回すべてで誤らない確率は 0.95²⁰ ≒ 0.358",
+     "少なくとも1回誤る確率は 1 − 0.358 = 0.642",
+     "約64%"],
+exp:"これが<b>多重比較の問題</b>です。真の差がまったくなくても、検定を繰り返せば高い確率でどれかが「有意」になります。<br><br>20項目を調べて1つだけ有意だった場合、それは発見ではなく偶然の可能性が高い。この構造を悪用して、有意になった項目だけを報告する行為が <b>p-hacking</b> です。<br><br>対処法として、有意水準を検定回数で割る<b>ボンフェローニ補正</b>（この場合 0.05 ÷ 20 = 0.0025）や、FDR制御などが用いられます。",
+trap:"「1回あたり5%だから20回でも5%」ではありません。機会が増えれば誤りの機会も増えます。",
+point:"検定を繰り返すと偽陽性が累積する。多重比較には補正が必要。"},
+
+{id:85,cat:"kentei",diff:3,scene:"有意性と重要性",
+lead:"標本サイズ50,000のデータで、ある施策の効果を検定したところ、p < 0.001 で有意であった。ただし効果の点推定値は0.03ポイント、95%信頼区間は [0.01, 0.05] であった。",
+q:"この結果の実務的な解釈として、最も適切なものを一つ選べ。",
+choices:["p値が極めて小さいので、効果は非常に大きい","統計的には差があるが、効果の大きさは実務上ほぼ無視できる水準である","信頼区間が0を含まないので、効果は確実に大きい","標本サイズが大きすぎるため、検定結果は無効である"],ans:1,
+how:["p値の小ささは「差の存在の確からしさ」であり、「差の大きさ」ではない",
+     "効果の大きさは点推定値と信頼区間で判断する",
+     "点推定0.03ポイント、区間 [0.01, 0.05] はいずれも極めて小さい",
+     "統計的には有意だが、実務的な意味は乏しい"],
+exp:"標本サイズが非常に大きいと、<b>実務上ほぼ意味のない差でも統計的に有意</b>になります。検定統計量は √n に比例して大きくなるためです。<br><br>だからこそ、p値だけを見て判断してはいけません。必ず<b>効果量とその信頼区間</b>を確認します。「有意かどうか」と「意味があるかどうか」は別の問いです。<br><br>逆に標本サイズが小さいと、実務上重要な差が有意にならないこともあります。有意性と重要性は、どちらの方向にもずれ得ます。",
+trap:"信頼区間が0を含まないことは「効果がある」を意味しますが、「効果が大きい」は意味しません。区間の位置と幅の両方を見てください。",
+point:"p値は差の存在、効果量は差の大きさ。両方見る。"},
+
+/* ===================== カイ二乗検定（7問） ===================== */
+{id:86,cat:"chi2",diff:1,scene:"曜日別の来店",
+lead:"ある店舗の1週間の来店客数を曜日別に集計したところ、合計420人であった。「曜日によって来店数に偏りはない」という帰無仮説のもとで適合度検定を行う。",
+fig:{t:"bar",y:"来店客数",n:["月","火","水","木","金","土","日"],v:[48,52,55,58,64,78,65]},
+q:"各曜日の期待度数と、この検定の自由度の組合せとして、最も適切なものを一つ選べ。",
+choices:["期待度数60・自由度7","期待度数60・自由度6","期待度数70・自由度6","期待度数60・自由度419"],ans:1,
+how:["偏りがないなら各曜日の確率は 1/7",
+     "期待度数 = 420 × (1/7) = 60人",
+     "自由度 = カテゴリ数 − 1 − 推定したパラメータ数",
+     "確率1/7は理論から与えられ推定していないので、自由度 = 7 − 1 = 6"],
+exp:"自由度が7ではなく6になるのは、<b>7つの度数の合計が420に固定されている</b>からです。6曜日分が決まれば、7つ目は自動的に決まります。自由に動けるのは6つ分だけです。<br><br>理論分布のパラメータを標本から推定した場合は、その分だけさらに自由度が減ります。たとえばポアソン分布への適合度を調べる際に λ をデータから推定したなら、自由度は k − 1 − 1 になります。<br><br>今回は 1/7 が理論的に与えられているので、減るのは1だけです。",
+trap:"自由度をカテゴリ数そのものとしないこと。適合度検定では必ず1以上減ります。",
+point:"適合度検定の自由度＝カテゴリ数 −1− 推定したパラメータ数。"},
+
+{id:87,cat:"chi2",diff:2,scene:"色の出現比率",
+lead:"あるカプセルトイは「赤・青・黄が 2 : 3 : 5 の比率で入っている」とされる。100個を購入したところ、赤28個・青26個・黄46個であった。有意水準5%の適合度検定を行う。自由度2のカイ二乗分布の上側5%点は5.99である。",
+q:"検定統計量 χ² の値と結論の組合せとして、最も適切なものを一つ選べ。",
+choices:["χ² = 4.05。棄却できない","χ² = 4.05。棄却する","χ² = 8.00。棄却する","χ² = 1.80。棄却できない"],ans:0,
+how:["期待度数を求める。赤 100×0.2 = 20、青 100×0.3 = 30、黄 100×0.5 = 50",
+     "各セルで (O−E)²÷E を計算する",
+     "赤：(28−20)²÷20 = 64÷20 = 3.20　青：(26−30)²÷30 = 16÷30 ≒ 0.53　黄：(46−50)²÷50 = 16÷50 = 0.32",
+     "合計 3.20 + 0.53 + 0.32 = 4.05。5.99 を下回るので棄却できない"],
+exp:"ずれを必ず<b>2乗してから期待度数で割る</b>のが要点です。2乗しないとプラスとマイナスが打ち消し合い、合計が常に0になってしまいます。<br><br>期待度数で割ることには意味があります。同じ「4のずれ」でも、期待度数20のときと50のときでは重みが違うからです。相対的な大きさに揃えています。<br><br>この例では赤の寄与（3.20）が突出しています。有意にはなりませんでしたが、赤が想定より多い傾向は読み取れます。",
+trap:"分母を観測度数にしないこと。<b>期待度数で割ります</b>。この取り違えが最も多い誤りです。",
+point:"χ² = Σ(O−E)²/E。分母は期待度数。"},
+
+{id:88,cat:"chi2",diff:1,scene:"年代と利用サービス",
+lead:"4つの年代層（20代・30代・40代・50代）と、3種類の利用サービスの関係を調べる独立性の検定を行う。",
+q:"この検定の自由度として、最も適切なものを一つ選べ。",
+choices:["12","11","6","7"],ans:2,
+how:["独立性の検定の自由度は (行数 − 1) × (列数 − 1)",
+     "4行3列の分割表である",
+     "(4 − 1) × (3 − 1) = 3 × 2",
+     "自由度は6"],
+exp:"表全体には12個のセルがありますが、<b>行合計と列合計がすべて固定されている</b>ため、自由に決められるのは左上の 3 × 2 = 6個だけです。残りは引き算で自動的に決まります。<br><br>適合度検定（1次元）は「カテゴリ数 − 1」、独立性の検定（2次元）は「(行−1)×(列−1)」。<b>掛け算になる</b>点が違いです。<br><br>この差は、行と列という2種類の制約が同時にかかっていることから生じます。",
+trap:"12 − 1 = 11 としないこと。2次元の表では掛け算です。",
+point:"独立性の検定は (行−1)×(列−1)。掛け算になる。"},
+
+{id:89,cat:"chi2",diff:1,scene:"施策と継続率",
+lead:"あるサービスで、リマインド通知の有無と翌月の継続状況を集計して次の表を得た。",
+tbl:{cap:"通知の有無と継続状況（人）",head:["","継続","解約","計"],
+  rows:[["通知あり","280","120","400"],["通知なし","170","230","400"],["計","450","350","800"]]},
+q:"「通知の有無と継続は独立」という帰無仮説のもとで、「通知あり かつ 継続」の期待度数として、最も適切なものを一つ選べ。",
+choices:["200.0","225.0","280.0","240.0"],ans:1,
+how:["期待度数 = (行合計 × 列合計) ÷ 総計",
+     "行合計（通知あり）= 400、列合計（継続）= 450、総計 = 800",
+     "400 × 450 ÷ 800 = 180,000 ÷ 800",
+     "= 225.0"],
+exp:"別の見方をすると、全体の継続率は 450 ÷ 800 = 56.25%。独立なら通知あり400人のうち56.25%が継続するはずなので、400 × 0.5625 = 225人。同じ結果です。<br><br>観測値280に対して期待度数225なので、通知ありの群は期待より55人多く継続しています。この差を全セルについて集計したものがカイ二乗統計量になります。<br><br>この式は表が大きくなっても変わりません。<b>「行合計 × 列合計 ÷ 総計」</b>という形を覚えれば、どのセルでも使えます。",
+trap:"総計で割るのを忘れないこと。行合計と列合計を掛けただけでは、桁が大きくなりすぎます。",
+point:"期待度数＝行合計×列合計÷総計。表の大きさによらず同じ。"},
+
+{id:90,cat:"chi2",diff:2,scene:"施策と継続率（続き）",
+lead:"前問の分割表について、期待度数は次のとおりである。有意水準5%における自由度1のカイ二乗分布の上側5%点は3.84である。",
+tbl:{cap:"期待度数",head:["","継続","解約"],rows:[["通知あり","225.0","175.0"],["通知なし","225.0","175.0"]]},
+q:"χ² 統計量の値と結論の組合せとして、最も適切なものを一つ選べ。",
+choices:["χ² = 61.4。関連があるといえる","χ² = 61.4。関連があるとはいえない","χ² = 24.4。関連があるといえる","χ² = 13.4。関連があるといえる"],ans:0,
+how:["各セルで (O−E)²÷E を計算する。ずれはすべて絶対値55",
+     "通知あり継続：(280−225)²÷225 = 3025÷225 ≒ 13.44",
+     "通知あり解約：(120−175)²÷175 = 3025÷175 ≒ 17.29",
+     "通知なし継続：(170−225)²÷225 ≒ 13.44　通知なし解約：(230−175)²÷175 ≒ 17.29",
+     "合計 ≒ 61.44。3.84 を大きく超えるので棄却する"],
+exp:"2×2の分割表では、<b>4つのセルのずれの絶対値がすべて等しくなります</b>。行合計と列合計が固定されているため、1つのセルが決まれば残りは自動的に決まるからです。これは検算に使えます。<br><br>自由度が1になるのも同じ理由です。(2−1)×(2−1) = 1。<br><br>χ² = 61.44 は臨界値3.84をはるかに超えており、通知の有無と継続には強い関連があると判断できます。",
+trap:"分母は各セルの期待度数であり、すべて同じ値ではありません。継続列は225、解約列は175で割ります。",
+point:"2×2表ではずれの絶対値が4セルとも等しい。検算に使える。"},
+
+{id:91,cat:"chi2",diff:3,scene:"少数データでの注意",
+lead:"ある2×2分割表で検定を行おうとしたところ、あるセルの期待度数が3.2であった。",
+q:"この状況における適切な対応として、最も適切なものを一つ選べ。",
+choices:["そのままカイ二乗検定を行ってよい","フィッシャーの正確確率検定を用いる、またはデータを追加する","自由度を1増やして補正する","観測度数を期待度数に置き換えて計算する"],ans:1,
+how:["カイ二乗検定は、離散的な度数を連続的なカイ二乗分布で近似する手法",
+     "近似が妥当なのは期待度数が十分大きいとき",
+     "目安は「期待度数5未満のセルが全体の20%を超えないこと」",
+     "2×2表で1セルが3.2なら25%が該当し、目安を超える"],
+exp:"期待度数が小さいとカイ二乗近似の精度が落ち、とくに<b>p値を過小評価</b>して有意でないものを有意と誤判定しやすくなります。<br><br>対処法は3つあります。<br>・<b>フィッシャーの正確確率検定</b>を使う（近似ではなく厳密計算。2×2表では第一選択）<br>・意味の近いカテゴリを統合してセルあたりの度数を増やす<br>・データを追加する<br><br>2×2表ではイェーツの連続性補正も使われますが、保守的すぎるとの批判もあり、近年はフィッシャーの正確確率検定が推奨される傾向にあります。",
+trap:"自由度をいじっても近似の問題は解決しません。手法そのものを変えるかデータを増やす必要があります。",
+point:"期待度数5未満が目立つなら、χ²検定ではなくフィッシャーの正確確率検定。"},
+
+{id:92,cat:"chi2",diff:3,scene:"検定結果の読み方",
+lead:"標本サイズ20,000の調査で、性別と商品カテゴリの独立性の検定を行い、p < 0.001 で有意という結果を得た。ただしクラメールのV は0.04であった。",
+q:"この結果の解釈として、最も適切なものを一つ選べ。",
+choices:["性別と商品カテゴリの間には強い関連がある","統計的に有意な関連はあるが、関連の強さは極めて弱い","性別が商品選択を決定づけている","p値が小さいので、クラメールのVは無視してよい"],ans:1,
+how:["カイ二乗統計量は標本サイズに比例して大きくなる",
+     "n = 20,000 では、ごくわずかな関連でも有意になりやすい",
+     "関連の強さはクラメールのVなどの指標で別途評価する",
+     "V = 0.04 は一般に「ほとんど関連なし」と判断される水準"],
+exp:"独立性の検定が示すのは<b>関連の有無</b>だけで、関連の<b>強さ</b>も<b>向き</b>も語りません。<br><br>クラメールのVは0から1の値を取り、目安として0.1未満なら弱い関連、0.3以上でやや強い関連とされます。V = 0.04 は実務上ほぼ意味のない水準です。<br><br>どのセルで乖離が大きいかを見るには<b>調整済み残差</b>を使います。絶対値が2を超えるセルが、関連の実体を示している箇所です。<br><br>なお、関連があっても因果は言えません。別の要因が両方に影響している可能性が残ります。",
+trap:"「p < 0.001 だから強い関連」は誤りです。p値の小ささは関連の強さではなく、関連の存在の確からしさを表します。",
+point:"χ²検定は関連の有無まで。強さはクラメールのVで別途評価。"},
+
+/* ===================== 回帰分析（8問） ===================== */
+{id:93,cat:"kaiki",diff:1,scene:"気温と電力使用量",
+lead:"ある地域の日別データを用いて、電力使用量（万kWh）を最高気温（℃）で説明する単回帰モデルを推定し、次の出力を得た。",
+rout:"            Estimate Std. Error t value Pr(>|t|)\n(Intercept) 128.4562   12.3418  10.408  1.24e-14\n気温          3.8271    0.4161   9.197  3.71e-13\n---\nResidual standard error: 18.42 on 60 degrees of freedom\nMultiple R-squared:  0.5850,  Adjusted R-squared:  0.5781\nF-statistic: 84.58 on 1 and 60 DF,  p-value: 3.71e-13",
+q:"この回帰モデルの推定に用いた標本サイズとして、最も適切なものを一つ選べ。",
+choices:["60","61","62","63"],ans:2,
+how:["残差の自由度が 60 と示されている",
+     "単回帰では、残差自由度 = n − 2（切片と傾きの2つを推定するため）",
+     "n − 2 = 60",
+     "n = 62"],
+exp:"標本サイズは出力に直接書かれないため、<b>自由度から逆算</b>します。<br><br>・単回帰：残差自由度 = n − 2<br>・説明変数 k 個の重回帰：残差自由度 = n − k − 1<br><br>F統計量の表示「on 1 and 60 DF」からも読み取れます。前の数字1が説明変数の数、後ろの60が残差自由度です。<br><br>この形式の設問は頻出なので、自由度と標本サイズの対応を確実に押さえてください。",
+trap:"自由度60をそのまま標本サイズとしないこと。推定したパラメータの数だけ減っています。",
+point:"単回帰の残差自由度は n−2。標本サイズはここから逆算する。"},
+
+{id:94,cat:"kaiki",diff:2,scene:"気温と電力使用量（続き）",
+lead:"前問と同じ出力について考える。",
+rout:"            Estimate Std. Error t value Pr(>|t|)\n(Intercept) 128.4562   12.3418  10.408  1.24e-14\n気温          3.8271    0.4161   9.197  3.71e-13\n---\nResidual standard error: 18.42 on 60 degrees of freedom\nMultiple R-squared:  0.5850,  Adjusted R-squared:  0.5781\nF-statistic: 84.58 on 1 and 60 DF,  p-value: 3.71e-13",
+q:"帰無仮説「気温の回帰係数は 3 である」、対立仮説「3 ではない」に対する検定統計量の値として、最も適切なものを一つ選べ。",
+choices:["<span class='fr'><i>3.8271</i><b>0.4161</b></span>","<span class='fr'><i>3.8271 − 3</i><b>0.4161</b></span>","<span class='fr'><i>3.8271 − 3</i><b>18.42</b></span>","3.8271 − 3"],ans:1,
+how:["回帰係数の検定統計量は t = (推定値 − 仮説値) ÷ 標準誤差",
+     "推定値は 3.8271、仮説値は 3、標準誤差は 0.4161",
+     "t = (3.8271 − 3) ÷ 0.4161 ≒ 1.988",
+     "自由度60のt分布と比較する。両側5%の臨界値は約2.00なのできわどい"],
+exp:"出力に表示されている t value（9.197）は、あくまで<b>帰無仮説「係数 = 0」</b>に対する値です。仮説値が0以外に変わったら、自分で計算し直さなければなりません。<br><br>この点が試験でよく問われます。「出力の t 値をそのまま使えばよい」わけではないのです。<br><br>検算：3.8271 ÷ 0.4161 = 9.197 となり、出力の t value と一致します。この関係を使えば、標準誤差が伏せられていても逆算できます。",
+trap:"分母に残差標準誤差18.42を置かないこと。分母は<b>その係数の標準誤差</b>です。",
+point:"回帰係数の検定は (推定値 − 仮説値) ÷ その係数の標準誤差。"},
+
+{id:95,cat:"kaiki",diff:1,scene:"気温と電力使用量（続き）",
+lead:"前問と同じ出力について、次の記述を考える。",
+rout:"            Estimate Std. Error t value Pr(>|t|)\n(Intercept) 128.4562   12.3418  10.408  1.24e-14\n気温          3.8271    0.4161   9.197  3.71e-13\n---\nResidual standard error: 18.42 on 60 degrees of freedom\nMultiple R-squared:  0.5850,  Adjusted R-squared:  0.5781\nF-statistic: 84.58 on 1 and 60 DF,  p-value: 3.71e-13",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　気温が1℃上がると、電力使用量は平均して約3.83万kWh増える傾向がある。<br>II　気温が25℃のときの電力使用量の予測値は約224万kWhである。<br>III　電力使用量の変動のうち、約58.5%がこのモデルで説明される。",
+choices:["Iのみ正しい","IとIIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：回帰係数3.8271は「気温1単位あたりの平均的な変化量」。正しい",
+     "II：予測値 = 128.4562 + 3.8271 × 25 = 128.4562 + 95.6775 = 224.13。正しい",
+     "III：Multiple R-squared = 0.5850。全変動の58.5%を説明。正しい",
+     "すべて正しい"],
+exp:"R出力の読解では、3か所を押さえれば大半の設問に対応できます。<br><br>・<b>Estimate</b>：係数。1単位あたりの平均変化量<br>・<b>Multiple R-squared</b>：説明できた変動の割合<br>・<b>残差自由度</b>：標本サイズの逆算に使う<br><br>予測値の計算では、切片を足し忘れないことが要点です。<br><br>なお、記述Iの「傾向がある」という表現に注意してください。回帰係数は相関を要約したものであり、因果を保証しません。",
+trap:"予測は<b>データが存在した範囲内</b>でのみ信頼できます。範囲外への当てはめ（外挿）は危険です。",
+point:"R出力は Estimate・R-squared・自由度の3点を押さえる。"},
+
+{id:96,cat:"kaiki",diff:2,scene:"住宅価格の重回帰",
+lead:"47地区のデータを用いて、log(住宅価格) を3つの変数で説明する重回帰モデルを推定し、次の出力を得た。",
+rout:"Coefficients:\n             Estimate Std. Error t value Pr(>|t|)\n(Intercept)   2.41830    0.86214   2.805 0.007541\n駅距離       -0.08762    0.01934  -4.531 4.51e-05\n築年数       -0.03415    0.00728  -4.691 2.71e-05\n面積          0.05221    0.01203   4.340 8.47e-05\n---\nResidual standard error: 0.1842 on 43 degrees of freedom\nMultiple R-squared:  0.7215,  Adjusted R-squared:  0.7021\nF-statistic: 37.13 on 3 and 43 DF,  p-value: 1.02e-11",
+q:"駅距離が5、築年数が20、面積が60のときの log(住宅価格) の予測値として、最も適切なものを一つ選べ。",
+choices:["約2.42","約4.42","約2.16","約3.42"],ans:1,
+how:["予測値 = 切片 + Σ(係数 × 変数の値)",
+     "駅距離の寄与：−0.08762 × 5 = −0.4381",
+     "築年数の寄与：−0.03415 × 20 = −0.6830",
+     "面積の寄与：0.05221 × 60 = 3.1326",
+     "2.41830 − 0.4381 − 0.6830 + 3.1326 ≒ 4.4298"],
+exp:"重回帰の予測は、<b>切片にすべての寄与を足す</b>だけです。係数の符号を正確に扱うことが要点になります。<br><br>この出力からは他にも読み取れます。標本サイズは残差自由度43 + 説明変数3 + 1 = <b>47</b>。F統計量の「on 3 and 43 DF」とも整合します。<br><br>また、すべての係数の p値が0.01を下回っており、3変数とも有意です。符号も直感と一致します（駅から遠い・築年数が古いほど安く、面積が広いほど高い）。",
+trap:"符号を落とさないこと。負の係数を足してしまうと、まったく違う値になります。",
+point:"重回帰の予測は 切片 + Σ(係数×値)。符号に注意。"},
+
+{id:97,cat:"kaiki",diff:3,scene:"住宅価格の重回帰（続き）",
+lead:"前問と同じ出力について、記述を考える。残差自由度は43である。",
+rout:"             Estimate Std. Error t value Pr(>|t|)\n(Intercept)   2.41830    0.86214   2.805 0.007541\n駅距離       -0.08762    0.01934  -4.531 4.51e-05\n築年数       -0.03415    0.00728  -4.691 2.71e-05\n面積          0.05221    0.01203   4.340 8.47e-05\n---\nMultiple R-squared:  0.7215,  Adjusted R-squared:  0.7021\nF-statistic: 37.13 on 3 and 43 DF,  p-value: 1.02e-11",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　この推定に用いた標本サイズは47である。<br>II　有意水準1%で0でない回帰係数（定数項を含む）は3つである。<br>III　自由度調整済み決定係数は約0.70である。",
+choices:["Iのみ正しい","IとIIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:1,
+how:["I：n = 残差自由度 + 説明変数の数 + 1 = 43 + 3 + 1 = 47。正しい",
+     "II：p値を確認する。定数項0.0075、駅距離4.51e-05、築年数2.71e-05、面積8.47e-05",
+     "いずれも0.01未満なので、有意水準1%で0でない係数は定数項を含めて4つ。誤り",
+     "III：Adjusted R-squared = 0.7021。正しい"],
+exp:"記述IIは<b>「定数項を含む」</b>という条件を見落とさないことが要点です。定数項の p値0.0075も0.01を下回っているため、4つすべてが有意になります。<br><br>指数表記の読み方も確認しておきます。<b>4.51e-05 = 0.0000451</b>。e以降がマイナスなら極めて小さい値です。<br><br>調整済み決定係数が R²（0.7215）より小さいのは、説明変数の数に対するペナルティが働いているためです。変数を増やすと R² は必ず上がりますが、調整済みは下がることもあります。",
+trap:"指数表記を大きい数と誤読しないこと。e-05 は10のマイナス5乗です。",
+point:"n = 残差自由度 + 説明変数の数 + 1。指数表記の符号に注意。"},
+
+{id:98,cat:"kaiki",diff:3,scene:"変数追加の判断",
+lead:"ある重回帰モデルに新しい説明変数を1つ追加したところ、Multiple R-squared は 0.612 から 0.618 に上昇したが、Adjusted R-squared は 0.594 から 0.591 に低下した。",
+q:"この結果の解釈として、最も適切なものを一つ選べ。",
+choices:["モデルの説明力が向上したので、変数を追加すべきである","追加した変数の説明力が、自由度を1つ失う代償に見合っていない","計算に誤りがあるので、やり直すべきである","標本サイズが不足しているため、判断できない"],ans:1,
+how:["R² は説明変数を追加すると必ず上昇する（無関係な変数でも下がらない）",
+     "したがって R² の上昇だけでは、変数の有用性を判断できない",
+     "Adjusted R² は変数の数 k に対するペナルティを課している",
+     "Adjusted R² が低下したなら、追加の代償が便益を上回っている"],
+exp:"自由度調整済み決定係数の式は<b>1 − (1−R²)(n−1)/(n−k−1)</b> です。分母の (n−k−1) が k とともに小さくなるため、k を増やすとペナルティが効きます。<br><br>R² が0.006しか上がらなかったのに対し、自由度を1失った代償のほうが大きかった。この変数は入れないほうがよい、というシグナルです。<br><br>不要な変数を増やして見かけの当てはまりを良くすることを<b>過学習</b>と呼びます。手元のデータには合っても、新しいデータでは予測が外れる状態です。",
+trap:"R² だけを見てモデルを評価しないこと。変数を増やせばいくらでも上げられます。",
+point:"変数追加の判断は Adjusted R² で行う。R² は必ず上がる。"},
+
+{id:99,cat:"kaiki",diff:3,scene:"説明変数どうしの相関",
+lead:"ある重回帰分析で、モデル全体のF検定は p < 0.001 で有意であったにもかかわらず、個々の回帰係数の t検定はいずれも有意にならなかった。説明変数には「年間所得」と「月間所得」が含まれていた。",
+q:"この現象の原因として、最も適切なものを一つ選べ。",
+choices:["標本サイズが小さすぎる","多重共線性。説明変数どうしの相関が極めて強い","目的変数が正規分布に従っていない","決定係数が低すぎる"],ans:1,
+how:["年間所得と月間所得はほぼ完全に相関している",
+     "どちらが目的変数に効いているのか、データからは切り分けられない",
+     "結果として各係数の標準誤差が大きく膨らみ、t値が小さくなる",
+     "一方でモデル全体としては予測できているので、F検定は有意になる"],
+exp:"<b>「全体は有意なのに個別は非有意」</b>という組合せが、多重共線性の代表的なサインです。<br><br>原因は、「年間所得を1単位変えて、月間所得は一定に保つ」という状況がデータの中にほとんど存在しないこと。係数の意味そのものが定まらないため、推定が不安定になります。<br><br>診断には<b>VIF</b>（分散拡大係数）を用い、10を超えたら要注意とされます。対処は、片方を除く、合成変数を作る、主成分回帰やリッジ回帰を使うなどです。<br><br>なお、<b>予測だけが目的なら多重共線性は必ずしも問題になりません</b>。困るのは、係数を解釈したいときです。",
+trap:"係数が有意でないことを「その変数が無関係」と解釈しないこと。共線性による見かけの非有意かもしれません。",
+point:"「全体は有意、個別は非有意」なら多重共線性を疑う。"},
+
+{id:100,cat:"kaiki",diff:2,scene:"分散分析表の読解",
+lead:"ある単回帰分析について、次の分散分析表が得られた。",
+tbl:{cap:"分散分析表",head:["要因","平方和","自由度","平均平方","F値"],
+  rows:[["回帰","1,240.0","1","1,240.0","（ア）"],["残差","1,560.0","39","40.0","—"],["全体","2,800.0","40","—","—"]]},
+q:"（ア）にあてはまるF値と、このモデルの決定係数の組合せとして、最も適切なものを一つ選べ。",
+choices:["F = 31.0、R² = 0.443","F = 0.795、R² = 0.443","F = 31.0、R² = 0.557","F = 1.240、R² = 0.443"],ans:0,
+how:["F値は 回帰の平均平方 ÷ 残差の平均平方",
+     "F = 1,240.0 ÷ 40.0 = 31.0",
+     "決定係数は 回帰平方和 ÷ 全平方和",
+     "R² = 1,240.0 ÷ 2,800.0 ≒ 0.443"],
+exp:"分散分析表は、全変動を<b>「回帰で説明できた分」と「説明できなかった分」に分解</b>したものです。<br><br>読み取りの要点は3つあります。<br>・<b>F値</b>＝平均平方の比。平方和のまま割ってはいけません<br>・<b>R²</b>＝回帰平方和 ÷ 全平方和<br>・<b>全体の自由度</b>＝n − 1。ここから標本サイズ n = 41 が分かります<br><br>自由度(1, 39)のF分布の上側5%点は約4.09なので、F = 31.0 は十分に有意です。単回帰なので t = √31.0 ≒ 5.57 とも対応します。",
+trap:"平方和をそのまま割って 1,240 ÷ 1,560 = 0.795 としないこと。必ず自由度で割ってから比を取ります。",
+point:"F値は平均平方の比。R²は回帰平方和÷全平方和。"}
+];
+
+const QUESTIONS = [].concat(QA,QB,QC,QD,QE);
+
+
+const CATS={kijutsu:"1変数データ",nihensu:"2変数データ",shushu:"データ収集法",
+  kakuritsu:"確率",bunpu:"確率分布",hyohon:"標本分布",suitei:"推定",
+  kentei:"仮説検定",chi2:"カイ二乗検定",kaiki:"回帰分析"};
+const CATKEYS=Object.keys(CATS);
+const DIFFNAME={1:"基礎",2:"標準",3:"応用"};
+const BADGES=[
+ {id:"first",ic:"🌱",nm:"はじめの一歩",ds:"1問目に正解",chk:s=>s.correct>=1},
+ {id:"ten",ic:"🍀",nm:"十問突破",ds:"10問正解",chk:s=>s.correct>=10},
+ {id:"quart",ic:"🌊",nm:"四分の一",ds:"25問正解",chk:s=>s.correct>=25},
+ {id:"half",ic:"⛵",nm:"折り返し",ds:"50問正解",chk:s=>s.correct>=50},
+ {id:"three",ic:"🗻",nm:"七合目",ds:"75問正解",chk:s=>s.correct>=75},
+ {id:"all",ic:"👑",nm:"完全制覇",ds:"100問正解",chk:s=>s.correct>=100},
+ {id:"c3",ic:"✨",nm:"三連正解",ds:"3問連続正解",chk:s=>s.maxCombo>=3},
+ {id:"c7",ic:"💫",nm:"七連正解",ds:"7問連続正解",chk:s=>s.maxCombo>=7},
+ {id:"c15",ic:"🌟",nm:"十五連正解",ds:"15問連続正解",chk:s=>s.maxCombo>=15},
+ {id:"hard",ic:"🔥",nm:"応用に強い",ds:"応用20問正解",chk:s=>s.hardCorrect>=20},
+ {id:"rout",ic:"📊",nm:"出力を読む",ds:"回帰分野を全問正解",chk:s=>s.per.kaiki.c===s.per.kaiki.n},
+ {id:"cat3",ic:"📗",nm:"三分野制覇",ds:"3分野を全問正解",chk:s=>s.fullCats>=3},
+ {id:"cat10",ic:"📚",nm:"全分野制覇",ds:"10分野すべて全問正解",chk:s=>s.fullCats>=10},
+ {id:"d3",ic:"🗓",nm:"三日坊主脱出",ds:"3日間学習",chk:s=>s.days>=3},
+ {id:"d7",ic:"📅",nm:"一週間継続",ds:"7日間学習",chk:s=>s.days>=7},
+ {id:"perf",ic:"💎",nm:"一発正解50",ds:"初回で50問正解",chk:s=>s.firstTry>=50}
+];
+
+const KEY="toukei2_real_v1"; let mem=null;
+function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return mem||null;}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){mem=JSON.parse(JSON.stringify(S));}}
+const today=()=>new Date().toISOString().slice(0,10);
+let S=load()||{res:{},maxCombo:0,dates:[]};
+S.res=S.res||{};S.dates=S.dates||[];
+if(!S.dates.includes(today()))S.dates.push(today());
+
+/* 選択肢の固定シャッフル */
+function seeded(n){const x=Math.sin(n*9301+49297)*233280;return x-Math.floor(x);}
+QUESTIONS.forEach(q=>{
+  const idx=[0,1,2,3];
+  for(let i=3;i>0;i--){const j=Math.floor(seeded(q.id*10+i)*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+  q._ch=idx.map(i=>q.choices[i]); q._ans=idx.indexOf(q.ans);
+});
+
+function stats(){
+  const r=S.res; let correct=0,firstTry=0,hardCorrect=0,attempted=0;
+  QUESTIONS.forEach(q=>{const v=r[q.id];if(!v)return;attempted++;
+    if(v.ok){correct++;if(v.first)firstTry++;if(q.diff===3)hardCorrect++;}});
+  const per={};let fullCats=0;
+  CATKEYS.forEach(k=>{const qs=QUESTIONS.filter(q=>q.cat===k);
+    const c=qs.filter(q=>r[q.id]&&r[q.id].ok).length;per[k]={c:c,n:qs.length};
+    if(qs.length&&c===qs.length)fullCats++;});
+  return {correct,firstTry,hardCorrect,attempted,per,fullCats,maxCombo:S.maxCombo||0,days:S.dates.length};
+}
+const hensa=c=>40+35*(c/QUESTIONS.length);
+
+function bell(){
+  const X=x=>20+(x-28)/(82-28)*420,Y=y=>78-y*62;
+  let d="",f="M "+X(28)+" 78 ";
+  for(let x=28;x<=82;x+=0.6){const y=Math.exp(-Math.pow((x-50)/10,2)/2);
+    d+=(x===28?"M ":"L ")+X(x).toFixed(1)+" "+Y(y).toFixed(1)+" ";
+    f+="L "+X(x).toFixed(1)+" "+Y(y).toFixed(1)+" ";}
+  f+="L "+X(82)+" 78 Z";
+  document.getElementById("bellLine").setAttribute("d",d);
+  document.getElementById("bellFill").setAttribute("d",f);
+  document.getElementById("ticks").innerHTML=[30,40,50,60,70,80].map(v=>
+    '<line class="axis" x1="'+X(v)+'" y1="78" x2="'+X(v)+'" y2="82"></line>'+
+    '<text class="tick" x="'+X(v)+'" y="93" text-anchor="middle">'+v+'</text>').join("");
+  return X;
+}
+const BX=bell();
+function drawMeter(){const st=stats(),h=hensa(st.correct);
+  document.getElementById("hensa").textContent=h.toFixed(1);
+  document.getElementById("mCorrect").textContent=st.correct;
+  document.getElementById("mDays").textContent=st.days;
+  document.getElementById("marker").setAttribute("transform","translate("+BX(h).toFixed(1)+",0)");}
+
+function drawRadar(){
+  const st=stats(),cx=150,cy=132,R=94,n=CATKEYS.length;
+  const pt=(i,r)=>{const a=-Math.PI/2+i*2*Math.PI/n;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];};
+  let g="";
+  [0.25,0.5,0.75,1].forEach(k=>{g+='<polygon class="grid" points="'+
+    CATKEYS.map((_,i)=>pt(i,R*k).map(v=>v.toFixed(1)).join(",")).join(" ")+'"></polygon>';});
+  CATKEYS.forEach((_,i)=>{const p=pt(i,R);
+    g+='<line class="grid" x1="'+cx+'" y1="'+cy+'" x2="'+p[0].toFixed(1)+'" y2="'+p[1].toFixed(1)+'"></line>';});
+  document.getElementById("radarGrid").innerHTML=g;
+  document.getElementById("radarArea").setAttribute("points",
+    CATKEYS.map((k,i)=>{const v=st.per[k];return pt(i,R*Math.max(v.c/v.n,0.012)).map(x=>x.toFixed(1)).join(",");}).join(" "));
+  document.getElementById("radarLab").innerHTML=CATKEYS.map((k,i)=>{
+    const p=pt(i,R+19),anc=Math.abs(p[0]-cx)<9?"middle":(p[0]>cx?"start":"end");
+    return '<text class="lab" x="'+p[0].toFixed(1)+'" y="'+(p[1]+3).toFixed(1)+'" text-anchor="'+anc+'">'+CATS[k]+'</text>';}).join("");
+}
+function drawStats(){
+  const st=stats();
+  document.getElementById("catList").innerHTML=CATKEYS.map(k=>{
+    const v=st.per[k],p=Math.round(v.c/v.n*100);
+    return '<div class="catrow"><span class="nm">'+CATS[k]+'</span><span class="bar"><i class="'+
+      (p===100?'done':'')+'" style="width:'+p+'%"></i></span><span class="nu">'+v.c+'/'+v.n+
+      '</span><button data-cat="'+k+'">解く</button></div>';}).join("");
+  document.querySelectorAll("#catList button").forEach(b=>b.onclick=()=>{
+    MODE={type:"cat",cat:b.dataset.cat};go("learn");next();toast(CATS[b.dataset.cat]+"に切り替えました");});
+  const wrong=QUESTIONS.filter(q=>S.res[q.id]&&!S.res[q.id].ok).length;
+  document.getElementById("recList").innerHTML=[
+    ["解いた問題",st.attempted+" / 100 問"],["初回で正解",st.firstTry+" 問"],
+    ["応用問題の正解",st.hardCorrect+" / 32 問"],["最高連続正解",st.maxCombo+" 問"],
+    ["復習が必要",wrong+" 問"],["学習した日数",st.days+" 日"]
+  ].map(r=>'<div class="catrow"><span class="nm" style="width:9.4em">'+r[0]+
+    '</span><span style="flex:1;text-align:right" class="mono">'+r[1]+'</span></div>').join("");
+}
+function drawBadges(){const st=stats();
+  document.getElementById("badgeList").innerHTML=BADGES.map(b=>
+    '<div class="badge'+(b.chk(st)?' got':'')+'"><div class="ic">'+b.ic+'</div><div class="nm">'+
+    b.nm+'</div><div class="ds">'+b.ds+'</div></div>').join("");}
+
+let MODE={type:"all"},CUR=null,COMBO=0,ANSWERED=false;
+function pool(){
+  if(MODE.type==="cat")return QUESTIONS.filter(q=>q.cat===MODE.cat);
+  if(MODE.type==="review")return QUESTIONS.filter(q=>S.res[q.id]&&!S.res[q.id].ok);
+  return QUESTIONS;
+}
+function next(){
+  const p=pool(); if(!p.length){render(null);return;}
+  const un=p.filter(q=>!S.res[q.id]||!S.res[q.id].ok);
+  let src=un.length?un:p;
+  if(MODE.type!=="review"){const m=Math.min.apply(null,src.map(q=>q.diff));src=src.filter(q=>q.diff===m);}
+  let cand=src.filter(q=>q.id!==(CUR&&CUR.id)); if(!cand.length)cand=src;
+  CUR=cand[Math.floor(Math.random()*cand.length)]; ANSWERED=false; render(CUR);
+}
+function render(q){
+  const el=document.getElementById("qcard");
+  if(!q){el.innerHTML='<div class="empty">'+(MODE.type==="review"
+      ?"復習が必要な問題はありません。<br>この調子で進めてください。":"問題がありません。")+
+      '</div><div class="row"><button class="btn primary" id="bAll">すべての問題に戻る</button></div>';
+    document.getElementById("bAll").onclick=()=>{MODE={type:"all"};next();};return;}
+  const st=S.res[q.id];
+  el.innerHTML=
+   '<div class="qmeta"><span class="chip">'+CATS[q.cat]+'</span><span class="chip d'+q.diff+'">'+
+     DIFFNAME[q.diff]+'</span><span class="chip scene">'+q.scene+'</span>'+
+     '<span class="qno">Q'+String(q.id).padStart(3,"0")+(st&&st.ok?' ✓':'')+'</span></div>'+
+   (q.lead?'<div class="lead">'+q.lead+'</div>':'')+
+   (q.rout?'<pre class="rout">'+q.rout+'</pre>':'')+
+   (q.fig?FIG(q.fig):'')+(q.tbl?TBL(q.tbl):'')+
+   '<div class="qtext">'+q.q+'</div>'+
+   '<div class="opts" id="opts">'+q._ch.map((c,i)=>
+     '<button class="opt" data-i="'+i+'"><span class="key">'+"ABCD"[i]+'</span><span>'+c+'</span></button>').join("")+
+   '</div><div class="row" id="preRow"><button class="btn ghost" id="bSkip" style="flex:1">わからないので解説を読む</button>'+
+   '<button class="btn ghost" style="flex:0 0 auto" id="bPass">飛ばす</button></div><div id="after"></div>';
+  document.querySelectorAll("#opts .opt").forEach(b=>b.onclick=()=>answer(+b.dataset.i));
+  document.getElementById("bSkip").onclick=()=>answer(-1,true);
+  document.getElementById("bPass").onclick=next;
+  updateProgress();
+}
+function answer(i,skipped){
+  if(ANSWERED)return; ANSWERED=true;
+  const q=CUR,ok=(i===q._ans)&&!skipped,prev=S.res[q.id],isFirst=!prev;
+  if(!skipped){
+    if(ok){COMBO++;if(COMBO>(S.maxCombo||0))S.maxCombo=COMBO;}else COMBO=0;
+    S.res[q.id]={ok:ok,first:isFirst?ok:((prev&&prev.first)||false),tries:((prev&&prev.tries)||0)+1};
+  }
+  save();
+  const pr=document.getElementById("preRow"); if(pr)pr.classList.add("hide");
+  document.querySelectorAll("#opts .opt").forEach(b=>{const bi=+b.dataset.i;b.disabled=true;
+    if(bi===q._ans)b.classList.add("correct");
+    else if(!skipped&&bi===i)b.classList.add("wrong");else b.classList.add("dim");});
+  const head=skipped?'<div class="verdict" style="color:var(--deep)">解説</div>'
+    :'<div class="verdict '+(ok?"ok":"ng")+'">'+(ok?"◯ 正解":"× 惜しい")+
+      (ok&&COMBO>=3?'<span class="combo">'+COMBO+'問連続正解</span>':'')+'</div>';
+  document.getElementById("after").innerHTML=head+
+   '<div class="exp">'+
+     '<div class="blk"><h3>解き方の手順</h3><ol class="steps">'+
+       q.how.map(h=>'<li>'+h+'</li>').join("")+'</ol></div>'+
+     '<div class="blk"><h3>考え方</h3><div class="expbody">'+q.exp+'</div></div>'+
+     (q.trap?'<div class="blk"><h3>引っかかりどころ</h3><div class="trap">'+q.trap+'</div></div>':'')+
+     '<div class="point"><span>おさえどころ</span>'+q.point+'</div>'+
+   '</div>'+
+   '<div class="row"><button class="btn primary" id="bNext">次の問題へ</button>'+
+     (skipped||!ok?'<button class="btn ghost" style="flex:0 0 auto" id="bRetry">もう一度</button>':'')+'</div>';
+  document.getElementById("bNext").onclick=next;
+  const r=document.getElementById("bRetry"); if(r)r.onclick=()=>{ANSWERED=false;render(q);};
+  drawMeter();drawRadar();drawStats();drawBadges();updateProgress();checkNewBadge();
+}
+function updateProgress(){
+  const st=stats(),p=pool();
+  document.getElementById("pbar").style.width=(st.correct/QUESTIONS.length*100)+"%";
+  const label=MODE.type==="all"?"すべての分野から、基礎の問題から順に出題しています"
+    :MODE.type==="cat"?CATS[MODE.cat]+"（"+p.length+"問）から出題しています"
+    :"間違えた問題（"+p.length+"問）を復習しています";
+  document.getElementById("modeNote").innerHTML=label+
+    '　<button style="background:none;border:none;color:var(--deep);text-decoration:underline;cursor:pointer;font-family:inherit;font-size:.77rem;padding:0" id="bAllMode">すべての分野に戻す</button>';
+  const b=document.getElementById("bAllMode");
+  if(b)b.onclick=()=>{MODE={type:"all"};next();toast("すべての分野から出題します");};
+}
+let shown=new Set();
+function checkNewBadge(){const st=stats();
+  BADGES.forEach(b=>{if(b.chk(st)&&!shown.has(b.id)){shown.add(b.id);
+    toast(b.ic+" 称号「"+b.nm+"」を獲得しました");}});}
+function toast(m){const t=document.getElementById("toast");
+  t.textContent=m;t.classList.add("on");clearTimeout(t._h);
+  t._h=setTimeout(()=>t.classList.remove("on"),2600);}
+
+function go(name){
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===name));
+  ["learn","stats","badge","about"].forEach(n=>
+    document.getElementById("tab-"+n).classList.toggle("hide",n!==name));
+  if(name==="stats"){drawRadar();drawStats();} if(name==="badge")drawBadges();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>go(b.dataset.tab));
+document.getElementById("btnReview").onclick=()=>{
+  const n=QUESTIONS.filter(q=>S.res[q.id]&&!S.res[q.id].ok).length;
+  if(!n){toast("復習が必要な問題はありません");return;}
+  MODE={type:"review"};go("learn");next();toast("間違えた"+n+"問を復習します");};
+document.getElementById("btnReset").onclick=()=>{
+  if(!confirm("学習の記録をすべて消します。元に戻せません。よろしいですか。"))return;
+  S={res:{},maxCombo:0,dates:[today()]};shown=new Set();save();
+  MODE={type:"all"};COMBO=0;next();drawMeter();drawRadar();drawStats();drawBadges();toast("記録を消しました");};
+document.addEventListener("keydown",e=>{
+  if(document.getElementById("tab-learn").classList.contains("hide"))return;
+  const k=e.key.toUpperCase();
+  if(!ANSWERED&&"ABCD".includes(k)){const b=document.querySelector('#opts .opt[data-i="'+"ABCD".indexOf(k)+'"]');if(b)b.click();}
+  if(ANSWERED&&(e.key==="Enter"||e.key===" ")){const b=document.getElementById("bNext");if(b){e.preventDefault();b.click();}}});
+
+BADGES.forEach(b=>{if(b.chk(stats()))shown.add(b.id);});
+drawMeter();drawRadar();drawStats();drawBadges();next();save();
+</script>
+</body>
+</html>
