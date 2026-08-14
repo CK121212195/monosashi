@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<script>if(location.protocol==='http:'){location.replace('https://'+location.host+location.pathname+location.search+location.hash);}</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2146116373822311" crossorigin="anonymous"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-BETYS4R53Y');
+</script>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>統計のものさし｜統計検定準1級レベル 実戦100問</title>
+<meta name="description" content="統計検定準1級の出題範囲に対応したオリジナル100問。統計ソフトの出力読解、数式を選ぶ設問、記述I〜IIIの正誤判定、図表の読み取りまで本番の出題形式で対応。1問ごとに解法の手順・考え方・引っかかりどころを解説します。">
+<meta name="author" content="数字のものさし">
+<link rel="canonical" href="https://kazumono.com/toukei-j1/">
+<meta property="og:url" content="https://kazumono.com/toukei-j1/">
+<meta property="og:site_name" content="数字のものさし">
+<meta property="og:image" content="https://kazumono.com/assets/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#33526C">
+<meta property="og:type" content="website">
+<meta property="og:title" content="統計のものさし｜統計検定準1級レベル 実戦100問">
+<meta property="og:description" content="準1級の全15分野を網羅したオリジナル100問。因果推論も収録。解法の手順を1問ずつ分解して解説。">
+<meta property="og:locale" content="ja_JP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LearningResource",
+"name":"統計のものさし 統計検定準1級レベル 実戦100問",
+"description":"統計検定準1級の出題範囲に対応したオリジナル100問。確率・母関数・変数変換・漸近理論・推定論・検定論・ノンパラメトリック法・確率過程・回帰とGLM・実験計画・多変量解析・時系列・ベイズ法・統計的因果推論を網羅。",
+"educationalLevel":"大学専門課程","learningResourceType":"練習問題","inLanguage":"ja","isAccessibleForFree":true,
+"teaches":["確率分布と母関数","変数変換","漸近理論","最尤推定","検定論","多変量解析","時系列解析","ベイズ法","統計的因果推論"],
+"url":"https://kazumono.com/toukei-j1/","author":{"@type":"Organization","name":"数字のものさし","url":"https://kazumono.com/"},"provider":{"@type":"Organization","name":"数字のものさし","url":"https://kazumono.com/"}}
+</script>
+<style>
+:root{
+  --paper:#FDF8F9;--pale:#FCEDF2;--mint:#F7C8D8;--sky:#E8799F;--deep:#9B4E6C;
+  --ink:#3A2B31;--sub:#7E656D;--line:#F0DEE4;--rule:#E0C5CF;
+  --leaf:#82B33A;--lime:#D4E157;--rose:#EE8FB0;--plum:#A8628E;--miss:#C4707F;
+  --r:14px;--shadow:0 2px 14px rgba(82,118,149,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic UI",Meiryo,sans-serif;
+  font-size:16px;line-height:1.85;-webkit-text-size-adjust:100%}
+.wrap{max-width:780px;margin:0 auto;padding:0 18px 100px}
+h1,h2{font-family:"Shippori Mincho B1","Yu Mincho",serif;font-weight:700;letter-spacing:.04em}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-feature-settings:"tnum"}
+
+header{background:linear-gradient(170deg,var(--pale) 0%,#FEF3F6 62%,var(--paper) 100%);border-bottom:1px solid var(--line)}
+.hd{max-width:780px;margin:0 auto;padding:22px 18px 12px}
+.brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.brand h1{font-size:1.34rem;line-height:1.4}
+.brand .tag{font-size:.72rem;color:var(--deep);border:1px solid var(--sky);border-radius:999px;padding:1px 9px;letter-spacing:.06em}
+.lede{font-size:.86rem;color:var(--sub);margin-top:7px}
+
+/* 到達度メーター */
+.meter{margin:16px 0 4px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px 16px 8px;box-shadow:var(--shadow)}
+.meter-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.meter-lab{font-size:.7rem;color:var(--sub);letter-spacing:.14em}
+.meter-val{font-family:"IBM Plex Mono",monospace;font-size:2.3rem;font-weight:500;line-height:1;color:var(--deep)}
+.meter-val small{font-size:.8rem;color:var(--sub);margin-left:4px;font-family:inherit}
+.meter-stat{text-align:right;font-size:.74rem;color:var(--sub);line-height:1.6}
+.meter-stat b{font-family:"IBM Plex Mono",monospace;font-size:1.05rem;color:var(--ink);font-weight:500}
+svg.curve{display:block;width:100%;height:auto}
+.curve .axis{stroke:var(--line);stroke-width:1}
+.curve .tick{fill:var(--sub);font-size:9px;font-family:"IBM Plex Mono",monospace}
+.marker{transition:transform .9s cubic-bezier(.22,1,.36,1)}
+
+nav.tabs{display:flex;gap:4px;max-width:780px;margin:0 auto;padding:0 18px}
+nav.tabs button{flex:1;background:none;border:none;border-bottom:2px solid transparent;
+  padding:11px 4px;font-family:inherit;font-size:.82rem;color:var(--sub);cursor:pointer;letter-spacing:.04em}
+nav.tabs button[aria-selected="true"]{color:var(--deep);border-bottom-color:var(--deep);font-weight:700}
+nav.tabs button:focus-visible{outline:2px solid var(--sky);outline-offset:-2px}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px 18px;box-shadow:var(--shadow);margin-top:18px}
+.qmeta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{font-size:.68rem;letter-spacing:.06em;padding:2px 9px;border-radius:999px;background:var(--pale);color:var(--deep);white-space:nowrap}
+.chip.scene{background:#fff;border:1px solid var(--line);color:var(--sub)}
+.chip.d1{background:#EEF9E9;color:#5E8C28}
+.chip.d2{background:#FBEDF3;color:#A85277}
+.chip.d3{background:#F7E9F1;color:#8E5288}
+.qno{font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--sub);margin-left:auto}
+.lead{font-size:.97rem;line-height:1.95;margin-bottom:14px}
+.qtext{font-size:1.0rem;line-height:1.95;margin:14px 0 16px;font-weight:500}
+
+/* R出力 */
+pre.rout{background:#FBF3F6;border:1px solid var(--rule);border-radius:9px;padding:13px 14px;margin:12px 0;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.735rem;line-height:1.72;
+  overflow-x:auto;white-space:pre;color:#33262B}
+pre.rout::before{content:"出力結果";display:block;font-size:.62rem;letter-spacing:.14em;color:var(--sub);margin-bottom:7px;font-family:"Zen Kaku Gothic New",sans-serif}
+
+/* 図表 */
+svg.fig{display:block;width:100%;max-width:360px;margin:12px auto;background:#fff}
+.ax{font-size:9px;fill:var(--sub);font-family:"IBM Plex Mono",monospace}
+.axl{font-size:10.5px;fill:var(--ink)}
+.tblwrap{margin:12px 0;overflow-x:auto}
+table.dtbl{border-collapse:collapse;font-size:.87rem;margin:0 auto;background:#fff}
+table.dtbl caption{font-size:.78rem;color:var(--sub);margin-bottom:6px}
+table.dtbl th,table.dtbl td{border:1px solid var(--rule);padding:6px 13px;text-align:center;
+  font-family:"IBM Plex Mono",monospace;font-weight:400}
+table.dtbl thead th{background:#FBF1F5;font-family:inherit;font-size:.82rem}
+table.dtbl th.lh{background:#FBF1F5;font-family:inherit;font-size:.82rem;font-weight:500}
+.src{font-size:.7rem;color:var(--sub);text-align:right;margin-top:4px}
+
+/* 分数・根号 */
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 3px;line-height:1.35}
+.fr>i{font-style:normal;border-bottom:1px solid currentColor;padding:0 5px 1px}
+.fr>b{font-weight:400;padding:1px 5px 0}
+.ovl{border-top:1px solid currentColor;padding:1px 3px 0;display:inline-block;margin-left:-1px}
+
+/* 選択肢 */
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;
+  background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:13px 14px;
+  font-family:inherit;font-size:.94rem;line-height:1.75;color:var(--ink);cursor:pointer;
+  transition:border-color .16s,background .16s}
+.opt:hover:not(:disabled){border-color:var(--sky);background:#FFFAFC}
+.opt:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+.opt:disabled{cursor:default}
+.opt .key{flex:none;width:25px;height:25px;border-radius:7px;background:var(--pale);color:var(--deep);
+  display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-size:.8rem;margin-top:2px}
+.opt.correct{border-color:var(--leaf);background:#F4FAEE}
+.opt.correct .key{background:var(--leaf);color:#fff}
+.opt.wrong{border-color:var(--miss);background:#FDF4F6}
+.opt.wrong .key{background:var(--miss);color:#fff}
+.opt.dim{opacity:.5}
+
+/* 解説 */
+.verdict{display:flex;align-items:center;gap:9px;margin:18px 0 12px;font-size:.95rem;font-weight:700}
+.verdict.ok{color:var(--leaf)} .verdict.ng{color:var(--miss)}
+.verdict .combo{margin-left:auto;font-size:.74rem;font-weight:400;color:var(--plum);background:#FAF0F6;border-radius:999px;padding:2px 10px}
+.exp{border-top:1px dashed var(--line);padding-top:16px}
+.blk{margin-bottom:16px}
+.blk>h3{font-size:.7rem;letter-spacing:.14em;color:var(--sub);font-weight:500;margin-bottom:7px;
+  font-family:"Zen Kaku Gothic New",sans-serif}
+ol.steps{list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding-left:31px;margin-bottom:9px;font-size:.9rem;line-height:1.8}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:3px;width:21px;height:21px;
+  background:var(--deep);color:#fff;border-radius:6px;display:grid;place-items:center;
+  font-family:"IBM Plex Mono",monospace;font-size:.7rem}
+.expbody{font-size:.92rem;line-height:1.95;color:#4A3740}
+.expbody b{color:var(--ink);font-weight:700}
+.trap{background:#FDF6F8;border-left:3px solid var(--miss);border-radius:0 9px 9px 0;padding:11px 14px;font-size:.87rem;line-height:1.85}
+.point{background:linear-gradient(100deg,#FCF0F4,#FFF8FA);border:1px solid #F0D5DF;border-radius:10px;padding:11px 14px;font-size:.88rem}
+.point span{font-size:.66rem;letter-spacing:.14em;color:#A96B84;display:block;margin-bottom:2px}
+
+.row{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}
+.btn{flex:1;min-width:120px;border:none;border-radius:11px;padding:13px 16px;
+  font-family:inherit;font-size:.92rem;font-weight:700;cursor:pointer;letter-spacing:.03em;transition:filter .15s}
+.btn:hover{filter:brightness(1.05)}
+.btn:focus-visible{outline:2px solid var(--deep);outline-offset:2px}
+.btn.primary{background:var(--deep);color:#fff}
+.btn.ghost{background:#fff;border:1.5px solid var(--line);color:var(--sub)}
+.btn.soft{background:var(--pale);color:var(--deep)}
+
+.pbar{height:5px;background:var(--pale);border-radius:99px;overflow:hidden;margin-top:14px}
+.pbar i{display:block;height:100%;background:linear-gradient(90deg,var(--mint),var(--sky));transition:width .5s;border-radius:99px}
+
+.radar-wrap{display:flex;justify-content:center;padding:6px 0 2px}
+svg.radar{width:100%;max-width:340px;height:auto}
+.radar .grid{fill:none;stroke:var(--line);stroke-width:1}
+.radar .area{fill:rgba(132,210,245,.34);stroke:var(--deep);stroke-width:1.6;stroke-linejoin:round;transition:all .6s}
+.radar .lab{font-size:7.6px;fill:var(--sub);font-family:inherit}
+
+.catlist{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.catrow{display:flex;align-items:center;gap:11px;font-size:.85rem}
+.catrow .nm{flex:none;width:9.4em}
+.catrow .bar{flex:1;height:7px;background:var(--pale);border-radius:99px;overflow:hidden}
+.catrow .bar i{display:block;height:100%;background:var(--sky);border-radius:99px;transition:width .5s}
+.catrow .bar i.done{background:var(--leaf)}
+.catrow .nu{flex:none;width:3.6em;text-align:right;font-family:"IBM Plex Mono",monospace;font-size:.79rem;color:var(--sub)}
+.catrow button{flex:none;background:none;border:1px solid var(--line);border-radius:7px;color:var(--deep);
+  font-family:inherit;font-size:.72rem;padding:3px 9px;cursor:pointer}
+.catrow button:hover{background:var(--pale)}
+
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(102px,1fr));gap:10px;margin-top:12px}
+.badge{border:1px solid var(--line);border-radius:12px;padding:13px 8px;text-align:center;background:#fff}
+.badge.got{border-color:var(--rose);background:linear-gradient(165deg,#FEF4F8,#fff)}
+.badge .ic{font-size:1.5rem;line-height:1.5;filter:grayscale(1);opacity:.28}
+.badge.got .ic{filter:none;opacity:1}
+.badge .nm{font-size:.75rem;font-weight:700;margin-top:2px}
+.badge .ds{font-size:.65rem;color:var(--sub);line-height:1.55;margin-top:3px}
+.badge:not(.got) .nm,.badge:not(.got) .ds{color:#CBB9C0}
+
+.sect-t{font-size:.94rem;margin:26px 0 2px;display:flex;align-items:center;gap:9px}
+.sect-t::after{content:"";flex:1;height:1px;background:var(--line)}
+.note{font-size:.77rem;color:var(--sub);line-height:1.8;margin-top:8px}
+.hide{display:none!important}
+.empty{text-align:center;color:var(--sub);font-size:.88rem;padding:34px 12px}
+footer{border-top:1px solid var(--line);margin-top:44px;padding:22px 0 8px;font-size:.74rem;color:var(--sub);line-height:1.9}
+footer b{color:var(--ink);display:block;margin-bottom:3px;font-size:.78rem}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,26px);
+  background:var(--ink);color:#fff;border-radius:999px;padding:10px 22px;font-size:.85rem;
+  opacity:0;pointer-events:none;transition:all .34s cubic-bezier(.22,1,.36,1);z-index:60;
+  box-shadow:0 6px 22px rgba(43,59,71,.3);max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:520px){
+  .brand h1{font-size:1.14rem}.meter-val{font-size:2rem}
+  .catrow .nm{width:7.2em;font-size:.79rem}.catrow button{display:none}
+  pre.rout{font-size:.66rem}
+  table.dtbl th,table.dtbl td{padding:5px 8px;font-size:.8rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd">
+    <div class="brand">
+      <h1>統計のものさし</h1>
+      <span class="tag">統計検定®準1級レベル 実戦100問</span>
+    </div>
+    <p class="lede">準1級の全15分野を網羅したオリジナル問題です。制限時間はありません。1問ごとに、解法の手順を分解して解説します。</p>
+    <div class="meter">
+      <div class="meter-top">
+        <div>
+          <div class="meter-lab">現在の到達度</div>
+          <div class="meter-val"><span id="hensa">40.0</span><small>相当</small></div>
+        </div>
+        <div class="meter-stat">
+          正解済み <b id="mCorrect">0</b> / 100 問<br>
+          連続学習 <b id="mDays">0</b> 日目
+        </div>
+      </div>
+      <svg class="curve" viewBox="0 0 460 96" role="img" aria-label="到達度メーター">
+        <defs><linearGradient id="gFill" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#FCEDF2"/><stop offset="55%" stop-color="#F7C8D8"/><stop offset="100%" stop-color="#E8799F"/>
+        </linearGradient></defs>
+        <path id="bellFill" fill="url(#gFill)" opacity=".65"></path>
+        <path id="bellLine" fill="none" stroke="#9B4E6C" stroke-width="1.4" opacity=".55"></path>
+        <line class="axis" x1="20" y1="78" x2="440" y2="78"></line>
+        <g id="ticks"></g>
+        <g class="marker" id="marker">
+          <line x1="0" y1="14" x2="0" y2="78" stroke="#9B4E6C" stroke-width="1.5" stroke-dasharray="3 3"></line>
+          <circle cx="0" cy="14" r="6.5" fill="#9B4E6C" stroke="#fff" stroke-width="2.5"></circle>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="learn">問題を解く</button>
+    <button role="tab" aria-selected="false" data-tab="stats">成績</button>
+    <button role="tab" aria-selected="false" data-tab="badge">称号</button>
+    <button role="tab" aria-selected="false" data-tab="about">この教材について</button>
+  </nav>
+</header>
+
+<div class="wrap">
+  <section id="tab-learn">
+    <div class="card" id="qcard"></div>
+    <div class="pbar"><i id="pbar" style="width:0%"></i></div>
+    <p class="note" id="modeNote"></p>
+  </section>
+
+  <section id="tab-stats" class="hide">
+    <div class="card">
+      <h2 class="sect-t" style="margin-top:0">分野別の到達度</h2>
+      <div class="radar-wrap">
+        <svg class="radar" viewBox="0 0 300 270" role="img" aria-label="分野別到達度">
+          <g id="radarGrid"></g><polygon class="area" id="radarArea" points=""></polygon><g id="radarLab"></g>
+        </svg>
+      </div>
+      <div class="catlist" id="catList"></div>
+      <h2 class="sect-t">記録</h2>
+      <div class="catlist" id="recList"></div>
+      <div class="row">
+        <button class="btn soft" id="btnReview">間違えた問題だけ復習する</button>
+        <button class="btn ghost" style="flex:0 0 auto" id="btnReset">記録を消す</button>
+      </div>
+      <p class="note">学習の記録はこの端末のブラウザにのみ保存されます。サーバーには送信されません。</p>
+    </div>
+  </section>
+
+  <section id="tab-badge" class="hide">
+    <div class="card">
+      <h2 class="sect-t" style="margin-top:0">獲得した称号</h2>
+      <p class="note" style="margin-top:2px">解き進めると自動で増えていきます。急ぐ必要はありません。</p>
+      <div class="badges" id="badgeList"></div>
+    </div>
+  </section>
+
+  <section id="tab-about" class="hide">
+    <div class="card">
+      <h2 class="sect-t" style="margin-top:0">この教材について</h2>
+      <div class="expbody">
+        <p>統計検定準1級の出題範囲に沿って作成した、<b>オリジナル100問</b>です。過去問や市販教材の複製・翻案は一切含みません。</p>
+        <p style="margin-top:12px">2級との最大の違いは<b>範囲の広さと深さ</b>です。母関数による分布の同定、多変数の変数変換、漸近理論、最尤推定の理論的性質、検定法の導出、確率過程、多変量解析、時系列、ベイズ法まで、扱う道具が一気に増えます。</p>
+        <p style="margin-top:12px">分野の配分は15分野です。事象と確率6問、母関数6問、変数変換6問、確率分布6問、漸近理論5問、推定論10問、検定論9問、ノンパラメトリック法6問、確率過程5問、回帰・GLM10問、実験計画7問、多変量解析8問、時系列6問、ベイズ法6問、因果推論4問。</p>
+      </div>
+
+      <h2 class="sect-t">統計的因果推論について</h2>
+      <div class="expbody">
+        <p>2027年1月1日から適用される新しい出題範囲表では、<b>統計的因果推論</b>が追加されます。本教材では、これを見据えて4問を収録しました。</p>
+        <p style="margin-top:10px">潜在結果の枠組み、バックドア基準、傾向スコア、操作変数法と差分の差分法を扱っています。2026年中に受験される方には範囲外ですが、実務では既に標準的な道具になっているため、学んでおいて損はありません。</p>
+      </div>
+
+      <h2 class="sect-t">解説の構成</h2>
+      <div class="expbody">
+        <p>1問ごとに4つの要素で構成しています。</p>
+        <p style="margin-top:10px"><b>解き方の手順</b>：計算や論証を分解し、どこから手をつけるかを番号順に示します。準1級は範囲が広いぶん、公式の暗記より手順の型を持つことが効きます。</p>
+        <p style="margin-top:8px"><b>考え方</b>：なぜその式になるのか、他の手法とどうつながるのかを説明します。分野をまたぐ関連を意識して書いています。</p>
+        <p style="margin-top:8px"><b>引っかかりどころ</b>：典型的な誤答と、その原因を明示します。</p>
+        <p style="margin-top:8px"><b>おさえどころ</b>：一行にまとめた結論です。</p>
+      </div>
+
+      <h2 class="sect-t">挫折しないための設計</h2>
+      <div class="expbody">
+        <p><b>制限時間はありません。</b>進捗は自動保存されるので、いつ中断しても構いません。</p>
+        <p style="margin-top:10px"><b>分からないときは解説へ進めます。</b>正解を選ばなくても「解説を読む」から考え方を確認できます。準1級では初見の概念に当たることが多いので、まず読んで進むほうが効率的です。</p>
+        <p style="margin-top:10px"><b>分野別に絞って解けます。</b>成績画面から苦手な分野だけを集中的に演習できます。</p>
+      </div>
+
+      <h2 class="sect-t">用語について</h2>
+      <div class="expbody">
+        <p><b>到達度（偏差値相当）</b>：正解済みの問題数から算出した、この教材内だけの指標です。40から始まり、100問すべて正解で75になります。実際の試験の偏差値や合否とは関係ありません。</p>
+        <p style="margin-top:10px"><b>選択肢は4つ</b>です。実際の試験では4肢または5肢の設問のほか、数値入力形式も出題されます。</p>
+      </div>
+
+      <h2 class="sect-t">免責事項</h2>
+      <div class="expbody" style="font-size:.85rem">
+        <p>本サイトは統計学の学習を目的とした<b>非公式の教材</b>です。一般財団法人統計質保証推進協会、日本統計学会、その他試験の実施団体とは一切関係がありません。「統計検定」は一般財団法人統計質保証推進協会の登録商標であり、本サイトでは試験の名称を示す目的でのみ使用しています。</p>
+        <p style="margin-top:10px">問題文中のデータ・企業・数値はすべて架空のものです。実在の組織や統計調査とは関係ありません。</p>
+        <p style="margin-top:10px">掲載内容は作成時点の一般的な統計学の理論に基づいていますが、正確性・完全性を保証するものではありません。試験の出題範囲や形式は変更される場合があります。とくに2027年1月1日から出題範囲表が改訂される予定です。受験にあたっては必ず試験実施団体の公式情報をご確認ください。</p>
+        <p style="margin-top:10px">本サイトの利用によって生じたいかなる損害についても、制作者は責任を負いかねます。問題文・解説文・図表・デザインを含む本サイトの内容の著作権は制作者に帰属します。無断での複製・転載・再配布はご遠慮ください。</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <b>統計のものさし</b>
+    <a href="https://kazumono.com/" style="color:var(--deep)">数字のものさし</a> の無料ツールです。<br>
+    非公式の学習教材です。「統計検定」は一般財団法人統計質保証推進協会の登録商標です。<br>
+    問題・解説・図表はすべてオリジナルです。過去問等の複製は含みません。データはすべて架空のものです。
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   図表描画エンジン
+   問題データの fig を受け取り、SVG文字列を返す
+   ============================================================ */
+const FIG = (function(){
+  const C = {ink:"#3A2B31", sub:"#7E656D", line:"#E0C5CF", deep:"#9B4E6C", sky:"#E8799F",
+             mint:"#F7C8D8", leaf:"#82B33A", rose:"#EE8FB0", plum:"#A8628E"};
+
+  function frame(W,H,ml,mr,mt,mb){
+    return {W,H,L:ml,R:W-mr,T:mt,B:H-mb};
+  }
+  function axes(f, xr, yr, xlab, ylab, xticks, yticks, fmt){
+    fmt = fmt || (v=>String(Math.round(v*1000)/1000));
+    const X = v => f.L + (v-xr[0])/(xr[1]-xr[0])*(f.R-f.L);
+    const Y = v => f.B - (v-yr[0])/(yr[1]-yr[0])*(f.B-f.T);
+    let s = '<line x1="'+f.L+'" y1="'+f.B+'" x2="'+f.R+'" y2="'+f.B+'" stroke="'+C.ink+'" stroke-width="1"/>'
+          + '<line x1="'+f.L+'" y1="'+f.T+'" x2="'+f.L+'" y2="'+f.B+'" stroke="'+C.ink+'" stroke-width="1"/>';
+    (xticks||[]).forEach(v=>{
+      s += '<line x1="'+X(v).toFixed(1)+'" y1="'+f.B+'" x2="'+X(v).toFixed(1)+'" y2="'+(f.B+4)+'" stroke="'+C.ink+'" stroke-width="1"/>'
+         + '<text x="'+X(v).toFixed(1)+'" y="'+(f.B+15)+'" text-anchor="middle" class="ax">'+fmt(v)+'</text>';
+    });
+    (yticks||[]).forEach(v=>{
+      s += '<line x1="'+(f.L-4)+'" y1="'+Y(v).toFixed(1)+'" x2="'+f.L+'" y2="'+Y(v).toFixed(1)+'" stroke="'+C.ink+'" stroke-width="1"/>'
+         + '<text x="'+(f.L-7)+'" y="'+(Y(v)+3.5).toFixed(1)+'" text-anchor="end" class="ax">'+fmt(v)+'</text>';
+    });
+    if(xlab) s += '<text x="'+((f.L+f.R)/2)+'" y="'+(f.B+31)+'" text-anchor="middle" class="axl">'+xlab+'</text>';
+    if(ylab) s += '<text transform="translate('+(f.L-30)+','+((f.T+f.B)/2)+') rotate(-90)" text-anchor="middle" class="axl">'+ylab+'</text>';
+    return {s,X,Y};
+  }
+  const wrap = (W,H,inner,alt) =>
+    '<svg class="fig" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+(alt||"図")+'">'+inner+'</svg>';
+
+  /* ---- 散布図（回帰直線つき） ---- */
+  function scatter(g){
+    const f=frame(330,250,52,14,14,46);
+    const a=axes(f,g.xr,g.yr,g.x,g.y,g.xt,g.yt,g.fmt);
+    let s=a.s;
+    if(g.line){
+      const [x0,x1]=g.xr, y0=g.line[0]+g.line[1]*x0, y1=g.line[0]+g.line[1]*x1;
+      const cy0=Math.max(g.yr[0],Math.min(g.yr[1],y0)), cy1=Math.max(g.yr[0],Math.min(g.yr[1],y1));
+      const cx0=g.line[1]!==0?(cy0-g.line[0])/g.line[1]:x0, cx1=g.line[1]!==0?(cy1-g.line[0])/g.line[1]:x1;
+      s+='<line x1="'+a.X(cx0).toFixed(1)+'" y1="'+a.Y(cy0).toFixed(1)+'" x2="'+a.X(cx1).toFixed(1)+'" y2="'+a.Y(cy1).toFixed(1)+
+         '" stroke="'+C.deep+'" stroke-width="1.3" stroke-dasharray="5 3"/>';
+    }
+    g.pts.forEach(p=>{ s+='<circle cx="'+a.X(p[0]).toFixed(1)+'" cy="'+a.Y(p[1]).toFixed(1)+
+      '" r="2.6" fill="none" stroke="'+C.deep+'" stroke-width="1"/>'; });
+    return wrap(330,250,s,"散布図");
+  }
+
+  /* ---- 箱ひげ図 ---- */
+  function box(g){
+    const n=g.groups.length, f=frame(330,250,52,14,16,46);
+    const a=axes(f,[0,n],g.yr,"",g.y,[],g.yt,g.fmt);
+    let s=a.s, w=(f.R-f.L)/n*0.42;
+    g.groups.forEach((b,i)=>{
+      const cx=f.L+(f.R-f.L)*(i+0.5)/n;
+      const [mn,q1,md,q3,mx]=b.v;
+      s+='<line x1="'+cx+'" y1="'+a.Y(mn).toFixed(1)+'" x2="'+cx+'" y2="'+a.Y(q1).toFixed(1)+'" stroke="'+C.ink+'"/>'
+       + '<line x1="'+cx+'" y1="'+a.Y(q3).toFixed(1)+'" x2="'+cx+'" y2="'+a.Y(mx).toFixed(1)+'" stroke="'+C.ink+'"/>'
+       + '<line x1="'+(cx-w*0.5)+'" y1="'+a.Y(mn).toFixed(1)+'" x2="'+(cx+w*0.5)+'" y2="'+a.Y(mn).toFixed(1)+'" stroke="'+C.ink+'"/>'
+       + '<line x1="'+(cx-w*0.5)+'" y1="'+a.Y(mx).toFixed(1)+'" x2="'+(cx+w*0.5)+'" y2="'+a.Y(mx).toFixed(1)+'" stroke="'+C.ink+'"/>'
+       + '<rect x="'+(cx-w)+'" y="'+a.Y(q3).toFixed(1)+'" width="'+(w*2)+'" height="'+(a.Y(q1)-a.Y(q3)).toFixed(1)+
+         '" fill="'+C.mint+'" fill-opacity=".5" stroke="'+C.ink+'" stroke-width="1"/>'
+       + '<line x1="'+(cx-w)+'" y1="'+a.Y(md).toFixed(1)+'" x2="'+(cx+w)+'" y2="'+a.Y(md).toFixed(1)+'" stroke="'+C.ink+'" stroke-width="1.8"/>'
+       + '<text x="'+cx+'" y="'+(f.B+15)+'" text-anchor="middle" class="ax">'+b.n+'</text>';
+      (b.out||[]).forEach(o=>{ s+='<circle cx="'+cx+'" cy="'+a.Y(o).toFixed(1)+'" r="2.4" fill="none" stroke="'+C.ink+'"/>'; });
+    });
+    return wrap(330,250,s,"箱ひげ図");
+  }
+
+  /* ---- ヒストグラム ---- */
+  function hist(g){
+    const f=frame(330,250,52,14,14,46);
+    const mx=Math.max.apply(null,g.c), yr=[0,mx*1.15];
+    const yt=g.yt||[0,Math.round(mx/2),mx];
+    const a=axes(f,[g.b[0],g.b[g.b.length-1]],yr,g.x,g.y||"度数",g.xt||g.b,yt,g.fmt);
+    let s=a.s;
+    for(let i=0;i<g.c.length;i++){
+      const x0=a.X(g.b[i]), x1=a.X(g.b[i+1]), y=a.Y(g.c[i]);
+      s+='<rect x="'+x0.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+(x1-x0).toFixed(1)+'" height="'+(a.Y(0)-y).toFixed(1)+
+         '" fill="'+C.mint+'" fill-opacity=".55" stroke="'+C.deep+'" stroke-width="1"/>';
+    }
+    return wrap(330,250,s,"ヒストグラム");
+  }
+
+  /* ---- 正規分布（斜線部つき） ---- */
+  function norm(g){
+    const f=frame(330,170,20,20,16,42);
+    const lo=g.r?g.r[0]:-3.4, hi=g.r?g.r[1]:3.4;
+    const X=v=>f.L+(v-lo)/(hi-lo)*(f.R-f.L), Y=v=>f.B-v*(f.B-f.T)*0.92;
+    const d=x=>Math.exp(-x*x/2);
+    let path="",i;
+    for(i=lo;i<=hi;i+=0.05) path+=(i===lo?"M ":"L ")+X(i).toFixed(1)+" "+Y(d(i)).toFixed(1)+" ";
+    let s="";
+    if(g.sh){
+      const [s0,s1]=[Math.max(lo,g.sh[0]),Math.min(hi,g.sh[1])];
+      let p="M "+X(s0).toFixed(1)+" "+f.B+" ";
+      for(i=s0;i<=s1;i+=0.05) p+="L "+X(i).toFixed(1)+" "+Y(d(i)).toFixed(1)+" ";
+      p+="L "+X(s1).toFixed(1)+" "+f.B+" Z";
+      s+='<path d="'+p+'" fill="'+C.sky+'" fill-opacity=".45"/>';
+    }
+    if(g.sh2){
+      const [s0,s1]=[Math.max(lo,g.sh2[0]),Math.min(hi,g.sh2[1])];
+      let p="M "+X(s0).toFixed(1)+" "+f.B+" ";
+      for(i=s0;i<=s1;i+=0.05) p+="L "+X(i).toFixed(1)+" "+Y(d(i)).toFixed(1)+" ";
+      p+="L "+X(s1).toFixed(1)+" "+f.B+" Z";
+      s+='<path d="'+p+'" fill="'+C.sky+'" fill-opacity=".45"/>';
+    }
+    s+='<path d="'+path+'" fill="none" stroke="'+C.deep+'" stroke-width="1.4"/>'
+     + '<line x1="'+f.L+'" y1="'+f.B+'" x2="'+f.R+'" y2="'+f.B+'" stroke="'+C.ink+'"/>';
+    (g.mk||[]).forEach(m=>{
+      s+='<line x1="'+X(m[0]).toFixed(1)+'" y1="'+f.B+'" x2="'+X(m[0]).toFixed(1)+'" y2="'+Y(d(m[0])).toFixed(1)+
+         '" stroke="'+C.ink+'" stroke-width="1" stroke-dasharray="3 2"/>'
+       + '<text x="'+X(m[0]).toFixed(1)+'" y="'+(f.B+15)+'" text-anchor="middle" class="ax">'+m[1]+'</text>';
+    });
+    return wrap(330,170,s,"正規分布");
+  }
+
+  /* ---- 棒グラフ ---- */
+  function bar(g){
+    const f=frame(330,230,52,14,14,46), n=g.v.length;
+    const mx=Math.max.apply(null,g.v), yr=[0,mx*1.15];
+    const a=axes(f,[0,n],yr,"",g.y,[],g.yt||[0,Math.round(mx/2),mx],g.fmt);
+    let s=a.s, w=(f.R-f.L)/n*0.55;
+    g.v.forEach((v,i)=>{
+      const cx=f.L+(f.R-f.L)*(i+0.5)/n;
+      s+='<rect x="'+(cx-w/2).toFixed(1)+'" y="'+a.Y(v).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+(a.Y(0)-a.Y(v)).toFixed(1)+
+         '" fill="'+C.sky+'" fill-opacity=".6" stroke="'+C.deep+'" stroke-width="1"/>'
+       + '<text x="'+cx.toFixed(1)+'" y="'+(f.B+15)+'" text-anchor="middle" class="ax">'+g.n[i]+'</text>';
+    });
+    return wrap(330,230,s,"棒グラフ");
+  }
+
+  /* ---- 折れ線（時系列） ---- */
+  function lineC(g){
+    const f=frame(330,230,52,14,14,46), n=g.v.length;
+    const mn=Math.min.apply(null,g.v), mx=Math.max.apply(null,g.v);
+    const pad=(mx-mn)*0.18||1, yr=g.yr||[mn-pad,mx+pad];
+    const dyt=g.yt||[Math.ceil(yr[0]),Math.round((yr[0]+yr[1])/2),Math.floor(yr[1])];
+    const a=axes(f,[0,n-1],yr,g.x||"",g.y,[],dyt,g.fmt);
+    let s=a.s, p="";
+    g.v.forEach((v,i)=>{ p+=(i?"L ":"M ")+a.X(i).toFixed(1)+" "+a.Y(v).toFixed(1)+" "; });
+    s+='<path d="'+p+'" fill="none" stroke="'+C.deep+'" stroke-width="1.6"/>';
+    if(g.v2){
+      let p2="";
+      g.v2.forEach((v,i)=>{ p2+=(i?"L ":"M ")+a.X(i).toFixed(1)+" "+a.Y(v).toFixed(1)+" "; });
+      s+='<path d="'+p2+'" fill="none" stroke="'+C.plum+'" stroke-width="1.5" stroke-dasharray="5 3"/>';
+    }
+    g.v.forEach((v,i)=>{ s+='<circle cx="'+a.X(i).toFixed(1)+'" cy="'+a.Y(v).toFixed(1)+'" r="2.6" fill="#fff" stroke="'+C.deep+'" stroke-width="1.2"/>'; });
+    (g.n||[]).forEach((t,i)=>{ s+='<text x="'+a.X(i).toFixed(1)+'" y="'+(f.B+15)+'" text-anchor="middle" class="ax">'+t+'</text>'; });
+    return wrap(330,230,s,"折れ線グラフ");
+  }
+
+  return function(g){
+    if(!g) return "";
+    switch(g.t){
+      case "scatter": return scatter(g);
+      case "box":     return box(g);
+      case "hist":    return hist(g);
+      case "norm":    return norm(g);
+      case "bar":     return bar(g);
+      case "line":    return lineC(g);
+      default: return "";
+    }
+  };
+})();
+
+/* 分割表・数値表の描画 */
+function TBL(t){
+  if(!t) return "";
+  let s='<div class="tblwrap"><table class="dtbl">';
+  if(t.cap) s+='<caption>'+t.cap+'</caption>';
+  if(t.head) s+='<thead><tr>'+t.head.map((h,i)=>'<th'+(i===0?' class="lh"':'')+'>'+h+'</th>').join("")+'</tr></thead>';
+  s+='<tbody>'+t.rows.map(r=>'<tr>'+r.map((c,i)=>
+      i===0?'<th class="lh">'+c+'</th>':'<td>'+c+'</td>').join("")+'</tr>').join("")+'</tbody></table>';
+  if(t.src) s+='<div class="src">'+t.src+'</div>';
+  return s+'</div>';
+}
+
+const PA = [
+/* ============ 事象と確率（6問） ============ */
+{id:1,cat:"jishou",diff:1,scene:"条件付き独立",
+lead:"事象 A、B が事象 C のもとで条件付き独立であり、P(A | C) = 0.6、P(B | C) = 0.5 である。",
+q:"P(A ∩ B | C) の値として、最も適切なものを一つ選べ。",
+choices:["0.30","1.10","0.55","0.80"],ans:0,
+how:["条件付き独立の定義は P(A ∩ B | C) = P(A | C) × P(B | C)",
+     "0.6 × 0.5 = 0.30"],
+exp:"条件付き独立は<b>「C を固定した世界の中では独立」</b>という意味です。C という共通要因を取り除けば、A と B の間に関連は残らない、と読みます。<br><br>重要なのは、条件付き独立と<b>周辺での独立は別物</b>だという点です。C のもとで独立でも、C を無視した P(A ∩ B) と P(A)P(B) は一致しません。C が両方に影響しているためです。<br><br>これは疑似相関の数理的な定式化にあたり、グラフィカルモデルや因果推論の土台になります。",
+trap:"条件付き独立から周辺独立を導けると考えないこと。逆も成り立ちません。",
+point:"条件付き独立は「Cを固定すれば独立」。周辺独立とは別物。"},
+
+{id:2,cat:"jishou",diff:1,scene:"3事象の和",
+lead:"3つの事象について、P(A) = 0.50、P(B) = 0.40、P(C) = 0.30、P(A∩B) = 0.20、P(A∩C) = 0.15、P(B∩C) = 0.12、P(A∩B∩C) = 0.06 である。",
+q:"P(A ∪ B ∪ C) の値として、最も適切なものを一つ選べ。",
+choices:["1.20","0.79","0.73","0.85"],ans:1,
+how:["包除原理を使う。3事象では単独を足し、2つの積を引き、3つの積を足す",
+     "単独の和：0.50 + 0.40 + 0.30 = 1.20",
+     "2つずつの積の和：0.20 + 0.15 + 0.12 = 0.47",
+     "1.20 − 0.47 + 0.06 = 0.79"],
+exp:"包除原理は<b>符号が交互に入れ替わる</b>のが要点です。奇数個の積は足し、偶数個の積は引きます。<br><br>n 事象なら P(∪Aᵢ) = ΣP(Aᵢ) − ΣP(AᵢAⱼ) + ΣP(AᵢAⱼAₖ) − … となります。<br><br>直感的には、2つずつ引くと3つ重なった部分を引きすぎるので、最後に足し戻す、という構造です。",
+trap:"最後の三重の項を足し忘れて0.73としないこと。符号の交替を確認してください。",
+point:"包除原理は単独＋、二重−、三重＋と符号が交替する。"},
+
+{id:3,cat:"jishou",diff:2,scene:"3つの原因の推定",
+lead:"ある部品は3つのラインで製造されている。ラインA・B・Cのシェアはそれぞれ 0.50、0.30、0.20 で、不良率は 0.02、0.04、0.10 である。",
+q:"無作為に選んだ1個が不良品であったとき、それがラインCの製品である確率として、最も適切なものを一つ選べ。",
+choices:["0.200","0.417","0.100","0.333"],ans:1,
+how:["全確率の定理で P(不良) を求める",
+     "A：0.50×0.02 = 0.010　B：0.30×0.04 = 0.012　C：0.20×0.10 = 0.020",
+     "P(不良) = 0.010 + 0.012 + 0.020 = 0.048",
+     "ベイズの定理より P(C|不良) = 0.020 ÷ 0.048 ≒ 0.4167"],
+exp:"ベイズの定理は<b>「結果から原因を逆算する」</b>道具です。事前確率（シェア）が尤度（不良率）で重みづけされ、事後確率に更新されます。<br><br>シェア20%のラインCが、不良品の約42%を生んでいます。不良率が他より格段に高いためで、改善の優先順位を数字で示せます。<br><br>準1級では、この構造が<b>ベイズ推定の事前分布・事後分布</b>へそのまま拡張されます。原因が離散なら和、連続なら積分になるだけで、骨格は同じです。",
+trap:"シェア0.20をそのまま答えないこと。事後確率は尤度で重みづけされて変化します。",
+point:"事後確率 ∝ 事前確率 × 尤度。分母は全確率の定理。"},
+
+{id:4,cat:"jishou",diff:1,scene:"独立と排反",
+lead:"P(A) > 0、P(B) > 0 である2つの事象 A、B について考える。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　A と B が排反ならば、A と B は独立である。<br>II　A と B が独立ならば、P(A | B) = P(A) が成り立つ。<br>III　A と B が排反ならば、P(A ∪ B) = P(A) + P(B) が成り立つ。",
+choices:["Iのみ正しい","IIとIIIのみ正しい","IとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:1,
+how:["I：排反なら P(A∩B) = 0。独立なら P(A∩B) = P(A)P(B) > 0。両立しないので誤り",
+     "II：独立の定義 P(A∩B) = P(A)P(B) の両辺を P(B) で割ると P(A|B) = P(A)。正しい",
+     "III：排反なら重なりがないので加法定理の補正項が0。正しい"],
+exp:"<b>排反と独立はまったく別の概念</b>で、しかも確率が正なら<b>両立しません</b>。<br><br>排反は「同時に起こりえない」という集合の関係です。片方が起きたと分かれば、もう片方は起きないと確定するので、これは強い依存関係にほかなりません。<br><br>独立は「片方の情報が、もう片方の確率を変えない」という関係です。<br><br>混同されやすいのは、日常語の「無関係」がどちらの意味にも取れるためです。",
+trap:"「排反だから独立」は典型的な誤りです。むしろ排反は最も強い依存の一形態です。",
+point:"排反は同時に起きない、独立は情報が影響しない。正の確率では両立しない。"},
+
+{id:5,cat:"jishou",diff:1,scene:"連鎖律",
+lead:"袋の中に赤玉4個と白玉6個が入っている。玉を戻さずに3個続けて取り出す。",
+q:"3個ともすべて赤玉である確率として、最も適切なものを一つ選べ。",
+choices:["0.064","0.0333","0.100","0.0167"],ans:1,
+how:["非復元抽出なので、乗法定理の連鎖律を使う",
+     "1個目が赤：4/10",
+     "1個目が赤のもとで2個目が赤：3/9",
+     "さらに3個目が赤：2/8",
+     "(4/10)×(3/9)×(2/8) = 24/720 = 1/30 ≒ 0.0333"],
+
+exp:"連鎖律 P(A∩B∩C) = P(A)P(B|A)P(C|A∩B) は、<b>非復元抽出を扱う基本形</b>です。<br><br>復元抽出なら各回が独立で (0.4)³ = 0.064 ですが、非復元では取り出すたびに母集団が変わります。ここが超幾何分布の考え方につながります。<br><br>組合せで書くと ₄C₃ ÷ ₁₀C₃ = 4 ÷ 120 = 1/30 と一致します。どちらの道でも同じ答えに到達できることを確認しておくと、検算に使えます。",
+trap:"復元抽出と混同して 0.4³ = 0.064 としないこと。「戻さずに」の一語で計算が変わります。",
+point:"非復元抽出は連鎖律。分母も分子も1つずつ減る。"},
+
+{id:6,cat:"jishou",diff:3,scene:"シンプソンの逆転",
+lead:"ある治療法の成功率を、2つの病院で集計した。病院Aは軽症・重症のいずれでも病院Bより成功率が高いにもかかわらず、全体を合算すると病院Bの成功率のほうが高くなった。",
+q:"この現象の名称と、生じる主な条件の組合せとして最も適切なものを一つ選べ。",
+choices:["シンプソンのパラドックス。層ごとの症例構成比が病院間で大きく異なるため","中心極限定理の効果。標本サイズが大きいため","選択バイアス。無作為抽出でないため","多重比較の問題。検定を繰り返したため"],ans:0,
+how:["層別（軽症・重症）では一貫してAが優位",
+     "合算すると逆転する現象がシンプソンのパラドックス",
+     "原因は、層ごとの成功率と、層の構成比が病院間で偏っていること",
+     "たとえばAが重症例を多く引き受けていれば、全体の成功率は下がる"],
+exp:"シンプソンのパラドックスは、<b>層別変数が交絡因子として働く</b>ときに生じます。<br><br>重要なのは「どちらの数字が正しいか」ではなく、<b>どちらを見るべきかは因果構造で決まる</b>という点です。症例の重症度が病院選択と結果の両方に影響しているなら、層別した数字を見るべきです。<br><br>逆に、層別変数が処置の<b>結果</b>である場合（中間変数）には、層別すると誤った結論になります。この判断には、後の因果推論で扱うバックドア基準が必要になります。",
+trap:"「合算のほうが標本が大きいから信頼できる」は誤りです。標本サイズの問題ではなく、構造の問題です。",
+point:"シンプソンのパラドックスは交絡の現れ。層別の可否は因果構造で決まる。"},
+
+/* ============ 確率分布と母関数・特性値（6問） ============ */
+{id:7,cat:"bokansu",diff:1,scene:"積率母関数から特性値",
+lead:"確率変数 X の積率母関数が M<sub>X</sub>(t) = exp(3t + 2t²) で与えられている。",
+q:"E[X] と V[X] の組合せとして、最も適切なものを一つ選べ。",
+choices:["E[X] = 3、V[X] = 2","E[X] = 3、V[X] = 4","E[X] = 3、V[X] = 13","E[X] = 6、V[X] = 4"],ans:1,
+how:["正規分布 N(μ, σ²) の積率母関数は exp(μt + σ²t²/2)",
+     "指数部を比較する。μ = 3、σ²/2 = 2 より σ² = 4",
+     "よって X 〜 N(3, 4)",
+     "E[X] = 3、V[X] = 4"],
+exp:"積率母関数には<b>一意性</b>があります。母関数が一致すれば分布も一致するため、形を見て分布を同定できます。この技法は準1級で頻出です。<br><br>微分でも求まります。M′(t) = (3+4t)exp(3t+2t²) より M′(0) = 3 = E[X]。M″(0) = E[X²] = 13 なので V[X] = 13 − 9 = 4。<br><br>覚えるべき母関数は、正規 exp(μt+σ²t²/2)、ポアソン exp(λ(eᵗ−1))、二項 (1−p+peᵗ)ⁿ、指数 (1−t/λ)⁻¹、ガンマ (1−θt)⁻ᵏ です。",
+trap:"E[X²] = 13 を分散と取り違えないこと。V = E[X²] − (E[X])² を最後に引きます。",
+point:"mgfは一意。形で分布を同定でき、微分でモーメントが出る。"},
+
+{id:8,cat:"bokansu",diff:2,scene:"母関数による和の分布",
+lead:"X 〜 Poisson(λ₁)、Y 〜 Poisson(λ₂) が互いに独立である。ポアソン分布の積率母関数は exp(λ(e<sup>t</sup> − 1)) である。",
+q:"X + Y の分布として、最も適切なものを一つ選べ。",
+choices:["Poisson(λ₁λ₂)","Poisson(λ₁ + λ₂)","Poisson((λ₁ + λ₂)/2)","ポアソン分布にはならない"],ans:1,
+how:["独立なら、和の積率母関数は各々の積になる",
+     "M(t) = exp(λ₁(eᵗ−1)) × exp(λ₂(eᵗ−1))",
+     "= exp((λ₁+λ₂)(eᵗ−1))",
+     "これは Poisson(λ₁+λ₂) の母関数。一意性より X+Y 〜 Poisson(λ₁+λ₂)"],
+exp:"<b>独立な確率変数の和の母関数は、母関数の積</b>。この性質が母関数を使う最大の理由です。畳み込み積分を計算せずに、掛け算だけで和の分布が求まります。<br><br>この性質により分布が同じ族に閉じることを<b>再生性</b>と呼びます。再生性を持つのは正規、ポアソン、二項（p共通）、負の二項、ガンマ（θ共通）、カイ二乗などです。<br><br>いっぽう一様分布や指数分布は再生性を持ちません。独立な指数分布の和はガンマ分布になります。",
+trap:"パラメータを掛けたり平均したりしないこと。母関数の指数部が足し算になるので、λ も足し算です。",
+point:"独立な和の母関数は積。指数部が足されるので再生性が見える。"},
+
+{id:9,cat:"bokansu",diff:2,scene:"母関数の同定",
+lead:"確率変数 X の積率母関数が M<sub>X</sub>(t) = (1 − 2t)<sup>−3</sup>（t < 1/2）で与えられている。",
+q:"E[X] と V[X] の組合せとして、最も適切なものを一つ選べ。",
+choices:["E[X] = 3、V[X] = 6","E[X] = 6、V[X] = 12","E[X] = 6、V[X] = 6","E[X] = 3、V[X] = 12"],ans:1,
+how:["ガンマ分布 Ga(k, θ) の積率母関数は (1 − θt)^(−k)",
+     "比較して k = 3、θ = 2。これは自由度6のカイ二乗分布でもある",
+     "ガンマ分布の平均は kθ = 3 × 2 = 6",
+     "分散は kθ² = 3 × 4 = 12"],
+exp:"(1−2t)^(−k) の形を見たら<b>自由度 2k のカイ二乗分布</b>と読めます。χ²(ν) の母関数は (1−2t)^(−ν/2) なので、ν = 6。カイ二乗分布の平均は ν = 6、分散は 2ν = 12。ガンマ経由の答えと一致します。<br><br>ガンマ分布 Ga(k,θ) は、指数分布（k=1）、カイ二乗分布（θ=2）、アーラン分布（k が整数）を含む広い族です。準1級ではこの包含関係が頻繁に問われます。",
+trap:"θ と 1/θ の定義の流儀が教科書によって異なります。母関数の形から判断するのが確実です。",
+point:"(1−θt)^(−k) はガンマ Ga(k,θ)。θ=2 ならχ²(2k)。"},
+
+{id:10,cat:"bokansu",diff:2,scene:"歪度と尖度",
+lead:"確率変数 X について、標準化された3次・4次モーメントを考える。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　歪度は E[((X−μ)/σ)³] で定義され、右に裾を引く分布では正となる。<br>II　正規分布の尖度 E[((X−μ)/σ)⁴] は 3 である。<br>III　左右対称な分布の歪度は必ず 0 である（3次モーメントが存在する場合）。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：歪度の定義そのもの。右に裾を引くと正の偏差の3乗が効いて正になる。正しい",
+     "II：正規分布の4次標準化モーメントは3。正しい",
+     "III：対称なら奇数次の中心モーメントはすべて0。正しい"],
+exp:"尖度には<b>2つの流儀</b>があります。E[((X−μ)/σ)⁴] をそのまま使う定義（正規分布で3）と、そこから3を引いた<b>超過尖度</b>（正規分布で0）です。ソフトウェアによって出力が異なるので、値が3付近か0付近かで判別してください。<br><br>超過尖度が正の分布は<b>裾が厚い</b>（t分布、コーシー分布など）、負なら裾が薄い（一様分布は −1.2）と読みます。<br><br>金融データの収益率は超過尖度が正になることが多く、正規分布を仮定するとテールリスクを過小評価します。",
+trap:"尖度は「山の尖り具合」ではなく「裾の厚さ」を主に反映します。名称に引きずられないでください。",
+point:"歪度は3次、尖度は4次。正規分布の尖度は3（超過尖度は0）。"},
+
+{id:11,cat:"bokansu",diff:1,scene:"確率母関数",
+lead:"非負整数値をとる確率変数 X の確率母関数を G(s) = E[s<sup>X</sup>] と定義する。ある X について G(s) = (0.3 + 0.7s)⁵ である。",
+q:"E[X] の値として、最も適切なものを一つ選べ。",
+choices:["3.5","0.7","5.0","2.45"],ans:0,
+how:["G(s) = (1−p+ps)ⁿ は二項分布 B(n,p) の確率母関数",
+     "比較して n = 5、p = 0.7",
+     "E[X] = np = 5 × 0.7 = 3.5",
+     "微分でも同じ。G′(s) = 5×0.7×(0.3+0.7s)⁴ より G′(1) = 3.5"],
+exp:"確率母関数は<b>離散分布（とくに非負整数値）</b>に特化した道具です。G′(1) = E[X]、G″(1) = E[X(X−1)] という関係があり、階乗モーメントが直接得られます。<br><br>分散は V[X] = G″(1) + G′(1) − (G′(1))² で求まります。ここでは G″(1) = 5×4×0.49 = 9.8 なので V = 9.8 + 3.5 − 12.25 = 1.05。np(1−p) = 5×0.7×0.3 = 1.05 と一致します。<br><br>積率母関数との関係は M(t) = G(eᵗ) です。",
+trap:"G(1) は必ず1になります。これは確率の総和が1であることの表れで、検算に使えます。",
+point:"確率母関数は G′(1)=E[X]。二項なら (1−p+ps)ⁿ の形。"},
+
+{id:12,cat:"bokansu",diff:2,scene:"凸関数と期待値",
+lead:"確率変数 X が定数ではなく、g が狭義凸関数であるとする。",
+q:"E[g(X)] と g(E[X]) の関係として、最も適切なものを一つ選べ。",
+choices:["E[g(X)] < g(E[X])","E[g(X)] > g(E[X])","E[g(X)] = g(E[X])","一般には大小関係を決められない"],ans:1,
+how:["イェンセンの不等式より、凸関数では E[g(X)] ≥ g(E[X])",
+     "狭義凸かつ X が定数でなければ、不等号は厳密になる",
+     "したがって E[g(X)] > g(E[X])",
+     "凹関数の場合は不等号が逆向きになる"],
+exp:"イェンセンの不等式は、準1級のさまざまな場面で顔を出します。<br><br>具体例で確認します。g(x) = x² は凸関数なので E[X²] > (E[X])²。これは V[X] = E[X²] − (E[X])² > 0 と同じことです。<br><br>逆に g(x) = log x は凹関数なので E[log X] < log E[X]。この関係は、最尤法で対数尤度を扱う際や、幾何平均が算術平均以下になることの説明に使われます。<br><br>また「不偏推定量を非線形変換しても不偏とは限らない」ことの根拠にもなります。s² が σ² の不偏推定量でも、s は σ の不偏推定量ではありません。",
+trap:"「期待値は線形だから変換しても順序は保たれる」と考えないこと。線形性が成り立つのは1次関数だけです。",
+point:"凸関数では E[g(X)] ≥ g(E[X])。等号は X が定数のときのみ。"},
+
+/* ============ 変数変換・多変量分布（6問） ============ */
+{id:13,cat:"henkan",diff:2,scene:"一変数変換",
+lead:"確率変数 X が区間 (0, 1) 上の一様分布に従うとき、Y = −2 log X とおく。",
+q:"Y の分布として、最も適切なものを一つ選べ。",
+choices:["区間 (0, 2) の一様分布","平均2の指数分布（＝自由度2のカイ二乗分布）","標準正規分布","平均1の指数分布"],ans:1,
+how:["累積分布関数を求める。P(Y ≤ y) = P(−2 log X ≤ y) = P(log X ≥ −y/2)",
+     "= P(X ≥ e^(−y/2))。X は (0,1) の一様分布なので = 1 − e^(−y/2)",
+     "これは率 λ = 1/2 の指数分布の累積分布関数",
+     "平均は 1/λ = 2。自由度2のカイ二乗分布と一致する"],
+exp:"この変換は<b>逆関数法による乱数生成</b>の典型例です。一様乱数から任意の分布の乱数を作る手法で、シミュレーションの基礎になります。<br><br>一般に、連続分布の累積分布関数を F とすると、U 〜 U(0,1) に対して F⁻¹(U) は元の分布に従います。ここでは指数分布の累積分布関数を逆に解いた形になっています。<br><br>変数変換の解法は2通りあります。累積分布関数を経由する方法（単調でなくても使える）と、密度関数にヤコビアンを掛ける方法（単調な場合に速い）です。迷ったら累積分布関数から攻めるのが安全です。",
+trap:"不等号の向きに注意してください。log X ≤ の変形で、負の係数を割るときに向きが反転します。",
+point:"変数変換は累積分布関数から攻めるのが安全。逆関数法は乱数生成の基礎。"},
+
+{id:14,cat:"henkan",diff:3,scene:"二変数変換",
+lead:"確率変数 (X, Y) の同時密度が f(x, y) であるとき、U = X + Y、V = X − Y という変換を考える。",
+q:"(U, V) の同時密度 g(u, v) として、最も適切なものを一つ選べ。",
+choices:["g(u,v) = f((u+v)/2, (u−v)/2)","g(u,v) = f((u+v)/2, (u−v)/2) × 1/2","g(u,v) = f((u+v)/2, (u−v)/2) × 2","g(u,v) = f(u+v, u−v)"],ans:1,
+how:["逆変換を求める。x = (u+v)/2、y = (u−v)/2",
+     "ヤコビアン行列は ∂(x,y)/∂(u,v) = [[1/2, 1/2], [1/2, −1/2]]",
+     "行列式は (1/2)(−1/2) − (1/2)(1/2) = −1/2。絶対値は 1/2",
+     "g(u,v) = f(x(u,v), y(u,v)) × |J| = f((u+v)/2, (u−v)/2) × 1/2"],
+exp:"多変数の変数変換では<b>ヤコビアンの絶対値</b>を掛けます。これは変換による面積（体積）の伸縮を補正する係数です。<br><br>手順は3段階に固定されます。<b>逆変換を書く → 偏微分してヤコビアン行列を作る → 行列式の絶対値を掛ける</b>。<br><br>方向を間違えないことが最大の注意点です。掛けるのは<b>「旧変数を新変数で偏微分した」</b>ヤコビアンです。逆向きのヤコビアンを使うと、係数が逆数になってしまいます。",
+trap:"ヤコビアンを掛けるのか割るのかで迷ったら、確率の総和が1になるかで検算できます。",
+point:"多変数変換は |J| を掛ける。J は旧変数を新変数で偏微分したもの。"},
+
+{id:15,cat:"henkan",diff:2,scene:"繰り返し期待値の法則",
+lead:"ある店舗の1日の来客数 N は平均40のポアソン分布に従い、各客の購入額は互いに独立に平均3,000円・分散1,000,000（円²）の分布に従う。来客数と購入額は独立とする。",
+q:"1日の売上総額 S = ΣXᵢ の期待値として、最も適切なものを一つ選べ。",
+choices:["3,000円","120,000円","40,000円","40,000,000円"],ans:1,
+how:["繰り返し期待値の法則 E[S] = E[E[S | N]] を使う",
+     "N を固定すると E[S | N] = N × E[X] = 3000N",
+     "E[S] = E[3000N] = 3000 × E[N]",
+     "= 3000 × 40 = 120,000円"],
+exp:"<b>繰り返し期待値の法則 E[X] = E[E[X | Y]]</b> は、準1級で最も使用頻度の高い道具のひとつです。<br><br>手順は「まず内側の条件を固定して期待値を取り、次に外側で期待値を取る」。複合分布や階層モデルは、すべてこの構造で扱えます。<br><br>この設定は<b>複合ポアソン分布</b>と呼ばれ、保険の総支払額のモデルとして標準的に使われます。分散は全分散の公式から V[S] = E[N]V[X] + V[N](E[X])² = 40×10⁶ + 40×9×10⁶ = 4×10⁸ となります。",
+trap:"N が確率変数であることを忘れて、40を定数扱いしないこと。分散の計算ではこの違いが効いてきます。",
+point:"E[X] = E[E[X|Y]]。内側で条件を固定してから外側で平均する。"},
+
+{id:16,cat:"henkan",diff:3,scene:"全分散の公式",
+lead:"確率変数 X、Y について、V[X] を条件付き分布に分解することを考える。",
+q:"全分散の公式として、最も適切なものを一つ選べ。",
+choices:["V[X] = E[V[X|Y]] + V[E[X|Y]]","V[X] = E[V[X|Y]] − V[E[X|Y]]","V[X] = V[E[X|Y]] × E[V[X|Y]]","V[X] = E[V[X|Y]] のみ"],ans:0,
+how:["V[X] = E[X²] − (E[X])² から出発する",
+     "E[X²] = E[E[X²|Y]] = E[V[X|Y] + (E[X|Y])²]",
+     "(E[X])² = (E[E[X|Y]])²",
+     "整理すると V[X] = E[V[X|Y]] + { E[(E[X|Y])²] − (E[E[X|Y]])² } = E[V[X|Y]] + V[E[X|Y]]"],
+exp:"全分散の公式は、ばらつきを<b>「群内変動の平均」と「群間変動」</b>に分解します。<br><br>第1項 E[V[X|Y]] は「Y を固定したときの残りのばらつきの平均」＝群内変動。<br>第2項 V[E[X|Y]] は「群ごとの平均自体のばらつき」＝群間変動。<br><br>この分解は<b>分散分析の平方和分解と同じ構造</b>です。群間変動が大きいほど、Y は X を説明する力を持ちます。<br><br>階層ベイズモデルやランダム効果モデルでも、この分解が理論的な骨格になります。",
+trap:"第2項は V[X|Y] ではなく <b>V[E[X|Y]]</b> です。期待値の分散であって、分散の期待値ではありません。",
+point:"V[X] = 群内変動の平均 + 群間変動。分散分析と同じ構造。"},
+
+{id:17,cat:"henkan",diff:2,scene:"二変量正規分布",
+lead:"(X, Y) が二変量正規分布に従い、μ<sub>X</sub> = 50、μ<sub>Y</sub> = 100、σ<sub>X</sub> = 10、σ<sub>Y</sub> = 20、相関係数 ρ = 0.6 である。",
+q:"X = 60 が観測されたときの Y の条件付き分布として、最も適切なものを一つ選べ。",
+choices:["N(112, 20²)","N(112, 16²)","N(100, 16²)","N(106, 16²)"],ans:1,
+how:["条件付き期待値の公式 E[Y|X=x] = μ_Y + ρ(σ_Y/σ_X)(x − μ_X)",
+     "= 100 + 0.6 × (20/10) × (60 − 50) = 100 + 0.6 × 2 × 10 = 112",
+     "条件付き分散の公式 V[Y|X] = σ_Y²(1 − ρ²)",
+     "= 400 × (1 − 0.36) = 256。標準偏差は16"],
+exp:"二変量正規分布の条件付き分布は、<b>やはり正規分布</b>になります。この性質が回帰分析の理論的な出発点です。<br><br>条件付き期待値の式 μ_Y + ρ(σ_Y/σ_X)(x − μ_X) は、まさに<b>回帰直線そのもの</b>です。傾き ρσ_Y/σ_X は最小二乗推定量の傾きと一致します。<br><br>注目すべきは<b>条件付き分散が x に依存しない</b>点です。これが回帰分析における等分散性の仮定の根拠になっています。<br><br>ρ = 0 なら条件付き分布は元の周辺分布と一致します。二変量正規では<b>無相関と独立が同値</b>になる、という重要な性質です。",
+trap:"条件付き分散が σ_Y² のままだと考えないこと。情報を得た分だけ (1−ρ²) 倍に縮みます。",
+point:"二変量正規の条件付き分布は正規。平均は回帰直線、分散は σ²(1−ρ²)。"},
+
+{id:18,cat:"henkan",diff:3,scene:"周辺分布の導出",
+lead:"確率変数 (X, Y) の同時密度が f(x, y) = 8xy（0 < x < y < 1）で与えられている。",
+q:"Y の周辺密度 f<sub>Y</sub>(y) として、最も適切なものを一つ選べ。",
+choices:["4y³（0 < y < 1）","8y³（0 < y < 1）","4y（0 < y < 1）","2y²（0 < y < 1）"],ans:0,
+how:["周辺密度は、もう一方の変数について積分する",
+     "積分範囲に注意する。0 < x < y なので x は 0 から y まで",
+     "f_Y(y) = ∫₀^y 8xy dx = 8y × [x²/2]₀^y = 8y × y²/2",
+     "= 4y³（0 < y < 1）"],
+exp:"この種の問題は<b>積分範囲の特定が9割</b>です。0 < x < y < 1 という制約から、y を固定したとき x は 0 から y まで動く、と読みます。<br><br>図を描くのが確実です。xy平面上で y = x より上、かつ単位正方形の内側という三角形の領域になります。<br><br>検算は積分が1になるかで行います。∫₀¹ 4y³ dy = [y⁴]₀¹ = 1。正しく求まっています。<br><br>条件付き密度は f(x|y) = 8xy ÷ 4y³ = 2x/y²（0 < x < y）となり、これも y ごとに積分すれば1になります。",
+trap:"積分範囲を 0 から 1 としないこと。制約 x < y を無視すると 4y になり、全積分が1になりません。",
+point:"周辺密度は積分範囲がすべて。制約を図に描いて確認する。"},
+
+/* ============ 各種確率分布・標本分布（前半2問） ============ */
+{id:19,cat:"bunpu",diff:1,scene:"負の二項分布",
+lead:"成功確率 p = 0.2 の独立なベルヌーイ試行を繰り返し、3回目の成功が起きるまでの試行回数を X とする。",
+q:"E[X] と V[X] の組合せとして、最も適切なものを一つ選べ。",
+choices:["E[X] = 15、V[X] = 60","E[X] = 15、V[X] = 12","E[X] = 5、V[X] = 20","E[X] = 15、V[X] = 75"],ans:0,
+how:["r回目の成功までの試行回数は負の二項分布に従う",
+     "E[X] = r/p = 3/0.2 = 15",
+     "V[X] = r(1−p)/p² = 3 × 0.8 ÷ 0.04",
+     "= 2.4 ÷ 0.04 = 60"],
+exp:"負の二項分布は<b>幾何分布の r 個の和</b>と見ると理解しやすくなります。幾何分布の平均 1/p、分散 (1−p)/p² を r 倍すればよいだけです（独立な和なので分散も足せる）。<br><br>定義には2つの流儀があります。<b>試行回数</b>を数える流儀（ここではこちら、最小値は r）と、<b>失敗回数</b>を数える流儀（最小値は0）です。後者なら平均は r(1−p)/p = 12 になります。問題文の定義を必ず確認してください。<br><br>また負の二項分布は、ポアソン分布の λ がガンマ分布に従うとした混合分布としても導出され、<b>過分散のカウントデータ</b>のモデルとして実務で多用されます。",
+trap:"定義の流儀の違いで答えが変わります。「試行回数」か「失敗回数」かを問題文から特定してください。",
+point:"負の二項は幾何分布のr個の和。E=r/p、V=r(1−p)/p²。"},
+
+{id:20,cat:"bunpu",diff:1,scene:"超幾何分布",
+lead:"箱に製品50個が入っており、そのうち8個が不良品である。無作為に10個を非復元で取り出し、含まれる不良品数を X とする。",
+q:"E[X] と、この分布の名称の組合せとして、最も適切なものを一つ選べ。",
+choices:["E[X] = 1.6、超幾何分布","E[X] = 1.6、二項分布","E[X] = 0.8、超幾何分布","E[X] = 8.0、超幾何分布"],ans:0,
+how:["非復元抽出で「当たり」の個数を数えるので超幾何分布",
+     "E[X] = n × (K/N) の形。n = 10、K = 8、N = 50",
+     "= 10 × (8/50) = 10 × 0.16",
+     "= 1.6"],
+exp:"超幾何分布の<b>期待値は二項分布とまったく同じ</b>形（n×p、ここで p = K/N）になります。非復元でも期待値は変わりません。<br><br>違いは分散に現れます。<br>V[X] = n·(K/N)·(1−K/N)·(N−n)/(N−1)<br>末尾の (N−n)/(N−1) が<b>有限母集団修正</b>で、必ず1以下です。非復元抽出のほうが分散が小さくなります。<br><br>ここでは 10×0.16×0.84×(40/49) ≒ 1.098。二項分布なら1.344なので、確かに小さくなっています。<br><br>N が n に比べて十分大きければ修正項は1に近づき、二項分布で近似できます。",
+trap:"期待値が同じだからといって二項分布と答えないこと。分布名は抽出方法で決まります。",
+point:"超幾何の期待値は二項と同じ。分散だけ有限母集団修正がかかる。"}
+];
+
+const PB = [
+/* ============ 各種確率分布・標本分布（続き4問） ============ */
+{id:21,cat:"bunpu",diff:2,scene:"指数分布の和",
+lead:"部品が故障するたびに即座に交換する装置がある。各部品の寿命は互いに独立に、平均500時間の指数分布に従う。",
+q:"3個目の部品が故障するまでの総時間 T の分布として、最も適切なものを一つ選べ。",
+choices:["平均1,500時間の指数分布","ガンマ分布 Ga(3, 500)。平均1,500時間、分散750,000","正規分布 N(1500, 500²)","対数正規分布"],ans:1,
+how:["独立な指数分布の和はガンマ分布になる（再生性）",
+     "率 λ = 1/500 の指数分布を3個足すので Ga(k=3, θ=500)",
+     "平均は kθ = 3 × 500 = 1,500時間",
+     "分散は kθ² = 3 × 250,000 = 750,000（標準偏差 ≒ 866時間）"],
+exp:"指数分布は<b>再生性を持ちません</b>。和は指数分布ではなくガンマ分布（整数 k のときアーラン分布）になります。<br><br>直感的にも自然です。指数分布は無記憶性ゆえに右へ大きく歪みますが、3個足すと中心極限定理の効果で山が立ち、形が変わります。<br><br>ポアソン過程との対応も押さえてください。事象の発生<b>回数</b>がポアソン分布なら、k 個目の発生までの<b>待ち時間</b>はガンマ分布です。表裏の関係にあります。<br><br>なお指数分布どうしの和が指数分布になるのは、そもそも成り立ちません。混同しやすいので注意してください。",
+trap:"「平均が3倍だから指数分布のまま」としないこと。平均は3倍で正しいのですが、分布族が変わります。",
+point:"指数分布の和はガンマ分布。ポアソン過程のk番目の待ち時間。"},
+
+{id:22,cat:"bunpu",diff:1,scene:"ベータ分布",
+lead:"ベータ分布 Be(α, β) の密度は f(x) ∝ x<sup>α−1</sup>(1−x)<sup>β−1</sup>（0 < x < 1）であり、平均は α/(α+β) である。",
+q:"Be(3, 7) の平均と、この分布が主に用いられる場面の組合せとして、最も適切なものを一つ選べ。",
+choices:["平均0.30。二項分布の成功確率に対する共役事前分布","平均0.43。ポアソン分布の λ に対する共役事前分布","平均0.30。正規分布の分散に対する共役事前分布","平均3.00。待ち時間のモデル"],ans:0,
+how:["平均は α/(α+β) = 3/(3+7) = 3/10 = 0.30",
+     "ベータ分布は区間 (0,1) 上の分布なので、確率や割合のモデルに使われる",
+     "二項分布の尤度 p^x(1−p)^(n−x) と、ベータの密度 p^(α−1)(1−p)^(β−1) は同じ形",
+     "したがってベータ分布は二項分布の p に対する共役事前分布になる"],
+exp:"ベータ分布と二項分布の<b>共役関係</b>は、ベイズ法の中心的な道具です。<br><br>事前分布 Be(α, β) に n 回中 x 回成功のデータを観測すると、事後分布は <b>Be(α+x, β+n−x)</b> になります。パラメータを足すだけで更新が完了します。<br><br>この関係から、α は「これまでの成功回数」、β は「失敗回数」に相当する擬似データと解釈できます。Be(1,1) は一様分布で、無情報事前分布としてよく使われます。<br><br>分散は αβ/{(α+β)²(α+β+1)} で、ここでは 21/(100×11) ≒ 0.0191、標準偏差 ≒ 0.138 です。",
+trap:"ポアソンの λ に対する共役事前分布はガンマ分布、正規分布の分散に対しては逆ガンマ分布です。組合せを取り違えないでください。",
+point:"ベータ×二項が共役。事後は Be(α+x, β+n−x) と足すだけ。"},
+
+{id:23,cat:"bunpu",diff:2,scene:"対数正規分布",
+lead:"確率変数 X について、log X 〜 N(μ, σ²) が成り立つとき、X は対数正規分布に従うという。μ = 2、σ² = 0.5 とする。",
+q:"E[X] の値として、最も適切なものを一つ選べ。ただし e ≒ 2.718 とする。",
+choices:["e² ≒ 7.39","e^2.25 ≒ 9.49","e^2.5 ≒ 12.18","2.00"],ans:1,
+how:["対数正規分布の平均は E[X] = exp(μ + σ²/2)",
+     "μ + σ²/2 = 2 + 0.25 = 2.25",
+     "E[X] = e^2.25 ≒ 9.49",
+     "なお中央値は e^μ = e² ≒ 7.39 で、平均より小さい"],
+exp:"E[X] = e^μ とならないのが要点です。<b>指数変換は凸関数</b>なので、イェンセンの不等式より E[e^Y] > e^(E[Y]) となります。σ²/2 がその補正項です。<br><br>対数正規分布では<b>最頻値 < 中央値 < 平均値</b>の順になります。ここでは最頻値 e^(μ−σ²) = e^1.5 ≒ 4.48、中央値 e² ≒ 7.39、平均 ≒ 9.49。右に大きく歪んだ分布です。<br><br>所得、株価、粒径など「正の値で、掛け算的に変動する」量のモデルとして広く使われます。中心極限定理の乗法版（対数を取れば和になる）が背景にあります。<br><br>分散は (e^σ² − 1)e^(2μ+σ²) です。",
+trap:"log を取ったときの平均 μ を、そのまま指数に戻して答えないこと。σ²/2 の補正を忘れると系統的に過小評価します。",
+point:"対数正規の平均は exp(μ+σ²/2)。中央値 exp(μ) より大きい。"},
+
+{id:24,cat:"bunpu",diff:2,scene:"標本分布の関係",
+lead:"Z 〜 N(0,1)、W 〜 χ²(ν) が互いに独立であるとする。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　Z / √(W/ν) は自由度 ν の t分布に従う。<br>II　t分布の自由度が1のときはコーシー分布と一致し、期待値が存在しない。<br>III　自由度 (1, ν) の F分布に従う確率変数は、自由度 ν の t分布に従う確率変数の2乗と一致する。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：t分布の定義そのもの。標準正規を、独立なカイ二乗の平方根で割る形。正しい",
+     "II：t(1) はコーシー分布。裾が厚すぎて期待値の積分が発散する。正しい",
+     "III：t(ν)² = Z²/(W/ν)。Z² 〜 χ²(1) なので、これは F(1,ν) の定義形。正しい"],
+exp:"3つの標本分布は<b>すべて正規分布とカイ二乗分布から組み立てられます</b>。関係を整理しておくと、応用が効きます。<br><br>・χ²(ν)：独立な標準正規の2乗和<br>・t(ν) = Z / √(χ²(ν)/ν)<br>・F(ν₁,ν₂) = (χ²(ν₁)/ν₁) / (χ²(ν₂)/ν₂)<br><br>記述IIIの関係 <b>t(ν)² = F(1, ν)</b> は実務でも使えます。単回帰で「回帰係数の t 検定」と「モデル全体の F 検定」が同じ結論になるのは、この等式のためです。<br><br>t(1) の期待値が存在しないことは、コーシー分布の裾の厚さを示す代表例です。標本平均を取っても分布が縮まらず、大数の法則が成り立ちません。",
+trap:"t分布の自由度が小さいと、モーメントが存在しないことがあります。t(ν) は ν 次以上のモーメントを持ちません。",
+point:"t² = F(1,ν)。標本分布はすべて正規とχ²から組み立てられる。"},
+
+/* ============ 極限定理・漸近理論（5問） ============ */
+{id:25,cat:"zenkin",diff:2,scene:"デルタ法",
+lead:"標本平均 X̄ が漸近的に N(μ, σ²/n) に従うとき、g(X̄) の漸近分布を考える。ここで μ = 4、σ² = 9、n = 100、g(x) = log x とする。",
+q:"g(X̄) = log X̄ の漸近分散として、最も適切なものを一つ選べ。",
+choices:["0.0900","0.0056","0.0225","0.2250"],ans:1,
+how:["デルタ法：g(X̄) は漸近的に N(g(μ), {g′(μ)}² σ²/n) に従う",
+     "g(x) = log x なので g′(x) = 1/x、g′(4) = 0.25",
+     "漸近分散 = (0.25)² × 9/100",
+     "= 0.0625 × 0.09 = 0.005625"],
+exp:"デルタ法は<b>「非線形変換しても、局所的には線形近似できる」</b>という考え方です。テイラー展開の1次項だけを残し、g(X̄) ≒ g(μ) + g′(μ)(X̄ − μ) とみなします。<br><br>右辺は X̄ の線形変換なので、分散は {g′(μ)}² 倍になります。ここが公式の中身です。<br><br>実務では<b>分散安定化変換</b>で使われます。たとえば比率 p̂ に対して arcsin√p̂ を取ると分散が p に依存しなくなり、ポアソン数に対して √X を取ると分散がほぼ一定になります。いずれもデルタ法で導かれます。<br><br>注意点として、g′(μ) = 0 の場合は1次近似が消えるため、2次の項まで展開する必要があります。",
+trap:"g′(μ) を2乗するのを忘れないこと。分散への効き方は係数の2乗です。",
+point:"デルタ法の漸近分散は {g′(μ)}²σ²/n。テイラー1次近似が中身。"},
+
+{id:26,cat:"zenkin",diff:1,scene:"大数の法則",
+lead:"独立同一分布に従う確率変数列 X₁, X₂, … の標本平均を X̄ₙ とする。",
+q:"大数の弱法則と強法則の違いとして、最も適切なものを一つ選べ。",
+choices:["弱法則は確率収束、強法則は概収束を主張する","弱法則は分散の存在を要しないが、強法則は要する","弱法則は正規分布を仮定するが、強法則は仮定しない","両者は同じ主張であり、証明方法が異なるだけである"],ans:0,
+how:["弱法則：任意の ε > 0 に対し P(|X̄ₙ − μ| > ε) → 0（確率収束）",
+     "強法則：P(lim X̄ₙ = μ) = 1（概収束、確率1で収束）",
+     "概収束は確率収束より強い概念であり、強法則から弱法則が導かれる",
+     "どちらも期待値の存在のみを要求し、分散の存在は不要"],
+exp:"収束概念の強さは<b>概収束 ⇒ 確率収束 ⇒ 分布収束</b>の順です。逆は一般に成り立ちません。<br><br>直感的な違いは次のとおりです。<b>弱法則</b>は「各 n について、大きく外れる確率が小さい」。<b>強法則</b>は「一本の標本路そのものが、いつかは μ に近づいて二度と離れない」。<br><br>中心極限定理が主張するのは<b>分布収束</b>で、これは最も弱い収束です。ただし「収束先の分布の形まで分かる」という点で、実用上は最も有用な定理になります。<br><br>コーシー分布のように期待値が存在しない場合、大数の法則は成り立ちません。標本平均を取っても分布が縮まらないのです。",
+trap:"「弱法則には分散が必要」は誤りです。チェビシェフの不等式による初等的な証明では分散を使いますが、定理自体は期待値の存在だけで成立します。",
+point:"概収束 ⇒ 確率収束 ⇒ 分布収束。強法則は概収束を主張。"},
+
+{id:27,cat:"zenkin",diff:2,scene:"スラツキーの定理",
+lead:"確率変数列について、Xₙ が X に分布収束し、Yₙ が定数 c に確率収束するとする。",
+q:"スラツキーの定理から導かれる結論として、最も適切なものを一つ選べ。",
+choices:["Xₙ + Yₙ は X + c に分布収束する","Xₙ + Yₙ は必ず正規分布に収束する","Yₙ が定数でなくても Xₙ Yₙ は XY に分布収束する","Xₙ Yₙ の収束については何も言えない"],ans:0,
+how:["スラツキーの定理：Xₙ →d X、Yₙ →p c（定数）のとき",
+     "Xₙ + Yₙ →d X + c",
+     "Xₙ Yₙ →d cX",
+     "Xₙ / Yₙ →d X/c（c ≠ 0）"],
+exp:"スラツキーの定理は、漸近理論の<b>接着剤</b>にあたります。<br><br>典型的な使い方は t 統計量の導出です。(X̄ − μ)/(σ/√n) は中心極限定理により N(0,1) に分布収束します。ここで σ を標本標準偏差 s に置き換えたいとき、s が σ に確率収束することとスラツキーの定理を組み合わせれば、<b>(X̄ − μ)/(s/√n) も N(0,1) に分布収束する</b>と結論できます。<br><br>重要な条件は、Yₙ の収束先が<b>定数</b>であることです。確率変数に収束する場合には、この定理は使えません。同時分布の情報が必要になるためです。",
+trap:"「Yₙ が確率変数に収束する場合も同様」としないこと。定数への収束が本質的な条件です。",
+point:"スラツキーは「定数に収束する項は、定数として扱ってよい」。"},
+
+{id:28,cat:"zenkin",diff:1,scene:"中心極限定理の適用",
+lead:"独立同一分布に従う X₁, …, X₁₀₀ が平均 μ = 5、分散 σ² = 16 の分布に従う。元の分布は右に強く歪んでいる。",
+q:"標本平均 X̄ について正しい記述として、最も適切なものを一つ選べ。",
+choices:["元の分布が歪んでいるため、中心極限定理は適用できない","X̄ は近似的に N(5, 0.16) に従う","X̄ は近似的に N(5, 16) に従う","X̄ は元の分布と同じく右に歪んだ分布に従う"],ans:1,
+how:["中心極限定理は、元の分布の形にかかわらず成立する（平均と分散が存在すれば）",
+     "X̄ の平均は μ = 5",
+     "X̄ の分散は σ²/n = 16/100 = 0.16",
+     "近似的に N(5, 0.16)、標準偏差は0.4"],
+exp:"中心極限定理の強みは<b>元の分布形を問わない</b>ことです。平均と分散が有限でありさえすればよく、離散でも連続でも、歪んでいても構いません。<br><br>ただし収束の速さは元の分布に依存します。歪みが強いほど大きな n を要し、n = 30 という目安が通用しないこともあります。実務では、標本平均のヒストグラムやブートストラップで確認するのが確実です。<br><br>N(μ, σ²/n) の第2引数は<b>分散</b>です。σ²/n = 0.16 であって、σ/√n = 0.4 ではありません。表記の取り違えが頻出します。",
+trap:"分散と標準偏差の取り違えに注意してください。N(5, 16) としてしまうと、ばらつきを10倍に見積もることになります。",
+point:"中心極限定理は元の分布形を問わない。X̄ 〜 N(μ, σ²/n)。"},
+
+{id:29,cat:"zenkin",diff:3,scene:"漸近有効性",
+lead:"最尤推定量 θ̂ の漸近的性質について考える。I(θ) を1標本あたりのフィッシャー情報量とする。",
+q:"最尤推定量の漸近分布として、最も適切なものを一つ選べ（正則条件を満たすものとする）。",
+choices:["√n(θ̂ − θ) →d N(0, I(θ))","√n(θ̂ − θ) →d N(0, 1/I(θ))","θ̂ − θ →d N(0, 1/I(θ))","√n(θ̂ − θ) →d N(0, n/I(θ))"],ans:1,
+how:["最尤推定量は一致性を持ち、θ に確率収束する",
+     "スケールを √n で拡大すると、非退化な極限分布が現れる",
+     "その漸近分散はフィッシャー情報量の逆数 1/I(θ)",
+     "θ̂ 自体の近似分散は 1/(nI(θ))"],
+exp:"最尤推定量は<b>漸近有効</b>です。漸近分散がクラメール・ラオの下限に一致し、これ以上小さくできないという意味で最良になります。<br><br>√n を掛ける理由は、θ̂ − θ そのものは0に収束してしまい、極限分布が一点に潰れるためです。ちょうど釣り合う速さで拡大すると、非退化な正規分布が現れます。<br><br>実務では、この結果から標準誤差を <b>1/√(nI(θ̂))</b> として信頼区間を作ります。統計ソフトが出力する最尤推定の標準誤差は、多くの場合この漸近近似です。<br><br>正則条件（台がパラメータに依存しない、微分と積分の交換が可能など）が崩れると成り立ちません。一様分布 U(0,θ) の最尤推定量が典型的な反例です。",
+trap:"情報量と分散は<b>逆数の関係</b>です。情報が多いほど分散は小さくなります。掛けるか割るかを間違えないでください。",
+point:"最尤推定量は漸近的に N(θ, 1/(nI(θ)))。情報量の逆数が分散。"},
+
+/* ============ 推定論（10問） ============ */
+{id:30,cat:"suitei",diff:1,scene:"最尤推定量の導出",
+lead:"独立な標本 X₁, …, Xₙ が平均 1/λ の指数分布（密度 λe<sup>−λx</sup>）に従うとする。",
+q:"λ の最尤推定量として、最も適切なものを一つ選べ。",
+choices:["λ̂ = X̄","λ̂ = 1/X̄","λ̂ = n/ΣXᵢ²","λ̂ = ΣXᵢ"],ans:1,
+how:["尤度 L(λ) = λⁿ exp(−λΣxᵢ)",
+     "対数尤度 ℓ(λ) = n log λ − λΣxᵢ",
+     "λ で微分して0とおく。n/λ − Σxᵢ = 0",
+     "λ̂ = n/Σxᵢ = 1/X̄"],
+exp:"最尤推定の手順は<b>4段階に固定</b>されます。尤度を書く、対数を取る、微分して0とおく、解く。対数を取るのは、積が和になって微分が容易になるためです。<br><br>この例では<b>不変性</b>も確認できます。平均 μ = 1/λ の最尤推定量は μ̂ = X̄ であり、λ̂ = 1/μ̂ となっています。<b>最尤推定量は変換に対して不変</b>（g(θ) の最尤推定量は g(θ̂)）という性質です。不偏性にはこの性質がないため、両者を区別してください。<br><br>なお λ̂ = 1/X̄ は不偏ではありません。E[1/X̄] > 1/E[X̄] がイェンセンの不等式から従うため、系統的に過大評価します。",
+trap:"2階微分が負であること（最大であること）の確認も、本来は必要です。ここでは −n/λ² < 0 で確認できます。",
+point:"最尤推定は 尤度→対数→微分→0 の4手順。不変性を持つ。"},
+
+{id:31,cat:"suitei",diff:2,scene:"十分統計量",
+lead:"独立な標本 X₁, …, Xₙ が Poisson(λ) に従うとき、同時確率関数は λ^(Σxᵢ) e^(−nλ) / Πxᵢ! と書ける。",
+q:"λ に対する十分統計量として、最も適切なものを一つ選べ。",
+choices:["X₁ のみ","ΣXᵢ","ΣXᵢ²","標本の最大値"],ans:1,
+how:["分解定理を使う。同時分布が g(T(x), θ) × h(x) の形に分解できれば T は十分統計量",
+     "λ^(Σxᵢ) e^(−nλ) の部分は λ と Σxᵢ にのみ依存する（これが g）",
+     "1/Πxᵢ! の部分は λ を含まない（これが h）",
+     "したがって T = ΣXᵢ が十分統計量"],
+exp:"十分統計量とは<b>「パラメータに関する情報を余さず含む要約」</b>です。T の値さえ分かれば、元データを見ても λ について新しい情報は得られません。<br><br>判定には<b>フィッシャー・ネイマンの分解定理</b>を使います。同時分布を「θ と T にだけ依存する部分」と「θ を含まない部分」の積に分けられるかを見ます。<br><br>実用上の意味は<b>次元削減</b>です。n 個のデータを1つの数値に圧縮しても、推測の精度は落ちません。<br><br>また、ラオ・ブラックウェルの定理により、任意の不偏推定量を十分統計量で条件づければ、分散が同じか小さい不偏推定量が得られます。十分統計量に基づく推定量を考えれば十分だ、という指針の根拠です。",
+trap:"十分統計量は一意ではありません。ΣXᵢ も X̄ も十分統計量です。1対1変換で移り合うものは同等に扱えます。",
+point:"分解定理で判定。同時分布が g(T,θ)h(x) に分かれれば T は十分統計量。"},
+
+{id:32,cat:"suitei",diff:2,scene:"フィッシャー情報量",
+lead:"Poisson(λ) からの独立標本 n = 50 について、1標本あたりのフィッシャー情報量は I(λ) = 1/λ である。真の値が λ = 2 であるとする。",
+q:"λ の不偏推定量が達成しうる分散の下限（クラメール・ラオの下限）として、最も適切なものを一つ選べ。",
+choices:["0.04","25.0","0.5","2.0"],ans:0,
+how:["クラメール・ラオの下限は 1/(n I(λ))",
+     "n I(λ) = 50 × (1/2) = 25",
+     "下限 = 1/25 = 0.04",
+     "実際、λ̂ = X̄ の分散は λ/n = 2/50 = 0.04 で下限を達成している"],
+exp:"クラメール・ラオの不等式は<b>「不偏推定量の分散には超えられない壁がある」</b>ことを示します。下限を達成する推定量を<b>有効推定量</b>と呼びます。<br><br>ポアソン分布では X̄ がちょうど下限を達成します。指数型分布族では、十分統計量に基づく推定量がしばしば有効になります。<br><br>フィッシャー情報量の定義は I(θ) = E[(∂/∂θ log f)²] = −E[∂²/∂θ² log f] です。対数尤度の<b>曲がり具合</b>を測っており、尖っているほど情報が多く、推定が精密になります。<br><br>注意点として、この不等式は<b>不偏推定量に対する</b>ものです。バイアスを許せば、より小さい平均二乗誤差を達成できる場合があります（リッジ回帰などがその例）。",
+trap:"n を掛けるのを忘れないこと。1標本あたりの情報量 I(λ) と、標本全体の情報量 nI(λ) を区別してください。",
+point:"CR下限 = 1/(nI(θ))。情報量が多いほど下限は小さい。"},
+
+{id:33,cat:"suitei",diff:2,scene:"バイアスと平均二乗誤差",
+lead:"正規母集団 N(μ, σ²) からの標本について、σ² の最尤推定量は (1/n)Σ(Xᵢ − X̄)²、不偏推定量は (1/(n−1))Σ(Xᵢ − X̄)² である。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　最尤推定量は σ² を系統的に過小評価する。<br>II　不偏推定量のほうが、平均二乗誤差（MSE）は必ず小さい。<br>III　n が大きくなると、両者の差は無視できるようになる。",
+choices:["Iのみ正しい","IとIIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:1,
+how:["I：E[最尤推定量] = (n−1)σ²/n < σ²。過小評価する。正しい",
+     "II：MSE = 分散 + バイアス²。最尤推定量はバイアスを持つが分散が小さい",
+     "正規分布では最尤推定量のほうが MSE は小さくなる。誤り",
+     "III：n → ∞ で (n−1)/n → 1。差は消える。正しい"],
+exp:"記述IIが要点です。<b>不偏であることは、必ずしも「良い」を意味しません</b>。<br><br>推定量の良さを MSE = 分散 + バイアス² で測ると、わずかなバイアスを許容して分散を大きく下げるほうが有利な場面があります。正規分布の分散推定はその典型で、実は 1/(n+1) で割る推定量が MSE 最小になります。<br><br>この<b>バイアスと分散のトレードオフ</b>は、統計学と機械学習に共通する中心的な概念です。リッジ回帰、Lasso、縮小推定はすべて「バイアスを入れて分散を下げる」設計になっています。<br><br>なお n−1 で割る補正が広く使われるのは、不偏性が分散分析や信頼区間の理論と整合的で扱いやすいためです。",
+trap:"「不偏＝優れている」と短絡しないこと。評価基準を MSE にすると結論が変わります。",
+point:"MSE = 分散 + バイアス²。不偏性は良さの一側面にすぎない。"},
+
+{id:34,cat:"suitei",diff:1,scene:"モーメント法",
+lead:"ガンマ分布 Ga(k, θ)（平均 kθ、分散 kθ²）からの標本について、標本平均が X̄ = 12、標本分散が s² = 24 であった。",
+q:"モーメント法による k と θ の推定値の組合せとして、最も適切なものを一つ選べ。",
+choices:["k̂ = 6、θ̂ = 2","k̂ = 2、θ̂ = 6","k̂ = 0.5、θ̂ = 24","k̂ = 12、θ̂ = 24"],ans:0,
+how:["理論モーメントと標本モーメントを対応させる",
+     "kθ = 12、kθ² = 24",
+     "第2式を第1式で割る。θ = 24/12 = 2",
+     "第1式に代入して k = 12/2 = 6"],
+exp:"モーメント法は<b>「理論上の平均・分散と、標本の平均・分散を等しいとおいて解く」</b>という単純な方法です。パラメータが2個なら方程式も2本立てます。<br><br>最尤法との比較を押さえておいてください。<br><br>・<b>モーメント法</b>：計算が簡単、一致性は持つ、ただし一般に漸近有効ではない<br>・<b>最尤法</b>：漸近有効だが、方程式が解析的に解けないことも多い（ガンマ分布の k はその例で、数値解法が必要）<br><br>実務では、モーメント法の推定値を<b>最尤法の反復計算の初期値</b>に使うことがよくあります。両者は競合するというより、補い合う関係にあります。",
+trap:"連立方程式は「割り算で1つの未知数を消す」のが定石です。展開して代入すると煩雑になります。",
+point:"モーメント法は理論と標本のモーメントを等置。計算は簡単だが漸近有効ではない。"},
+
+{id:35,cat:"suitei",diff:2,scene:"漸近信頼区間",
+lead:"n = 400 のベルヌーイ試行で成功回数が 120 であった。成功確率 p の最尤推定量は p̂ = 0.3 であり、その漸近分散は p(1−p)/n である。",
+q:"p の95%漸近信頼区間として、最も適切なものを一つ選べ。",
+choices:["0.300 ± 0.0229","0.300 ± 0.0449","0.300 ± 0.0225","0.300 ± 0.4490"],ans:1,
+how:["漸近標準誤差を求める。√(p̂(1−p̂)/n) = √(0.3×0.7/400)",
+     "= √(0.21/400) = √0.000525 ≒ 0.02291",
+     "95%区間は p̂ ± 1.96 × 標準誤差",
+     "1.96 × 0.02291 ≒ 0.0449"],
+exp:"最尤推定量の漸近正規性を用いた区間推定を<b>ワルド型信頼区間</b>と呼びます。形は「推定値 ± z × 漸近標準誤差」で、2級までの信頼区間と同じ構造です。<br><br>準1級では、これ以外の構成法との違いも問われます。<br><br>・<b>ワルド型</b>：計算が簡単だが、p が0や1に近いと精度が落ち、区間が [0,1] をはみ出すこともある<br>・<b>スコア型（ウィルソン区間）</b>：帰無仮説のもとの分散を使う。極端な p でも安定<br>・<b>尤度比型</b>：対数尤度が最大値から一定量下がる範囲。パラメータ変換に対して不変<br><br>小標本や極端な比率では、ワルド型は避けるのが実務上の定石です。",
+trap:"標準誤差そのもの（0.0229）を区間の半幅としないこと。1.96 を掛ける手順を飛ばさないでください。",
+point:"ワルド型区間は 推定値 ± z×漸近SE。極端な p では精度が落ちる。"},
+
+{id:36,cat:"suitei",diff:1,scene:"最尤推定量の不変性",
+lead:"あるパラメータ θ の最尤推定量が θ̂ = 4 と求まった。ここで関心のある量が g(θ) = θ² であるとする。",
+q:"g(θ) の最尤推定量として、最も適切なものを一つ選べ。",
+choices:["16","4","2","θ̂ の分布を求めないと決まらない"],ans:0,
+how:["最尤推定量には不変性がある",
+     "g(θ) の最尤推定量は g(θ̂) で与えられる",
+     "g(θ̂) = 4² = 16"],
+exp:"<b>不変性</b>は最尤推定量の際立った長所です。関心のあるパラメータをどう変換しても、推定値は単純に変換すればよいだけです。<br><br>対照的に、<b>不偏性には不変性がありません</b>。θ̂ が θ の不偏推定量でも、θ̂² は θ² の不偏推定量になりません。イェンセンの不等式より E[θ̂²] = V[θ̂] + θ² > θ² となり、必ず過大評価します。<br><br>この違いは実務でも効いてきます。たとえば分散の不偏推定量 s² の平方根 s は、標準偏差 σ の不偏推定量ではありません。<br><br>なお g(θ̂) の分散はデルタ法で近似します。V[g(θ̂)] ≒ {g′(θ̂)}² V[θ̂] です。",
+trap:"不偏推定量に不変性があると考えないこと。最尤推定量に固有の性質です。",
+point:"最尤推定量は変換に不変。不偏推定量は不変ではない。"},
+
+{id:37,cat:"suitei",diff:3,scene:"EMアルゴリズム",
+lead:"欠測データや潜在変数を含むモデルで最尤推定を行う際、EMアルゴリズムが用いられる。",
+q:"EMアルゴリズムの説明として、最も適切なものを一つ選べ。",
+choices:["Eステップで完全データ対数尤度の条件付き期待値を計算し、Mステップでそれを最大化する。反復により対数尤度は単調非減少となる","Eステップで最大化を行い、Mステップで期待値を計算する","必ず大域的最大値に収束することが保証されている","欠測データがない場合には適用できない"],ans:0,
+how:["Eステップ（Expectation）：現在のパラメータ推定値のもとで、完全データ対数尤度の条件付き期待値 Q(θ|θ⁽ᵗ⁾) を計算",
+     "Mステップ（Maximization）：Q を θ について最大化し、θ⁽ᵗ⁺¹⁾ を得る",
+     "この反復により、観測データの対数尤度は単調に増加（または不変）する",
+     "ただし収束先は局所最大値であり、大域的最大値の保証はない"],
+exp:"EMアルゴリズムは、<b>潜在変数があるために尤度を直接最大化できない場面</b>で使われます。混合正規分布によるクラスタリング、因子分析、隠れマルコフモデル、欠測データの扱いなどが代表例です。<br><br>単調増加性が保証されるため<b>発散しない</b>のが利点ですが、初期値によって異なる局所解に収束します。実務では複数の初期値から実行し、最も対数尤度が高い解を採用します。<br><br>収束は遅く、とくに解の近傍では線形収束にとどまります。速度が問題になる場合はニュートン法などと併用します。<br><br>なお、標準誤差はEM自体からは直接得られません。別途、観測情報行列やブートストラップで評価します。",
+trap:"「必ず最良の解に到達する」と考えないこと。単調増加と大域的最適は別問題です。",
+point:"EMはE（期待値）→M（最大化）の反復。単調増加するが局所解に留まりうる。"},
+
+{id:38,cat:"suitei",diff:1,scene:"ブートストラップ",
+lead:"標本サイズ n のデータから、ある統計量の標準誤差を評価したい。理論的な導出が困難なため、ブートストラップ法を用いる。",
+q:"ノンパラメトリック・ブートストラップの手続きとして、最も適切なものを一つ選べ。",
+choices:["元の標本から復元抽出で大きさ n の再標本を多数作り、各再標本で統計量を計算して、その標準偏差を標準誤差とする","元の標本から非復元抽出で大きさ n の再標本を作る","母集団分布を正規分布と仮定して乱数を発生させる","標本を2分割し、それぞれで統計量を計算して比較する"],ans:0,
+how:["元の標本を経験分布とみなし、そこから大きさ n の再標本を復元抽出で作る",
+     "各再標本について、関心のある統計量を計算する",
+     "これを B 回（通常1,000〜10,000回）繰り返す",
+     "得られた B 個の統計量の標準偏差が、標準誤差の推定値になる"],
+exp:"ブートストラップの発想は<b>「母集団の代わりに、手元の標本を母集団とみなす」</b>ことです。経験分布が真の分布のよい近似になっているという前提に立ちます。<br><br>非復元抽出では元の標本がそのまま再現されるだけなので、<b>復元抽出であることが本質的</b>です。<br><br>信頼区間の作り方には複数あります。パーセンタイル法（再標本分布の2.5%点と97.5%点を取る）、BCa法（バイアスと歪度を補正）、ブートストラップt法などです。<br><br>適用が難しい場面もあります。最大値・最小値のような極値統計量、標本サイズが極端に小さい場合、時系列のように独立性が崩れる場合（ブロックブートストラップが必要）です。",
+trap:"再標本のサイズは元と同じ n にします。異なるサイズにすると、標準誤差のスケールが変わってしまいます。",
+point:"ブートストラップは復元抽出でn個を再現。経験分布を母集団とみなす。"},
+
+{id:39,cat:"suitei",diff:3,scene:"区間推定の構成法",
+lead:"パラメータ θ の信頼区間を構成する方法として、ワルド型、スコア型、尤度比型の3つがある。",
+q:"これらの関係として、最も適切なものを一つ選べ。",
+choices:["3つは漸近的に同等だが、有限標本では異なる区間を与える","3つは常に同一の区間を与える","尤度比型のみが漸近正規性に依存しない","ワルド型が常に最も精度が高い"],ans:0,
+how:["ワルド型：最尤推定値における情報量を用いる。(θ̂−θ)²I(θ̂) を評価",
+     "スコア型：帰無仮説の値における情報量を用いる。スコア関数を評価",
+     "尤度比型：対数尤度が最大値から一定量下がる範囲",
+     "いずれも漸近的に χ²(1) に従い同等だが、有限標本では区間が一致しない"],
+exp:"3つの手法は<b>同じ対数尤度曲線を、違う角度から測っている</b>と捉えると理解しやすくなります。<br><br>・<b>ワルド</b>：最大点における曲率で放物線近似する（水平方向の距離）<br>・<b>スコア</b>：帰無仮説の点における傾きを見る<br>・<b>尤度比</b>：対数尤度の高さの差を見る（垂直方向）<br><br>対数尤度が放物線に近ければ3つは一致しますが、非対称な場合はずれます。<br><br>実務上の選択基準として、<b>尤度比型が最も信頼できる</b>とされます。パラメータ変換に対して不変であり、区間が定義域をはみ出さないためです。ワルド型は計算が最も簡単ですが、小標本や境界付近では精度が落ちます。",
+trap:"統計ソフトの既定の標準誤差はワルド型であることが多いので、境界付近のパラメータでは注意が必要です。",
+point:"ワルド・スコア・尤度比は漸近同等。有限標本では尤度比型が安定。"},
+
+{id:40,cat:"kentei",diff:3,scene:"ネイマン・ピアソンの補題",
+lead:"単純帰無仮説 H₀: θ = θ₀ に対する単純対立仮説 H₁: θ = θ₁ を、有意水準 α で検定する。",
+q:"ネイマン・ピアソンの補題が主張する内容として、最も適切なものを一つ選べ。",
+choices:["尤度比 L(θ₁)/L(θ₀) が定数 k を超えるとき棄却する検定が、有意水準 α のもとで最強力である","標本平均に基づく検定が常に最強力である","第1種の過誤と第2種の過誤を同時に最小化できる","対立仮説が複合仮説でも、同じ検定が最強力となる"],ans:0,
+how:["棄却域を「尤度比が大きい領域」に取る",
+     "つまり L(θ₁)/L(θ₀) > k となる標本点を棄却域に入れる",
+     "k は P(棄却 | H₀) = α を満たすように定める",
+     "この検定が、水準 α のすべての検定の中で検出力を最大にする"],
+exp:"ネイマン・ピアソンの補題は<b>検定論の出発点</b>です。「H₀ より H₁ のほうがもっともらしいデータから順に棄却域へ入れる」という、直感どおりの手続きが最適だと保証します。<br><br>重要な限界は、この補題が<b>単純仮説対単純仮説</b>にしか適用できないことです。対立仮説が複合（θ > θ₀ など）の場合、θ₁ ごとに最強力検定が変わりうるからです。<br><br>ただし、尤度比が統計量の単調関数になる分布族（<b>単調尤度比</b>を持つ族、指数型分布族の多くが該当）では、片側検定に限り<b>一様最強力検定</b>が存在します。<br><br>両側対立仮説では、一般に一様最強力検定は存在しません。そこで不偏性などの制約を加えた最適性を考えます。",
+trap:"「第1種と第2種の過誤を同時に最小化」はできません。α を固定したうえで検出力を最大化する、という枠組みです。",
+point:"NP補題は尤度比検定が最強力と保証。ただし単純対単純に限る。"}
+];
+
+const PC = [
+/* ============ 検定論（続き8問） ============ */
+{id:41,cat:"kentei",diff:3,scene:"尤度比検定の漸近分布",
+lead:"パラメータ空間の次元が p の完全モデルと、q 個の制約を課した縮約モデルを比較する。対数尤度の最大値をそれぞれ ℓ₁、ℓ₀ とする。",
+q:"尤度比検定統計量 Λ = 2(ℓ₁ − ℓ₀) の帰無仮説のもとでの漸近分布として、最も適切なものを一つ選べ。",
+choices:["χ²(q)","χ²(p)","χ²(p+q)","N(0,1)"],ans:0,
+how:["尤度比検定統計量は Λ = 2 × (対数尤度の差)",
+     "帰無仮説が正しいとき、Λ は漸近的にカイ二乗分布に従う（ウィルクスの定理）",
+     "自由度は「制約の個数」＝ 2つのモデルの自由パラメータ数の差",
+     "したがって χ²(q)"],
+exp:"<b>自由度は制約の個数</b>である、という点が最重要です。モデルの次元そのものではありません。<br><br>2倍する理由は、テイラー展開したときに対数尤度の2次項が (1/2)×情報量×(θ̂−θ)² の形で現れ、その 1/2 を打ち消すためです。<br><br>この定理により、入れ子（ネスト）になった任意のモデルを比較できます。重回帰の変数選択、ロジスティック回帰のモデル比較、分割表の対数線形モデルなど、応用範囲は非常に広いものです。<br><br>ただし<b>ネストしていないモデルには使えません</b>。その場合はAICなどの情報量規準を用います。また、パラメータが定義域の境界にある場合（分散成分が0など）は、漸近分布が χ² からずれます。",
+trap:"自由度を大きいほうのモデルの次元 p としないこと。制約の数 q です。",
+point:"尤度比統計量 2(ℓ₁−ℓ₀) 〜 χ²(制約の個数)。ネストが前提。"},
+
+{id:42,cat:"kentei",diff:3,scene:"3つの検定の関係",
+lead:"最尤法に基づく検定として、尤度比検定・ワルド検定・スコア検定（ラグランジュ乗数検定）がある。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　3つはいずれも漸近的に同じ χ² 分布に従う。<br>II　ワルド検定は制約なしモデルの推定のみで計算できる。<br>III　スコア検定は制約付きモデルの推定のみで計算できる。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：3つとも帰無仮説のもとで χ²(q) に漸近収束する。正しい",
+     "II：ワルドは θ̂ とその情報量を使うので、制約なしモデルだけでよい。正しい",
+     "III：スコアは帰無仮説のもとでの推定値におけるスコア関数を使う。正しい"],
+exp:"計算コストの違いが、実務での使い分けを決めます。<br><br>・<b>尤度比検定</b>：両方のモデルを推定する必要がある。最も手間がかかるが、精度は最も高い<br>・<b>ワルド検定</b>：制約なしモデルのみ。統計ソフトの回帰係数の検定はこれ<br>・<b>スコア検定</b>：制約付きモデルのみ。複雑なモデルの当てはめを避けたいときに有利<br><br>有限標本では3つの値がずれます。一般に <b>ワルド ≥ 尤度比 ≥ スコア</b> という大小関係が（線形モデルの一部で）成り立つことが知られています。<br><br>ワルド検定には<b>パラメータ変換で結果が変わる</b>という弱点があります。θ を検定するか log θ を検定するかで結論が変わりうるのです。尤度比検定にはこの問題がありません。",
+trap:"3つが「漸近的に同等」であることと、「有限標本で一致する」ことは別です。小標本では結論が食い違うことがあります。",
+point:"尤度比＝両モデル、ワルド＝制約なし、スコア＝制約付き。漸近同等。"},
+
+{id:43,cat:"kentei",diff:2,scene:"検出力の計算",
+lead:"母標準偏差 σ = 10 が既知の正規母集団について、H₀: μ = 50、H₁: μ > 50 を有意水準 α = 0.05 の片側検定で調べる。標本サイズは n = 25 である。",
+q:"真の平均が μ = 54 であるときの検出力を求める式として、最も適切なものを一つ選べ。ただし Φ は標準正規分布の累積分布関数、z<sub>0.05</sub> = 1.645 とする。",
+choices:["Φ(1.645 − 2)","1 − Φ(1.645 − 2)","Φ(1.645 + 2)","1 − Φ(2)"],ans:1,
+how:["標準誤差は σ/√n = 10/5 = 2",
+     "棄却域の境界は X̄ > 50 + 1.645 × 2 = 53.29",
+     "真の分布は N(54, 2²) なので、境界を標準化する",
+     "z = (53.29 − 54)/2 = −0.355 = 1.645 − 2。検出力 = P(Z > 1.645 − 2) = 1 − Φ(1.645 − 2) ≒ 0.639"],
+exp:"検出力の計算は<b>「棄却域の境界を、対立仮説のもとの分布で標準化する」</b>という一手順に尽きます。<br><br>一般形は 検出力 = 1 − Φ(z<sub>α</sub> − δ√n/σ) です。ここで δ = μ₁ − μ₀ は効果量で、δ√n/σ = 4×5/10 = 2 が「離れ具合」を表します。<br><br>この式から、検出力を上げる4つの方法が読み取れます。<b>n を増やす、δ が大きい、σ を小さくする、α を緩める</b>。<br><br>逆算すれば必要標本サイズが求まります。検出力80%を確保するなら z<sub>β</sub> = 0.84 として n ≥ (z<sub>α</sub>+z<sub>β</sub>)²σ²/δ² = (1.645+0.84)²×100/16 ≒ 38.6、つまり39以上が必要です。",
+trap:"境界の標準化で符号を誤りやすい箇所です。図を描いて、対立分布のどちら側を求めているかを確認してください。",
+point:"検出力 = 1 − Φ(z_α − δ√n/σ)。効果量と標本サイズが効く。"},
+
+{id:44,cat:"kentei",diff:2,scene:"多重比較の補正",
+lead:"20個の仮説について、それぞれ有意水準5%で検定を行う。実際にはすべての帰無仮説が正しいとする。",
+q:"少なくとも1つを誤って棄却する確率（FWER）と、ボンフェローニ補正後の各検定の有意水準の組合せとして、最も適切なものを一つ選べ。",
+choices:["約64%、補正後 0.0025","約5%、補正後 0.05","約100%、補正後 0.001","約64%、補正後 0.05"],ans:0,
+how:["1回も誤らない確率は 0.95²⁰ ≒ 0.3585",
+     "少なくとも1回誤る確率（FWER）= 1 − 0.3585 ≒ 0.6415（約64%）",
+     "ボンフェローニ補正は α を検定回数で割る",
+     "0.05 ÷ 20 = 0.0025"],
+exp:"多重比較の問題は<b>検定の機会が増えれば偽陽性の機会も増える</b>という単純な構造です。<br><br>補正法は目的によって使い分けます。<br><br>・<b>ボンフェローニ</b>：α/m。単純で常に妥当だが保守的すぎ、検出力を大きく損なう<br>・<b>ホルム</b>：段階的に緩める。ボンフェローニより検出力が高く、同じくFWERを制御<br>・<b>ベンジャミニ・ホッホバーグ（FDR）</b>：<b>棄却したもののうち誤りの割合</b>を制御する別の基準。探索的な大規模検定（遺伝子発現解析など）で標準的<br><br>FWERとFDRは制御する対象が違います。仮説が数千あるような場面でFWERを制御すると、ほぼ何も検出できなくなるため、FDRが選ばれます。",
+trap:"「1回あたり5%だから20回でも5%」は誤りです。また、FWERとFDRを同じものとして扱わないでください。",
+point:"FWER = 1−(1−α)^m。ボンフェローニは α/m。FDRは別の基準。"},
+
+{id:45,cat:"kentei",diff:2,scene:"適合度検定の自由度",
+lead:"ある観測データが、ポアソン分布に従うかを適合度検定で調べる。度数を6つの階級にまとめ、λ は標本平均から推定した。",
+q:"この検定における自由度として、最も適切なものを一つ選べ。",
+choices:["6","5","4","3"],ans:2,
+how:["適合度検定の自由度 = 階級数 − 1 − （データから推定したパラメータの個数）",
+     "階級数は6",
+     "度数の合計が固定されているので1減る",
+     "λ を1つ推定したのでさらに1減る。6 − 1 − 1 = 4"],
+exp:"<b>推定したパラメータの数だけ自由度が減る</b>のが要点です。理論分布が完全に指定されている場合（サイコロの 1/6 など）は減りません。<br><br>直感的には、パラメータをデータに合わせて調整した分だけ「当てはまりが良くなって当然」なので、その分の甘さを自由度を減らして補正する、と理解できます。<br><br>正規分布への適合度検定なら μ と σ² の2つを推定するので、自由度は 階級数 − 3 になります。<br><br>なお、この自由度の調整が厳密に成立するのは、<b>階級ごとの度数から最尤推定した場合</b>です。元データから推定した場合、漸近分布は厳密には χ²(k−1−p) と χ²(k−1) の間になります。実務ではこの差は無視されることが多いのですが、理論上の注意点です。",
+trap:"パラメータ推定による減少を忘れると、自由度を過大に取り、検定が保守的になりすぎます。",
+point:"適合度検定の自由度 = 階級数 −1− 推定パラメータ数。"},
+
+{id:46,cat:"kentei",diff:3,scene:"p値の分布",
+lead:"連続な検定統計量に基づく検定において、帰無仮説が正しいときの p値の分布を考える。",
+q:"この分布として、最も適切なものを一つ選べ。",
+choices:["区間 (0,1) の一様分布","0付近に集中した分布","標準正規分布","1付近に集中した分布"],ans:0,
+how:["p値は p = 1 − F(T) の形（Fは統計量Tの帰無分布の累積分布関数）",
+     "確率積分変換より、F(T) は (0,1) の一様分布に従う",
+     "したがって p値も (0,1) の一様分布に従う",
+     "P(p ≤ α) = α となり、有意水準の定義と整合する"],
+exp:"p値が一様分布に従うことは、<b>有意水準の意味を保証する土台</b>です。「p ≤ 0.05 となる確率がちょうど5%」だからこそ、第1種の過誤が α に一致します。<br><br>この性質は実務でも活用できます。多数の検定を行ったとき、<b>p値のヒストグラムを描く</b>と診断になります。<br><br>・一様に近い → ほぼ効果がない<br>・0付近に山がある → 真に効果のある仮説が混じっている<br>・1付近に山がある → モデルの誤特定や検定の保守性を疑う<br><br>離散分布に基づく検定（二項検定、フィッシャーの正確確率検定など）では、p値は離散値しか取れないため厳密には一様になりません。その結果、実際の第1種の過誤は α より小さくなり、検定は保守的になります。",
+trap:"「帰無仮説が正しければ p値は大きくなるはず」と考えないこと。0に近い値も同じ確率で出ます。",
+point:"H₀ のもとで p値は一様分布。だから P(p≤α)=α が成り立つ。"},
+
+{id:47,cat:"kentei",diff:3,scene:"一様最強力検定",
+lead:"指数型分布族に属する分布について、片側対立仮説 H₁: θ > θ₀ の検定を考える。",
+q:"一様最強力（UMP）検定が存在するための重要な条件として、最も適切なものを一つ選べ。",
+choices:["尤度比がある統計量の単調関数であること（単調尤度比を持つこと）","標本サイズが十分大きいこと","帰無仮説が単純であること","分布が正規分布であること"],ans:0,
+how:["ネイマン・ピアソンの補題は単純仮説対単純仮説にのみ適用できる",
+     "対立仮説が複合の場合、θ₁ ごとに最強力検定が変わりうる",
+     "しかし尤度比 L(θ₁)/L(θ₀) が統計量 T の単調増加関数であれば",
+     "棄却域が θ₁ によらず T > c の形に定まり、一様最強力検定が存在する"],
+exp:"<b>単調尤度比</b>を持つ族では、片側検定に限って一様最強力検定が存在します。指数型分布族（正規、ポアソン、二項、指数、ガンマなど）の多くがこの性質を持ちます。<br><br>直感的には、「どの θ₁ を対立に選んでも、棄却すべきデータの順番が変わらない」ということです。だから1つの棄却域ですべての θ₁ に同時に最適となります。<br><br>いっぽう<b>両側対立仮説 H₁: θ ≠ θ₀ では、一般に一様最強力検定は存在しません</b>。上側に強い検定は下側で弱くなるからです。<br><br>そこで<b>不偏性</b>（対立仮説のもとでの検出力が α 以上）という制約を加え、その範囲での最適性を考えます。これが一様最強力不偏（UMPU）検定です。",
+trap:"「両側でも一様最強力検定が存在する」としないこと。片側に限られるのが原則です。",
+point:"単調尤度比 → 片側でUMP検定が存在。両側では一般に存在しない。"},
+
+{id:48,cat:"kentei",diff:2,scene:"分散に関する検定",
+lead:"2つの独立な正規母集団から標本を取り、母分散が等しいかを検定する。n₁ = 16、s₁² = 45、n₂ = 21、s₂² = 18 である。",
+q:"検定統計量 F の値と、その分布の自由度の組合せとして、最も適切なものを一つ選べ。",
+choices:["F = 2.50、自由度 (15, 20)","F = 2.50、自由度 (16, 21)","F = 0.40、自由度 (15, 20)","F = 27.0、自由度 (15, 20)"],ans:0,
+how:["F検定統計量は2つの不偏分散の比",
+     "F = s₁²/s₂² = 45/18 = 2.50",
+     "自由度は分子・分母それぞれ n − 1",
+     "(16−1, 21−1) = (15, 20)"],
+exp:"分散の比較に<b>差ではなく比</b>を使うのは、各不偏分散が (n−1)s²/σ² 〜 χ²(n−1) を満たし、カイ二乗分布に従う量どうしの比がF分布になるからです。<br><br>両側検定では、慣例として<b>大きいほうを分子</b>に置き、上側確率を2倍してp値とします。<br><br>実務上の注意として、<b>F検定は正規性に極めて敏感</b>です。母集団が正規分布から少しずれるだけで、第1種の過誤が名目水準から大きく外れます。<br><br>そのため、2標本t検定の前段階として等分散性をF検定で確認する手続きは、現在では推奨されません。最初からウェルチのt検定を使うのが標準的です。",
+trap:"自由度を n としないこと。また、どちらを分子に置いたかで F の値が逆数になります。",
+point:"F = s₁²/s₂²、自由度 (n₁−1, n₂−1)。正規性に敏感。"},
+
+/* ============ ノンパラメトリック法・分割表（6問） ============ */
+{id:49,cat:"nonpara",diff:1,scene:"ウィルコクソンの順位和検定",
+lead:"2つの独立な群（n₁ = 5、n₂ = 6）のデータを合併して順位をつけ、第1群の順位和 W を求めた。",
+q:"帰無仮説「2群の分布は同一」のもとでの E[W] として、最も適切なものを一つ選べ。",
+choices:["30","33","27.5","15"],ans:0,
+how:["全体の順位は 1 から N = n₁+n₂ = 11 まで",
+     "順位の総和は N(N+1)/2 = 11×12/2 = 66",
+     "帰無仮説のもとでは、どの順位も等確率で第1群に入る",
+     "E[W] = n₁ × (N+1)/2 = 5 × 6 = 30"],
+exp:"ウィルコクソンの順位和検定（マン・ホイットニーのU検定と等価）は、<b>データの値を順位に置き換える</b>ことで分布の仮定を外します。<br><br>分散は V[W] = n₁n₂(N+1)/12 = 5×6×12/12 = 30 です。<br><br>順位に置き換える利点は2つあります。<b>外れ値の影響を受けにくい</b>ことと、<b>正規性を仮定しなくてよい</b>ことです。<br><br>代償として、正規分布が実際に成り立つ場合には t検定より検出力がやや落ちます。ただしその差は小さく（漸近相対効率3/π ≒ 0.955）、正規性が疑わしい場面ではむしろ有利になります。<br><br>同順位（タイ）がある場合は平均順位を割り当て、分散に補正を加えます。",
+trap:"検定しているのは厳密には「中央値の差」ではなく「分布の位置のずれ」です。分布の形が大きく異なる場合、解釈には注意が必要です。",
+point:"順位和の期待値は n₁(N+1)/2、分散は n₁n₂(N+1)/12。"},
+
+{id:50,cat:"nonpara",diff:2,scene:"符号付き順位検定",
+lead:"対応のある12組のデータについて、差の中央値が0かどうかを検定したい。差の分布は左右対称と仮定できるが、正規分布とは考えにくい。",
+q:"用いるべき検定として、最も適切なものを一つ選べ。",
+choices:["ウィルコクソンの符号付き順位検定","ウィルコクソンの順位和検定","クラスカル・ウォリス検定","フリードマン検定"],ans:0,
+how:["対応のあるデータなので、まず差を取る",
+     "差の絶対値に順位をつけ、元の符号を付け直す",
+     "正の順位の和を検定統計量とする",
+     "これがウィルコクソンの符号付き順位検定"],
+exp:"ノンパラメトリック検定は<b>データの構造で使い分け</b>ます。<br><br>・<b>符号付き順位検定</b>：対応あり2群（対応のあるt検定に対応）<br>・<b>順位和検定（マン・ホイットニーU）</b>：独立2群（2標本t検定に対応）<br>・<b>クラスカル・ウォリス検定</b>：独立3群以上（一元配置分散分析に対応）<br>・<b>フリードマン検定</b>：対応あり3群以上（乱塊法の分散分析に対応）<br><br>符号付き順位検定は<b>差の分布の対称性</b>を仮定します。対称性が疑わしい場合は、符号だけを使う<b>符号検定</b>が使えますが、順位の情報を捨てるため検出力は落ちます。",
+trap:"対応の有無で選ぶ検定が変わります。対応のあるデータに順位和検定を使うと、個人差が誤差に混入し検出力を大きく損ないます。",
+point:"対応あり2群は符号付き順位、独立2群は順位和。構造で選ぶ。"},
+
+{id:51,cat:"nonpara",diff:2,scene:"順位相関係数",
+lead:"2つの変数について、順位に基づく相関を評価したい。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　スピアマンの順位相関係数は、順位に対してピアソンの相関係数を計算したものと一致する。<br>II　ケンドールの順位相関係数は、順序が一致する組と逆転する組の個数の差に基づく。<br>III　順位相関は、単調な関係であれば直線的でなくても1に近づきうる。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：スピアマンの定義そのもの。同順位がなければ簡便式 1 − 6Σd²/{n(n²−1)} と一致する。正しい",
+     "II：ケンドールのτ = (一致対の数 − 逆転対の数) / 全対数。正しい",
+     "III：順位相関は単調性を測る。指数関数のような曲線でも単調なら1になる。正しい"],
+exp:"ピアソンの相関係数が<b>直線関係</b>を測るのに対し、順位相関は<b>単調関係</b>を測ります。<br><br>たとえば y = e^x という完全に単調な関係では、スピアマンとケンドールはともに1になりますが、ピアソンは1未満です。<br><br>スピアマンとケンドールの使い分けは次のとおりです。<b>スピアマン</b>は計算が簡単で値が大きめに出ます。<b>ケンドール</b>は解釈が明快（無作為に選んだ2組の順序が一致する確率に直結）で、小標本や同順位が多い場合に安定します。<br><br>いずれも外れ値の影響を受けにくく、順序尺度のデータにも適用できます。",
+trap:"順位相関が高くても因果は言えません。また、単調でない関係（U字型など）では、順位相関も0に近くなります。",
+point:"ピアソンは直線、順位相関は単調性を測る。外れ値に強い。"},
+
+{id:52,cat:"nonpara",diff:2,scene:"分割表のオッズ比",
+lead:"2×2分割表について、次のデータを得た。",
+tbl:{cap:"曝露と発症（人）",head:["","発症あり","発症なし","計"],
+  rows:[["曝露あり","60","140","200"],["曝露なし","40","360","400"],["計","100","500","600"]]},
+q:"オッズ比とその対数の標準誤差の組合せとして、最も適切なものを一つ選べ。",
+choices:["オッズ比 3.86、log(OR)の標準誤差 √(1/60+1/140+1/40+1/360)","オッズ比 3.00、log(OR)の標準誤差 √(1/60+1/140+1/40+1/360)","オッズ比 3.86、log(OR)の標準誤差 √(1/200+1/400)","オッズ比 1.50、log(OR)の標準誤差 √(1/100+1/500)"],ans:0,
+how:["オッズ比 = (a×d)/(b×c) = (60×360)/(140×40)",
+     "= 21,600 / 5,600 ≒ 3.857",
+     "log(OR) の分散は、4つのセル度数の逆数の和",
+     "標準誤差 = √(1/60 + 1/140 + 1/40 + 1/360) ≒ 0.2271"],
+exp:"オッズ比の信頼区間は<b>対数を取ってから</b>構成します。オッズ比の分布は右に歪んでいますが、log(OR) は近似的に正規分布に従うためです。<br><br>手順は、log(OR) ± 1.96×SE で区間を作り、最後に指数変換して戻します。ここでは log(3.857) = 1.350、1.350 ± 1.96×0.2271 = [0.905, 1.795]、指数を取って [2.47, 6.02] です。1を含まないので有意です。<br><br>この分散公式（<b>ウルフの公式</b>）は、デルタ法から導かれます。<br><br>リスク比なら (60/200)/(40/400) = 0.30/0.10 = 3.00 です。オッズ比はリスク比より1から遠い値になる傾向があり、発症率が低いときに両者が近づきます。",
+trap:"オッズ比の区間を「OR ± 1.96×SE」の形で作らないこと。必ず対数スケールで構成してから戻します。",
+point:"log(OR)の分散はセル度数の逆数の和。区間は対数スケールで作る。"},
+
+{id:53,cat:"nonpara",diff:3,scene:"層別解析",
+lead:"複数の層に分かれた2×2分割表について、層を通じた共通のオッズ比を推定したい。",
+q:"用いる手法として、最も適切なものを一つ選べ。",
+choices:["マンテル・ヘンツェル法","クラスカル・ウォリス検定","主成分分析","コルモゴロフ・スミルノフ検定"],ans:0,
+how:["層ごとに2×2表があり、層内では交絡が調整されている",
+     "各層のオッズ比を、層のサイズで重みづけして合成する",
+     "これがマンテル・ヘンツェル推定量",
+     "層間でオッズ比が均質かどうかは、ブレスロー・デイ検定などで確認する"],
+exp:"マンテル・ヘンツェル法は<b>層別によって交絡を調整する</b>古典的な手法です。年齢層、性別、施設などで層別し、層内で比較してから統合します。<br><br>前提となるのは<b>層間でオッズ比が均質</b>であることです。層によってオッズ比が大きく異なる（＝交互作用がある）場合、1つの共通オッズ比にまとめること自体が不適切になります。<br><br>層の数が多く各層の度数が小さい場合でも、マンテル・ヘンツェル推定量は妥当に働きます（<b>スパースデータへの頑健性</b>）。<br><br>現代的には、<b>ロジスティック回帰</b>で層を共変量として投入する方法が主流です。連続変数の調整もでき、複数の交絡因子を同時に扱えるためです。",
+trap:"層ごとの表を合算してから1つの表として分析しないこと。シンプソンのパラドックスが生じます。",
+point:"マンテル・ヘンツェルは層別で交絡を調整。オッズ比の均質性が前提。"},
+
+{id:54,cat:"nonpara",diff:3,scene:"対数線形モデル",
+lead:"3元分割表の解析に、対数線形モデルを用いる。",
+q:"対数線形モデルの説明として、最も適切なものを一つ選べ。",
+choices:["セル度数の対数を、各変数の主効果と交互作用の和で表すモデル。ポアソン回帰の枠組みで推定できる","セル度数そのものを線形結合で表すモデル","目的変数と説明変数を明確に区別するモデル","連続変数のみを扱うモデル"],ans:0,
+how:["セル度数 nᵢⱼₖ がポアソン分布に従うと仮定する",
+     "log(期待度数) = μ + λᵢ^A + λⱼ^B + λₖ^C + λᵢⱼ^AB + …",
+     "リンク関数が対数なので、ポアソン回帰（GLM）として推定できる",
+     "交互作用項の有無が、変数間の独立性・条件付き独立性に対応する"],
+exp:"対数線形モデルの特徴は、<b>目的変数と説明変数を区別しない</b>点です。すべての変数を対等に扱い、変数間の関連構造そのものをモデル化します。<br><br>交互作用項と独立性の対応が要点です。<br><br>・AB の交互作用がない → A と B は（C を条件として）条件付き独立<br>・すべての交互作用がない → 3変数は完全独立<br>・3因子交互作用 ABC がない → オッズ比が第3の変数によらず一定（均質性）<br><br>モデル選択には尤度比検定やAICを用います。通常のカイ二乗独立性検定は、2元表における「交互作用なし」モデルの適合度検定に相当します。<br><br>いっぽう、明確な目的変数がある場合は<b>ロジスティック回帰</b>のほうが解釈しやすくなります。両者は数学的に密接な関係にあります。",
+trap:"対数を取るのは度数そのものではなく<b>期待度数</b>です。観測度数が0のセルがあっても、モデルは定義されます。",
+point:"対数線形モデルは log(期待度数) を主効果と交互作用で表す。ポアソン回帰の一種。"},
+
+/* ============ マルコフ連鎖・確率過程（5問） ============ */
+{id:55,cat:"katei",diff:1,scene:"推移確率行列",
+lead:"2状態のマルコフ連鎖の推移確率行列が次で与えられている。",
+tbl:{cap:"推移確率行列 P（行が現在、列が次）",head:["","状態1","状態2"],
+  rows:[["状態1","0.7","0.3"],["状態2","0.4","0.6"]]},
+q:"現在が状態1であるとき、2ステップ後に状態1にいる確率として、最も適切なものを一つ選べ。",
+choices:["0.49","0.61","0.70","0.55"],ans:1,
+how:["2ステップ推移確率は P² の (1,1) 成分",
+     "経路を数える。1→1→1 と 1→2→1 の2通り",
+     "1→1→1：0.7 × 0.7 = 0.49",
+     "1→2→1：0.3 × 0.4 = 0.12。合計 0.49 + 0.12 = 0.61"],
+exp:"<b>n ステップ推移確率行列は Pⁿ</b> です。行列の積が、経路の場合分けと足し算に対応しています。これがチャップマン・コルモゴロフ方程式の内容です。<br><br>マルコフ性とは「次の状態は、現在の状態にのみ依存し、それ以前の履歴には依存しない」という仮定です。この仮定があるからこそ、行列の掛け算だけで将来が計算できます。<br><br>行ごとの和が1になっていることを確認する習慣をつけてください。これは推移確率行列の必要条件で、計算前の検算になります。",
+trap:"経路を1つだけ数えて 0.49 としないこと。中間状態のすべての可能性を足し合わせます。",
+point:"nステップ推移確率は Pⁿ。中間状態をすべて足し上げる。"},
+
+{id:56,cat:"katei",diff:1,scene:"定常分布",
+lead:"前問と同じ推移確率行列（状態1から1へ0.7、1から2へ0.3、状態2から1へ0.4、2から2へ0.6）を持つマルコフ連鎖を考える。",
+q:"この連鎖の定常分布 π = (π₁, π₂) として、最も適切なものを一つ選べ。",
+choices:["(0.5, 0.5)","(4/7, 3/7)","(3/7, 4/7)","(0.7, 0.3)"],ans:1,
+how:["定常分布は πP = π を満たす。つまり π₁ = 0.7π₁ + 0.4π₂",
+     "整理すると 0.3π₁ = 0.4π₂、すなわち π₁ : π₂ = 4 : 3",
+     "π₁ + π₂ = 1 の制約を加える",
+     "π = (4/7, 3/7) ≒ (0.571, 0.429)"],
+exp:"定常分布は<b>「長期的にどの状態にどれだけの割合で滞在するか」</b>を表します。既約かつ非周期な有限マルコフ連鎖では、初期状態によらずこの分布に収束します。<br><br>解き方の定石は、まず<b>釣り合い式を1本だけ立てて比を求め</b>、次に和が1という制約で正規化することです。連立方程式をすべて立てると1本が冗長になるため、無駄が生じます。<br><br>2状態の場合、一般解は π₁ = q/(p+q)、π₂ = p/(p+q)（p は1→2、q は2→1の確率）となります。ここでは 0.4/0.7 と 0.3/0.7 で、確かに (4/7, 3/7) です。<br><br>直感的には「出ていきにくい状態ほど、長く留まる」という関係です。",
+trap:"πP = π であって Pπ = π ではありません。π を行ベクトルとして左から掛けます。",
+point:"定常分布は πP=π。比を求めてから和1で正規化する。"},
+
+{id:57,cat:"katei",diff:3,scene:"連鎖の分類",
+lead:"有限状態のマルコフ連鎖について、その長期的な挙動を考える。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　既約とは、任意の状態から任意の状態へ有限ステップで到達できることをいう。<br>II　非周期とは、状態に戻るステップ数の最大公約数が1であることをいう。<br>III　既約かつ非周期な有限マルコフ連鎖では、初期分布によらず定常分布に収束する。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：既約性の定義。連鎖が複数の閉じたグループに分かれていない状態",
+     "II：周期の定義。周期1なら非周期",
+     "III：エルゴード定理の内容。既約かつ非周期なら一意の定常分布へ収束",
+     "すべて正しい"],
+exp:"3つの条件の役割を整理します。<br><br><b>既約性</b>がないと、連鎖が複数の閉じた部分に分かれ、どこから始めたかで行き先が変わります。定常分布が一意に定まりません。<br><br><b>非周期性</b>がないと、たとえば周期2の連鎖では偶数ステップと奇数ステップで分布が振動し続け、収束しません（ただし時間平均は定常分布に一致します）。<br><br>両方が揃うと<b>エルゴード的</b>と呼ばれ、初期状態を忘れて一意の定常分布に収束します。<br><br>この定理は<b>MCMC の理論的根拠</b>そのものです。目標分布を定常分布に持つ既約・非周期な連鎖を設計すれば、十分長く走らせることで目標分布からのサンプルが得られる、という保証になります。",
+trap:"「収束する」ことと「速く収束する」ことは別問題です。MCMCでは収束の速さ（混合の良さ）が実用上の課題になります。",
+point:"既約＋非周期＝エルゴード的。MCMCの理論的根拠。"},
+
+{id:58,cat:"katei",diff:2,scene:"ポアソン過程",
+lead:"あるコールセンターへの入電が、強度 λ = 6（件/時間）のポアソン過程に従うとする。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　30分間の入電数は平均3のポアソン分布に従う。<br>II　連続する入電の時間間隔は、平均10分の指数分布に従う。<br>III　互いに重ならない時間区間における入電数は、互いに独立である。",
+choices:["Iのみ正しい","IとIIのみ正しい","IとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：区間長 t の入電数は Poisson(λt)。t = 0.5時間なら λt = 3。正しい",
+     "II：ポアソン過程の到着間隔は率 λ の指数分布。平均 1/6 時間 = 10分。正しい",
+     "III：独立増分性。ポアソン過程の定義に含まれる性質。正しい"],
+exp:"ポアソン過程は3つの性質で特徴づけられます。<b>独立増分性、定常増分性（増分の分布が区間の長さのみに依存）、微小区間での同時多発がない</b>ことです。<br><br>「回数」と「時間」の対応を押さえてください。<br><br>・回数（区間 t 内）→ Poisson(λt)<br>・次の1件までの時間 → 指数分布（平均 1/λ）<br>・k 件目までの時間 → ガンマ分布 Ga(k, 1/λ)<br><br>この対応関係は待ち行列理論の出発点になります。<br><br>強度が時間とともに変化する場合は<b>非斉次ポアソン過程</b>となり、区間内の期待件数は λ(t) の積分で与えられます。日中と深夜で入電率が異なるような実務では、こちらが現実的なモデルです。",
+trap:"λ は単位時間あたりの値です。区間の長さを掛けるのを忘れないでください。",
+point:"ポアソン過程は 回数→ポアソン、間隔→指数、k件目→ガンマ。"},
+
+{id:59,cat:"katei",diff:3,scene:"ランダムウォークとブラウン運動",
+lead:"独立同一分布に従う増分の和として定義される確率過程を考える。",
+q:"標準ブラウン運動 B(t) の性質として、<b>適切でない</b>ものを一つ選べ。",
+choices:["B(0) = 0 である","増分 B(t) − B(s) は N(0, t−s) に従う","互いに重ならない区間の増分は独立である","任意の点で微分可能である"],ans:3,
+how:["B(0)=0、独立増分、定常増分、増分が正規分布、標本路が連続 が定義",
+     "増分の分散は区間の長さに比例する",
+     "しかし標本路は至るところ微分不可能であることが知られている",
+     "したがって「任意の点で微分可能」は誤り"],
+exp:"ブラウン運動の標本路は<b>連続だが至るところ微分不可能</b>という、直感に反する性質を持ちます。どれだけ拡大しても滑らかにならず、常にギザギザしています。<br><br>これは、増分の標準偏差が √Δt に比例することの帰結です。Δt → 0 のとき ΔB/Δt ≒ √Δt/Δt = 1/√Δt → ∞ となり、微分が発散します。<br><br>この性質のために通常の微積分が使えず、<b>伊藤積分</b>という別の枠組みが必要になります。伊藤の補題における (dB)² = dt という規則も、ここから来ています。<br><br>ランダムウォークを時間・空間ともに適切にスケーリングして極限を取ると、ブラウン運動に収束します（<b>ドンスカーの定理</b>、関数中心極限定理）。ブラウン運動は中心極限定理の過程版と捉えられます。",
+trap:"連続性と微分可能性は別の性質です。連続であっても微分可能とは限りません。",
+point:"ブラウン運動は連続だが至るところ微分不可能。増分の分散は t に比例。"},
+
+/* ============ 回帰分析（前半1問） ============ */
+{id:60,cat:"kaiki",diff:2,scene:"最小二乗推定量",
+lead:"重回帰モデル y = Xβ + ε（X は n×p の計画行列、E[ε] = 0、V[ε] = σ²I）を考える。",
+q:"最小二乗推定量 β̂ とその共分散行列の組合せとして、最も適切なものを一つ選べ。",
+choices:["β̂ = (XᵀX)⁻¹Xᵀy、V[β̂] = σ²(XᵀX)⁻¹","β̂ = (XᵀX)⁻¹Xᵀy、V[β̂] = σ²XᵀX","β̂ = XᵀX(Xᵀy)⁻¹、V[β̂] = σ²(XᵀX)⁻¹","β̂ = Xᵀy、V[β̂] = σ²I"],ans:0,
+how:["残差平方和 (y−Xβ)ᵀ(y−Xβ) を β で微分して0とおく",
+     "正規方程式 XᵀXβ̂ = Xᵀy を得る",
+     "XᵀX が正則なら β̂ = (XᵀX)⁻¹Xᵀy",
+     "V[β̂] = (XᵀX)⁻¹Xᵀ V[y] X(XᵀX)⁻¹ = σ²(XᵀX)⁻¹"],
+exp:"この2つの式は重回帰のすべての土台です。<br><br><b>ガウス・マルコフの定理</b>により、誤差が期待値0・等分散・無相関であれば、β̂ は線形不偏推定量の中で分散最小（BLUE）になります。正規性は<b>不要</b>である点に注意してください。正規性が必要になるのは、t検定やF検定を厳密に行うときです。<br><br>V[β̂] = σ²(XᵀX)⁻¹ の対角成分が、各係数の分散です。説明変数間の相関が強いと XᵀX が特異に近づき、逆行列の成分が爆発します。これが<b>多重共線性</b>の数理的な正体です。<br><br>σ² は残差平方和を n−p で割って推定します。",
+trap:"分散共分散行列は σ²(XᵀX)⁻¹ です。逆行列であることを落とすと、多重共線性の説明ができなくなります。",
+point:"β̂=(XᵀX)⁻¹Xᵀy、V[β̂]=σ²(XᵀX)⁻¹。正規性なしでBLUE。"}
+];
+
+const PD = [
+/* ============ 回帰分析・GLM（続き9問） ============ */
+{id:61,cat:"kaiki",diff:2,scene:"ハット行列とレバレッジ",
+lead:"重回帰モデルにおいて、ハット行列を H = X(XᵀX)⁻¹Xᵀ と定義する。説明変数の個数は切片を含めて p、標本サイズは n とする。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　H は対称かつ冪等（H² = H）である。<br>II　H の対角成分 h<sub>ii</sub> はレバレッジと呼ばれ、その総和は p に等しい。<br>III　残差の分散は V[e<sub>i</sub>] = σ²(1 − h<sub>ii</sub>) である。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：Hᵀ = H は定義から明らか。H² = X(XᵀX)⁻¹XᵀX(XᵀX)⁻¹Xᵀ = H。正しい",
+     "II：tr(H) = tr(X(XᵀX)⁻¹Xᵀ) = tr((XᵀX)⁻¹XᵀX) = tr(I_p) = p。正しい",
+     "III：e = (I−H)y なので V[e] = σ²(I−H)。対角成分は σ²(1−h_ii)。正しい"],
+exp:"ハット行列は<b>「観測値 y に帽子をかぶせて予測値 ŷ にする」</b>行列で、ŷ = Hy と書けます。幾何学的には、y を X の列空間へ射影する<b>射影行列</b>です。冪等性は「2回射影しても1回と同じ」という当然の性質を表しています。<br><br>レバレッジ h<sub>ii</sub> は、その観測点が自分自身の予測値をどれだけ引っ張るかを表します。平均は p/n なので、<b>2p/n を超えたら要注意</b>というのが実務上の目安です。<br><br>記述IIIから、レバレッジの高い点ほど残差が小さくなることが分かります。当てはまりが良く見えても、それは影響力が強いだけかもしれません。だから残差をそのまま見るのではなく、√(1−h<sub>ii</sub>) で割った<b>標準化残差</b>を見ます。",
+trap:"レバレッジは説明変数の値だけで決まり、y には依存しません。外れ値（y が外れる）と影響点（x が外れる）は別概念です。",
+point:"H は射影行列。レバレッジの和は p、平均は p/n。"},
+
+{id:62,cat:"kaiki",diff:3,scene:"クックの距離",
+lead:"回帰診断において、各観測が推定結果に与える影響を評価したい。",
+q:"クックの距離が測っているものとして、最も適切なものを一つ選べ。",
+choices:["その観測を除いたときの、全観測に対する予測値の変化の大きさ","その観測の残差の大きさのみ","説明変数間の相関の強さ","誤差項の正規性からの乖離"],ans:0,
+how:["クックの距離 D_i = Σ_j (ŷ_j − ŷ_j(i))² / (p·s²)",
+     "ŷ_j(i) は観測 i を除いて推定した場合の予測値",
+     "つまり「その1点を抜いたら、全体の予測がどれだけ動くか」を測る",
+     "残差の大きさとレバレッジの両方を組み合わせた指標になっている"],
+exp:"クックの距離は <b>D<sub>i</sub> = (標準化残差)² × h<sub>ii</sub>/{p(1−h<sub>ii</sub>)}</b> と分解できます。つまり<b>残差の大きさとレバレッジの積</b>です。<br><br>影響が大きくなるのは、両方が揃ったときです。<br><br>・残差が大きくてもレバレッジが低ければ、単なる外れ値で影響は限定的<br>・レバレッジが高くても残差が小さければ、回帰線に沿っているので害は少ない<br>・<b>両方が大きい点が真の影響点</b><br><br>目安として D<sub>i</sub> > 1、あるいは 4/n を超えたら要検討とされます。<br><br>診断の実務では、残差プロット、レバレッジ、クックの距離を組み合わせて見ます。ソフトウェアの回帰診断プロットは通常この3つを含んでいます。",
+trap:"影響点を見つけても、機械的に削除しないこと。まず「なぜその値が生じたか」を調べます。入力ミスなら修正、実在の特殊事例なら別途分析します。",
+point:"クックの距離＝残差×レバレッジ。両方大きい点が真の影響点。"},
+
+{id:63,cat:"kaiki",diff:2,scene:"多重共線性の診断",
+lead:"重回帰分析において、説明変数 x<sub>j</sub> の分散拡大係数（VIF）は 1/(1 − R<sub>j</sub>²) で定義される。ここで R<sub>j</sub>² は x<sub>j</sub> を他の説明変数で回帰したときの決定係数である。",
+q:"ある説明変数の VIF が 10 であったとき、R<sub>j</sub>² の値と実務上の解釈の組合せとして、最も適切なものを一つ選べ。",
+choices:["R<sub>j</sub>² = 0.9。他の変数で9割説明され、係数の標準誤差が √10 ≒ 3.2倍に膨らんでいる","R<sub>j</sub>² = 0.1。問題はない","R<sub>j</sub>² = 0.9。係数の標準誤差が10倍に膨らんでいる","R<sub>j</sub>² = 0.99。深刻な共線性がある"],ans:0,
+how:["VIF = 1/(1 − R_j²) = 10 を解く",
+     "1 − R_j² = 0.1 より R_j² = 0.9",
+     "VIF は分散の膨張倍率なので、標準誤差は √VIF 倍になる",
+     "√10 ≒ 3.16倍"],
+exp:"VIFは「他の説明変数がなければどれだけ分散が小さかったか」の比です。<b>分散が VIF 倍、標準誤差が √VIF 倍</b>に膨らみます。ここの2乗の関係を取り違えないでください。<br><br>実務上の目安は VIF > 10（R<sub>j</sub>² > 0.9）で要注意、VIF > 5 でも留意、とされます。<br><br>対処法は4つあります。<b>相関の強い変数の一方を除く、合成変数を作る（主成分回帰）、リッジ回帰で縮小する、データを追加する</b>。<br><br>重要な点として、<b>予測だけが目的なら多重共線性は問題になりません</b>。予測値そのものは安定しているからです。困るのは個々の係数を解釈したいときです。<br><br>典型的な症状は「モデル全体のF検定は有意なのに、個々の係数のt検定はどれも有意でない」という組合せです。",
+trap:"分散と標準誤差の膨張倍率を混同しないこと。VIF は分散の倍率です。",
+point:"VIF = 1/(1−R_j²)。分散がVIF倍、標準誤差は√VIF倍。"},
+
+{id:64,cat:"kaiki",diff:1,scene:"ロジスティック回帰の解釈",
+lead:"ロジスティック回帰モデル logit(p) = β₀ + β₁x₁ + β₂x₂ を推定したところ、β̂₁ = 0.693 であった。",
+q:"β̂₁ の解釈として、最も適切なものを一つ選べ。ただし e<sup>0.693</sup> ≒ 2.0 とする。",
+choices:["x₁ が1単位増えると、他を一定として、発生確率が2倍になる","x₁ が1単位増えると、他を一定として、発生のオッズが約2倍になる","x₁ が1単位増えると、他を一定として、発生確率が0.693増える","x₁ が1単位増えると、他を一定として、発生確率が69.3%になる"],ans:1,
+how:["ロジスティック回帰は log(オッズ) を線形結合で表す",
+     "x₁ が1単位増えると log(オッズ) が β₁ = 0.693 増える",
+     "指数を取ると、オッズは e^0.693 ≒ 2.0 倍になる",
+     "係数の指数がオッズ比を与える"],
+exp:"ロジスティック回帰の係数は、必ず<b>「オッズ比」</b>として解釈します。確率の倍率ではありません。<br><br>確率の変化量は元の水準に依存します。p = 0.1 ならオッズ 0.111 が 0.222 になり、確率は 0.182（1.82倍）。p = 0.5 ならオッズ 1 が 2 になり、確率は 0.667（1.33倍）。同じ係数でも確率の増え方が違います。<br><br>これがロジット変換を使う理由でもあります。確率は [0,1] に制約されますが、ロジットは実数全体を動くため、線形モデルに載せられます。<br><br>発生率が低い場合（おおむね10%未満）はオッズ比とリスク比が近づくため、「約2倍になりやすい」という近似的な言い方が許容されることもあります。",
+trap:"係数をそのまま確率の変化と読まないこと。指数を取ってオッズ比に直すのが必須の手順です。",
+point:"ロジスティック回帰の exp(係数) はオッズ比。確率の倍率ではない。"},
+
+{id:65,cat:"kaiki",diff:2,scene:"ポアソン回帰とオフセット",
+lead:"地域ごとの事故件数を、人口規模が異なる状況でモデル化したい。事故件数 Y<sub>i</sub>、人口 N<sub>i</sub> とする。",
+q:"適切なモデルとして、最も適切なものを一つ選べ。",
+choices:["log(E[Y]) = β₀ + βx + log(N)。log(N) をオフセット項として係数1で固定する","log(E[Y]) = β₀ + βx + γlog(N)。γ も推定する","E[Y/N] = β₀ + βx の線形回帰","log(E[Y]) = β₀ + βx。人口は無視する"],ans:0,
+how:["モデル化したいのは発生率 Y/N であって件数そのものではない",
+     "log(E[Y]/N) = β₀ + βx と書ける",
+     "変形すると log(E[Y]) = β₀ + βx + log(N)",
+     "log(N) の係数は1に固定される。これがオフセット項"],
+exp:"<b>オフセット</b>は「係数を推定せず1に固定する説明変数」です。分母（曝露量、人口、観測時間、走行距離など）を調整するために使います。<br><br>オフセットを入れないと、単に人口の多い地域で事故が多いという当たり前の関係を拾ってしまい、地域特性の比較ができません。<br><br>係数を推定する（γ を自由にする）と、それは「人口の弾力性」を推定する別のモデルになります。発生率のモデルにはなりません。<br><br>実務上の注意として、カウントデータでは<b>過分散</b>（分散 > 平均）がよく起こります。ポアソン回帰は平均＝分散を仮定するため、過分散があると標準誤差を過小評価します。対処は準ポアソンモデルか<b>負の二項回帰</b>です。",
+trap:"オフセットは対数スケールで入れます。log を取らずに N をそのまま入れると、まったく別のモデルになります。",
+point:"率のモデル化にはオフセット log(曝露量) を係数1で固定して投入。"},
+
+{id:66,cat:"kaiki",diff:2,scene:"一般化線形モデルの構成",
+lead:"一般化線形モデル（GLM）は、3つの要素から構成される。",
+q:"GLMの構成要素として、<b>適切でない</b>ものを一つ選べ。",
+choices:["確率分布（指数型分布族に属する誤差分布）","線形予測子（説明変数の線形結合）","リンク関数（平均と線形予測子を結ぶ関数）","説明変数の正規性の仮定"],ans:3,
+how:["GLMの3要素は 確率成分・系統成分・リンク関数",
+     "確率成分：Yの分布が指数型分布族に属する",
+     "系統成分：η = Xβ という線形予測子",
+     "リンク関数：g(μ) = η。説明変数自体の分布は一切仮定しない"],
+exp:"GLMは通常の線形回帰を2方向に拡張したものです。<b>誤差分布を正規以外にも広げ</b>、<b>平均と線形予測子の関係にリンク関数を挟む</b>。<br><br>代表的な組合せを押さえてください。<br><br>・正規分布＋恒等リンク → 通常の線形回帰<br>・二項分布＋ロジットリンク → ロジスティック回帰<br>・ポアソン分布＋対数リンク → ポアソン回帰<br>・ガンマ分布＋逆数リンク → ガンマ回帰<br><br>各分布には<b>正準リンク</b>があり、これを使うと十分統計量が簡潔になり、数値計算も安定します。<br><br>推定は反復重み付き最小二乗法（IRLS）で行い、モデル比較には<b>逸脱度（デビアンス）</b>を使います。逸脱度は飽和モデルとの対数尤度の差の2倍で、尤度比検定の枠組みに乗ります。<br><br>なお<b>説明変数の分布は問いません</b>。仮定するのは応答変数の分布です。",
+trap:"「回帰では説明変数も正規分布でなければならない」は誤解です。通常の線形回帰でも、正規性を仮定するのは誤差項だけです。",
+point:"GLMは 確率分布＋線形予測子＋リンク関数。説明変数に分布の仮定はない。"},
+
+{id:67,cat:"kaiki",diff:2,scene:"逸脱度による検定",
+lead:"ロジスティック回帰で、説明変数3個のモデル（残差逸脱度 142.6）と、そこから2個を除いたモデル（残差逸脱度 155.8）を比較する。",
+q:"2つのモデルの比較における検定統計量と、その帰無分布の組合せとして、最も適切なものを一つ選べ。",
+choices:["13.2、χ²(2)","13.2、χ²(3)","6.6、χ²(2)","298.4、χ²(2)"],ans:0,
+how:["逸脱度の差が尤度比検定統計量になる",
+     "155.8 − 142.6 = 13.2",
+     "自由度は制約の個数、すなわち除いた変数の数",
+     "2変数を除いたので χ²(2)。上側5%点5.99を超えるので、除いたのは不適切"],
+exp:"<b>逸脱度の差がそのまま尤度比検定統計量</b>になります。逸脱度が D = −2(ℓ<sub>model</sub> − ℓ<sub>saturated</sub>) と定義されているため、差を取ると飽和モデルの項が消え、2(ℓ₁ − ℓ₀) だけが残るからです。<br><br>したがって、2級で扱う分散分析表のF検定に相当する役割を、GLMでは逸脱度の差が担います。<br><br>注意点として、<b>残差逸脱度そのものを適合度検定に使うのは危険</b>です。二値データのロジスティック回帰では、残差逸脱度は χ² 分布に従いません。適合度の評価にはホスマー・レメショウ検定などを用います。<br><br>ネストしていないモデルの比較には、逸脱度の差ではなくAICを使います。",
+trap:"自由度をモデルの変数の数としないこと。制約の個数（＝差分の変数の数）です。",
+point:"逸脱度の差＝尤度比統計量。自由度は除いた変数の数。"},
+
+{id:68,cat:"kaiki",diff:3,scene:"正則化回帰",
+lead:"説明変数が多く多重共線性が疑われる状況で、リッジ回帰とLasso回帰を検討する。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　リッジ回帰は係数の2乗和に、Lassoは係数の絶対値の和に罰則をかける。<br>II　Lassoは係数をちょうど0にすることがあり、変数選択の機能を持つ。<br>III　どちらも推定量にバイアスを導入するが、分散を減らして予測精度の改善を狙う。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：リッジは L2 罰則 λΣβ²、Lasso は L1 罰則 λΣ|β|。正しい",
+     "II：L1 罰則の制約領域が角を持つため、解が軸上（係数0）に乗りやすい。正しい",
+     "III：どちらもバイアスと分散のトレードオフを利用する。正しい"],
+exp:"L1とL2の違いは<b>制約領域の形</b>で理解できます。L2は円（球）なので接点が軸上に来にくく、L1は菱形で角が軸上にあるため、解が角に当たって係数がちょうど0になります。<br><br>使い分けの指針は次のとおりです。<br><br>・<b>リッジ</b>：相関の強い変数群を均等に縮小する。すべての変数を残したいとき<br>・<b>Lasso</b>：変数選択を同時に行いたいとき。ただし相関の強い変数群からは1つしか選ばない傾向がある<br>・<b>Elastic Net</b>：両者の折衷。相関の強い変数群をまとめて残せる<br><br>罰則の強さ λ は<b>交差検証</b>で決めます。<br><br>注意点として、罰則はスケールに依存するため、説明変数は事前に<b>標準化</b>する必要があります。また切片には通常罰則をかけません。",
+trap:"Lassoは相関の強い変数群から恣意的に1つを選ぶため、「選ばれなかった変数は無関係」とは解釈できません。",
+point:"リッジはL2で縮小、LassoはL1で選択。事前の標準化が必須。"},
+
+{id:69,cat:"kaiki",diff:2,scene:"モデル選択規準",
+lead:"複数の候補モデルから1つを選ぶ際、AICとBICが用いられる。対数尤度の最大値を ℓ、パラメータ数を k、標本サイズを n とする。",
+q:"AICとBICの定義と性質の組合せとして、最も適切なものを一つ選べ。",
+choices:["AIC = −2ℓ + 2k、BIC = −2ℓ + k log n。BICのほうが罰則が重く、より単純なモデルを選びやすい","AIC = −2ℓ + 2k、BIC = −2ℓ + 2k log n。AICのほうが罰則が重い","AIC = 2ℓ − 2k、BIC = 2ℓ − k log n。値が大きいモデルを選ぶ","AICとBICは常に同じモデルを選ぶ"],ans:0,
+how:["AIC = −2ℓ + 2k。罰則はパラメータ1個あたり2",
+     "BIC = −2ℓ + k log n。罰則は log n",
+     "n > e² ≒ 7.39 なら log n > 2 となり、BICの罰則のほうが重い",
+     "いずれも値が小さいモデルを選ぶ"],
+exp:"両者は<b>目的が異なります</b>。<br><br><b>AIC</b>は予測誤差（カルバック・ライブラー情報量）の最小化を目指します。真のモデルが候補に含まれない前提で、最も予測が良いモデルを選びます。標本サイズを大きくしても、真のモデルを選ぶ確率は1に収束しません（一致性がない）。<br><br><b>BIC</b>はベイズ的な事後確率の近似から導かれ、真のモデルが候補に含まれる前提で<b>一致性</b>を持ちます。n → ∞ で真のモデルを選ぶ確率が1に収束します。<br><br>実務では「予測が目的ならAIC、真の構造の特定が目的ならBIC」という使い分けが一般的です。<br><br>標本サイズが小さいとき（n/k < 40程度）は、AICの有限標本補正版であるAICcが推奨されます。",
+trap:"AICとBICの値そのものに意味はありません。同じデータ・同じ応答変数のモデル間での相対比較にのみ使えます。",
+point:"AIC罰則は2k、BICは k log n。BICのほうが厳しく一致性を持つ。"},
+
+/* ============ 分散分析・実験計画法・標本調査（7問） ============ */
+{id:70,cat:"bunsan",diff:1,scene:"一元配置分散分析",
+lead:"4つの水準について、各水準6反復（計24観測）の一元配置実験を行い、次の分散分析表を得た。",
+tbl:{cap:"分散分析表",head:["要因","平方和","自由度","平均平方","F値"],
+  rows:[["水準間","270.0","（ア）","（イ）","（ウ）"],["誤差","400.0","20","20.0","—"],["全体","670.0","23","—","—"]]},
+q:"（ア）（イ）（ウ）にあてはまる値の組合せとして、最も適切なものを一つ選べ。",
+choices:["（ア）3　（イ）90.0　（ウ）4.50","（ア）4　（イ）67.5　（ウ）3.38","（ア）3　（イ）270.0　（ウ）13.5","（ア）3　（イ）90.0　（ウ）0.22"],ans:0,
+how:["水準数 a = 4 なので、水準間の自由度は a − 1 = 3",
+     "平均平方 = 平方和 ÷ 自由度 = 270.0 ÷ 3 = 90.0",
+     "F = 水準間の平均平方 ÷ 誤差の平均平方 = 90.0 ÷ 20.0 = 4.50",
+     "自由度の検算：3 + 20 = 23（全体）で整合"],
+exp:"分散分析表の読み方は<b>自由度から埋める</b>のが定石です。<br><br>・水準間：a − 1<br>・誤差：a(r − 1) = N − a<br>・全体：N − 1<br><br>ここでは 3 + 20 = 23 と整合します。<br><br>F 検定の帰無仮説は「すべての水準の母平均が等しい」です。自由度 (3, 20) のF分布の上側5%点は3.10なので、F = 4.50 は有意です。<br><br>寄与率（η²）は 270/670 ≒ 0.403 で、全変動の約40%が水準の違いで説明されます。<br><br>F が有意でも「どの水準どうしが違うか」は分かりません。それを知るには<b>多重比較</b>（テューキー法など）が必要です。",
+trap:"F値は平均平方の比です。平方和のまま割って 270/400 = 0.675 としないでください。",
+point:"分散分析表は自由度から埋める。F は平均平方の比。"},
+
+{id:71,cat:"bunsan",diff:2,scene:"二元配置と交互作用",
+lead:"因子Aが3水準、因子Bが4水準、各セル2反復の二元配置実験を行った（計24観測）。",
+q:"交互作用 A×B の自由度と、誤差の自由度の組合せとして、最も適切なものを一つ選べ。",
+choices:["交互作用 6、誤差 12","交互作用 12、誤差 11","交互作用 6、誤差 17","交互作用 7、誤差 12"],ans:0,
+how:["主効果Aの自由度は 3−1 = 2、Bは 4−1 = 3",
+     "交互作用の自由度は (3−1)(4−1) = 6",
+     "全体の自由度は 24−1 = 23",
+     "誤差の自由度は 23 − 2 − 3 − 6 = 12（= ab(r−1) = 12×1）"],
+exp:"交互作用の自由度は<b>主効果の自由度の積</b>です。<br><br>反復がないと誤差の自由度が0になり、交互作用の検定ができません。<b>交互作用を検定したければ、反復が必須</b>です。反復が取れない場合は、交互作用がないと仮定してその平方和を誤差に繰り込みます。<br><br>解釈の順序も重要です。<b>交互作用が有意なら、主効果の解釈は慎重に</b>行います。「Aの効果はBの水準によって変わる」のに、Aの平均的効果だけを語るのは誤解を招くためです。<br><br>交互作用の有無は、水準ごとの平均をプロットした<b>交互作用プロット</b>で視覚的に確認できます。線が平行なら交互作用なし、交差していれば強い交互作用があると判断します。",
+trap:"交互作用の自由度を足し算 (2+3=5) としないこと。積です。",
+point:"交互作用の自由度は主効果の積。検定には反復が必要。"},
+
+{id:72,cat:"bunsan",diff:3,scene:"乱塊法",
+lead:"圃場に肥沃度の勾配がある畑で、4種類の処理を比較する実験を計画する。",
+q:"乱塊法（乱塊デザイン）の説明として、最も適切なものを一つ選べ。",
+choices:["肥沃度の似た区画をブロックとしてまとめ、各ブロック内で4処理を無作為に配置する","全区画に対して4処理を完全に無作為に配置する","肥沃度の高い区画に効果の高そうな処理を配置する","ブロックごとに1つの処理だけを配置する"],ans:0,
+how:["肥沃度の勾配は既知の変動要因である",
+     "似た条件の区画をまとめてブロックを作る",
+     "各ブロック内に、すべての処理を1回ずつ無作為に配置する",
+     "ブロック間の変動が誤差から分離され、処理の比較が精密になる"],
+exp:"乱塊法はフィッシャーの3原則の<b>局所管理</b>を具体化した設計です。<br><br>完全無作為化と比べた利点は、<b>ブロック間変動を誤差から取り除ける</b>ことです。誤差分散が小さくなるので、同じ標本サイズでも検出力が上がります。<br><br>代償は自由度です。ブロックの自由度 (b−1) だけ誤差の自由度が減ります。ブロック間に実際には差がないのにブロック化すると、かえって効率が落ちることがあります。<br><br>ブロックの数が多く、1ブロックに全処理を入れられない場合は<b>不完備ブロック計画</b>（釣合型不完備ブロック計画など）を用います。<br><br>なお、ブロック因子は通常<b>変量効果</b>として扱い、処理因子（母数効果）と区別します。",
+trap:"「効果の高そうな処理を良い区画に」は無作為化の破壊であり、実験計画として成立しません。",
+point:"乱塊法はブロック内で無作為配置。ブロック間変動を誤差から分離。"},
+
+{id:73,cat:"bunsan",diff:3,scene:"直交表",
+lead:"L₈(2⁷) 型の直交表を用いて実験を計画する。",
+q:"この直交表の意味と、その利点の組合せとして、最も適切なものを一つ選べ。",
+choices:["8回の実験で、2水準の因子を最大7個割り付けられる。全組合せ128回を8回に削減できる","8回の実験で、7水準の因子を2個割り付けられる","2回の実験で7因子を扱える","128回の実験がすべて必要になる"],ans:0,
+how:["L₈ の8は実験回数（行数）",
+     "上付きの7は列数、すなわち割り付けられる因子の最大数",
+     "括弧内の2は各因子の水準数",
+     "全組合せなら 2⁷ = 128回だが、直交表なら8回で主効果が推定できる"],
+exp:"直交表は<b>実験回数を劇的に減らす</b>ための道具です。任意の2列を取り出したとき、水準の組合せが均等に現れる（直交する）ように配置されているため、各因子の主効果を独立に推定できます。<br><br>代償は<b>交絡</b>です。すべての交互作用を推定することはできず、割り付け方によっては交互作用が主効果と交絡します。<br><br>そのため、事前に<b>線点図</b>を使って、推定したい交互作用を空いた列に割り当てる設計が必要になります。<br><br>3水準系には L₉(3⁴)、L₂₇(3¹³) などがあり、混合水準系の直交表も存在します。<br><br>品質工学（タグチメソッド）では、この考え方が製品開発の効率化に応用されています。",
+trap:"「8回で128回分の情報が得られる」わけではありません。得られるのは主効果と一部の交互作用に限られます。",
+point:"L₈(2⁷) は8回の実験で2水準因子を最大7個。交互作用は交絡しうる。"},
+
+{id:74,cat:"bunsan",diff:2,scene:"多重比較",
+lead:"一元配置分散分析でF検定が有意となったため、5水準すべての対について平均の差を検定したい。",
+q:"用いる手法として、最も適切なものを一つ選べ。",
+choices:["テューキーのHSD法。全対比較でFWERを制御する","対応のないt検定を10回繰り返す","F検定の結果のみで、どの対に差があるか判断する","分散分析をもう一度繰り返す"],ans:0,
+how:["5水準の全対比較は ₅C₂ = 10 通り",
+     "t検定を10回繰り返すと FWER が 1−0.95¹⁰ ≒ 40% に膨らむ",
+     "テューキーのHSD法はステューデント化した範囲の分布を用いる",
+     "全対比較を行いながら FWER を α に制御できる"],
+exp:"多重比較の手法は<b>比較の構造</b>で選びます。<br><br>・<b>テューキーのHSD</b>：全対比較。最も一般的<br>・<b>ダネット法</b>：対照群との比較のみ。比較数が少ないぶん検出力が高い<br>・<b>シェッフェ法</b>：任意の線形対比。最も汎用的だが最も保守的<br>・<b>ボンフェローニ</b>：単純だが保守的。比較数が少なければ実用的<br><br>手法選択の原則は<b>「必要な比較だけを行う」</b>ことです。対照群との比較しか興味がないのに全対比較をすると、検出力を無駄に失います。<br><br>なお、F検定が有意でなくても多重比較を行ってよいか、という論点があります。テューキー法は単独でFWERを制御するため、F検定を前提としない運用も可能です。",
+trap:"「F検定が有意だったから、どこかに差がある」までは言えますが、どの対かは特定できません。",
+point:"全対比較はテューキー、対照群比較はダネット。構造で選ぶ。"},
+
+{id:75,cat:"bunsan",diff:3,scene:"層化抽出の効率",
+lead:"母集団を L 個の層に分け、各層から標本を抽出する。層 h の大きさを N<sub>h</sub>、層内分散を S<sub>h</sub>²、抽出数を n<sub>h</sub> とする。",
+q:"総標本サイズ n を固定したとき、推定量の分散を最小にする配分として、最も適切なものを一つ選べ。",
+choices:["比例配分。n<sub>h</sub> ∝ N<sub>h</sub>","ネイマン配分。n<sub>h</sub> ∝ N<sub>h</sub>S<sub>h</sub>","均等配分。n<sub>h</sub> = n/L","n<sub>h</sub> ∝ N<sub>h</sub>²"],ans:1,
+how:["層別推定量の分散は Σ (N_h/N)² S_h²/n_h の形になる",
+     "総標本サイズ n の制約のもとでこれを最小化する",
+     "ラグランジュ未定乗数法で解くと n_h ∝ N_h S_h",
+     "これがネイマン配分"],
+exp:"ネイマン配分の直感は<b>「大きい層と、ばらつきの大きい層に多く配分する」</b>です。<br><br>比例配分（n<sub>h</sub> ∝ N<sub>h</sub>）は層内分散を無視するので、ネイマン配分より効率が落ちます。ただし層内分散が事前に分からないことも多く、実務では比例配分が広く使われます。<br><br>コストが層によって異なる場合は、コスト C<sub>h</sub> を考慮した<b>最適配分</b> n<sub>h</sub> ∝ N<sub>h</sub>S<sub>h</sub>/√C<sub>h</sub> を用います。<br><br>層化の効果は、<b>層内が均質で層間の差が大きいほど</b>大きくなります。逆に層別変数が調査項目と無関係なら、層化の利益はほとんどありません。<br><br>層化抽出は、単純無作為抽出より分散が大きくなることが（比例配分なら）原則ありません。この点が実務での安心材料になっています。",
+trap:"ネイマン配分には層内標準偏差の事前情報が必要です。予備調査や過去のデータがなければ使えません。",
+point:"ネイマン配分は n_h ∝ N_h S_h。大きくばらつく層に厚く配分。"},
+
+{id:76,cat:"bunsan",diff:3,scene:"比推定と回帰推定",
+lead:"標本調査において、補助変数 x（既知の母集団総計を持つ）を用いて、目的変数 y の母平均を推定したい。",
+q:"比推定量が単純標本平均より効率的になる条件として、最も適切なものを一つ選べ。",
+choices:["x と y の相関が高く、回帰直線がほぼ原点を通るとき","x と y が無相関のとき","x の分散が y の分散より大きいとき","標本サイズが小さいとき"],ans:0,
+how:["比推定量は ȳ_R = (ȳ/x̄) × X̄ の形",
+     "y が x にほぼ比例していれば、x の既知情報で y の推定精度が上がる",
+     "相関が高いほど補正の効果が大きい",
+     "回帰直線が原点を通らない場合は、回帰推定量のほうが適切"],
+exp:"補助変数の使い方には2通りあります。<br><br><b>比推定</b>：y ≒ βx（原点を通る比例関係）を想定。前年の値、面積、世帯数などが補助変数の例<br><b>回帰推定</b>：y ≒ α + βx（切片あり）を想定。より一般的で、比推定を特別な場合として含む<br><br>効率の目安として、比推定が単純平均より優れるのは、おおむね相関係数が<b>変動係数の比の半分</b>を超えるときです。相関が低いと、かえって精度が落ちることがあります。<br><br>いずれも<b>x の母集団総計が既知</b>であることが前提です。国勢調査の人口や、事業所統計の従業員数など、公的統計から得られる値が使われます。<br><br>なお、比推定量は一般に<b>不偏ではありません</b>（比の期待値は期待値の比ではないため）。ただしバイアスは n が大きければ無視できる程度です。",
+trap:"補助変数の母集団情報がなければ、比推定も回帰推定も使えません。ここが前提条件です。",
+point:"比推定は原点を通る比例関係、回帰推定は切片あり。相関の高さが鍵。"},
+
+/* ============ 多変量解析（前半4問） ============ */
+{id:77,cat:"tahen",diff:1,scene:"主成分分析の寄与率",
+lead:"5変数のデータに対して主成分分析を行い、相関行列から次の固有値を得た。",
+tbl:{cap:"固有値",head:["主成分","第1","第2","第3","第4","第5"],
+  rows:[["固有値","2.60","1.15","0.65","0.40","0.20"]]},
+fig:{t:"bar",y:"固有値",n:["第1","第2","第3","第4","第5"],v:[2.60,1.15,0.65,0.40,0.20],yt:[0,1,2,3],fmt:v=>v.toFixed(1)},
+q:"第2主成分までの累積寄与率として、最も適切なものを一つ選べ。",
+choices:["52.0%","75.0%","23.0%","62.5%"],ans:1,
+how:["相関行列から出発しているので、固有値の総和は変数の個数5に等しい",
+     "検算：2.60+1.15+0.65+0.40+0.20 = 5.00",
+     "第1主成分の寄与率は 2.60/5 = 52.0%、第2は 1.15/5 = 23.0%",
+     "累積寄与率は 52.0 + 23.0 = 75.0%"],
+exp:"<b>寄与率 = 固有値 ÷ 固有値の総和</b>です。相関行列を用いる場合、総和は変数の個数と一致します。これは検算に使えます。<br><br>採用する主成分数の判断には、いくつかの基準があります。<br><br>・<b>カイザー基準</b>：固有値1以上（相関行列の場合）。ここでは第2主成分まで<br>・<b>累積寄与率</b>：70〜80%を超えるまで<br>・<b>スクリープロット</b>：固有値の減衰が緩やかになる直前まで<br><br>いずれも経験則であり、絶対的な基準ではありません。解釈可能性も併せて判断します。<br><br>共分散行列から出発するか相関行列から出発するかで結果が変わります。<b>変数の単位が異なる場合は相関行列</b>（＝標準化してから）を使うのが原則です。単位の大きい変数が第1主成分を支配してしまうためです。",
+trap:"共分散行列を使った場合、固有値の総和は変数の個数になりません。全分散の合計になります。",
+point:"寄与率＝固有値/総和。相関行列なら総和は変数の個数。"},
+
+{id:78,cat:"tahen",diff:2,scene:"主成分の解釈",
+lead:"主成分分析の結果について考える。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　主成分どうしは互いに無相関である。<br>II　第1主成分は、データの分散を最大にする方向である。<br>III　主成分負荷量は、元の変数と主成分との相関係数として解釈できる。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：主成分は対称行列の固有ベクトルなので直交し、主成分得点は無相関。正しい",
+     "II：第1主成分は分散最大化問題の解として定義される。正しい",
+     "III：相関行列から出発した場合、負荷量は元の変数との相関になる。正しい"],
+exp:"主成分分析は<b>「情報（分散）をできるだけ保ったまま次元を下げる」</b>手法です。<br><br>第1主成分は分散最大の方向、第2主成分は第1に直交する中で分散最大の方向、と順に定まります。<br><br>解釈の実務では、負荷量の絶対値が大きい変数を見て主成分に意味づけをします。ただし主成分は<b>数学的に決まる合成変数</b>であり、必ず解釈可能とは限りません。無理に意味を与えるのは危険です。<br><br>因子分析との違いも押さえてください。<b>主成分分析は変数の合成（観測変数 → 主成分）、因子分析は潜在構造の推定（因子 → 観測変数）</b>で、矢印の向きが逆です。目的も、前者は次元圧縮、後者は構造の解明にあります。<br><br>主成分分析には回転の概念がなく（回転すると分散最大の性質が崩れる）、因子分析では解釈しやすさのために回転を行います。",
+trap:"主成分に「因子」としての実体的な意味があると考えないこと。あくまで分散最大の方向です。",
+point:"主成分は互いに無相関で分散最大。因子分析とは矢印の向きが逆。"},
+
+{id:79,cat:"tahen",diff:2,scene:"マハラノビス距離",
+lead:"2群の判別において、群の共分散行列を Σ、平均ベクトルを μ とする。観測 x に対するマハラノビス距離は D² = (x−μ)ᵀΣ⁻¹(x−μ) で定義される。",
+q:"ユークリッド距離と比較したマハラノビス距離の利点として、最も適切なものを一つ選べ。",
+choices:["変数のスケールの違いと変数間の相関を同時に考慮できる","計算が簡単である","必ず正の整数値をとる","変数が独立でなければ定義できない"],ans:0,
+how:["Σ⁻¹ を挟むことで、分散の大きい方向の距離は割り引かれる",
+     "相関がある方向についても、共分散を通じて補正が入る",
+     "Σ = I（単位行列）のときユークリッド距離と一致する",
+     "つまりマハラノビス距離はユークリッド距離の一般化"],
+exp:"マハラノビス距離は<b>「データの散らばりの形を考慮した距離」</b>です。<br><br>散布図で楕円状に広がったデータを考えると分かりやすくなります。ユークリッド距離では中心から等距離の点は円上に並びますが、マハラノビス距離では<b>データの広がりに沿った楕円上</b>に並びます。<br><br>用途は広く、判別分析（各群の中心への距離で分類）、外れ値検出（多変量での異常値判定）、クラスター分析の距離定義などに使われます。<br><br>2群の共分散行列が等しいと仮定すると、マハラノビス距離の差が線形になり、<b>線形判別関数</b>が導かれます。共分散行列が群ごとに異なると仮定すれば<b>2次判別関数</b>になります。<br><br>注意点として、Σ の推定には十分な標本サイズが必要です。変数の数に対して標本が少ないと Σ が特異になり、逆行列が計算できません。",
+trap:"標準化しただけでは相関は考慮されません。マハラノビス距離は相関まで込みで補正します。",
+point:"マハラノビス距離はスケールと相関を補正した距離。Σ=I ならユークリッド。"},
+
+{id:80,cat:"tahen",diff:2,scene:"線形判別分析",
+lead:"2群の判別問題において、フィッシャーの線形判別分析を用いる。",
+q:"フィッシャーの判別関数が最大化する量として、最も適切なものを一つ選べ。",
+choices:["群間変動と群内変動の比","群内変動のみ","全変動","誤判別率そのもの"],ans:0,
+how:["判別得点 z = wᵀx を考える",
+     "z について、群間平方和と群内平方和を計算する",
+     "この比（群間/群内）を最大にする w を求める",
+     "解は w ∝ Σ_W⁻¹(μ₁ − μ₂) となる"],
+exp:"フィッシャーの判別分析は<b>「群がよく分離して見える方向を探す」</b>手法です。群間の差を大きく、群内のばらつきを小さくする方向を選びます。<br><br>この基準は<b>分散分析のF比と同じ構造</b>です。判別分析と分散分析は、変数と群の役割を入れ替えた関係にあります。<br><br>判別関数の解 Σ<sub>W</sub>⁻¹(μ₁ − μ₂) は、マハラノビス距離に基づく判別と一致します。また、多変量正規で共分散行列が等しいという仮定のもとでは、ベイズ最適な判別とも一致します。<br><br>共分散行列が群ごとに異なる場合は<b>2次判別分析</b>になり、判別境界が曲面になります。ただし推定すべきパラメータが増えるため、標本サイズが小さいと不安定です。<br><br>誤判別率の評価には、必ず<b>交差検証</b>を使います。学習データでの誤判別率は楽観的に偏ります。",
+trap:"フィッシャーの判別は誤判別率を直接最小化しているわけではありません。分離度の比を最大化しています。",
+point:"線形判別は 群間/群内 の比を最大化。分散分析のF比と同じ構造。"}
+];
+
+const PE = [
+/* ============ 多変量解析（続き4問） ============ */
+{id:81,cat:"tahen",diff:3,scene:"階層的クラスター分析",
+lead:"階層的クラスター分析における併合方法（リンケージ）を選択する。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　最短距離法（単連結法）は鎖効果を起こしやすく、細長いクラスターができやすい。<br>II　ウォード法は、併合による群内平方和の増加量が最小となる対を選ぶ。<br>III　デンドログラムの高さは、併合時点での距離（または非類似度）を表す。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：最短距離法は最も近い1点対の距離で判断するため、数珠つなぎに伸びる。正しい",
+     "II：ウォード法の定義そのもの。情報損失を最小にする併合を選ぶ。正しい",
+     "III：デンドログラムの縦軸は併合水準を表す。正しい"],
+exp:"リンケージの選択で結果が大きく変わります。特徴を整理します。<br><br>・<b>最短距離法</b>：鎖効果が出やすい。細長い形のクラスターは検出できる<br>・<b>最長距離法</b>：コンパクトな塊を作りやすいが、外れ値に敏感<br>・<b>群平均法</b>：両者の中間で安定<br>・<b>ウォード法</b>：等分散に近い球状のクラスターを作る。実務で最も広く使われる<br><br>クラスター数の決定には、デンドログラムの<b>「高さが急に飛ぶ位置」</b>で切る方法が基本です。ほかにシルエット係数、ギャップ統計量などの指標もあります。<br><br>距離の定義も重要です。変数のスケールが異なる場合は標準化が必須で、相関を考慮したいならマハラノビス距離を使います。<br><br>非階層的手法である k-means との違いは、クラスター数を事前に決める必要がない点です。",
+trap:"クラスター分析には「正解」がありません。手法と距離の選択で結果が変わるため、複数の設定で頑健性を確認してください。",
+point:"ウォード法は群内平方和の増加最小。最短距離法は鎖効果に注意。"},
+
+{id:82,cat:"tahen",diff:2,scene:"k-means法",
+lead:"非階層的クラスタリングとして k-means 法を用いる。",
+q:"k-means 法の性質として、<b>適切でない</b>ものを一つ選べ。",
+choices:["クラスター内平方和の合計を最小化することを目指す","初期値に依存し、局所最適解に収束しうる","クラスター数 k を事前に指定する必要がある","必ず大域的最適解に到達することが保証されている"],ans:3,
+how:["各点を最近傍の中心に割り当て、中心を再計算する、を反復する",
+     "この反復により、クラスター内平方和は単調に減少する",
+     "しかし到達するのは局所最適解であり、初期値に依存する",
+     "大域的最適解の保証はない"],
+exp:"k-means は<b>単調減少するが局所解に留まる</b>という、EMアルゴリズムと同じ構造を持ちます（実際、k-means は混合正規モデルのEMの極限的な特殊ケースと見なせます）。<br><br>実務上の対処は<b>複数の初期値から実行し、目的関数が最小の解を採用</b>することです。k-means++ のような初期値選択の工夫も広く使われます。<br><br>k の決定には、エルボー法（平方和の減少が緩やかになる点）、シルエット係数、ギャップ統計量などを用います。<br><br>制約も理解しておいてください。k-means は<b>球状で同程度の大きさのクラスター</b>を前提とします。細長い形や大きさの偏ったクラスターには不向きで、その場合は混合正規モデルやDBSCANなどが適します。<br><br>また、平均を使うため<b>外れ値に敏感</b>です。頑健性が必要なら k-medoids を検討します。",
+trap:"k-means の結果は実行するたびに変わりうるので、乱数シードを固定して再現性を確保してください。",
+point:"k-meansは単調減少するが局所解。複数初期値からの実行が必須。"},
+
+{id:83,cat:"tahen",diff:2,scene:"因子分析",
+lead:"探索的因子分析において、観測変数を少数の共通因子と独自因子で説明する。",
+q:"共通性（communality）の意味として、最も適切なものを一つ選べ。",
+choices:["各観測変数の分散のうち、共通因子によって説明される割合","因子どうしの相関の強さ","観測変数どうしの相関の平均","因子negativeの寄与率"],ans:0,
+how:["因子分析モデルは x_j = Σ a_jk f_k + e_j",
+     "分散を分解すると V(x_j) = （共通因子の寄与）+（独自因子の寄与）",
+     "標準化した場合、共通性 = Σ a_jk²、独自性 = 1 − 共通性",
+     "共通性は共通因子で説明される分散の割合"],
+exp:"因子分析の核心は<b>観測変数の分散を「共通因子で説明できる部分」と「その変数固有の部分」に分解する</b>ことです。共通性が低い変数は、その因子構造にうまく乗っていないことを意味します。<br><br>主成分分析との違いを再確認してください。<b>因子分析は潜在因子が観測変数を生成すると考え（因子 → 変数）、主成分分析は観測変数を合成します（変数 → 主成分）</b>。因子分析には独自因子（誤差）の概念があり、主成分分析にはありません。<br><br><b>回転</b>は因子分析に特有です。因子軸を回転しても当てはまりは変わらないため（回転の不定性）、解釈しやすい解を選べます。バリマックス回転（直交、因子は無相関）、プロマックス回転（斜交、因子間の相関を許す）が代表的です。<br><br>心理学や社会調査など、背後に構成概念を想定する分野で使われます。",
+trap:"因子の数や解釈は分析者の判断に依存します。「データが因子構造を証明した」とは言えません。",
+point:"共通性は共通因子で説明される分散の割合。回転は因子分析特有。"},
+
+{id:84,cat:"tahen",diff:3,scene:"手法の選択",
+lead:"次の4つの分析目的に対して、適切な多変量解析手法を考える。<br><br>ア　多数の相関する変数を、情報損失を抑えて少数の合成変数に要約したい<br>イ　既知の2群を最もよく分離する方向を見つけたい<br>ウ　2組の変数群の間の関連を最大化する線形結合を求めたい<br>エ　個体間の非類似度から、低次元の空間に布置したい",
+q:"ア〜エに対応する手法の組合せとして、最も適切なものを一つ選べ。",
+choices:["ア 主成分分析・イ 判別分析・ウ 正準相関分析・エ 多次元尺度構成法","ア 因子分析・イ クラスター分析・ウ 主成分分析・エ 判別分析","ア 主成分分析・イ クラスター分析・ウ 因子分析・エ 正準相関分析","ア 判別分析・イ 主成分分析・ウ 多次元尺度構成法・エ 正準相関分析"],ans:0,
+how:["ア：分散を保ちながら次元圧縮するのは主成分分析",
+     "イ：既知の群ラベルがあり分離を狙うのは判別分析（教師あり）",
+     "ウ：2つの変数群の相関を最大化するのは正準相関分析",
+     "エ：距離情報から布置を求めるのは多次元尺度構成法（MDS）"],
+exp:"多変量解析の選択は<b>「教師あり／なし」と「何を最大化するか」</b>の2軸で整理できます。<br><br>教師なし（群ラベルなし）<br>・主成分分析：分散を最大化<br>・因子分析：潜在構造を推定<br>・クラスター分析：群を発見<br>・MDS：距離を保つ布置<br><br>教師あり（群ラベルあり）<br>・判別分析：群間/群内比を最大化<br>・ロジスティック回帰：確率をモデル化<br><br>2つの変数群<br>・正準相関分析：群間の相関を最大化<br><br><b>正準相関分析</b>は重回帰の一般化にあたります。目的変数が1つなら重相関係数に帰着し、判別分析や正準判別も特殊ケースとして含みます。<br><br>MDSは、直接の座標がなく距離（あるいは順位）だけが分かる場面（都市間距離、ブランドの類似度評価など）で威力を発揮します。",
+trap:"クラスター分析と判別分析の混同が典型的です。<b>群を見つけるのがクラスター、既知の群に分けるのが判別</b>です。",
+point:"教師の有無と最大化する量で手法が決まる。判別とクラスターは別物。"},
+
+/* ============ 時系列解析（6問） ============ */
+{id:85,cat:"jikei",diff:1,scene:"定常性",
+lead:"時系列 {X<sub>t</sub>} について、弱定常性（共分散定常性）を考える。",
+q:"弱定常性の条件として、最も適切なものを一つ選べ。",
+choices:["期待値が t によらず一定、分散が有限で一定、自己共分散が時差 k のみに依存する","すべての t で分布が同一である","期待値が0である","トレンドが直線的である"],ans:0,
+how:["E[X_t] = μ（t によらず一定）",
+     "V[X_t] = σ² < ∞（有限で一定）",
+     "Cov(X_t, X_{t+k}) = γ_k（時点 t によらず、時差 k のみに依存）",
+     "この3条件が弱定常性"],
+exp:"弱定常性は<b>1次と2次のモーメントだけの条件</b>です。分布そのものが同一である必要はありません（それは強定常性）。<br><br>実務で定常性が重要なのは、<b>非定常な系列に回帰分析を適用すると「見せかけの回帰」が生じる</b>からです。無関係な2つのランダムウォーク間に、高い決定係数と有意な係数が出てしまいます。<br><br>非定常性への対処は主に2つです。<b>差分を取る</b>（単位根がある場合）か、<b>トレンドを除去する</b>（決定論的トレンドの場合）。どちらが適切かは単位根検定（ADF検定、KPSS検定）で判断します。<br><br>ARIMA(p,d,q) の d は、定常化に必要な差分回数を表します。<br><br>なお、分散が時間とともに変わる場合（ボラティリティ・クラスタリング）は、ARCH/GARCHモデルで扱います。",
+trap:"「平均が一定なら定常」ではありません。自己共分散が時差のみに依存することも必要です。",
+point:"弱定常は 平均一定・分散有限一定・自己共分散が時差のみ依存。"},
+
+{id:86,cat:"jikei",diff:1,scene:"AR(1)過程",
+lead:"AR(1)過程 X<sub>t</sub> = 0.6X<sub>t−1</sub> + ε<sub>t</sub>（ε<sub>t</sub> はホワイトノイズ、分散 σ² = 1）を考える。",
+q:"この過程の定常分散と、時差2の自己相関の組合せとして、最も適切なものを一つ選べ。",
+choices:["分散 1.5625、自己相関 0.36","分散 1.5625、自己相関 0.60","分散 1.0000、自己相関 0.36","分散 2.5000、自己相関 0.36"],ans:0,
+how:["定常分散は V = σ²/(1−φ²) = 1/(1−0.36) = 1/0.64 = 1.5625",
+     "AR(1)の自己相関関数は ρ_k = φ^k",
+     "ρ₂ = 0.6² = 0.36",
+     "自己相関は幾何級数的に減衰する"],
+exp:"AR(1)の性質を整理します。<br><br>・定常条件：|φ| < 1<br>・定常分散：σ²/(1−φ²)<br>・自己相関：ρ<sub>k</sub> = φ<sup>k</sup>（指数的に減衰、φ<0 なら振動しながら減衰）<br>・<b>偏自己相関</b>：ラグ1のみ非ゼロで、ラグ2以降は0<br><br>この最後の性質がモデル同定の鍵です。<b>自己相関が緩やかに減衰し、偏自己相関がラグ p で切れる → AR(p)</b> と判断します。<br><br>φ = 1 になると単位根を持ち、ランダムウォークとなって非定常です。分散が時間とともに増大し、定常分散の式も発散します。<br><br>φ が1に近いと自己相関の減衰が遅く、見た目には非定常と区別しにくくなります。この判別が単位根検定の課題です。",
+trap:"定常分散を σ² と混同しないこと。過去の値が累積するため、σ² より大きくなります。",
+point:"AR(1)は ρ_k=φ^k、分散 σ²/(1−φ²)。偏自己相関がラグ1で切れる。"},
+
+{id:87,cat:"jikei",diff:1,scene:"MA(1)過程",
+lead:"MA(1)過程 X<sub>t</sub> = ε<sub>t</sub> + 0.5ε<sub>t−1</sub>（ε<sub>t</sub> はホワイトノイズ）を考える。",
+q:"時差1および時差2の自己相関の組合せとして、最も適切なものを一つ選べ。",
+choices:["ρ₁ = 0.50、ρ₂ = 0.25","ρ₁ = 0.40、ρ₂ = 0.00","ρ₁ = 0.50、ρ₂ = 0.00","ρ₁ = 0.40、ρ₂ = 0.16"],ans:1,
+how:["MA(1)の自己相関は ρ₁ = θ/(1+θ²)",
+     "= 0.5/(1+0.25) = 0.5/1.25 = 0.40",
+     "MA(q)ではラグ q を超えると自己相関は厳密に0",
+     "ρ₂ = 0.00"],
+exp:"MA過程の決定的な特徴は、<b>自己相関がラグ q で完全に切れる</b>ことです。q を超えるラグでは重なる誤差項がないため、共分散が厳密に0になります。<br><br>これがAR過程との対照になります。<br><br>・<b>AR(p)</b>：自己相関は緩やかに減衰、偏自己相関がラグ p で切れる<br>・<b>MA(q)</b>：自己相関がラグ q で切れる、偏自己相関は緩やかに減衰<br>・<b>ARMA(p,q)</b>：どちらも緩やかに減衰<br><br>この対称的な関係を使ってモデルを同定する手続きが<b>ボックス・ジェンキンス法</b>です。<br><br>ρ₁ = θ/(1+θ²) は θ = 1 のとき最大0.5になります。したがって<b>MA(1)の自己相関は0.5を超えられません</b>。実データの ρ₁ が0.6なら、MA(1)は不適切だと即座に判断できます。<br><br>なお θ と 1/θ は同じ自己相関を与えるため、反転可能性の条件 |θ| < 1 で一意に定めます。",
+trap:"ρ₁ を θ そのもの（0.5）としないこと。分母の (1+θ²) を忘れると値がずれます。",
+point:"MA(q)は自己相関がラグqで切れる。ARとは自己相関/偏自己相関が逆。"},
+
+{id:88,cat:"jikei",diff:2,scene:"単位根と見せかけの回帰",
+lead:"2つの独立なランダムウォーク系列 X<sub>t</sub> と Y<sub>t</sub> について、Y を X で回帰した。",
+q:"この分析で生じる問題として、最も適切なものを一つ選べ。",
+choices:["真の関係がないのに、高い決定係数と有意な回帰係数が得られやすい（見せかけの回帰）","決定係数が必ず0になる","回帰係数が必ず1になる","残差が必ず正規分布に従う"],ans:0,
+how:["ランダムウォークは単位根を持つ非定常過程である",
+     "両系列とも時間とともに大きく変動し、たまたま同方向に動く区間が生じる",
+     "通常の t 統計量は標準的な分布に従わず、過大に出る",
+     "その結果、無関係でも有意になりやすい"],
+exp:"<b>見せかけの回帰</b>は、非定常系列を扱う際の最大の落とし穴です。グレンジャーとニューボルドの研究で広く知られるようになりました。<br><br>診断のサインは、<b>「決定係数は高いのにダービン・ワトソン統計量が極端に小さい（残差が強く自己相関している）」</b>という組合せです。R² > DW なら見せかけを疑え、という経験則もあります。<br><br>対処は3つです。<br><br>・<b>差分を取ってから回帰する</b>（最も基本的）<br>・<b>共和分の検定を行う</b>：両系列が非定常でも、その線形結合が定常なら長期均衡関係が存在する。この場合は水準での回帰に意味がある<br>・<b>誤差修正モデル（ECM）</b>を用いる<br><br>手順としては、まずADF検定などで単位根の有無を確認し、次に共和分の有無を調べる、という流れになります。",
+trap:"決定係数の高さは、非定常系列では信頼できる指標になりません。まず定常性を確認してください。",
+point:"非定常系列の回帰は見せかけになる。差分か共和分の確認が必須。"},
+
+{id:89,cat:"jikei",diff:2,scene:"モデル同定",
+lead:"ある時系列のコレログラムにおいて、自己相関は緩やかに減衰し、偏自己相関はラグ2以降でほぼ0であった。",
+fig:{t:"bar",y:"偏自己相関",n:["1","2","3","4","5","6"],v:[0.62,0.31,0.03,0.02,0.01,0.02],yt:[0,0.3,0.6],fmt:v=>v.toFixed(1)},
+q:"想定されるモデルとして、最も適切なものを一つ選べ。",
+choices:["AR(2)","MA(2)","ARMA(2,2)","ホワイトノイズ"],ans:0,
+how:["偏自己相関がラグ p で切れる → AR(p) の特徴",
+     "ここでは偏自己相関がラグ2以降で0なので p = 2",
+     "自己相関が緩やかに減衰することもAR過程の特徴と整合",
+     "したがって AR(2)"],
+exp:"モデル同定の判断表を覚えてしまうのが実用的です。<br><br>・自己相関が<b>減衰</b>、偏自己相関が<b>ラグ p で切断</b> → AR(p)<br>・自己相関が<b>ラグ q で切断</b>、偏自己相関が<b>減衰</b> → MA(q)<br>・どちらも<b>減衰</b> → ARMA(p,q)<br>・どちらも<b>0に近い</b> → ホワイトノイズ<br><br>これがボックス・ジェンキンス法の同定段階です。<br><br>ただし実データでは判断が曖昧なことが多く、複数の候補モデルを推定して<b>AICで比較</b>するのが現代的な実務です。<br><br>推定後は<b>残差の診断</b>が必須になります。残差にまだ自己相関が残っていないかを、リュング・ボックス検定などで確認します。残差がホワイトノイズになって初めて、モデルが情報を汲み尽くしたと言えます。",
+trap:"自己相関と偏自己相関を取り違えないこと。切れるほうがモデルの次数を示します。",
+point:"偏自己相関が切れたらAR、自己相関が切れたらMA。"},
+
+{id:90,cat:"jikei",diff:2,scene:"状態空間モデル",
+lead:"時系列の解析に、状態空間モデルとカルマンフィルタを用いる。",
+q:"状態空間モデルの特徴として、最も適切なものを一つ選べ。",
+choices:["観測されない状態変数の時間発展と、状態から観測値への関係を分けて記述する。欠測にも柔軟に対応できる","定常時系列にしか適用できない","トレンドと季節成分を分離できない","パラメータ推定に最尤法を使えない"],ans:0,
+how:["状態方程式：状態変数の時間発展を記述する",
+     "観測方程式：状態から観測値がどう生成されるかを記述する",
+     "カルマンフィルタで、観測値から状態を逐次的に推定する",
+     "欠測時は予測ステップのみを実行すればよく、自然に対応できる"],
+exp:"状態空間モデルの利点は<b>柔軟性</b>にあります。<br><br>・<b>成分分解</b>：水準・トレンド・季節・回帰成分などを明示的にモデル化し、分離して取り出せる<br>・<b>欠測への対応</b>：観測がない時点は更新ステップを飛ばすだけでよい<br>・<b>時変パラメータ</b>：係数が時間とともに変化するモデルも自然に書ける<br>・<b>統一的な枠組み</b>：ARIMAも状態空間表現に書き直せる<br><br>線形・正規の場合は<b>カルマンフィルタ</b>で解析的に処理でき、尤度も計算できるため最尤推定が可能です。<br><br>非線形・非正規の場合は、拡張カルマンフィルタや<b>粒子フィルタ（逐次モンテカルロ）</b>を使います。<br><br>フィルタリング（現在まで）、予測（将来）、平滑化（全期間の情報を使った過去の推定）という3つの推論が体系的に扱えるのも特徴です。",
+trap:"状態空間モデルは定常性を要求しません。ローカルレベルモデルなど、非定常な状態を持つモデルが標準的です。",
+point:"状態空間は状態方程式＋観測方程式。欠測と成分分解に強い。"},
+
+/* ============ ベイズ法・モデル選択・不完全データ（6問） ============ */
+{id:91,cat:"bayes",diff:1,scene:"共役事前分布",
+lead:"成功確率 p に対する事前分布として Be(2, 8) を設定した。その後、n = 20 回の試行で 8 回の成功を観測した。",
+q:"事後分布として、最も適切なものを一つ選べ。",
+choices:["Be(10, 20)","Be(8, 12)","Be(10, 8)","Be(2, 8)"],ans:0,
+how:["ベータ分布は二項尤度の共役事前分布",
+     "事後分布は Be(α + 成功数, β + 失敗数)",
+     "α + x = 2 + 8 = 10",
+     "β + (n − x) = 8 + (20 − 8) = 8 + 12 = 20。よって Be(10, 20)"],
+exp:"共役性の利点は、<b>事後分布が事前分布と同じ族に留まり、パラメータの更新が足し算だけで済む</b>ことです。<br><br>事後平均は 10/(10+20) = 0.333。事前平均 2/10 = 0.20 と、最尤推定値 8/20 = 0.40 の<b>中間</b>に位置します。<br><br>実は事後平均は、事前平均と最尤推定値の加重平均として書けます。重みは擬似観測数（α+β = 10）と実観測数（n = 20）の比になります。データが増えるほど、事前分布の影響は薄れていきます。<br><br>代表的な共役の組合せを押さえてください。<br><br>・二項 × ベータ<br>・ポアソン × ガンマ<br>・正規（分散既知）× 正規<br>・正規（平均既知）× 逆ガンマ<br><br>共役でない場合は、MCMCなどの数値的手法が必要になります。",
+trap:"β に加えるのは失敗回数 (n−x) であって、試行回数 n ではありません。",
+point:"ベータ×二項の事後は Be(α+x, β+n−x)。足すだけ。"},
+
+{id:92,cat:"bayes",diff:2,scene:"正規モデルの事後平均",
+lead:"平均 θ が未知、分散 σ² = 4 が既知の正規母集団を考える。事前分布を θ 〜 N(10, 1) とし、n = 12 の標本から標本平均 x̄ = 14 を得た。",
+q:"事後分布の平均として、最も適切なものを一つ選べ。",
+choices:["12.0","13.0","11.0","14.0"],ans:1,
+how:["事後平均は、事前平均と標本平均を精度（分散の逆数）で加重平均したもの",
+     "事前の精度は 1/τ² = 1/1 = 1",
+     "データの精度は n/σ² = 12/4 = 3",
+     "事後平均 = (1×10 + 3×14)/(1+3) = (10+42)/4 = 52/4 = 13.0"],
+exp:"正規モデルでは、事後平均は<b>精度（分散の逆数）による加重平均</b>になります。<br><br>事後平均 = (事前精度 × 事前平均 + データ精度 × x̄) ÷ (事前精度 + データ精度)<br>= (1 × 10 + 3 × 14) ÷ 4 = <b>13.0</b><br><br>データの精度3が事前の精度1より大きいため、事前平均10よりも標本平均14に近い値になりました。<br><br>一般に、<b>事後平均は事前平均とデータの間に必ず入ります</b>。これが<b>縮小推定</b>の効果です。<br><br>事後分散は 1/(事前精度 + データ精度) = 1/4 = 0.25 で、事前分散1より小さくなります。情報が増えれば不確実性は減る、という当然の結果です。<br><br>n → ∞ ではデータの精度が支配し、事後平均は最尤推定値 x̄ に収束します。",
+trap:"単純な算術平均ではなく、精度による加重平均です。分散が小さい情報源ほど重みが大きくなります。",
+point:"正規モデルの事後平均は精度による加重平均。事前とデータの間に入る。"},
+
+{id:93,cat:"bayes",diff:1,scene:"ベイズ推定量",
+lead:"損失関数を変えると、事後分布から導かれる最適な点推定量も変わる。",
+q:"損失関数と対応するベイズ推定量の組合せとして、最も適切なものを一つ選べ。",
+choices:["2乗損失 → 事後平均、絶対損失 → 事後中央値、0-1損失 → 事後最頻値（MAP）","2乗損失 → 事後中央値、絶対損失 → 事後平均、0-1損失 → 事後平均","すべての損失関数で事後平均が最適","損失関数は推定量に影響しない"],ans:0,
+how:["2乗損失 E[(θ−a)²] を最小化する a は、分布の平均",
+     "絶対損失 E[|θ−a|] を最小化する a は、分布の中央値",
+     "0-1損失（外したら一律の損失）を最小化するのは最頻値",
+     "いずれも事後分布に対して適用する"],
+exp:"ベイズ推定の枠組みでは、<b>「何を最適とするか」は損失関数が決めます</b>。事後分布そのものが推定結果であり、点推定はそれを1つの数値に要約する操作にすぎません。<br><br>実務上の使い分けは次のとおりです。<br><br>・<b>事後平均</b>：最も一般的。滑らかで扱いやすい<br>・<b>事後中央値</b>：事後分布が歪んでいる場合に頑健<br>・<b>MAP推定</b>：最頻値。最適化問題として解けるため計算が速い。正則化つき最尤推定と対応する（リッジ回帰は正規事前、Lassoはラプラス事前のMAP）<br><br>区間推定に相当するのが<b>信用区間</b>です。頻度論の信頼区間と違い、「パラメータがこの区間に入る確率が95%」と直接的に解釈できます。<br><br>最高事後密度（HPD）区間を使えば、非対称な事後分布でも最短の区間が得られます。",
+trap:"信用区間と信頼区間は解釈が異なります。混同しないでください。",
+point:"2乗損失→平均、絶対損失→中央値、0-1損失→MAP。損失が推定量を決める。"},
+
+{id:94,cat:"bayes",diff:2,scene:"MCMC",
+lead:"事後分布が解析的に求まらない場合、マルコフ連鎖モンテカルロ法（MCMC）を用いる。",
+q:"次の記述I〜IIIについて、正しいものの組合せとして最も適切なものを一つ選べ。<br><br>I　目標分布を定常分布に持つマルコフ連鎖を構成し、その標本路を事後分布からのサンプルとみなす。<br>II　ギブスサンプリングは、各パラメータを他のパラメータで条件づけた分布から順に生成する。<br>III　初期の一定期間（バーンイン）は捨て、収束の診断が必要である。",
+choices:["Iのみ正しい","IとIIのみ正しい","IIとIIIのみ正しい","I、II、IIIのすべてが正しい"],ans:3,
+how:["I：MCMCの基本原理。エルゴード定理が理論的根拠",
+     "II：ギブスサンプリングの定義。全条件付き分布から生成できる場合に有効",
+     "III：初期値の影響を除くためバーンインを設け、収束を診断する",
+     "すべて正しい"],
+exp:"MCMCの理論的根拠は<b>エルゴード定理</b>です。既約かつ非周期な連鎖は、初期値によらず定常分布に収束します。<br><br>主要なアルゴリズムは次のとおりです。<br><br>・<b>メトロポリス・ヘイスティングス</b>：提案分布から候補を生成し、確率的に採択する。最も汎用的<br>・<b>ギブスサンプリング</b>：全条件付き分布から順に生成。採択率100%だが、条件付き分布が既知である必要がある<br>・<b>ハミルトニアンモンテカルロ（HMC/NUTS）</b>：勾配情報を使い、高次元で効率が高い。Stanなどが採用<br><br>収束診断には、複数の連鎖を走らせて比較する <b>Gelman-Rubin統計量（R̂）</b>が標準的で、1.01未満が目安です。ほかにトレースプロットの目視、有効サンプルサイズ（ESS）の確認も行います。<br><br>MCMCサンプルは<b>自己相関を持つ</b>ため、独立サンプルより有効数が少なくなります。",
+trap:"「サンプルが得られたから収束した」とはなりません。収束診断は必須の手順です。",
+point:"MCMCは目標分布を定常分布に持つ連鎖。バーンインと収束診断が必須。"},
+
+{id:95,cat:"bayes",diff:1,scene:"欠測のメカニズム",
+lead:"欠測データの扱いにおいて、欠測メカニズムを MCAR、MAR、MNAR に分類する。",
+q:"分類の説明として、最も適切なものを一つ選べ。",
+choices:["MCARは欠測が完全に無作為、MARは観測された変数で条件づければ無作為、MNARは欠測値そのものに依存する","MCARは欠測値に依存し、MNARは完全に無作為である","MARは欠測が一切生じないことを意味する","3つは同じ意味である"],ans:0,
+how:["MCAR：欠測が観測値にも欠測値にも依存しない（完全にランダム）",
+     "MAR：観測された変数で条件づければ、欠測は無作為とみなせる",
+     "MNAR：欠測が欠測値そのものに依存する（高所得者ほど所得を答えない等）",
+     "MCAR ⊂ MAR という包含関係にある"],
+exp:"欠測メカニズムによって、使える手法が変わります。<br><br>・<b>MCAR</b>：完全ケース分析（リストワイズ削除）でもバイアスは生じない。ただし標本が減り効率は落ちる<br>・<b>MAR</b>：<b>多重代入法</b>や最尤法（FIML）で妥当な推定が可能<br>・<b>MNAR</b>：観測データだけでは対処できない。選択モデルやパターン混合モデルなど、<b>欠測メカニズム自体をモデル化</b>する必要があり、仮定に強く依存する<br><br>重要な点として、<b>データからMARかMNARかを検証することはできません</b>。欠測値が観測できない以上、判別する情報がないからです。感度分析で頑健性を確認するのが現実的な対応になります。<br><br>単一代入（平均値代入など）は<b>推奨されません</b>。分散を過小評価し、標準誤差が不当に小さくなるためです。多重代入では、代入の不確実性を分散に反映できます。",
+trap:"平均値代入は簡便ですが、変数間の関係を歪め、標準誤差を過小評価します。安易に使わないでください。",
+point:"MCAR⊂MAR。MARなら多重代入で対処可。MNARは検証不能で仮定依存。"},
+
+{id:96,cat:"bayes",diff:2,scene:"交差検証",
+lead:"予測モデルの汎化性能を評価するため、k分割交差検証を行う。",
+q:"k分割交差検証の説明として、最も適切なものを一つ選べ。",
+choices:["データをk個に分割し、1つを検証用、残りを学習用として k 回繰り返し、評価を平均する","データを2分割し、1回だけ評価する","全データで学習し、同じデータで評価する","学習データを増やしながら評価を繰り返す"],ans:0,
+how:["データを k 個のほぼ同サイズの群に分割する",
+     "各回で1群を検証用、残り k−1 群を学習用にする",
+     "これを k 回繰り返し、すべてのデータが1回ずつ検証に使われる",
+     "k 回の評価指標を平均して汎化性能の推定値とする"],
+exp:"交差検証の目的は<b>汎化性能の推定</b>です。学習データでの評価は必ず楽観的に偏るため、未知データへの性能を測るには別の仕組みが要ります。<br><br>k の選択にはトレードオフがあります。<br><br>・<b>k が大きい（LOOCVなど）</b>：バイアスは小さいが分散が大きく、計算コストも高い<br>・<b>k が小さい</b>：バイアスは大きいが分散は小さい<br>・実務では <b>k = 5 または 10</b> が慣例<br><br>重要な注意点として、<b>前処理を交差検証の外で行ってはいけません</b>。標準化や変数選択を全データで先に行うと、検証データの情報が学習に漏れ（データリーク）、性能を過大評価します。前処理も含めて各分割の中で行う必要があります。<br><br>時系列データでは、通常の交差検証は使えません。未来の情報で過去を予測することになるためです。時系列用の分割（ローリング検証）を用います。",
+trap:"ハイパーパラメータ調整に使った交差検証の値を、そのまま最終的な性能として報告しないこと。別途、独立のテストデータが必要です。",
+point:"交差検証は汎化性能の推定。前処理も分割の中で行う。"},
+
+/* ============ 統計的因果推論（4問） ============ */
+{id:97,cat:"inga",diff:1,scene:"潜在結果",
+lead:"処置 T（1または0）と結果 Y について、潜在結果 Y(1)、Y(0) を用いた枠組みを考える。",
+q:"平均処置効果（ATE）の定義と、その推定における根本問題の組合せとして、最も適切なものを一つ選べ。",
+choices:["ATE = E[Y(1) − Y(0)]。各個体では片方の潜在結果しか観測できない（因果推論の根本問題）","ATE = E[Y|T=1] − E[Y|T=0]。常に観測から直接計算できる","ATE = E[Y(1)]のみ。対照群は不要である","ATE は個体ごとに観測できる"],ans:0,
+how:["各個体には2つの潜在結果 Y(1)、Y(0) が想定される",
+     "しかし実際に観測できるのは、実際に受けた処置に対応する一方だけ",
+     "これが因果推論の根本問題",
+     "個体レベルの効果は観測できないが、集団平均としての ATE は推定可能"],
+exp:"<b>ルービンの潜在結果枠組み</b>は、因果推論の標準的な言語です。<br><br>観測される差 E[Y|T=1] − E[Y|T=0] が ATE と一致するのは、<b>処置割当が潜在結果と独立</b>な場合に限られます。無作為化比較試験がまさにこの条件を満たします。<br><br>観察研究では独立性が成り立たないため、条件付き独立性（<b>強い意味での無視可能性</b>）を仮定します。<br><br>もう1つの重要な仮定が <b>SUTVA</b> です。ある個体の処置が他の個体の結果に影響しない（干渉がない）こと、処置に複数のバージョンがないことを要求します。感染症やネットワーク効果がある場面では成立しません。<br><br>推定対象には ATE のほか、処置群における効果 <b>ATT</b>、局所的効果 <b>LATE</b> などがあり、手法によって推定できるものが異なります。",
+trap:"個体ごとの因果効果 Y(1)−Y(0) は、原理的に観測できません。推定できるのは集団の平均です。",
+point:"ATE=E[Y(1)−Y(0)]。片方しか観測できないのが根本問題。"},
+
+{id:98,cat:"inga",diff:2,scene:"バックドア基準",
+lead:"因果ダイアグラム（DAG）において、処置 T から結果 Y への因果効果を推定したい。",
+q:"調整すべき変数の選択について、最も適切なものを一つ選べ。",
+choices:["T と Y の共通原因（交絡因子）を調整し、中間変数や合流点は調整しない","入手できる変数はすべて調整する","T の結果である変数を優先的に調整する","調整は不要である"],ans:0,
+how:["交絡因子（T と Y の共通原因）を調整すると、バックドア経路が閉じる",
+     "中間変数（T → M → Y）を調整すると、因果効果の一部が消えてしまう",
+     "合流点（T → C ← Y のような変数）を調整すると、かえって偽の関連が生じる",
+     "したがって調整すべきはバックドア基準を満たす変数集合"],
+exp:"<b>「変数は多いほどよい」は誤り</b>である、というのが因果推論の重要な教訓です。調整して害になる変数が存在します。<br><br>・<b>交絡因子</b>（共通原因）→ 必ず調整する<br>・<b>中間変数</b>（T → M → Y）→ 調整すると効果を過小評価する（媒介分析をしたい場合を除く）<br>・<b>合流点</b>（T → C ← Y）→ 調整すると<b>合流点バイアス</b>が生じ、無関係な変数間に偽の関連が現れる<br><br>合流点バイアスの典型例が<b>選択バイアス</b>です。入院患者に限定して分析すると、独立な2つの疾患の間に見かけの負の関連が現れる（バークソンのパラドックス）ことが知られています。<br><br><b>バックドア基準</b>は、どの変数集合を調整すれば因果効果が識別できるかを、DAG上で判定するための規則です。<br><br>つまり、統計的な調整の前に<b>因果構造の想定が必要</b>になります。データだけからは決まりません。",
+trap:"「共変量は多いほど調整が効く」という直感は危険です。合流点を入れるとバイアスが増えます。",
+point:"交絡は調整、中間変数と合流点は調整しない。DAGでの判断が必要。"},
+
+{id:99,cat:"inga",diff:2,scene:"傾向スコア",
+lead:"観察研究において、傾向スコア e(x) = P(T = 1 | X = x) を用いて処置効果を推定する。",
+q:"傾向スコアの性質と利用法として、最も適切なものを一つ選べ。",
+choices:["傾向スコアが等しい個体どうしでは、共変量 X の分布が処置群と対照群で均衡する。マッチング・層別・逆確率重み付けに利用できる","傾向スコアは結果変数 Y を予測するモデルである","傾向スコアを使えば、未観測の交絡も調整できる","傾向スコアはランダム化比較試験でのみ使える"],ans:0,
+how:["傾向スコアは「共変量が与えられたときに処置を受ける確率」",
+     "ローゼンバウムとルービンの定理により、傾向スコアはバランシングスコアになる",
+     "e(x) を条件づければ、X の分布が両群で均衡する",
+     "マッチング、層別、逆確率重み付け（IPW）、二重頑健推定などに用いる"],
+exp:"傾向スコアの利点は<b>次元圧縮</b>にあります。多数の共変量を1つのスカラーに要約でき、その1変数で条件づけるだけで共変量全体の均衡が達成されます。<br><br>推定後は必ず<b>バランスの確認</b>を行います。標準化平均差（SMD）が0.1未満であることが目安です。バランスが取れていなければ、傾向スコアモデルを見直します。<br><br>もう1つ確認すべきは<b>コモンサポート（重なり）</b>です。両群の傾向スコア分布が重なっていない領域では、比較対象が存在しないため推定できません。<br><br>決定的な限界は、<b>観測された共変量しか調整できない</b>ことです。未観測の交絡が残れば、傾向スコアを使ってもバイアスは消えません。この点で、無作為化とは本質的に異なります。<br><br>感度分析で「どの程度の未観測交絡があれば結論が覆るか」を評価するのが実務上の作法です。",
+trap:"傾向スコアは魔法ではありません。無作為化の代用にはならず、未観測交絡には無力です。",
+point:"傾向スコアはバランシングスコア。ただし未観測交絡は調整できない。"},
+
+{id:100,cat:"inga",diff:3,scene:"操作変数と差分の差分",
+lead:"未観測の交絡が疑われる状況で、因果効果を識別する手法を検討する。",
+q:"操作変数法（IV）と差分の差分法（DID）の説明として、最も適切なものを一つ選べ。",
+choices:["IVは処置にのみ影響し結果には直接影響しない変数を利用する。DIDは処置前後の変化を処置群と対照群で比較し、平行トレンドを仮定する","IVは処置と結果の両方に直接影響する変数を利用する","DIDは処置後のデータのみで推定できる","どちらも未観測交絡には対処できない"],ans:0,
+how:["IVの条件：（1）処置と関連する（関連性）（2）交絡因子と独立（外生性）（3）結果へは処置を通じてのみ影響（除外制約）",
+     "この3条件が満たされれば、未観測交絡があっても効果を識別できる",
+     "DIDは処置群と対照群の、処置前後の変化量の差を効果とみなす",
+     "鍵となる仮定は、処置がなければ両群のトレンドが平行だったという平行トレンド仮定"],
+exp:"どちらも<b>未観測交絡がある状況で因果効果を識別する</b>ための準実験的手法です。<br><br><b>操作変数法</b>の3条件のうち、<b>除外制約</b>はデータから検証できません。理論や制度的な知識で正当化する必要があります。操作変数の例としては、地理的距離、政策の恣意的な線引き、抽選による割当などが使われます。<br><br>なお、IVで推定されるのは一般に ATE ではなく <b>LATE</b>（操作変数によって処置状態が変わる集団における効果）です。<br><br><b>差分の差分法</b>の平行トレンド仮定は、処置前に複数期間のデータがあれば<b>プレトレンドの確認</b>で間接的に検証できます。処置前のトレンドが揃っていれば、仮定の妥当性が支持されます。<br><br>関連手法として、閾値の前後を比較する<b>回帰不連続デザイン（RDD）</b>、複数の対照群を合成する<b>合成対照法</b>があります。",
+trap:"弱い操作変数（処置との関連が弱い）を使うと、推定が不安定になりバイアスも大きくなります。第1段階のF統計量が10以上であることが目安です。",
+point:"IVは除外制約、DIDは平行トレンドが鍵。どちらも検証困難な仮定に依存。"}
+];
+
+const QUESTIONS = [].concat(PA,PB,PC,PD,PE);
+
+
+const CATS={jishou:"事象と確率",bokansu:"母関数",henkan:"変数変換",bunpu:"確率分布",
+  zenkin:"漸近理論",suitei:"推定論",kentei:"検定論",nonpara:"ノンパラ",
+  katei:"確率過程",kaiki:"回帰・GLM",bunsan:"実験計画",tahen:"多変量解析",
+  jikei:"時系列",bayes:"ベイズ法",inga:"因果推論"};
+const CATKEYS=Object.keys(CATS);
+const DIFFNAME={1:"基礎",2:"標準",3:"応用"};
+const BADGES=[
+ {id:"first",ic:"🌱",nm:"はじめの一歩",ds:"1問目に正解",chk:s=>s.correct>=1},
+ {id:"ten",ic:"🍀",nm:"十問突破",ds:"10問正解",chk:s=>s.correct>=10},
+ {id:"quart",ic:"🌊",nm:"四分の一",ds:"25問正解",chk:s=>s.correct>=25},
+ {id:"half",ic:"⛵",nm:"折り返し",ds:"50問正解",chk:s=>s.correct>=50},
+ {id:"three",ic:"🗻",nm:"七合目",ds:"75問正解",chk:s=>s.correct>=75},
+ {id:"all",ic:"👑",nm:"完全制覇",ds:"100問正解",chk:s=>s.correct>=100},
+ {id:"c3",ic:"✨",nm:"三連正解",ds:"3問連続正解",chk:s=>s.maxCombo>=3},
+ {id:"c7",ic:"💫",nm:"七連正解",ds:"7問連続正解",chk:s=>s.maxCombo>=7},
+ {id:"c15",ic:"🌟",nm:"十五連正解",ds:"15問連続正解",chk:s=>s.maxCombo>=15},
+ {id:"hard",ic:"🔥",nm:"応用に強い",ds:"応用40問正解",chk:s=>s.hardCorrect>=40},
+ {id:"rout",ic:"📊",nm:"モデルを操る",ds:"回帰・GLMを全問正解",chk:s=>s.per.kaiki.c===s.per.kaiki.n},
+ {id:"inga",ic:"🔗",nm:"因果を読む",ds:"因果推論を全問正解",chk:s=>s.per.inga.c===s.per.inga.n},
+ {id:"cat3",ic:"📗",nm:"五分野制覇",ds:"5分野を全問正解",chk:s=>s.fullCats>=5},
+ {id:"cat10",ic:"📚",nm:"全分野制覇",ds:"15分野すべて全問正解",chk:s=>s.fullCats>=15},
+ {id:"d3",ic:"🗓",nm:"三日坊主脱出",ds:"3日間学習",chk:s=>s.days>=3},
+ {id:"d7",ic:"📅",nm:"一週間継続",ds:"7日間学習",chk:s=>s.days>=7},
+ {id:"perf",ic:"💎",nm:"一発正解50",ds:"初回で50問正解",chk:s=>s.firstTry>=50}
+];
+
+const KEY="toukei_j1_v1"; let mem=null;
+function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return mem||null;}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){mem=JSON.parse(JSON.stringify(S));}}
+const today=()=>new Date().toISOString().slice(0,10);
+let S=load()||{res:{},maxCombo:0,dates:[]};
+S.res=S.res||{};S.dates=S.dates||[];
+if(!S.dates.includes(today()))S.dates.push(today());
+
+/* 選択肢の固定シャッフル */
+function seeded(n){const x=Math.sin(n*9301+49297)*233280;return x-Math.floor(x);}
+QUESTIONS.forEach(q=>{
+  const idx=[0,1,2,3];
+  for(let i=3;i>0;i--){const j=Math.floor(seeded(q.id*10+i)*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+  q._ch=idx.map(i=>q.choices[i]); q._ans=idx.indexOf(q.ans);
+});
+
+function stats(){
+  const r=S.res; let correct=0,firstTry=0,hardCorrect=0,attempted=0;
+  QUESTIONS.forEach(q=>{const v=r[q.id];if(!v)return;attempted++;
+    if(v.ok){correct++;if(v.first)firstTry++;if(q.diff===3)hardCorrect++;}});
+  const per={};let fullCats=0;
+  CATKEYS.forEach(k=>{const qs=QUESTIONS.filter(q=>q.cat===k);
+    const c=qs.filter(q=>r[q.id]&&r[q.id].ok).length;per[k]={c:c,n:qs.length};
+    if(qs.length&&c===qs.length)fullCats++;});
+  return {correct,firstTry,hardCorrect,attempted,per,fullCats,maxCombo:S.maxCombo||0,days:S.dates.length};
+}
+const hensa=c=>40+35*(c/QUESTIONS.length);
+
+function bell(){
+  const X=x=>20+(x-28)/(82-28)*420,Y=y=>78-y*62;
+  let d="",f="M "+X(28)+" 78 ";
+  for(let x=28;x<=82;x+=0.6){const y=Math.exp(-Math.pow((x-50)/10,2)/2);
+    d+=(x===28?"M ":"L ")+X(x).toFixed(1)+" "+Y(y).toFixed(1)+" ";
+    f+="L "+X(x).toFixed(1)+" "+Y(y).toFixed(1)+" ";}
+  f+="L "+X(82)+" 78 Z";
+  document.getElementById("bellLine").setAttribute("d",d);
+  document.getElementById("bellFill").setAttribute("d",f);
+  document.getElementById("ticks").innerHTML=[30,40,50,60,70,80].map(v=>
+    '<line class="axis" x1="'+X(v)+'" y1="78" x2="'+X(v)+'" y2="82"></line>'+
+    '<text class="tick" x="'+X(v)+'" y="93" text-anchor="middle">'+v+'</text>').join("");
+  return X;
+}
+const BX=bell();
+function drawMeter(){const st=stats(),h=hensa(st.correct);
+  document.getElementById("hensa").textContent=h.toFixed(1);
+  document.getElementById("mCorrect").textContent=st.correct;
+  document.getElementById("mDays").textContent=st.days;
+  document.getElementById("marker").setAttribute("transform","translate("+BX(h).toFixed(1)+",0)");}
+
+function drawRadar(){
+  const st=stats(),cx=150,cy=134,R=84,n=CATKEYS.length;
+  const pt=(i,r)=>{const a=-Math.PI/2+i*2*Math.PI/n;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];};
+  let g="";
+  [0.25,0.5,0.75,1].forEach(k=>{g+='<polygon class="grid" points="'+
+    CATKEYS.map((_,i)=>pt(i,R*k).map(v=>v.toFixed(1)).join(",")).join(" ")+'"></polygon>';});
+  CATKEYS.forEach((_,i)=>{const p=pt(i,R);
+    g+='<line class="grid" x1="'+cx+'" y1="'+cy+'" x2="'+p[0].toFixed(1)+'" y2="'+p[1].toFixed(1)+'"></line>';});
+  document.getElementById("radarGrid").innerHTML=g;
+  document.getElementById("radarArea").setAttribute("points",
+    CATKEYS.map((k,i)=>{const v=st.per[k];return pt(i,R*Math.max(v.c/v.n,0.012)).map(x=>x.toFixed(1)).join(",");}).join(" "));
+  document.getElementById("radarLab").innerHTML=CATKEYS.map((k,i)=>{
+    const p=pt(i,R+17),anc=Math.abs(p[0]-cx)<9?"middle":(p[0]>cx?"start":"end");
+    return '<text class="lab" x="'+p[0].toFixed(1)+'" y="'+(p[1]+3).toFixed(1)+'" text-anchor="'+anc+'">'+CATS[k]+'</text>';}).join("");
+}
+function drawStats(){
+  const st=stats();
+  document.getElementById("catList").innerHTML=CATKEYS.map(k=>{
+    const v=st.per[k],p=Math.round(v.c/v.n*100);
+    return '<div class="catrow"><span class="nm">'+CATS[k]+'</span><span class="bar"><i class="'+
+      (p===100?'done':'')+'" style="width:'+p+'%"></i></span><span class="nu">'+v.c+'/'+v.n+
+      '</span><button data-cat="'+k+'">解く</button></div>';}).join("");
+  document.querySelectorAll("#catList button").forEach(b=>b.onclick=()=>{
+    MODE={type:"cat",cat:b.dataset.cat};go("learn");next();toast(CATS[b.dataset.cat]+"に切り替えました");});
+  const wrong=QUESTIONS.filter(q=>S.res[q.id]&&!S.res[q.id].ok).length;
+  document.getElementById("recList").innerHTML=[
+    ["解いた問題",st.attempted+" / 100 問"],["初回で正解",st.firstTry+" 問"],
+    ["応用問題の正解",st.hardCorrect+" / "+QUESTIONS.filter(q=>q.diff===3).length+" 問"],["最高連続正解",st.maxCombo+" 問"],
+    ["復習が必要",wrong+" 問"],["学習した日数",st.days+" 日"]
+  ].map(r=>'<div class="catrow"><span class="nm" style="width:9.4em">'+r[0]+
+    '</span><span style="flex:1;text-align:right" class="mono">'+r[1]+'</span></div>').join("");
+}
+function drawBadges(){const st=stats();
+  document.getElementById("badgeList").innerHTML=BADGES.map(b=>
+    '<div class="badge'+(b.chk(st)?' got':'')+'"><div class="ic">'+b.ic+'</div><div class="nm">'+
+    b.nm+'</div><div class="ds">'+b.ds+'</div></div>').join("");}
+
+let MODE={type:"all"},CUR=null,COMBO=0,ANSWERED=false;
+function pool(){
+  if(MODE.type==="cat")return QUESTIONS.filter(q=>q.cat===MODE.cat);
+  if(MODE.type==="review")return QUESTIONS.filter(q=>S.res[q.id]&&!S.res[q.id].ok);
+  return QUESTIONS;
+}
+function next(){
+  const p=pool(); if(!p.length){render(null);return;}
+  const un=p.filter(q=>!S.res[q.id]||!S.res[q.id].ok);
+  let src=un.length?un:p;
+  if(MODE.type!=="review"){const m=Math.min.apply(null,src.map(q=>q.diff));src=src.filter(q=>q.diff===m);}
+  let cand=src.filter(q=>q.id!==(CUR&&CUR.id)); if(!cand.length)cand=src;
+  CUR=cand[Math.floor(Math.random()*cand.length)]; ANSWERED=false; render(CUR);
+}
+function render(q){
+  const el=document.getElementById("qcard");
+  if(!q){el.innerHTML='<div class="empty">'+(MODE.type==="review"
+      ?"復習が必要な問題はありません。<br>この調子で進めてください。":"問題がありません。")+
+      '</div><div class="row"><button class="btn primary" id="bAll">すべての問題に戻る</button></div>';
+    document.getElementById("bAll").onclick=()=>{MODE={type:"all"};next();};return;}
+  const st=S.res[q.id];
+  el.innerHTML=
+   '<div class="qmeta"><span class="chip">'+CATS[q.cat]+'</span><span class="chip d'+q.diff+'">'+
+     DIFFNAME[q.diff]+'</span><span class="chip scene">'+q.scene+'</span>'+
+     '<span class="qno">Q'+String(q.id).padStart(3,"0")+(st&&st.ok?' ✓':'')+'</span></div>'+
+   (q.lead?'<div class="lead">'+q.lead+'</div>':'')+
+   (q.rout?'<pre class="rout">'+q.rout+'</pre>':'')+
+   (q.fig?FIG(q.fig):'')+(q.tbl?TBL(q.tbl):'')+
+   '<div class="qtext">'+q.q+'</div>'+
+   '<div class="opts" id="opts">'+q._ch.map((c,i)=>
+     '<button class="opt" data-i="'+i+'"><span class="key">'+"ABCD"[i]+'</span><span>'+c+'</span></button>').join("")+
+   '</div><div class="row" id="preRow"><button class="btn ghost" id="bSkip" style="flex:1">わからないので解説を読む</button>'+
+   '<button class="btn ghost" style="flex:0 0 auto" id="bPass">飛ばす</button></div><div id="after"></div>';
+  document.querySelectorAll("#opts .opt").forEach(b=>b.onclick=()=>answer(+b.dataset.i));
+  document.getElementById("bSkip").onclick=()=>answer(-1,true);
+  document.getElementById("bPass").onclick=next;
+  updateProgress();
+}
+function answer(i,skipped){
+  if(ANSWERED)return; ANSWERED=true;
+  const q=CUR,ok=(i===q._ans)&&!skipped,prev=S.res[q.id],isFirst=!prev;
+  if(!skipped){
+    if(ok){COMBO++;if(COMBO>(S.maxCombo||0))S.maxCombo=COMBO;}else COMBO=0;
+    S.res[q.id]={ok:ok,first:isFirst?ok:((prev&&prev.first)||false),tries:((prev&&prev.tries)||0)+1};
+  }
+  save();
+  const pr=document.getElementById("preRow"); if(pr)pr.classList.add("hide");
+  document.querySelectorAll("#opts .opt").forEach(b=>{const bi=+b.dataset.i;b.disabled=true;
+    if(bi===q._ans)b.classList.add("correct");
+    else if(!skipped&&bi===i)b.classList.add("wrong");else b.classList.add("dim");});
+  const head=skipped?'<div class="verdict" style="color:var(--deep)">解説</div>'
+    :'<div class="verdict '+(ok?"ok":"ng")+'">'+(ok?"◯ 正解":"× 惜しい")+
+      (ok&&COMBO>=3?'<span class="combo">'+COMBO+'問連続正解</span>':'')+'</div>';
+  document.getElementById("after").innerHTML=head+
+   '<div class="exp">'+
+     '<div class="blk"><h3>解き方の手順</h3><ol class="steps">'+
+       q.how.map(h=>'<li>'+h+'</li>').join("")+'</ol></div>'+
+     '<div class="blk"><h3>考え方</h3><div class="expbody">'+q.exp+'</div></div>'+
+     (q.trap?'<div class="blk"><h3>引っかかりどころ</h3><div class="trap">'+q.trap+'</div></div>':'')+
+     '<div class="point"><span>おさえどころ</span>'+q.point+'</div>'+
+   '</div>'+
+   '<div class="row"><button class="btn primary" id="bNext">次の問題へ</button>'+
+     (skipped||!ok?'<button class="btn ghost" style="flex:0 0 auto" id="bRetry">もう一度</button>':'')+'</div>';
+  document.getElementById("bNext").onclick=next;
+  const r=document.getElementById("bRetry"); if(r)r.onclick=()=>{ANSWERED=false;render(q);};
+  drawMeter();drawRadar();drawStats();drawBadges();updateProgress();checkNewBadge();
+}
+function updateProgress(){
+  const st=stats(),p=pool();
+  document.getElementById("pbar").style.width=(st.correct/QUESTIONS.length*100)+"%";
+  const label=MODE.type==="all"?"すべての分野から、基礎の問題から順に出題しています"
+    :MODE.type==="cat"?CATS[MODE.cat]+"（"+p.length+"問）から出題しています"
+    :"間違えた問題（"+p.length+"問）を復習しています";
+  document.getElementById("modeNote").innerHTML=label+
+    '　<button style="background:none;border:none;color:var(--deep);text-decoration:underline;cursor:pointer;font-family:inherit;font-size:.77rem;padding:0" id="bAllMode">すべての分野に戻す</button>';
+  const b=document.getElementById("bAllMode");
+  if(b)b.onclick=()=>{MODE={type:"all"};next();toast("すべての分野から出題します");};
+}
+let shown=new Set();
+function checkNewBadge(){const st=stats();
+  BADGES.forEach(b=>{if(b.chk(st)&&!shown.has(b.id)){shown.add(b.id);
+    toast(b.ic+" 称号「"+b.nm+"」を獲得しました");}});}
+function toast(m){const t=document.getElementById("toast");
+  t.textContent=m;t.classList.add("on");clearTimeout(t._h);
+  t._h=setTimeout(()=>t.classList.remove("on"),2600);}
+
+function go(name){
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===name));
+  ["learn","stats","badge","about"].forEach(n=>
+    document.getElementById("tab-"+n).classList.toggle("hide",n!==name));
+  if(name==="stats"){drawRadar();drawStats();} if(name==="badge")drawBadges();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>go(b.dataset.tab));
+document.getElementById("btnReview").onclick=()=>{
+  const n=QUESTIONS.filter(q=>S.res[q.id]&&!S.res[q.id].ok).length;
+  if(!n){toast("復習が必要な問題はありません");return;}
+  MODE={type:"review"};go("learn");next();toast("間違えた"+n+"問を復習します");};
+document.getElementById("btnReset").onclick=()=>{
+  if(!confirm("学習の記録をすべて消します。元に戻せません。よろしいですか。"))return;
+  S={res:{},maxCombo:0,dates:[today()]};shown=new Set();save();
+  MODE={type:"all"};COMBO=0;next();drawMeter();drawRadar();drawStats();drawBadges();toast("記録を消しました");};
+document.addEventListener("keydown",e=>{
+  if(document.getElementById("tab-learn").classList.contains("hide"))return;
+  const k=e.key.toUpperCase();
+  if(!ANSWERED&&"ABCD".includes(k)){const b=document.querySelector('#opts .opt[data-i="'+"ABCD".indexOf(k)+'"]');if(b)b.click();}
+  if(ANSWERED&&(e.key==="Enter"||e.key===" ")){const b=document.getElementById("bNext");if(b){e.preventDefault();b.click();}}});
+
+BADGES.forEach(b=>{if(b.chk(stats()))shown.add(b.id);});
+drawMeter();drawRadar();drawStats();drawBadges();next();save();
+</script>
+</body>
+</html>
