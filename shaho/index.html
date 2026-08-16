@@ -37,34 +37,39 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#E8EBEA;
-  --card:#F8F9F8;
-  --card-2:#F1F3F2;
-  --ink:#14191C;
-  --ink-2:#4C565B;
-  --ink-3:#7C868B;
-  --rule:#C7CFCC;
-  --rule-soft:#DCE2DF;
-  --net:#17635C;
-  --net-soft:#D5E4E1;
-  --cost:#8E2F3A;
-  --cost-soft:#EBD9DB;
-  --brass:#A8862F;
-  --warn:#9C4A18;
-  --radius:3px;
+  /* ---- 紙とカード（A系＝トップ・住宅ローンと共通） ---- */
+  --paper:#FAF9F6; --card:#FFFFFF; --card-2:#F4F6F5;
+  /* ---- 文字 ---- */
+  --ink:#18262F; --ink-soft:#33495B; --ink-faint:#5B7085;
+  --ink-2:#33495B; --ink-3:#5B7085;
+  /* ---- 早朝のシーグラス ---- */
+  --sea-deep:#33526C; --sea:#527695; --sky:#84D2F5; --aqua:#B0F1F0; --mist:#DFF6F1;
+  /* ---- 朝焼け ---- */
+  --dawn:#FEEEDF; --rose:#F4C3D3; --bloom:#F8A3BF; --plum:#B67AB4;
+  /* ---- ペリドット ---- */
+  --peridot:#82B33A; --lime:#D4E157; --mint:#E8F5E9; --warn:#B5623F;
+  /* ---- 罫線 ---- */
+  --line:rgba(24,38,47,.18); --rule:rgba(24,38,47,.18); --rule-soft:rgba(24,38,47,.09);
+  --shadow:0 1px 2px rgba(24,38,47,.05), 0 10px 26px rgba(24,38,47,.07);
+  --shadow-lift:0 3px 6px rgba(24,38,47,.07), 0 20px 44px rgba(24,38,47,.14);
+  --radius:14px; --r:14px;
+  --serif:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Times New Roman",serif;
+  --sans:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Noto Sans JP",sans-serif;
   --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
-  --sans:"Zen Kaku Gothic New",-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
-  --serif:"Shippori Mincho B1","Hiragino Mincho ProN",serif;
+  --num:"Helvetica Neue",Arial,sans-serif;
+  --net:#17635C; --net-soft:#DFF6F1;
+  --cost:#B5623F; --cost-soft:#F9E7DE;
+  --brass:#A8862F;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0;background:var(--paper);color:var(--ink);
-  font-family:var(--sans);font-size:15px;line-height:1.7;
-  font-feature-settings:"palt" 1;
+  font-family:var(--sans);font-size:16.5px;line-height:1.92;
+  letter-spacing:.015em;-webkit-font-smoothing:antialiased;
 }
 a{color:var(--net);text-underline-offset:3px}
 h1,h2,h3{font-family:var(--serif);font-weight:800;line-height:1.35;letter-spacing:.01em;margin:0}
@@ -106,7 +111,7 @@ legend::after{content:"";flex:1;height:1px;background:var(--rule-soft)}
 input[type=number],select,input[type=text]{
   font-family:var(--mono);font-size:13.5px;font-variant-numeric:tabular-nums;
   width:118px;padding:5px 8px;text-align:right;color:var(--ink);
-  background:#fff;border:1px solid var(--rule);border-radius:2px}
+  background:#fff;border:1px solid var(--rule);border-radius:14px}
 select{width:100%;text-align:left;grid-column:1/-1;font-family:var(--sans);font-size:13px}
 input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{
   outline:2px solid var(--brass);outline-offset:2px}
@@ -117,7 +122,7 @@ input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visi
 
 /* 繁忙月スライダー */
 .otbox{background:var(--card-2);border:1px solid var(--rule);border-left:3px solid var(--brass);
-  border-radius:2px;padding:12px 14px;margin-top:12px}
+  border-radius:14px;padding:12px 14px;margin-top:12px}
 .otbox .val{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--ink)}
 .otbox .val small{font-size:13px;color:var(--ink-2);font-weight:400}
 input[type=range]{width:100%;accent-color:var(--cost);margin-top:6px}
@@ -137,7 +142,7 @@ input[type=range]{width:100%;accent-color:var(--cost);margin-top:6px}
 .bands{padding:6px 24px 22px}
 .bands svg{width:100%;height:auto;display:block;overflow:visible}
 .band-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:11.5px;color:var(--ink-2);font-family:var(--mono)}
-.band-legend i{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px;border-radius:1px}
+.band-legend i{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px;border-radius:8px}
 
 /* ---------- metrics ---------- */
 .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-top:1px solid var(--rule)}
@@ -175,7 +180,7 @@ tr.hi td{background:var(--net-soft)}
 .note{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule-soft);font-size:13px;line-height:1.65}
 .note:last-child{border-bottom:0}
 .note .tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:2px 7px;height:fit-content;
-  border:1px solid currentColor;border-radius:2px;white-space:nowrap;margin-top:2px}
+  border:1px solid currentColor;border-radius:14px;white-space:nowrap;margin-top:2px}
 .t-tax{color:var(--brass)} .t-risk{color:var(--warn)} .t-net{color:var(--net)} .t-cost{color:var(--cost)}
 .note b{font-weight:700}
 
@@ -188,7 +193,7 @@ details.src[open] summary{border-bottom:1px solid var(--rule-soft)}
 
 .actions{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px;border-top:1px solid var(--rule-soft)}
 button{font-family:var(--sans);font-size:12.5px;padding:7px 14px;cursor:pointer;
-  background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:2px}
+  background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:14px}
 button.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
 button:hover{opacity:.86}
 
@@ -207,7 +212,7 @@ button:hover{opacity:.86}
 .cmp .no{color:var(--ink-3)}
 .cmp .part{color:var(--brass);font-size:12px}
 .cta{display:inline-block;margin-top:16px;padding:11px 22px;background:var(--cost);color:#fff;
-  text-decoration:none;border-radius:2px;font-size:14px;font-weight:700}
+  text-decoration:none;border-radius:14px;font-size:14px;font-weight:700}
 .cta:hover{opacity:.88}
 
 footer{border-top:1px solid var(--rule);margin-top:36px;padding:22px 24px 48px;
@@ -216,11 +221,25 @@ footer{border-top:1px solid var(--rule);margin-top:36px;padding:22px 24px 48px;
   .bar-seg,.line-path{transition:all .35s cubic-bezier(.4,0,.2,1)}
 }
 @media print{.controls,.actions{display:none}.wrap{grid-template-columns:1fr}}
+
+/* ==== A系トーンへの調整（カードを白く浮かせる） ==== */
+.panel,.card,.box,details.src,.promo,.result,.hero,.figure,.tblwrap{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.stamp{border-radius:10px}
+table th,table td{border-color:var(--rule-soft)}
+/* 太い黒罫（新聞的）を淡い罫へ */
+.masthead{border-bottom:1px solid var(--line)}
+.promo{border:1px solid var(--line)}
+.sec-t,.section-title{border-bottom-color:var(--line)}
 </style>
 </head>
 <body>
-<div style="background:#1F3251;color:#EAEDF0;font:500 13px/1.5 -apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',sans-serif;padding:11px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:relative;z-index:99999">
-<a href="/" style="color:#EAEDF0;text-decoration:none;letter-spacing:.12em">← 数字のものさし</a>
+<div style="background:#33526C;color:#FAF9F6;font:500 13px/1.5 -apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',sans-serif;padding:11px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:relative;z-index:99999">
+<a href="/" style="color:#FAF9F6;text-decoration:none;letter-spacing:.12em">← 数字のものさし</a>
 <a href="/#tools" style="color:#A8862F;text-decoration:none">ほかのツール</a>
 <a href="/articles/" style="color:#A8862F;text-decoration:none">読みもの</a>
 <a href="/#excel" style="color:#A8862F;text-decoration:none">Excel版</a>
@@ -638,7 +657,7 @@ const SEG = [
   ['net','手取り','#17635C'],
   ['kenpo','健康保険','#C46A5E'],
   ['kaigo','介護保険','#D4897E'],
-  ['kosei','厚生年金','#8E2F3A'],
+  ['kosei','厚生年金','#B5623F'],
   ['koyo','雇用保険','#E0A99F'],
   ['shotoku','所得税','#8A6D3B'],
   ['jumin','住民税','#B79A63']
@@ -695,7 +714,7 @@ function drawBands(S){
     kosei: S.koseiY + S.bKosei, koyo: S.koyo, shotoku: S.shotoku, jumin: S.jumin
   };
   const tot = Math.max(1, S.grossAll);
-  let out = `<text x="0" y="18" font-family="IBM Plex Mono" font-size="11" fill="#7C868B" letter-spacing="2">額面年収 ${yen(S.grossAll)} の内訳</text>`;
+  let out = `<text x="0" y="18" font-family="IBM Plex Mono" font-size="11" fill="#5B7085" letter-spacing="2">額面年収 ${yen(S.grossAll)} の内訳</text>`;
   let x = PADL;
   SEG.forEach(([k,name,col]) => {
     const v = data[k] || 0;
@@ -708,9 +727,9 @@ function drawBands(S){
   });
   // 会社負担の帯
   const Y2 = Y + H + 16;
-  out += `<text x="0" y="${Y2-4}" font-family="IBM Plex Mono" font-size="10.5" fill="#7C868B">会社が別に負担している法定福利費 ${yen(S.shahoKai)}（額面の ${(S.shahoKai/Math.max(1,S.grossAll)*100).toFixed(1)}%）</text>`;
+  out += `<text x="0" y="${Y2-4}" font-family="IBM Plex Mono" font-size="10.5" fill="#5B7085">会社が別に負担している法定福利費 ${yen(S.shahoKai)}（額面の ${(S.shahoKai/Math.max(1,S.grossAll)*100).toFixed(1)}%）</text>`;
   const w2 = S.shahoKai/tot*BW;
-  out += `<rect x="${PADL}" y="${Y2}" width="${Math.max(1,w2).toFixed(1)}" height="18" fill="none" stroke="#8E2F3A" stroke-dasharray="4 3"/>`;
+  out += `<rect x="${PADL}" y="${Y2}" width="${Math.max(1,w2).toFixed(1)}" height="18" fill="none" stroke="#B5623F" stroke-dasharray="4 3"/>`;
   $('bandSvg').innerHTML = out;
   $('bandLegend').innerHTML = SEG.filter(([k]) => (data[k]||0) > 0)
     .map(([k,n,c]) => `<span><i style="background:${c}"></i>${n}</span>`).join('');
@@ -735,14 +754,14 @@ function drawStep(S){
   let out = '';
   for (let i = 0; i <= 4; i++){
     const gy = T + ih*i/4, gv = vmax - (vmax-vmin)*i/4;
-    out += `<line x1="${L}" y1="${gy}" x2="${W-R}" y2="${gy}" stroke="#DCE2DF"/>`;
-    out += `<text x="${L-10}" y="${gy+4}" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#7C868B">${man(gv)}</text>`;
+    out += `<line x1="${L}" y1="${gy}" x2="${W-R}" y2="${gy}" stroke="rgba(24,38,47,.09)"/>`;
+    out += `<text x="${L-10}" y="${gy+4}" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#5B7085">${man(gv)}</text>`;
   }
   for (let h = 0; h <= maxH; h += 10){
-    out += `<line x1="${X(h)}" y1="${T}" x2="${X(h)}" y2="${T+ih}" stroke="#DCE2DF" opacity=".55"/>`;
-    out += `<text x="${X(h)}" y="${T+ih+18}" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#7C868B">${h}</text>`;
+    out += `<line x1="${X(h)}" y1="${T}" x2="${X(h)}" y2="${T+ih}" stroke="rgba(24,38,47,.09)" opacity=".55"/>`;
+    out += `<text x="${X(h)}" y="${T+ih+18}" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#5B7085">${h}</text>`;
   }
-  out += `<text x="${W-R}" y="${T+ih+36}" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#7C868B">4〜6月の月平均残業時間</text>`;
+  out += `<text x="${W-R}" y="${T+ih+36}" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#5B7085">4〜6月の月平均残業時間</text>`;
 
   // 階段のパス
   let d = '';
@@ -754,7 +773,7 @@ function drawStep(S){
       else d += `L${X(p.h).toFixed(1)},${Yv(p.y).toFixed(1)}`;
     }
   });
-  out += `<path class="line-path" d="${d}" fill="none" stroke="#8E2F3A" stroke-width="2.4"/>`;
+  out += `<path class="line-path" d="${d}" fill="none" stroke="#B5623F" stroke-width="2.4"/>`;
 
   // 現在位置
   const cur = pts.reduce((a,p) => Math.abs(p.h - S.otPeak) < Math.abs(a.h - S.otPeak) ? p : a, pts[0]);
@@ -764,7 +783,7 @@ function drawStep(S){
   const anchor = S.otPeak > maxH*0.72 ? 'end' : 'start';
   const dx = S.otPeak > maxH*0.72 ? -10 : 10;
   out += `<text x="${cx+dx}" y="${cy-14}" text-anchor="${anchor}" font-family="IBM Plex Mono" font-size="11.5" fill="#A8862F">いまの位置　${S.otPeak}h → ${yen(cur.y)}／年</text>`;
-  out += `<text x="${L}" y="${T-8}" font-family="IBM Plex Mono" font-size="10.5" fill="#4C565B">縦軸＝9月から翌年8月までの本人負担（健康保険＋介護保険＋厚生年金）。会社も同額を負担します。</text>`;
+  out += `<text x="${L}" y="${T-8}" font-family="IBM Plex Mono" font-size="10.5" fill="#33495B">縦軸＝9月から翌年8月までの本人負担（健康保険＋介護保険＋厚生年金）。会社も同額を負担します。</text>`;
   $('stepSvg').innerHTML = out;
 }
 

@@ -37,34 +37,39 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#E8EBEA;
-  --card:#F8F9F8;
-  --card-2:#F1F3F2;
-  --ink:#14191C;
-  --ink-2:#4C565B;
-  --ink-3:#7C868B;
-  --rule:#C7CFCC;
-  --rule-soft:#DCE2DF;
-  --rent:#17635C;
-  --rent-soft:#D5E4E1;
-  --own:#8E2F3A;
-  --own-soft:#EBD9DB;
-  --brass:#A8862F;
-  --warn:#9C4A18;
-  --radius:3px;
+  /* ---- 紙とカード（A系＝トップ・住宅ローンと共通） ---- */
+  --paper:#FAF9F6; --card:#FFFFFF; --card-2:#F4F6F5;
+  /* ---- 文字 ---- */
+  --ink:#18262F; --ink-soft:#33495B; --ink-faint:#5B7085;
+  --ink-2:#33495B; --ink-3:#5B7085;
+  /* ---- 早朝のシーグラス ---- */
+  --sea-deep:#33526C; --sea:#527695; --sky:#84D2F5; --aqua:#B0F1F0; --mist:#DFF6F1;
+  /* ---- 朝焼け ---- */
+  --dawn:#FEEEDF; --rose:#F4C3D3; --bloom:#F8A3BF; --plum:#B67AB4;
+  /* ---- ペリドット ---- */
+  --peridot:#82B33A; --lime:#D4E157; --mint:#E8F5E9; --warn:#B5623F;
+  /* ---- 罫線 ---- */
+  --line:rgba(24,38,47,.18); --rule:rgba(24,38,47,.18); --rule-soft:rgba(24,38,47,.09);
+  --shadow:0 1px 2px rgba(24,38,47,.05), 0 10px 26px rgba(24,38,47,.07);
+  --shadow-lift:0 3px 6px rgba(24,38,47,.07), 0 20px 44px rgba(24,38,47,.14);
+  --radius:14px; --r:14px;
+  --serif:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Times New Roman",serif;
+  --sans:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Noto Sans JP",sans-serif;
   --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
-  --sans:"Zen Kaku Gothic New",-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
-  --serif:"Shippori Mincho B1","Hiragino Mincho ProN",serif;
+  --num:"Helvetica Neue",Arial,sans-serif;
+  --rent:#17635C; --rent-soft:#DFF6F1;
+  --own:#B5623F; --own-soft:#F9E7DE;
+  --brass:#A8862F;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0;background:var(--paper);color:var(--ink);
-  font-family:var(--sans);font-size:15px;line-height:1.7;
-  font-feature-settings:"palt" 1;
+  font-family:var(--sans);font-size:16.5px;line-height:1.92;
+  letter-spacing:.015em;-webkit-font-smoothing:antialiased;
 }
 a{color:var(--rent);text-underline-offset:3px}
 h1,h2,h3{font-family:var(--serif);font-weight:800;line-height:1.35;letter-spacing:.01em;margin:0}
@@ -106,7 +111,7 @@ legend::after{content:"";flex:1;height:1px;background:var(--rule-soft)}
 input[type=number],select,input[type=text]{
   font-family:var(--mono);font-size:13.5px;font-variant-numeric:tabular-nums;
   width:112px;padding:5px 8px;text-align:right;color:var(--ink);
-  background:#fff;border:1px solid var(--rule);border-radius:2px}
+  background:#fff;border:1px solid var(--rule);border-radius:14px}
 select{width:100%;text-align:left;grid-column:1/-1;font-family:var(--sans);font-size:13px}
 input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{
   outline:2px solid var(--brass);outline-offset:2px}
@@ -117,7 +122,7 @@ input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visi
 .check input{margin-top:4px;accent-color:var(--rent)}
 
 /* death slider */
-.deathbox{background:var(--card-2);border:1px solid var(--rule);border-radius:2px;padding:12px 14px;margin-top:12px}
+.deathbox{background:var(--card-2);border:1px solid var(--rule);border-radius:14px;padding:12px 14px;margin-top:12px}
 .deathbox .val{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--ink)}
 .deathbox .val small{font-size:13px;color:var(--ink-2);font-weight:400}
 input[type=range]{width:100%;accent-color:var(--own);margin-top:6px}
@@ -138,7 +143,7 @@ input[type=range]{width:100%;accent-color:var(--own);margin-top:6px}
 .bands{padding:6px 24px 22px}
 .bands svg{width:100%;height:auto;display:block;overflow:visible}
 .band-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:11.5px;color:var(--ink-2);font-family:var(--mono)}
-.band-legend i{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px;border-radius:1px}
+.band-legend i{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px;border-radius:8px}
 
 /* ---------- metric grid ---------- */
 .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));border-top:1px solid var(--rule)}
@@ -177,7 +182,7 @@ tr.sub td{color:var(--ink-3)}
 .note{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule-soft);font-size:13px;line-height:1.65}
 .note:last-child{border-bottom:0}
 .note .tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:2px 7px;height:fit-content;
-  border:1px solid currentColor;border-radius:2px;white-space:nowrap;margin-top:2px}
+  border:1px solid currentColor;border-radius:14px;white-space:nowrap;margin-top:2px}
 .t-tax{color:var(--brass)} .t-risk{color:var(--warn)} .t-rent{color:var(--rent)} .t-own{color:var(--own)}
 .note b{font-weight:700}
 
@@ -190,7 +195,7 @@ details.src[open] summary{border-bottom:1px solid var(--rule-soft)}
 
 .actions{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px;border-top:1px solid var(--rule-soft)}
 button{font-family:var(--sans);font-size:12.5px;padding:7px 14px;cursor:pointer;
-  background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:2px}
+  background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:14px}
 button.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
 button:hover{opacity:.86}
 
@@ -200,11 +205,25 @@ footer{border-top:1px solid var(--rule);margin-top:36px;padding:22px 24px 48px;
   .bar-seg,.line-path{transition:all .35s cubic-bezier(.4,0,.2,1)}
 }
 @media print{.controls,.actions{display:none}.wrap{grid-template-columns:1fr}}
+
+/* ==== A系トーンへの調整（カードを白く浮かせる） ==== */
+.panel,.card,.box,details.src,.promo,.result,.hero,.figure,.tblwrap{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.stamp{border-radius:10px}
+table th,table td{border-color:var(--rule-soft)}
+/* 太い黒罫（新聞的）を淡い罫へ */
+.masthead{border-bottom:1px solid var(--line)}
+.promo{border:1px solid var(--line)}
+.sec-t,.section-title{border-bottom-color:var(--line)}
 </style>
 </head>
 <body>
-<div style="background:#1F3251;color:#EAEDF0;font:500 13px/1.5 -apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',sans-serif;padding:11px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:relative;z-index:99999">
-<a href="/" style="color:#EAEDF0;text-decoration:none;letter-spacing:.12em">← 数字のものさし</a>
+<div style="background:#33526C;color:#FAF9F6;font:500 13px/1.5 -apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',sans-serif;padding:11px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:relative;z-index:99999">
+<a href="/" style="color:#FAF9F6;text-decoration:none;letter-spacing:.12em">← 数字のものさし</a>
 <a href="/#tools" style="color:#A8862F;text-decoration:none">ほかのツール</a>
 <a href="/kinri/" style="color:#A8862F;text-decoration:none">ローン返済の詳細</a>
 <a href="/articles/" style="color:#A8862F;text-decoration:none">読みもの</a>
@@ -870,7 +889,7 @@ const SEG_R = [
   ['init','初期費用（礼敷・仲介）','#CBDFDC']
 ];
 const SEG_O = [
-  ['init','頭金・諸費用','#8E2F3A'],
+  ['init','頭金・諸費用','#B5623F'],
   ['interest','ローン利息','#AB4B54'],
   ['loan','ローン元金','#C67078'],
   ['tax','固定資産税・都市計画税','#D89AA0'],
@@ -931,14 +950,14 @@ function drawBands(S){
   const max = Math.max(S.cumR, S.cumO, 1);
   const bars = [
     { label:'賃貸', total:S.cumR, segs:SEG_R, data:S.sumR, y:44, color:'#17635C' },
-    { label:'持ち家', total:S.cumO, segs:SEG_O, data:S.sumO, y:144, color:'#8E2F3A' }
+    { label:'持ち家', total:S.cumO, segs:SEG_O, data:S.sumO, y:144, color:'#B5623F' }
   ];
-  let out = `<text x="0" y="18" font-family="IBM Plex Mono" font-size="11" fill="#7C868B" letter-spacing="2">生涯支出の内訳（名目・${S.age0}→${S.ageD}歳）</text>`;
+  let out = `<text x="0" y="18" font-family="IBM Plex Mono" font-size="11" fill="#5B7085" letter-spacing="2">生涯支出の内訳（名目・${S.age0}→${S.ageD}歳）</text>`;
 
   bars.forEach(b => {
     let x = PADL;
     out += `<text x="${PADL-12}" y="${b.y+26}" text-anchor="end" font-family="Shippori Mincho B1" font-size="17" font-weight="800" fill="${b.color}">${b.label}</text>`;
-    out += `<text x="${PADL-12}" y="${b.y+46}" text-anchor="end" font-family="IBM Plex Mono" font-size="12" fill="#4C565B">${fmtY(b.total)}</text>`;
+    out += `<text x="${PADL-12}" y="${b.y+46}" text-anchor="end" font-family="IBM Plex Mono" font-size="12" fill="#33495B">${fmtY(b.total)}</text>`;
     b.segs.forEach(([key,name,col]) => {
       const val = b.data[key] || 0;
       if (val <= 0) return;
@@ -957,8 +976,8 @@ function drawBands(S){
   // 目盛
   for (let i = 0; i <= 4; i++){
     const gx = PADL + BW*i/4;
-    out += `<line x1="${gx}" y1="36" x2="${gx}" y2="212" stroke="#C7CFCC" stroke-width="1" opacity=".6"/>`;
-    out += `<text x="${gx}" y="228" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#7C868B">${fmtY(max*i/4)}</text>`;
+    out += `<line x1="${gx}" y1="36" x2="${gx}" y2="212" stroke="rgba(24,38,47,.18)" stroke-width="1" opacity=".6"/>`;
+    out += `<text x="${gx}" y="228" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#5B7085">${fmtY(max*i/4)}</text>`;
   }
   $('bandSvg').innerHTML = out;
 
@@ -982,20 +1001,20 @@ function drawLines(S){
   let out = '';
   for (let i = 0; i <= 4; i++){
     const gy = T + ih*i/4, gv = vmax - (vmax-vmin)*i/4;
-    out += `<line x1="${L}" y1="${gy}" x2="${W-R}" y2="${gy}" stroke="#DCE2DF"/>`;
-    out += `<text x="${L-10}" y="${gy+4}" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#7C868B">${fmtY(gv)}</text>`;
+    out += `<line x1="${L}" y1="${gy}" x2="${W-R}" y2="${gy}" stroke="rgba(24,38,47,.09)"/>`;
+    out += `<text x="${L-10}" y="${gy+4}" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#5B7085">${fmtY(gv)}</text>`;
   }
   const step = S.Y > 40 ? 10 : 5;
   for (let a = S.age0; a <= S.ageD; a += step){
-    out += `<line x1="${X(a)}" y1="${T}" x2="${X(a)}" y2="${T+ih}" stroke="#DCE2DF" opacity=".55"/>`;
-    out += `<text x="${X(a)}" y="${T+ih+18}" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#7C868B">${a}</text>`;
+    out += `<line x1="${X(a)}" y1="${T}" x2="${X(a)}" y2="${T+ih}" stroke="rgba(24,38,47,.09)" opacity=".55"/>`;
+    out += `<text x="${X(a)}" y="${T+ih+18}" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#5B7085">${a}</text>`;
   }
-  if (vmin < 0) out += `<line x1="${L}" y1="${Yv(0)}" x2="${W-R}" y2="${Yv(0)}" stroke="#14191C" stroke-width="1"/>`;
+  if (vmin < 0) out += `<line x1="${L}" y1="${Yv(0)}" x2="${W-R}" y2="${Yv(0)}" stroke="#18262F" stroke-width="1"/>`;
 
   out += `<path class="line-path" d="${path('cumR')}" fill="none" stroke="#17635C" stroke-width="2.4"/>`;
-  out += `<path class="line-path" d="${path('cumO')}" fill="none" stroke="#8E2F3A" stroke-width="2.4"/>`;
+  out += `<path class="line-path" d="${path('cumO')}" fill="none" stroke="#B5623F" stroke-width="2.4"/>`;
   out += `<path class="line-path" d="${path('aRent')}" fill="none" stroke="#17635C" stroke-width="1.4" stroke-dasharray="5 3" opacity=".75"/>`;
-  out += `<path class="line-path" d="${path('aOwn')}" fill="none" stroke="#8E2F3A" stroke-width="1.4" stroke-dasharray="5 3" opacity=".75"/>`;
+  out += `<path class="line-path" d="${path('aOwn')}" fill="none" stroke="#B5623F" stroke-width="1.4" stroke-dasharray="5 3" opacity=".75"/>`;
 
   if (S.crossAge){
     const cx = X(S.crossAge);
@@ -1006,10 +1025,10 @@ function drawLines(S){
   // ローン完済
   const done = S.age0 + Math.min(S.P.term, S.Y);
   if (done <= S.ageD && !S.sch.reverse){
-    out += `<line x1="${X(done)}" y1="${T}" x2="${X(done)}" y2="${T+ih}" stroke="#8E2F3A" stroke-width="1" opacity=".45"/>`;
-    out += `<text x="${X(done)+6}" y="${T+ih-8}" font-family="IBM Plex Mono" font-size="10.5" fill="#8E2F3A" opacity=".8">完済 ${done}歳</text>`;
+    out += `<line x1="${X(done)}" y1="${T}" x2="${X(done)}" y2="${T+ih}" stroke="#B5623F" stroke-width="1" opacity=".45"/>`;
+    out += `<text x="${X(done)+6}" y="${T+ih-8}" font-family="IBM Plex Mono" font-size="10.5" fill="#B5623F" opacity=".8">完済 ${done}歳</text>`;
   }
-  out += `<text x="${L}" y="${T-8}" font-family="IBM Plex Mono" font-size="10.5" fill="#4C565B">実線＝名目の累計支出　破線＝金融資産（共通の住居予算との差額を年${(num('rInv')).toFixed(1)}%で運用）</text>`;
+  out += `<text x="${L}" y="${T-8}" font-family="IBM Plex Mono" font-size="10.5" fill="#33495B">実線＝名目の累計支出　破線＝金融資産（共通の住居予算との差額を年${(num('rInv')).toFixed(1)}%で運用）</text>`;
   $('lineSvg').innerHTML = out;
 }
 
@@ -1034,7 +1053,7 @@ function drawScenarios(S){
     const t = a - age0;
     const state = s.sch.reverse ? '元金は死亡時に清算'
       : t < term ? `返済中・残債 ${fmtY(s.balEnd)}` : '完済後';
-    out += `<tr${a==base?' style="background:#F1F3F2;font-weight:600"':''}>
+    out += `<tr${a==base?' style="background:#F4F6F5;font-weight:600"':''}>
       <td class="n">${a}歳</td><td>${state}</td>
       <td class="n">${fmtY(s.rentHeir)}</td><td class="n">${fmtY(s.ownHeir)}</td>
       <td class="n">${fmtY(s.iRent.tax)}</td><td class="n">${fmtY(s.iOwn.tax)}</td>
