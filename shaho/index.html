@@ -230,7 +230,7 @@ body{font-family:var(--sans);font-size:16.5px;line-height:1.92;letter-spacing:.0
 /* --- サイトヘッダー：濃紺の帯をやめ、白地にロゴ＋ナビ --- */
 .sitehead{background:var(--paper);border-bottom:1px solid var(--line);
   position:sticky;top:0;z-index:60}
-.sitehead__inner{max-width:1440px;margin:0 auto;padding:10px 24px;min-height:58px;
+.sitehead__inner{max-width:var(--pagew,1440px);margin:0 auto;padding:10px var(--pagepad,24px);min-height:58px;
   display:flex;align-items:center;justify-content:space-between;gap:6px 24px;flex-wrap:wrap}
 .brand{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.16em;
   text-decoration:none;color:var(--ink);white-space:nowrap}
@@ -245,7 +245,7 @@ body{font-family:var(--sans);font-size:16.5px;line-height:1.92;letter-spacing:.0
 
 /* --- ページ見出し：等幅の英字ラベルをやめ、丸ミストを添える --- */
 .masthead{border-bottom:none;background:transparent;position:relative;isolation:isolate}
-.masthead-in{max-width:1440px;padding:22px 24px 34px}
+.masthead-in{max-width:var(--pagew,1440px);padding:22px var(--pagepad,24px) 34px}
 .masthead-in::before{content:"";position:absolute;top:-10px;right:8px;width:156px;height:156px;
   border-radius:50%;background:var(--mist);pointer-events:none;z-index:-1}
 .mark{font-family:var(--num);font-size:11.5px;font-weight:700;letter-spacing:.26em;
@@ -313,6 +313,8 @@ tr.hi td{background:rgba(223,246,241,.7)}
 .legend,.legend-cost,.legend-rent,.legend-own{font-size:13.5px}
 .chart,svg.chart{background:rgba(255,255,255,.7);border-radius:16px}
 
+:root{--pagew:1440px;--pagepad:24px}
+
 /* ==== 可読性の底上げ ==== */
 .hint,.row .hint,.field small,.calc__hint,.tab small,.kpi b{
   font-size:13px;color:var(--ink-soft)}
@@ -331,10 +333,47 @@ label,.row>label,.field label{color:var(--ink);font-weight:600}
 :root{--headh:59px}
 .controls{top:calc(var(--headh) + 16px) !important;
   max-height:calc(100vh - var(--headh) - 32px) !important}
+.sticky,.side,.panel.controls{top:calc(var(--headh) + 16px) !important}
 html{scroll-padding-top:calc(var(--headh) + 12px)}
 [id]{scroll-margin-top:calc(var(--headh) + 12px)}
 @media(max-width:1020px){.controls{position:static !important;max-height:none !important}}
 @media(max-width:640px){:root{--headh:52px}}
+
+/* ==== 記事部分を kinri / credit と同じ体裁に ==== */
+.prose h2,.about h2,.notes-body h2{
+  font-family:var(--serif);font-weight:700;
+  font-size:clamp(21px,3vw,26px);letter-spacing:.08em;
+  margin:52px 0 20px;padding:0 0 13px;
+  border-left:none;border-bottom:1px solid var(--line)}
+.prose h3,.about h3{
+  font-family:var(--serif);font-weight:700;font-size:18.5px;letter-spacing:.05em;
+  margin:34px 0 12px;padding-left:0;border-left:none}
+.prose h3::before,.about h3::before{
+  content:"";display:inline-block;width:9px;height:9px;border-radius:50%;
+  background:var(--bloom);margin-right:11px;vertical-align:middle}
+.prose p,.about p{margin:0 0 20px;font-size:16.5px;line-height:1.92}
+.prose ul,.prose ol,.about ul,.about ol{margin:0 0 20px;padding-left:1.4em;font-size:16.5px}
+.prose li,.about li{margin:8px 0}
+.prose code,.about code{font-family:var(--num);background:var(--mist);
+  padding:2px 8px;border-radius:6px;font-size:14.5px}
+/* 蛍光の砂色 → シーグラスの淡色に */
+.prose .em,.about .em,.em{background:linear-gradient(transparent 62%,var(--mist) 62%)}
+/* 結果カード・注記を kinri の .result / .disclaimer と同じ形に */
+.hero{background:linear-gradient(150deg,var(--mist),rgba(255,255,255,.92));
+  border:1.5px solid var(--line);border-top:1.5px solid var(--line);
+  border-left:6px solid var(--sea);border-radius:22px;box-shadow:none}
+.conv-out{background:rgba(232,245,233,.7);border-left:4px solid var(--peridot);
+  border-radius:0 16px 16px 0}
+.note{background:rgba(232,245,233,.7);border:none;border-left:4px solid var(--peridot);
+  border-radius:0 16px 16px 0;padding:24px 28px}
+.warnbox{background:var(--dawn);border-left:4px solid var(--warn);
+  border-radius:0 16px 16px 0;padding:20px 24px}
+.cta{border:1.5px solid var(--line);border-left:5px solid var(--sky);
+  border-radius:22px;box-shadow:var(--shadow)}
+.cta a.btn{border-radius:999px;padding:12px 26px;background:var(--sea-deep)}
+.cta .price{color:var(--ink-soft)}
+.sec-t{font-family:var(--num);font-size:11.5px;font-weight:700;letter-spacing:.26em;
+  color:var(--ink-faint);border-bottom:1px solid var(--line)}
 
 /* ==== 文字を太く・くっきり ==== */
 body{font-weight:500}
