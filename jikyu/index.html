@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<script>if(location.protocol==='http:'){location.replace('https://'+location.host+location.pathname+location.search+location.hash);}</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2146116373822311" crossorigin="anonymous"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-BETYS4R53Y');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>実質時給 計算ツール｜あなたの1時間はいくらか（令和8年度版）</title>
+<meta name="description" content="年収から社会保険料・所得税・住民税を差し引き、残業と通勤を含めた拘束時間で割って「実質時給」を出します。協会けんぽの都道府県別料率、標準報酬月額の等級表に対応。その支出が労働何時間分かも換算します。令和8年度の料率・令和8年分の税制に準拠した概算。">
+<meta name="author" content="数字のものさし">
+<link rel="canonical" href="https://kazumono.com/jikyu/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#33526C">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kazumono.com/jikyu/">
+<meta property="og:site_name" content="数字のものさし">
+<meta property="og:title" content="実質時給 計算ツール｜あなたの1時間はいくらか">
+<meta property="og:description" content="社会保険料・所得税・住民税を引いたあとの手取りを、残業と通勤を含めた拘束時間で割る。額面時給と実質時給の差を出します。令和8年度版。">
+<meta property="og:image" content="https://kazumono.com/assets/ogp.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="実質時給 計算ツール｜あなたの1時間はいくらか">
+<meta name="twitter:description" content="社会保険料・所得税・住民税を引いたあとの手取りを、残業と通勤を含めた拘束時間で割る。額面時給と実質時給の差を出します。">
+<meta name="twitter:image" content="https://kazumono.com/assets/ogp.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication",
+"name":"実質時給 計算ツール",
+"description":"年収から社会保険料・所得税・住民税を差し引き、残業と通勤を含めた拘束時間で割って実質時給を算出するツール。令和8年度の協会けんぽ都道府県別料率、令和8年分の所得税・住民税に対応した概算。",
+"applicationCategory":"FinanceApplication","operatingSystem":"Web browser","inLanguage":"ja",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},
+"url":"https://kazumono.com/jikyu/",
+"author":{"@type":"Organization","name":"数字のものさし","url":"https://kazumono.com/"},
+"provider":{"@type":"Organization","name":"数字のものさし","url":"https://kazumono.com/"}}
+</script>
+<style>
+:root{
+  --paper:#E8EBEA; --card:#F8F9F8; --card-2:#F1F3F2;
+  --ink:#14191C; --ink-2:#4C565B; --ink-3:#7C868B;
+  --rule:#C7CFCC; --rule-soft:#DCE2DF;
+  --net:#17635C; --net-soft:#D5E4E1;
+  --cost:#8E2F3A; --cost-soft:#EBD9DB;
+  --brass:#A8862F; --warn:#9C4A18;
+  --radius:3px;
+  --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  --sans:"Zen Kaku Gothic New",-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
+  --serif:"Shippori Mincho B1","Hiragino Mincho ProN",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.9;-webkit-text-size-adjust:100%}
+.wrap{max-width:820px;margin:0 auto;padding:0 18px 90px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:.03em}
+.mono{font-family:var(--mono);font-feature-settings:"tnum"}
+a{color:var(--net)}
+
+.topnav{background:#1F3251;color:#EAEDF0;font:500 13px/1.5 -apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',sans-serif;padding:11px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:relative;z-index:99999}
+.topnav a{color:#EAEDF0;text-decoration:none;letter-spacing:.12em}
+.topnav a.sub{color:#A8862F;letter-spacing:0}
+
+.masthead{background:linear-gradient(178deg,#F3F5F4 0%,var(--paper) 100%);border-bottom:1px solid var(--rule)}
+.masthead-in{max-width:820px;margin:0 auto;padding:26px 18px 20px;position:relative}
+.mark{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;color:var(--ink-3);text-transform:uppercase;margin-bottom:10px}
+.masthead h1{font-size:1.62rem;line-height:1.42;font-weight:800}
+.masthead h1 .slash{color:var(--brass);font-weight:600;margin:0 .1em}
+.masthead .sub{margin-top:11px;font-size:.9rem;color:var(--ink-2);line-height:1.85}
+.dot{position:absolute;right:20px;top:26px;width:52px;height:52px;border-radius:50%;border:1px solid var(--rule);opacity:.55}
+.dot::after{content:"";position:absolute;inset:11px;border-radius:50%;border:1px solid var(--brass);opacity:.6}
+
+section{margin-top:30px}
+.sec-t{font-size:.7rem;font-family:var(--mono);letter-spacing:.17em;color:var(--ink-3);text-transform:uppercase;border-bottom:1px solid var(--rule);padding-bottom:7px;margin-bottom:16px}
+
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:20px 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px 18px}
+.f label{display:block;font-size:.79rem;color:var(--ink-2);font-weight:500;margin-bottom:5px;letter-spacing:.02em}
+.f label .u{color:var(--ink-3);font-weight:400}
+.f input,.f select{width:100%;padding:9px 10px;border:1px solid var(--rule);border-radius:var(--radius);background:#fff;
+  font-family:var(--mono);font-size:.98rem;color:var(--ink)}
+.f input:focus,.f select:focus{outline:2px solid var(--net);outline-offset:-1px}
+.hint{font-size:.72rem;color:var(--ink-3);margin-top:4px;line-height:1.6}
+
+details.more{margin-top:16px;border-top:1px dashed var(--rule);padding-top:14px}
+details.more summary{cursor:pointer;font-size:.82rem;color:var(--net);font-weight:500;letter-spacing:.03em}
+details.more[open] summary{margin-bottom:14px}
+
+/* 結果 */
+.hero{margin-top:22px;background:var(--card);border:1px solid var(--rule);border-top:3px solid var(--net);border-radius:var(--radius);padding:24px 18px 20px;text-align:center}
+.hero .lead{font-size:.78rem;color:var(--ink-3);font-family:var(--mono);letter-spacing:.15em}
+.hero .big{font-family:var(--mono);font-weight:500;font-size:3.1rem;line-height:1.15;color:var(--net);margin:6px 0 2px;letter-spacing:-.02em}
+.hero .big span{font-size:1.15rem;margin-left:2px}
+.hero .cap{font-size:.85rem;color:var(--ink-2)}
+
+.bars{margin-top:18px;display:grid;gap:9px}
+.bar{display:grid;grid-template-columns:6.4em 1fr auto;align-items:center;gap:10px;font-size:.83rem}
+.bar b{font-weight:500;color:var(--ink-2)}
+.bar .track{height:15px;background:var(--card-2);border:1px solid var(--rule-soft);border-radius:2px;overflow:hidden}
+.bar .fill{height:100%;transition:width .28s ease}
+.bar .v{font-family:var(--mono);font-size:.88rem;min-width:5.4em;text-align:right}
+.f1{background:var(--rule)} .f2{background:#9BB8B4} .f3{background:var(--net)}
+
+table.br{width:100%;border-collapse:collapse;font-size:.86rem;margin-top:6px}
+table.br th,table.br td{padding:8px 6px;border-bottom:1px solid var(--rule-soft);text-align:right}
+table.br th{text-align:left;font-weight:500;color:var(--ink-2)}
+table.br td{font-family:var(--mono)}
+table.br tr.sum th,table.br tr.sum td{border-top:1px solid var(--rule);border-bottom:none;font-weight:700;color:var(--net)}
+table.br tr.cost td{color:var(--cost)}
+table.br .sub2 th{padding-left:16px;color:var(--ink-3);font-weight:400;font-size:.82rem}
+
+.conv{margin-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 6px}
+.chip{border:1px solid var(--rule);background:#fff;border-radius:999px;padding:5px 12px;font-size:.78rem;color:var(--ink-2);cursor:pointer;font-family:inherit}
+.chip:hover{border-color:var(--net);color:var(--net)}
+.conv-out{margin-top:12px;background:var(--net-soft);border-left:3px solid var(--net);border-radius:0 var(--radius) var(--radius) 0;padding:13px 15px;font-size:.95rem}
+.conv-out b{font-family:var(--mono);font-size:1.28rem;color:var(--net);font-weight:500}
+
+.note{background:var(--card-2);border:1px solid var(--rule-soft);border-radius:var(--radius);padding:14px 16px;font-size:.83rem;color:var(--ink-2);line-height:1.85}
+.warnbox{background:#F7EFE7;border-left:3px solid var(--warn);padding:13px 15px;border-radius:0 var(--radius) var(--radius) 0;font-size:.85rem;line-height:1.85;margin-top:14px}
+.warnbox b{color:var(--warn)}
+
+.prose h2{font-size:1.18rem;margin:30px 0 12px;padding-left:12px;border-left:3px solid var(--brass)}
+.prose h3{font-size:1rem;margin:22px 0 8px;color:var(--ink)}
+.prose p{margin-bottom:14px;font-size:.94rem;line-height:1.95}
+.prose ul{margin:0 0 14px 1.3em;font-size:.94rem}
+.prose li{margin-bottom:6px}
+.prose .em{background:linear-gradient(transparent 62%,#EDE3CB 62%)}
+
+.cta{margin-top:26px;background:var(--card);border:1px solid var(--brass);border-radius:var(--radius);padding:20px 18px}
+.cta h3{font-size:1.05rem;margin-bottom:8px;color:var(--ink)}
+.cta p{font-size:.89rem;color:var(--ink-2);margin-bottom:12px;line-height:1.85}
+.cta ul{margin:0 0 14px 1.25em;font-size:.87rem;color:var(--ink-2)}
+.cta ul li{margin-bottom:5px}
+.cta a.btn{display:inline-block;background:var(--net);color:#fff;text-decoration:none;padding:11px 22px;border-radius:var(--radius);font-size:.9rem;letter-spacing:.05em}
+.cta .price{font-family:var(--mono);color:var(--brass);font-size:.86rem;margin-left:10px}
+
+footer{margin-top:44px;border-top:1px solid var(--rule);padding-top:20px;font-size:.79rem;color:var(--ink-3);line-height:1.9}
+footer a{color:var(--ink-2)}
+.adslot{margin:30px 0 0;text-align:center;min-height:1px}
+
+@media(max-width:560px){
+  .masthead h1{font-size:1.3rem}
+  .dot{display:none}
+  .hero .big{font-size:2.4rem}
+  .bar{grid-template-columns:5.2em 1fr;grid-template-areas:"l v" "t t";gap:4px 8px}
+  .bar b{grid-area:l} .bar .v{grid-area:v} .bar .track{grid-area:t}
+}
+</style>
+</head>
+<body>
+<div class="topnav">
+<a href="/">← 数字のものさし</a>
+<a class="sub" href="/#tools">ほかのツール</a>
+<a class="sub" href="/articles/">読みもの</a>
+<a class="sub" href="/#excel">Excel版</a>
+<a class="sub" href="/contact/">お問い合わせ</a>
+</div>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <span class="mark">Real Hourly Wage / 実質時給の試算</span>
+    <h1>実質時給<span class="slash">／</span>あなたの1時間は<br>いくらになっているか</h1>
+    <p class="sub">年収を、社会保険料と税を引いたあとの手取りに直し、残業と通勤を含めた拘束時間で割ります。額面の時給と、実際に手元に残る1時間あたりの金額は、かなり違います。</p>
+    <div class="dot"></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <p class="sec-t">Input / 入力</p>
+  <div class="panel">
+    <div class="grid">
+      <div class="f">
+        <label for="nen">年収（額面・賞与込み） <span class="u">万円</span></label>
+        <input id="nen" type="number" value="500" min="0" max="20000" step="10">
+      </div>
+      <div class="f">
+        <label for="pref">勤務先の都道府県</label>
+        <select id="pref"></select>
+        <p class="hint">協会けんぽの健康保険料率が都道府県ごとに違います</p>
+      </div>
+      <div class="f">
+        <label for="age">年齢 <span class="u">歳</span></label>
+        <input id="age" type="number" value="38" min="15" max="80" step="1">
+        <p class="hint">40〜64歳は介護保険料が上乗せされます</p>
+      </div>
+      <div class="f">
+        <label for="hday">1日の所定労働時間 <span class="u">時間</span></label>
+        <input id="hday" type="number" value="8" min="1" max="16" step="0.25">
+      </div>
+      <div class="f">
+        <label for="holiday">年間休日 <span class="u">日</span></label>
+        <input id="holiday" type="number" value="120" min="0" max="200" step="1">
+      </div>
+      <div class="f">
+        <label for="zan">残業（月平均） <span class="u">時間</span></label>
+        <input id="zan" type="number" value="20" min="0" max="200" step="1">
+      </div>
+      <div class="f">
+        <label for="tsukin">通勤（片道） <span class="u">分</span></label>
+        <input id="tsukin" type="number" value="40" min="0" max="240" step="5">
+      </div>
+      <div class="f">
+        <label for="jiko">仕事のための自己負担（月） <span class="u">円</span></label>
+        <input id="jiko" type="number" value="0" min="0" max="500000" step="1000">
+        <p class="hint">スーツ、書籍、資格、付き合いの飲食など</p>
+      </div>
+    </div>
+
+    <details class="more">
+      <summary>詳しい条件を指定する（賞与の割合・扶養・休憩時間）</summary>
+      <div class="grid">
+        <div class="f">
+          <label for="bratio">年収に占める賞与の割合 <span class="u">％</span></label>
+          <input id="bratio" type="number" value="20" min="0" max="60" step="1">
+          <p class="hint">社会保険料は月給と賞与で計算が違うため分けます</p>
+        </div>
+        <div class="f">
+          <label for="spouse">配偶者控除の対象となる配偶者</label>
+          <select id="spouse"><option value="0">いない</option><option value="1">いる</option></select>
+        </div>
+        <div class="f">
+          <label for="fuyo">扶養親族 <span class="u">人</span></label>
+          <input id="fuyo" type="number" value="0" min="0" max="10" step="1">
+          <p class="hint">一般の控除対象扶養親族の人数</p>
+        </div>
+        <div class="f">
+          <label for="kyukei">休憩時間（1日） <span class="u">分</span></label>
+          <input id="kyukei" type="number" value="60" min="0" max="180" step="15">
+          <p class="hint">拘束されている時間として実質時給に含めます</p>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="hero">
+    <p class="lead">REAL HOURLY WAGE</p>
+    <p class="big mono" id="realWage">—<span>円</span></p>
+    <p class="cap" id="realCap">—</p>
+
+    <div class="bars">
+      <div class="bar"><b>額面時給</b><div class="track"><div class="fill f1" id="bar1" style="width:0"></div></div><span class="v mono" id="v1">—</span></div>
+      <div class="bar"><b>手取り時給</b><div class="track"><div class="fill f2" id="bar2" style="width:0"></div></div><span class="v mono" id="v2">—</span></div>
+      <div class="bar"><b>実質時給</b><div class="track"><div class="fill f3" id="bar3" style="width:0"></div></div><span class="v mono" id="v3">—</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="sec-t">Breakdown / 内訳</p>
+  <div class="panel">
+    <table class="br" id="tblMoney"></table>
+    <div style="height:18px"></div>
+    <table class="br" id="tblTime"></table>
+    <div class="warnbox" id="notice"></div>
+  </div>
+</section>
+
+<section class="conv">
+  <p class="sec-t">Conversion / その支出は労働何時間分か</p>
+  <div class="panel">
+    <div class="f" style="max-width:280px">
+      <label for="price">金額 <span class="u">円</span></label>
+      <input id="price" type="number" value="12000" min="0" max="100000000" step="100">
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="conv-out" id="convOut">—</div>
+    <p class="hint" style="margin-top:10px">実質時給で割っています。「これは何時間ぶんの拘束か」という見方をすると、同じ金額でも印象が変わります。</p>
+  </div>
+</section>
+
+<div class="cta">
+  <h3>もっと細かく、何度も比べたい場合</h3>
+  <p>ブラウザ版は「今の自分の実質時給を1本出す」ためのものです。条件を作り込んで比較したい場合は、Excel版があります。</p>
+  <ul>
+    <li>転職オファーA案・B案・現職を横並びで比較（年収が上がっても実質時給が下がる場合があります）</li>
+    <li>時短勤務、扶養の範囲内、副業を足した場合の試算</li>
+    <li>月ごとの手取りの推移と、年末調整での精算額</li>
+    <li>計算過程がシート上に全部出ているので、どの控除がいくら効いたかを追えます</li>
+  </ul>
+  <a class="btn" href="/#excel">Excel版を見る</a><span class="price">1,000円／令和8年度版</span>
+</div>
+
+<div class="adslot"></div>
+
+<section class="prose">
+  <p class="sec-t">Notes / 読みもの</p>
+
+  <h2>額面の時給は、実際にはほとんど意味がない</h2>
+  <p>年収500万円、週40時間労働。これを単純に割ると時給は2,400円ほどになります。ところが、この数字で生活の判断をしている人はいません。実際に使えるのは、社会保険料と税を引いたあとの金額だからです。そしてもうひとつ、時間の側も正確ではありません。残業も通勤も休憩も、あなたが自由に使えない時間という意味では同じです。</p>
+  <p>このツールは、その両側を実態に近づけます。<span class="em">分子を手取りに、分母を拘束時間に</span>置き換えるだけの単純な計算ですが、出てくる数字は額面時給とかなり違います。</p>
+
+  <h2>分子の側：手取りはどう決まるか</h2>
+  <h3>社会保険料は、給与そのものではなく「等級」で決まる</h3>
+  <p>健康保険料と厚生年金保険料は、毎月の給与額に直接料率を掛けるのではありません。給与額を等級表に当てはめて標準報酬月額という区切りのいい数字に置き換え、それに料率を掛けます。等級は第1級から第50級まであり、健康保険は58,000円から1,390,000円まで、厚生年金は88,000円から650,000円までの範囲で決まります。</p>
+  <p>この仕組みには段差があります。給与が少し上がっただけで等級がひとつ上がると、保険料が階段状に増える。逆に、等級の中に収まっている限りは給与が増えても保険料は変わりません。標準報酬月額がどう決まるか、4月から6月の残業が9月以降の保険料をどう左右するかについては、<a href="/shaho/">社会保険料・手取り 簡易シミュレーター</a>で段差の動きを見ることができます。</p>
+
+  <h3>健康保険料率は都道府県で1%以上違う</h3>
+  <p>協会けんぽの健康保険料率は都道府県ごとに算出されます。令和8年度は全国平均9.90%で、最も高い佐賀県が10.55%、最も低い新潟県が9.21%。1.34ポイントの差があります。年収500万円なら、この差だけで年間3万円前後の違いが出ます。勤務先がどこの支部に加入しているかで、同じ給与でも手取りが変わるということです。</p>
+  <p>40歳から64歳の方には介護保険料が上乗せされます。令和8年度は全国一律1.62%。さらに令和8年度からは子ども・子育て支援金率0.23%が新設され、これも労使折半で負担します。40歳の誕生日を迎えた月から手取りが下がるのは、この介護保険料が始まるためです。</p>
+
+  <h3>厚生年金は18.3%で固定、雇用保険は給与のつど</h3>
+  <p>厚生年金保険料率は18.3%で、平成29年9月以降は変わっていません。労使折半なので本人負担は9.15%です。ただし標準報酬月額に上限があるため、高収入になるほど負担率は頭打ちになります。雇用保険は等級ではなく、実際に支払われた賃金額に対してそのつど計算されます。残業代にも賞与にも掛かります。</p>
+
+  <h3>所得税と住民税は、控除の積み上げで決まる</h3>
+  <p>所得税は、給与収入から給与所得控除を引いて所得を出し、そこから社会保険料控除・配偶者控除・扶養控除・基礎控除などを引いた残りに税率を掛けます。税率は5%から45%までの7段階。ここに復興特別所得税2.1%が上乗せされます。</p>
+  <p>住民税は所得割10%と均等割の組み合わせです。所得割の計算は所得税と似ていますが、控除額が所得税より小さいものがいくつかあり、その差を埋めるために調整控除という仕組みが入ります。均等割は自治体によって異なりますが、標準は道府県民税と市町村民税で合計4,000円、これに森林環境税1,000円が加わります。</p>
+
+  <h3>令和8年は、税制が大きく動いた年</h3>
+  <p>令和8年分から基礎控除が引き上げられました。合計所得金額が489万円以下なら104万円、489万円超655万円以下なら67万円、それを超えると62万円です。給与所得控除の最低保障額も特例で74万円に引き上げられています。多くの給与所得者にとって、これは減税です。</p>
+  <p>ただし<span class="em">注意すべき点があります</span>。この引き上げは令和8年分の所得税から適用されますが、月々の給与から引かれる源泉徴収税額への反映は令和9年1月からです。改訂された源泉徴収税額表の適用がそこから始まるためで、令和8年中の月次給与は旧税額表で計算されます。つまり<span class="em">毎月の給与明細で引かれている所得税は多めになっており、年末調整でまとめて戻ってくる</span>ことになります。「今月の手取り」を見て年間の実力を判断すると、今年に限っては低めに見積もることになります。このツールは年額ベースの試算なので、年末調整後の姿を表しています。</p>
+
+  <h2>分母の側：どこまでを拘束時間と見るか</h2>
+  <p>ここには唯一の正解がありません。このツールでは次のように置いています。</p>
+  <ul>
+    <li><b>所定労働時間</b>：（365日 − 年間休日）× 1日の所定労働時間</li>
+    <li><b>残業時間</b>：月平均 × 12か月</li>
+    <li><b>通勤時間</b>：片道 × 2 × 出勤日数</li>
+    <li><b>休憩時間</b>：1日あたりの休憩 × 出勤日数</li>
+  </ul>
+  <p>額面時給と手取り時給は「所定＋残業」で割り、実質時給だけが通勤と休憩を含みます。これは、通勤と休憩が給与の対象ではないが自由でもない時間だからです。片道40分の通勤は、年間240日出勤なら320時間になります。1日8時間労働で40日分。ここを分母に入れるかどうかで、数字はかなり動きます。</p>
+  <p>仕事のための自己負担も分子から引いています。スーツ、書籍、資格の受験料、付き合いの飲食。これらは給与から出ていく一方で、給与明細には現れません。</p>
+
+  <h2>年収が上がるほど、手取り率は下がる</h2>
+  <p>このツールで東京都・38歳・賞与20%・扶養なしという条件を固定し、年収だけを動かすと、手取り率は次のように動きます。年収300万円で約80.5%、500万円で約78.5%、700万円で約75.9%、1,000万円で約71.4%、1,500万円で約67.3%。年収が5倍になっても、手取りは4.2倍にしかなりません。</p>
+  <p>理由は2つあります。ひとつは所得税の累進構造で、課税所得が増えるほど上乗せ分に高い税率がかかること。もうひとつは給与所得控除に上限があり、年収850万円を超えると195万円で頭打ちになることです。収入が増えても控除は増えないため、課税対象がそのまま伸びていきます。<span class="em">増えた年収のうち手元に残るのは、思っているより少ない</span>——昇給や転職の判断では、この逓減を頭に入れておく必要があります。</p>
+  <p>ただし社会保険料には逆の動きもあります。厚生年金の標準報酬月額には上限があるため、そこを超えた分には厚生年金保険料がかかりません。高収入層では、社会保険料の負担率だけは下がっていきます。</p>
+
+  <h2>この数字をどう使うか</h2>
+  <p>ひとつは支出の判断です。12,000円の買い物が実質時給1,500円の人にとって8時間分の拘束にあたる、という見方をすると、金額の重みが変わります。上の換算欄はそのためのものです。</p>
+  <p>もうひとつは働き方の比較です。年収が50万円上がっても、残業が月20時間増え、通勤が片道20分伸びるなら、実質時給は下がることがあります。転職の判断で年収の額だけを見ていると、この逆転を見落とします。</p>
+  <p>ただし、実質時給が高ければよいという話ではありません。この数字は仕事のやりがいも、身につくスキルも、将来の年収の伸びしろも一切測っていません。あくまで<span class="em">今この瞬間の、金銭と時間の交換レート</span>を見るための道具です。それ以上のことは言えません。</p>
+
+  <h2>この試算に含まれていないもの</h2>
+  <ul>
+    <li>健康保険組合に加入している場合の料率（このツールは協会けんぽの料率を使っています）</li>
+    <li>生命保険料控除、住宅ローン控除、医療費控除、iDeCoなど個別の控除</li>
+    <li>住民税の均等割の自治体差、非課税限度額の級地差</li>
+    <li>年齢や賃金による雇用保険の適用除外</li>
+    <li>賞与の支給回数が年2回でない場合の保険料の細かい違い</li>
+    <li>通勤手当の非課税枠（年収に含めず、別途支給されている前提です）</li>
+    <li>厚生年金の標準報酬月額の上限を超える高所得層での細かな挙動</li>
+  </ul>
+
+  <div class="note" style="margin-top:20px">
+    <b>この試算について。</b>令和8年度の協会けんぽ都道府県別保険料率・介護保険料率・子ども子育て支援金率、および令和8年分の所得税・住民税をもとにした<b>概算</b>です。実際の金額は、加入している健康保険の種別、扶養の状況、各種控除、勤務先の給与規程によって変わります。正確な金額は源泉徴収票、給与明細、お住まいの自治体の住民税決定通知書でご確認ください。<br>
+    このツールは一般的な計算方法を示すものであり、個別の税務相談に応じるものではありません。具体的な税額の判断が必要な場合は、税理士または所轄の税務署にご相談ください。
+  </div>
+</section>
+
+<footer>
+  <p>令和8年度の料率・令和8年分の税制に準拠した概算ツールです。年度が変わると料率と控除額が変わるため、結果も変わります。</p>
+  <p style="margin-top:10px">
+    <a href="/">数字のものさし</a>　
+    <a href="/shaho/">社会保険料シミュレーター</a>　
+    <a href="/articles/">読みもの</a>　
+    <a href="/privacy/">プライバシーポリシー</a>　
+    <a href="/contact/">お問い合わせ</a>
+  </p>
+  <p style="margin-top:10px">© 数字のものさし</p>
+</footer>
+</div>
+
+<script>
+/* ===== 令和8年度の料率・令和8年分の税制 ===== */
+const PREFS = [
+  ["北海道",10.28],["青森県",9.85],["岩手県",9.51],["宮城県",10.10],["秋田県",10.01],
+  ["山形県",9.75],["福島県",9.50],["茨城県",9.52],["栃木県",9.82],["群馬県",9.68],
+  ["埼玉県",9.67],["千葉県",9.73],["東京都",9.85],["神奈川県",9.92],["新潟県",9.21],
+  ["富山県",9.59],["石川県",9.70],["福井県",9.71],["山梨県",9.55],["長野県",9.63],
+  ["岐阜県",9.80],["静岡県",9.61],["愛知県",9.93],["三重県",9.77],["滋賀県",9.88],
+  ["京都府",9.89],["大阪府",10.13],["兵庫県",10.12],["奈良県",9.91],["和歌山県",10.06],
+  ["鳥取県",9.86],["島根県",9.94],["岡山県",10.05],["広島県",9.78],["山口県",10.15],
+  ["徳島県",10.24],["香川県",10.02],["愛媛県",9.98],["高知県",10.05],["福岡県",10.11],
+  ["佐賀県",10.55],["長崎県",10.06],["熊本県",10.08],["大分県",10.08],["宮崎県",9.77],
+  ["鹿児島県",10.13],["沖縄県",9.44]
+];
+const KAIGO = 1.62, KODOMO = 0.23, KOSEI = 18.300;
+const KOYO_HON = 5/1000;
+const KOSEI_MIN = 88000, KOSEI_MAX = 650000;
+const BONUS_CAP_KENPO = 5730000, BONUS_CAP_KOSEI = 1500000;
+const SHOTOKU = [
+  [1950000,0.05,0],[3300000,0.10,97500],[6950000,0.20,427500],[9000000,0.23,636000],
+  [18000000,0.33,1536000],[40000000,0.40,2796000],[Infinity,0.45,4796000]
+];
+const FUKKO = 0.021;
+/* [等級, 厚年等級, 標準報酬月額, 報酬月額の下限] */
+const GRADES = [
+  [1,0,58000,0],[2,0,68000,63000],[3,0,78000,73000],[4,1,88000,83000],
+  [5,2,98000,93000],[6,3,104000,101000],[7,4,110000,107000],[8,5,118000,114000],
+  [9,6,126000,122000],[10,7,134000,130000],[11,8,142000,138000],[12,9,150000,146000],
+  [13,10,160000,155000],[14,11,170000,165000],[15,12,180000,175000],[16,13,190000,185000],
+  [17,14,200000,195000],[18,15,220000,210000],[19,16,240000,230000],[20,17,260000,250000],
+  [21,18,280000,270000],[22,19,300000,290000],[23,20,320000,310000],[24,21,340000,330000],
+  [25,22,360000,350000],[26,23,380000,370000],[27,24,410000,395000],[28,25,440000,425000],
+  [29,26,470000,455000],[30,27,500000,485000],[31,28,530000,515000],[32,29,560000,545000],
+  [33,30,590000,575000],[34,31,620000,605000],[35,32,650000,635000],[36,0,680000,665000],
+  [37,0,710000,695000],[38,0,750000,730000],[39,0,790000,770000],[40,0,830000,810000],
+  [41,0,880000,855000],[42,0,930000,905000],[43,0,980000,955000],[44,0,1030000,1005000],
+  [45,0,1090000,1055000],[46,0,1150000,1115000],[47,0,1210000,1175000],[48,0,1270000,1235000],
+  [49,0,1330000,1295000],[50,0,1390000,1355000]
+];
+
+const halfUp = x => Math.round(x*2)%2===0 ? Math.round(x) : Math.round(x-0.0000001);
+function gradeOf(h){ let i=0; for(let k=0;k<GRADES.length;k++) if(h>=GRADES[k][3]) i=k; return i; }
+function kyuyoKojo(x){
+  if(x<=0) return 0;
+  if(x<=2200000) return Math.min(x,740000);
+  if(x<=3600000) return x*0.30+80000;
+  if(x<=6600000) return x*0.20+440000;
+  if(x<=8500000) return x*0.10+1100000;
+  return 1950000;
+}
+function kisoTax(g){
+  if(g<=4890000) return 1040000;
+  if(g<=6550000) return 670000;
+  if(g<=23500000) return 620000;
+  if(g<=24000000) return 480000;
+  if(g<=24500000) return 320000;
+  if(g<=25000000) return 160000;
+  return 0;
+}
+function kisoJumin(g){
+  if(g<=24000000) return 430000;
+  if(g<=24500000) return 290000;
+  if(g<=25000000) return 150000;
+  return 0;
+}
+function shotokuTax(t){ for(const [cap,rate,ded] of SHOTOKU) if(t<=cap) return Math.max(0,t*rate-ded); return 0; }
+
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat($(id).value); return isNaN(v) ? 0 : v; };
+
+function calc(){
+  const gross    = Math.max(0, num('nen')) * 10000;
+  const bRatio   = Math.min(60, Math.max(0, num('bratio')))/100;
+  const bonus    = Math.floor(gross * bRatio);
+  const payMonth = Math.floor((gross - bonus)/12);
+  const age      = num('age');
+  const kenpoRate = PREFS[$('pref').selectedIndex][1] + KODOMO;
+  const kaigoRate = (age>=40 && age<65) ? KAIGO : 0;
+  const active    = gross > 0;
+
+  /* --- 社会保険料（本人負担） --- */
+  const gi   = gradeOf(payMonth);
+  const std  = GRADES[gi][2];
+  const stdK = Math.min(Math.max(std, KOSEI_MIN), KOSEI_MAX);
+  const kenpoM = active ? halfUp(std * kenpoRate/100/2) : 0;
+  const kaigoM = active ? halfUp(std * kaigoRate/100/2) : 0;
+  const koseiM = active ? halfUp(stdK * KOSEI/100/2) : 0;
+  const kenpoY = kenpoM*12, kaigoY = kaigoM*12, koseiY = koseiM*12;
+
+  const bEach  = Math.floor(bonus/2/1000)*1000;
+  const bBaseK = Math.min(bEach, BONUS_CAP_KENPO);
+  const bKenpo = active ? halfUp(bBaseK*kenpoRate/100/2)*2 : 0;
+  const bKaigo = active ? halfUp(bBaseK*kaigoRate/100/2)*2 : 0;
+  const bKosei = active ? halfUp(Math.min(bEach,BONUS_CAP_KOSEI)*KOSEI/100/2)*2 : 0;
+  const koyo   = active ? halfUp(gross*KOYO_HON) : 0;
+  const shaho  = kenpoY + kaigoY + koseiY + bKenpo + bKaigo + bKosei + koyo;
+
+  /* --- 税 --- */
+  const kyuyo   = kyuyoKojo(gross);
+  const total   = Math.max(0, gross - kyuyo);
+  const spouse  = $('spouse').value === '1';
+  const fuyo    = Math.max(0, num('fuyo'));
+  const dedTax  = shaho + (spouse?380000:0) + fuyo*380000 + kisoTax(total);
+  const dedJum  = shaho + (spouse?330000:0) + fuyo*330000 + kisoJumin(total);
+  const taxable  = Math.floor(Math.max(0, total - dedTax)/1000)*1000;
+  const taxableJ = Math.floor(Math.max(0, total - dedJum)/1000)*1000;
+
+  const shotoku = Math.floor(shotokuTax(taxable)*(1+FUKKO)/100)*100;
+  const shotokuwari = taxableJ*0.10;
+  const jinteki = 50000 + (spouse?50000:0) + fuyo*50000;
+  const chosei = taxableJ<=2000000
+      ? Math.min(jinteki, taxableJ)*0.05
+      : Math.max(2500, (jinteki-(taxableJ-2000000))*0.05);
+  const jumin = (total<=450000) ? 0 : Math.round(Math.max(0, shotokuwari-chosei)) + 5000;
+
+  const net = gross - shaho - shotoku - jumin;
+
+  /* --- 時間 --- */
+  const holiday = Math.min(200, Math.max(0, num('holiday')));
+  const days    = Math.max(1, 365 - holiday);
+  const hday    = Math.max(0.5, num('hday'));
+  const hShotei = days * hday;
+  const hZan    = Math.max(0, num('zan')) * 12;
+  const hTsukin = days * Math.max(0, num('tsukin')) * 2 / 60;
+  const hKyukei = days * Math.max(0, num('kyukei')) / 60;
+  const hPaid   = hShotei + hZan;
+  const hAll    = hPaid + hTsukin + hKyukei;
+
+  const jiko = Math.max(0, num('jiko')) * 12;
+  const netAdj = net - jiko;
+
+  return {
+    gross, bonus, payMonth, age, kenpoRate, kaigoRate, gi, std, stdK,
+    kenpoY, kaigoY, koseiY, bKenpo, bKaigo, bKosei, koyo, shaho,
+    kyuyo, total, taxable, taxableJ, shotoku, jumin, net, netAdj, jiko,
+    days, hShotei, hZan, hTsukin, hKyukei, hPaid, hAll,
+    wGross: hPaid>0 ? gross/hPaid : 0,
+    wNet:   hPaid>0 ? net/hPaid   : 0,
+    wReal:  hAll>0  ? netAdj/hAll : 0
+  };
+}
+
+const yen = n => Math.round(n).toLocaleString('ja-JP');
+const hrs = n => n.toLocaleString('ja-JP',{maximumFractionDigits:0});
+
+function hoursToText(h){
+  if(!isFinite(h) || h<=0) return "—";
+  const H = Math.floor(h), M = Math.round((h-H)*60);
+  if(H >= 8){
+    const d = Math.floor(H/8), r = H%8;
+    return `${hrs(H)}時間${M}分（1日8時間なら約${hrs(d)}日${r>0?"と"+r+"時間":""}）`;
+  }
+  return `${H}時間${M}分`;
+}
+
+function render(){
+  const r = calc();
+
+  $('realWage').innerHTML = yen(r.wReal) + '<span>円</span>';
+  $('realCap').textContent =
+    `年間の拘束 ${hrs(r.hAll)}時間 ／ 手元に残る ${yen(r.netAdj)}円`;
+
+  const mx = Math.max(r.wGross, 1);
+  const set = (i,v)=>{
+    const w = Math.min(100, Math.max(0, v/mx*100));
+    $('bar'+i).style.width = w.toFixed(1)+'%';
+    $('v'+i).textContent = yen(v)+'円';
+  };
+  set(1, r.wGross); set(2, r.wNet); set(3, r.wReal);
+
+  const pref = PREFS[$('pref').selectedIndex][0];
+  const rows = [
+    ['年収（額面）', r.gross, 'plus'],
+    ['&emsp;うち月給（12か月）', r.gross - r.bonus, 'sub2'],
+    ['&emsp;うち賞与', r.bonus, 'sub2'],
+    [`健康保険料（${pref} ${r.kenpoRate.toFixed(2)}%）`, -(r.kenpoY + r.bKenpo), 'cost'],
+    ['介護保険料', -(r.kaigoY + r.bKaigo), 'cost'],
+    ['厚生年金保険料', -(r.koseiY + r.bKosei), 'cost'],
+    ['雇用保険料', -r.koyo, 'cost'],
+    ['所得税（復興特別所得税を含む）', -r.shotoku, 'cost'],
+    ['住民税', -r.jumin, 'cost'],
+  ];
+  if(r.jiko>0) rows.push(['仕事のための自己負担', -r.jiko, 'cost']);
+
+  let html = '<tr><th style="width:56%">項目</th><td>年額</td></tr>';
+  for(const [label, val, kind] of rows){
+    if(kind==='sub2'){ html += `<tr class="sub2"><th>${label}</th><td>${yen(val)}</td></tr>`; continue; }
+    const cls = kind==='cost' ? ' class="cost"' : '';
+    html += `<tr><th>${label}</th><td${cls}>${val<0?'▲ ':''}${yen(Math.abs(val))}</td></tr>`;
+  }
+  html += `<tr class="sum"><th>手元に残る金額</th><td>${yen(r.netAdj)}</td></tr>`;
+  $('tblMoney').innerHTML = html;
+
+  const th = [
+    ['所定労働時間', r.hShotei],
+    ['残業時間', r.hZan],
+    ['通勤時間', r.hTsukin],
+    ['休憩時間', r.hKyukei]
+  ];
+  let h2 = '<tr><th style="width:56%">拘束されている時間</th><td>年間</td></tr>';
+  for(const [l,v] of th) h2 += `<tr><th>${l}</th><td>${hrs(v)} 時間</td></tr>`;
+  h2 += `<tr class="sum"><th>合計</th><td>${hrs(r.hAll)} 時間</td></tr>`;
+  $('tblTime').innerHTML = h2;
+
+  const rate = r.gross>0 ? (r.net/r.gross*100) : 0;
+  const diff = r.wGross>0 ? (1 - r.wReal/r.wGross)*100 : 0;
+  $('notice').innerHTML =
+    `<b>手取り率 ${rate.toFixed(1)}%。</b>額面時給 ${yen(r.wGross)}円 に対し、実質時給は ${yen(r.wReal)}円。`
+    + `<b>${diff.toFixed(0)}%</b> 目減りしています。`
+    + `標準報酬月額は第${GRADES[r.gi][0]}級（${yen(r.std)}円）。`
+    + (r.kaigoRate>0 ? '介護保険料（40〜64歳）が含まれています。' : '')
+    + `<br>令和8年中の給与から引かれる所得税は旧税額表で計算されるため、毎月の手取りはこの試算より低く出て、年末調整で精算されます。`;
+
+  conv();
+}
+
+function conv(){
+  const r = calc();
+  const p = Math.max(0, num('price'));
+  const h = r.wReal>0 ? p/r.wReal : 0;
+  $('convOut').innerHTML = p<=0 ? '—'
+    : `${yen(p)}円 は <b>${hoursToText(h)}</b> ぶんの拘束にあたります。`;
+}
+
+/* 初期化 */
+(function init(){
+  const sel = $('pref');
+  PREFS.forEach(([n],i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=n; sel.appendChild(o); });
+  sel.selectedIndex = 12; // 東京都
+
+  const presets = [['コンビニ弁当',600],['ランチ',1200],['飲み会',6000],['スマホ月額',8000],['家賃',90000],['旅行',150000],['車',2500000]];
+  const box = $('chips');
+  presets.forEach(([label,v])=>{
+    const b=document.createElement('button');
+    b.className='chip'; b.type='button'; b.textContent=`${label} ${v.toLocaleString('ja-JP')}円`;
+    b.addEventListener('click',()=>{ $('price').value=v; conv(); });
+    box.appendChild(b);
+  });
+
+  ['nen','pref','age','hday','holiday','zan','tsukin','jiko','bratio','spouse','fuyo','kyukei']
+    .forEach(id=>{ $(id).addEventListener('input',render); $(id).addEventListener('change',render); });
+  $('price').addEventListener('input',conv);
+
+  render();
+})();
+</script>
+</body>
+</html>
