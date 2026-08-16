@@ -43,8 +43,8 @@
   /* ---- 紙とカード（A系＝トップ・住宅ローンと共通） ---- */
   --paper:#FAF9F6; --card:#FFFFFF; --card-2:#F4F6F5;
   /* ---- 文字 ---- */
-  --ink:#18262F; --ink-soft:#33495B; --ink-faint:#5B7085;
-  --ink-2:#33495B; --ink-3:#5B7085;
+  --ink:#0F1A22; --ink-soft:#2A3D4D; --ink-faint:#465A6C;
+  --ink-2:#2A3D4D; --ink-3:#465A6C;
   /* ---- 早朝のシーグラス ---- */
   --sea-deep:#33526C; --sea:#527695; --sky:#84D2F5; --aqua:#B0F1F0; --mist:#DFF6F1;
   /* ---- 朝焼け ---- */
@@ -69,7 +69,7 @@ html{-webkit-text-size-adjust:100%}
 body{
   margin:0;background:var(--paper);color:var(--ink);
   font-family:var(--sans);font-size:16.5px;line-height:1.92;
-  letter-spacing:.015em;-webkit-font-smoothing:antialiased;
+  letter-spacing:.015em;
 }
 a{color:var(--net);text-underline-offset:3px}
 h1,h2,h3{font-family:var(--serif);font-weight:800;line-height:1.35;letter-spacing:.01em;margin:0}
@@ -225,8 +225,7 @@ footer{border-top:1px solid var(--rule);margin-top:36px;padding:22px 24px 48px;
 /* ================================================================
    A系シェル（kinri / credit と同じ骨格）への上書き
    ================================================================ */
-body{font-family:var(--sans);font-size:16.5px;line-height:1.92;letter-spacing:.015em;
-  -webkit-font-smoothing:antialiased;background:var(--paper);color:var(--ink)}
+body{font-family:var(--sans);font-size:16.5px;line-height:1.92;letter-spacing:.015em;background:var(--paper);color:var(--ink)}
 
 /* --- サイトヘッダー：濃紺の帯をやめ、白地にロゴ＋ナビ --- */
 .sitehead{background:var(--paper);border-bottom:1px solid var(--line);
@@ -313,6 +312,23 @@ tr.hi td{background:rgba(223,246,241,.7)}
 /* --- 注記・凡例 --- */
 .legend,.legend-cost,.legend-rent,.legend-own{font-size:13.5px}
 .chart,svg.chart{background:rgba(255,255,255,.7);border-radius:16px}
+
+/* ==== 可読性の底上げ ==== */
+.hint,.row .hint,.field small,.calc__hint,.tab small,.kpi b{
+  font-size:13px;color:var(--ink-soft)}
+.metric .d,.check,.verdict-note,.band-legend,.note,.sub{color:var(--ink-soft)}
+footer,.foot__links a{color:var(--ink-soft)}
+th{color:var(--ink)}
+label,.row>label,.field label{color:var(--ink);font-weight:600}
+
+/* ==== 固定ヘッダーぶんのオフセット ==== */
+:root{--headh:59px}
+.controls{top:calc(var(--headh) + 16px) !important;
+  max-height:calc(100vh - var(--headh) - 32px) !important}
+html{scroll-padding-top:calc(var(--headh) + 12px)}
+[id]{scroll-margin-top:calc(var(--headh) + 12px)}
+@media(max-width:1020px){.controls{position:static !important;max-height:none !important}}
+@media(max-width:640px){:root{--headh:52px}}
 </style>
 </head>
 <body>
@@ -794,7 +810,7 @@ function drawBands(S){
     kosei: S.koseiY + S.bKosei, koyo: S.koyo, shotoku: S.shotoku, jumin: S.jumin
   };
   const tot = Math.max(1, S.grossAll);
-  let out = `<text x="0" y="18" font-family="IBM Plex Mono" font-size="11" fill="#5B7085" letter-spacing="2">額面年収 ${yen(S.grossAll)} の内訳</text>`;
+  let out = `<text x="0" y="18" font-family="IBM Plex Mono" font-size="11" fill="#465A6C" letter-spacing="2">額面年収 ${yen(S.grossAll)} の内訳</text>`;
   let x = PADL;
   SEG.forEach(([k,name,col]) => {
     const v = data[k] || 0;
@@ -807,7 +823,7 @@ function drawBands(S){
   });
   // 会社負担の帯
   const Y2 = Y + H + 16;
-  out += `<text x="0" y="${Y2-4}" font-family="IBM Plex Mono" font-size="10.5" fill="#5B7085">会社が別に負担している法定福利費 ${yen(S.shahoKai)}（額面の ${(S.shahoKai/Math.max(1,S.grossAll)*100).toFixed(1)}%）</text>`;
+  out += `<text x="0" y="${Y2-4}" font-family="IBM Plex Mono" font-size="10.5" fill="#465A6C">会社が別に負担している法定福利費 ${yen(S.shahoKai)}（額面の ${(S.shahoKai/Math.max(1,S.grossAll)*100).toFixed(1)}%）</text>`;
   const w2 = S.shahoKai/tot*BW;
   out += `<rect x="${PADL}" y="${Y2}" width="${Math.max(1,w2).toFixed(1)}" height="18" fill="none" stroke="#B5623F" stroke-dasharray="4 3"/>`;
   $('bandSvg').innerHTML = out;
@@ -835,13 +851,13 @@ function drawStep(S){
   for (let i = 0; i <= 4; i++){
     const gy = T + ih*i/4, gv = vmax - (vmax-vmin)*i/4;
     out += `<line x1="${L}" y1="${gy}" x2="${W-R}" y2="${gy}" stroke="rgba(24,38,47,.09)"/>`;
-    out += `<text x="${L-10}" y="${gy+4}" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#5B7085">${man(gv)}</text>`;
+    out += `<text x="${L-10}" y="${gy+4}" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#465A6C">${man(gv)}</text>`;
   }
   for (let h = 0; h <= maxH; h += 10){
     out += `<line x1="${X(h)}" y1="${T}" x2="${X(h)}" y2="${T+ih}" stroke="rgba(24,38,47,.09)" opacity=".55"/>`;
-    out += `<text x="${X(h)}" y="${T+ih+18}" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#5B7085">${h}</text>`;
+    out += `<text x="${X(h)}" y="${T+ih+18}" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#465A6C">${h}</text>`;
   }
-  out += `<text x="${W-R}" y="${T+ih+36}" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#5B7085">4〜6月の月平均残業時間</text>`;
+  out += `<text x="${W-R}" y="${T+ih+36}" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#465A6C">4〜6月の月平均残業時間</text>`;
 
   // 階段のパス
   let d = '';
@@ -863,7 +879,7 @@ function drawStep(S){
   const anchor = S.otPeak > maxH*0.72 ? 'end' : 'start';
   const dx = S.otPeak > maxH*0.72 ? -10 : 10;
   out += `<text x="${cx+dx}" y="${cy-14}" text-anchor="${anchor}" font-family="IBM Plex Mono" font-size="11.5" fill="#B67AB4">いまの位置　${S.otPeak}h → ${yen(cur.y)}／年</text>`;
-  out += `<text x="${L}" y="${T-8}" font-family="IBM Plex Mono" font-size="10.5" fill="#33495B">縦軸＝9月から翌年8月までの本人負担（健康保険＋介護保険＋厚生年金）。会社も同額を負担します。</text>`;
+  out += `<text x="${L}" y="${T-8}" font-family="IBM Plex Mono" font-size="10.5" fill="#2A3D4D">縦軸＝9月から翌年8月までの本人負担（健康保険＋介護保険＋厚生年金）。会社も同額を負担します。</text>`;
   $('stepSvg').innerHTML = out;
 }
 

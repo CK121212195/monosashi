@@ -32,7 +32,7 @@
 <style>
 :root{
   --paper:#FAF9F6; --card:#FFFFFF;
-  --ink:#18262F; --ink-soft:#33495B; --ink-faint:#5B7085;
+  --ink:#0F1A22; --ink-soft:#2A3D4D; --ink-faint:#465A6C;
   --sea-deep:#33526C; --sea:#527695; --sky:#84D2F5; --aqua:#B0F1F0; --mist:#DFF6F1;
   --dawn:#FEEEDF; --rose:#F4C3D3; --bloom:#F8A3BF; --plum:#B67AB4;
   --peridot:#82B33A; --lime:#D4E157; --mint:#E8F5E9; --warn:#B5623F;
@@ -45,7 +45,7 @@
 }
 *,*::before,*::after{box-sizing:border-box;}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
-  font-size:16.5px;line-height:1.92;letter-spacing:.015em;-webkit-font-smoothing:antialiased;}
+  font-size:16.5px;line-height:1.92;letter-spacing:.015em;}
 .column{width:100%;max-width:900px;margin:0 auto;padding:0 24px;}
 .wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 24px;}
 a{color:inherit;}
@@ -173,6 +173,14 @@ tr.tot td,tr.tot th{font-weight:700;background:rgba(223,246,241,.5);}
   h1,h2,h3,p,li,td,th{overflow-wrap:anywhere;}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+
+/* ==== 可読性の底上げ ==== */
+.hint,.row .hint,.field small,.calc__hint,.tab small,.kpi b{
+  font-size:13px;color:var(--ink-soft)}
+.metric .d,.check,.verdict-note,.band-legend,.note,.sub{color:var(--ink-soft)}
+footer,.foot__links a{color:var(--ink-soft)}
+th{color:var(--ink)}
+label,.row>label,.field label{color:var(--ink);font-weight:600}
 </style>
 </head>
 <body>
@@ -442,7 +450,7 @@ tr.tot td,tr.tot th{font-weight:700;background:rgba(223,246,241,.5);}
     for(var g=0; g<=4; g++){
       var gy=T+(H-T-B)*g/4;
       h+='<line x1="'+L+'" y1="'+gy+'" x2="'+(W-R)+'" y2="'+gy+'" stroke="rgba(24,38,47,.10)"/>';
-      h+='<text x="'+(L-8)+'" y="'+(gy+4)+'" text-anchor="end" font-size="10" fill="#5B7085">'+yen(maxV*(4-g)/4/10000)+'万</text>';
+      h+='<text x="'+(L-8)+'" y="'+(gy+4)+'" text-anchor="end" font-size="10" fill="#465A6C">'+yen(maxV*(4-g)/4/10000)+'万</text>';
     }
     var pts=[];
     yrs.forEach(function(a,idx){
@@ -452,11 +460,11 @@ tr.tot td,tr.tot th{font-weight:700;background:rgba(223,246,241,.5);}
       h+='<rect x="'+x+'" y="'+(H-B-hp)+'" width="'+w+'" height="'+hp+'" fill="#527695"/>';
       pts.push((x+w/2)+','+(T+(H-T-B)*(1-a.bal/maxB)));
       if(yrs.length<=20 || idx%2===0)
-        h+='<text x="'+(x+w/2)+'" y="'+(H-B+16)+'" text-anchor="middle" font-size="10" fill="#5B7085">'+a.y+'</text>';
+        h+='<text x="'+(x+w/2)+'" y="'+(H-B+16)+'" text-anchor="middle" font-size="10" fill="#465A6C">'+a.y+'</text>';
     });
     h+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="#82B33A" stroke-width="2.5"/>';
-    h+='<text x="'+(W-R+8)+'" y="'+(T+8)+'" font-size="10" fill="#5B7085">残高</text>';
-    h+='<text x="'+(W/2)+'" y="'+(H-4)+'" text-anchor="middle" font-size="10.5" fill="#5B7085">経過年数（年）</text>';
+    h+='<text x="'+(W-R+8)+'" y="'+(T+8)+'" font-size="10" fill="#465A6C">残高</text>';
+    h+='<text x="'+(W/2)+'" y="'+(H-4)+'" text-anchor="middle" font-size="10.5" fill="#465A6C">経過年数（年）</text>';
     svg.innerHTML=h;
   }
 
@@ -517,7 +525,7 @@ tr.tot td,tr.tot th{font-weight:700;background:rgba(223,246,241,.5);}
     var at=Math.max(1,Math.round(yr*12));
     if(amt<=0){
       $('p-kpi').innerHTML='<div><b>繰上返済額</b><span>—</span></div>';
-      $('p-table').innerHTML=''; $('p-remarks').innerHTML='<li style="--c:#5B7085">繰上返済額を入力すると、削減できる利息が表示されます。</li>';
+      $('p-table').innerHTML=''; $('p-remarks').innerHTML='<li style="--c:#465A6C">繰上返済額を入力すると、削減できる利息が表示されます。</li>';
       return;
     }
     var res=build(P,i,n,type,bonus,{at:at,amt:amt,mode:mode});
@@ -557,7 +565,7 @@ tr.tot td,tr.tot th{font-weight:700;background:rgba(223,246,241,.5);}
     for(var g=0;g<=4;g++){
       var gy=T+(H-T-B)*g/4, gv=maxV-(maxV-minV)*g/4;
       h+='<line x1="'+L+'" y1="'+gy+'" x2="'+(W-R)+'" y2="'+gy+'" stroke="rgba(24,38,47,.10)"/>';
-      h+='<text x="'+(L-8)+'" y="'+(gy+4)+'" text-anchor="end" font-size="10" fill="#5B7085">'+yen(gv/10000)+'万</text>';
+      h+='<text x="'+(L-8)+'" y="'+(gy+4)+'" text-anchor="end" font-size="10" fill="#465A6C">'+yen(gv/10000)+'万</text>';
     }
     [['comp','#527695',3],['simple','#82B33A',2],['real','#B5623F',2.5]].forEach(function(cfg){
       var pts=series.map(function(a,idx){ return X(idx)+','+Y(a[cfg[0]]); }).join(' ');
@@ -566,9 +574,9 @@ tr.tot td,tr.tot th{font-weight:700;background:rgba(223,246,241,.5);}
     var step=Math.max(1,Math.ceil(n/10));
     series.forEach(function(a,idx){
       if(idx%step===0||idx===n-1)
-        h+='<text x="'+X(idx)+'" y="'+(H-B+16)+'" text-anchor="middle" font-size="10" fill="#5B7085">'+a.y+'</text>';
+        h+='<text x="'+X(idx)+'" y="'+(H-B+16)+'" text-anchor="middle" font-size="10" fill="#465A6C">'+a.y+'</text>';
     });
-    h+='<text x="'+(W/2)+'" y="'+(H-4)+'" text-anchor="middle" font-size="10.5" fill="#5B7085">経過年数（年）</text>';
+    h+='<text x="'+(W/2)+'" y="'+(H-4)+'" text-anchor="middle" font-size="10.5" fill="#465A6C">経過年数（年）</text>';
     svg.innerHTML=h;
   }
 

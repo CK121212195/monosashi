@@ -47,9 +47,9 @@
   --card:#FFFFFF;
 
   /* ---- 文字（527695 から派生した濃色。パレット外の追加色） ---- */
-  --ink:#18262F;        /* 本文・見出し */
-  --ink-soft:#33495B;   /* 補助文。これでも十分読める濃さ */
-  --ink-faint:#5B7085;  /* 日付など、読まなくてよい情報だけ */
+  --ink:#0F1A22;        /* 本文・見出し */
+  --ink-soft:#2A3D4D;   /* 補助文。これでも十分読める濃さ */
+  --ink-faint:#465A6C;  /* 日付など、読まなくてよい情報だけ */
 
   /* ---- 早朝のシーグラス：土台と信頼 ---- */
   --sea-deep:#33526C;   /* ボタン・ラベル用に 527695 を締めた色 */
@@ -91,7 +91,6 @@ body{
   font-family:var(--sans);
   font-size:16.5px;
   line-height:1.92;
-  -webkit-font-smoothing:antialiased;
   letter-spacing:.015em;
 }
 
@@ -550,6 +549,14 @@ a{color:inherit;}
   .hero__blob--a{width:150px;height:150px;top:-60px;right:-60px;}
   .hero h1{font-size:24px;letter-spacing:.02em;}
 }
+
+/* ==== 可読性の底上げ ==== */
+.hint,.row .hint,.field small,.calc__hint,.tab small,.kpi b{
+  font-size:13px;color:var(--ink-soft)}
+.metric .d,.check,.verdict-note,.band-legend,.note,.sub{color:var(--ink-soft)}
+footer,.foot__links a{color:var(--ink-soft)}
+th{color:var(--ink)}
+label,.row>label,.field label{color:var(--ink);font-weight:600}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>

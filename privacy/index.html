@@ -28,7 +28,7 @@
 <style>
 :root{
   --paper:#FAF9F6; --card:#FFFFFF;
-  --ink:#18262F; --ink-soft:#33495B; --ink-faint:#5B7085;
+  --ink:#0F1A22; --ink-soft:#2A3D4D; --ink-faint:#465A6C;
   --sea-deep:#33526C; --sea:#527695; --sky:#84D2F5; --aqua:#B0F1F0; --mist:#DFF6F1;
   --dawn:#FEEEDF; --rose:#F4C3D3; --bloom:#F8A3BF; --plum:#B67AB4;
   --peridot:#82B33A; --lime:#D4E157; --mint:#E8F5E9;
@@ -43,7 +43,6 @@
 body{
   margin:0;background:var(--paper);color:var(--ink);
   font-family:var(--sans);font-size:16.5px;line-height:1.95;letter-spacing:.015em;
-  -webkit-font-smoothing:antialiased;
 }
 body::before{
   content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.26;mix-blend-mode:multiply;
@@ -163,6 +162,14 @@ a{color:inherit;}
   .hero__blob--a{width:150px;height:150px;top:-60px;right:-60px;}
   .hero h1{font-size:24px;letter-spacing:.02em;}
 }
+
+/* ==== 可読性の底上げ ==== */
+.hint,.row .hint,.field small,.calc__hint,.tab small,.kpi b{
+  font-size:13px;color:var(--ink-soft)}
+.metric .d,.check,.verdict-note,.band-legend,.note,.sub{color:var(--ink-soft)}
+footer,.foot__links a{color:var(--ink-soft)}
+th{color:var(--ink)}
+label,.row>label,.field label{color:var(--ink);font-weight:600}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
