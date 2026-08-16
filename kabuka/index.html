@@ -9,22 +9,38 @@
 <meta name="description" content="取引相場のない株式（自社株）の相続税評価額を、会社規模判定・類似業種比準価額・純資産価額・配当還元・特定の評価会社の判定まで含めて自動計算。DCF法・時価純資産法・年買法・EBITDAマルチプル法によるM&A評価も同時に表示します。財産評価基本通達 令和8年3月25日付改正（法人税額等相当額37%→38%）反映。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#EAEDF0; --card:#FBFCFD; --card-2:#F1F4F7; --ink:#131A21; --ink-2:#282E34;
-  --ink-3:#2A2E31; --rule:#C9D1D9; --rule-soft:#DEE4EA;
-  --navy:#1F3251; --navy-soft:#DDE4EF; --teal:#0F6E64; --teal-soft:#D6E7E4;
-  --gold:#A8862F; --gold-soft:#F4EDDA; --crim:#8E2F3A; --crim-soft:#EFDBDD;
-  --radius:3px;
+  /* ---- 紙とカード（A系＝トップ・住宅ローンと共通） ---- */
+  --paper:#FAF9F6; --card:#FFFFFF; --card-2:#F4F6F5;
+  /* ---- 文字 ---- */
+  --ink:#0F1A22; --ink-soft:#202F3B; --ink-faint:#242F38;
+  --ink-2:#202F3B; --ink-3:#242F38;
+  /* ---- 早朝のシーグラス ---- */
+  --sea-deep:#33526C; --sea:#527695; --sky:#84D2F5; --aqua:#B0F1F0; --mist:#DFF6F1;
+  /* ---- 朝焼け ---- */
+  --dawn:#FEEEDF; --rose:#F4C3D3; --bloom:#F8A3BF; --plum:#B67AB4;
+  /* ---- ペリドット ---- */
+  --peridot:#82B33A; --lime:#D4E157; --mint:#E8F5E9; --warn:#B5623F;
+  /* ---- 罫線 ---- */
+  --line:rgba(24,38,47,.18); --rule:rgba(24,38,47,.18); --rule-soft:rgba(24,38,47,.09);
+  --shadow:0 1px 2px rgba(24,38,47,.05), 0 10px 26px rgba(24,38,47,.07);
+  --shadow-lift:0 3px 6px rgba(24,38,47,.07), 0 20px 44px rgba(24,38,47,.14);
+  --radius:14px; --r:14px;
+  --serif:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Times New Roman",serif;
+  --sans:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Noto Sans JP",sans-serif;
   --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
-  --sans:"Zen Kaku Gothic New",-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
-  --serif:"Shippori Mincho B1","Hiragino Mincho ProN",serif;
+  --num:"Helvetica Neue",Arial,sans-serif;
+  --navy:#33526C; --navy-soft:#DFF6F1;
+  --teal:#33526C; --teal-soft:#DFF6F1;
+  --gold:#B67AB4; --gold-soft:#F3E8F2;
+  --crim:#B5623F; --crim-soft:#F9E7DE;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
-  font-size:15px;line-height:1.75;font-feature-settings:"palt" 1}
+  font-size:16.5px;line-height:1.92;letter-spacing:.015em;}
 a{color:var(--teal);text-underline-offset:3px}
 h1,h2,h3{font-family:var(--serif);font-weight:800;line-height:1.35;margin:0}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
@@ -64,7 +80,7 @@ legend::after{content:"";flex:1;height:1px;background:var(--rule-soft)}
   margin-top:-2px;min-height:14px}
 input[type=number],input[type=text],input[type=date],select{
   font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums;width:132px;
-  padding:5px 8px;text-align:right;color:var(--ink);background:#fff;border:1px solid var(--rule);border-radius:2px}
+  padding:5px 8px;text-align:right;color:var(--ink);background:#fff;border:1px solid var(--rule);border-radius:14px}
 input[type=date]{width:132px;text-align:center}
 select{width:100%;text-align:left;grid-column:1/-1;font-family:var(--sans);font-size:12.5px}
 .row-full{display:block;margin-top:10px}
@@ -108,7 +124,7 @@ tr.total td{border-top:1px solid var(--navy);border-bottom:0;font-weight:700;bac
 tr.sub td{color:var(--ink-3);font-size:12px}
 tr.hi td{background:var(--gold-soft)}
 .tbl-scroll{overflow:auto}
-.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;padding:2px 7px;border:1px solid currentColor;border-radius:2px;white-space:nowrap}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;padding:2px 7px;border:1px solid currentColor;border-radius:14px;white-space:nowrap}
 .t-ok{color:var(--teal)} .t-ng{color:var(--ink-3)} .t-warn{color:var(--crim)}
 
 /* steps */
@@ -116,18 +132,18 @@ tr.hi td{background:var(--gold-soft)}
 .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--rule-soft)}
 .step:last-child{border-bottom:0}
 .step .sno{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:#fff;background:var(--navy);
-  padding:3px 0;text-align:center;height:fit-content;border-radius:2px}
+  padding:3px 0;text-align:center;height:fit-content;border-radius:14px}
 .step h4{margin:0 0 4px;font-size:13.5px;font-family:var(--sans);font-weight:700}
-.step .body{font-size:12.5px;color:var(--ink-2);line-height:1.7}
+.step .body{font-size:12.5px;color:var(--ink-2);line-height:1.92}
 .step .body .f{font-family:var(--mono);font-size:12px;color:var(--navy);background:var(--card-2);
-  padding:2px 6px;border-radius:2px;display:inline-block;margin:3px 0}
+  padding:2px 6px;border-radius:14px;display:inline-block;margin:3px 0}
 .step .res{font-family:var(--mono);font-weight:600;color:var(--teal)}
 
 .notes{padding:4px 18px 16px}
 .note{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule-soft);font-size:12.8px;line-height:1.7}
 .note:last-child{border-bottom:0}
 .note .tg{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;padding:2px 7px;height:fit-content;
-  border:1px solid currentColor;border-radius:2px;white-space:nowrap;margin-top:3px}
+  border:1px solid currentColor;border-radius:14px;white-space:nowrap;margin-top:3px}
 .n-tax{color:var(--gold)} .n-risk{color:var(--crim)} .n-ma{color:var(--teal)} .n-info{color:var(--navy)}
 .note b{font-weight:700}
 
@@ -151,7 +167,7 @@ details.src[open] summary{border-bottom:1px solid var(--rule-soft)}
 
 .actions{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px;border-top:1px solid var(--rule-soft)}
 button{font-family:var(--sans);font-size:12.5px;padding:7px 14px;cursor:pointer;
-  background:var(--navy);color:#fff;border:1px solid var(--navy);border-radius:2px}
+  background:var(--navy);color:#fff;border:1px solid var(--navy);border-radius:14px}
 button.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
 button:hover{opacity:.87}
 footer{border-top:1px solid var(--rule);margin-top:34px;padding:22px 24px 46px;font-size:12px;
@@ -213,6 +229,99 @@ footer{border-top:1px solid var(--rule);margin-top:34px;padding:22px 24px 46px;f
   .hero h1{font-size:24px;letter-spacing:.02em;}
 }
 
+/* ================================================================
+   A系シェル（kinri / credit と同じ骨格）への上書き
+   ================================================================ */
+body{font-family:var(--sans);font-size:16.5px;line-height:1.92;letter-spacing:.015em;background:var(--paper);color:var(--ink)}
+
+/* --- サイトヘッダー：濃紺の帯をやめ、白地にロゴ＋ナビ --- */
+.sitehead{background:var(--paper);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:60}
+.sitehead__inner{max-width:var(--pagew,1440px);margin:0 auto;padding:10px var(--pagepad,24px);min-height:58px;
+  display:flex;align-items:center;justify-content:space-between;gap:6px 24px;flex-wrap:wrap}
+.brand{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.16em;
+  text-decoration:none;color:var(--ink);white-space:nowrap}
+.brand span{color:var(--sea-deep)}
+.sitenav{display:flex;gap:26px;flex-wrap:wrap}
+.sitenav a{font-size:14px;font-weight:500;letter-spacing:.1em;text-decoration:none;
+  color:var(--ink-soft);border-bottom:2px solid transparent;padding:6px 0;
+  transition:color .2s,border-color .2s}
+.sitenav a:hover{color:var(--ink);border-bottom-color:var(--bloom)}
+@media(max-width:640px){.brand{font-size:17px;letter-spacing:.1em}.sitenav{gap:16px}
+  .sitenav a{font-size:13px;letter-spacing:.04em}}
+
+/* --- ページ見出し：等幅の英字ラベルをやめ、丸ミストを添える --- */
+.masthead{border-bottom:none;background:transparent;position:relative;isolation:isolate}
+.masthead-in{max-width:var(--pagew,1440px);padding:22px var(--pagepad,24px) 34px}
+.masthead-in::before{content:"";position:absolute;top:-10px;right:8px;width:156px;height:156px;
+  border-radius:50%;background:var(--mist);pointer-events:none;z-index:-1}
+.mark{font-family:var(--num);font-size:11.5px;font-weight:700;letter-spacing:.26em;
+  color:var(--ink-faint);text-transform:uppercase;display:block;margin-bottom:12px}
+.masthead h1{font-family:var(--serif);font-weight:600;
+  font-size:clamp(26px,4.2vw,38px);line-height:1.55;letter-spacing:.04em;margin:0 0 16px}
+h1 .slash{color:var(--sea);font-weight:600;padding:0 .25em}
+.masthead .sub{color:var(--ink-soft);font-size:16.5px;line-height:2;max-width:34em;margin-top:0}
+@media(max-width:640px){.masthead-in::before{display:none}}
+
+/* --- 準拠時点スタンプ：pill に --- */
+.stamp{font-family:var(--num);font-size:12.5px;line-height:1.9;color:var(--ink-soft);
+  border:1.5px solid var(--line);border-left:5px solid var(--peridot);
+  border-radius:0 16px 16px 0;padding:16px 20px;background:rgba(232,245,233,.55)}
+
+/* --- カード：角丸を大きく、影で浮かせる --- */
+.panel,details.src,.promo,.otbox,.deathbox{
+  background:var(--card);border:1.5px solid var(--line);border-radius:22px;
+  box-shadow:var(--shadow)}
+.panel{padding:4px}
+.otbox,.deathbox{border-left:5px solid var(--sea);border-radius:0 18px 18px 0;
+  background:linear-gradient(150deg,var(--mist),rgba(255,255,255,.92));box-shadow:none}
+
+/* --- 結果ブロック：ミントのグラデ＋左の太いライン --- */
+.verdict{background:linear-gradient(150deg,var(--mist),rgba(255,255,255,.92));
+  border-left:6px solid var(--sea);border-radius:22px;padding:32px 30px}
+.verdict .n,.delta .n{font-family:var(--num);font-weight:700;font-variant-numeric:tabular-nums}
+
+/* --- セクション見出し：等幅の小さいキッカーを丸ドット付きに --- */
+.blk-head{padding:0 4px 14px;align-items:center}
+.blk-head .kicker{font-family:var(--num);font-size:11.5px;font-weight:700;
+  letter-spacing:.26em;color:var(--ink-faint)}
+.blk-head h2{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.08em}
+.blk-head h2::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;
+  background:var(--bloom);margin-right:11px;vertical-align:middle}
+
+/* --- 入力欄：丸角＋淡い地。フォーカスで白に --- */
+input,select,textarea{font-family:var(--num);font-size:16px;
+  border:1.5px solid var(--line);border-radius:12px;background:var(--paper);
+  color:var(--ink);padding:11px 14px}
+input:focus,select:focus{border-color:var(--sea-deep);outline:none;background:#fff}
+select{font-family:var(--sans);font-size:15px}
+.row .hint,.hint{font-size:12.5px;color:var(--ink-faint);line-height:1.6}
+.row>label,.row label{font-size:14px;font-weight:600}
+input[type=range]{accent-color:var(--sea);border:none;background:transparent;padding:0}
+
+/* --- ボタン：pill 型 --- */
+button{font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:.05em;
+  padding:11px 24px;border-radius:999px;background:var(--sea-deep);color:#fff;
+  border:1.5px solid var(--sea-deep);cursor:pointer;transition:transform .2s,box-shadow .2s}
+button:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(51,82,108,.28)}
+button.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+button.ghost:hover{border-color:var(--sea-deep);box-shadow:none}
+.actions{border-top:1px solid var(--line);padding:16px 20px;gap:10px}
+
+/* --- 表：角丸で囲い、罫を淡く --- */
+table{font-size:14.5px;background:rgba(255,255,255,.8);border-radius:14px;overflow:hidden}
+th{font-family:var(--sans);font-size:12.5px;font-weight:600;letter-spacing:.04em;
+  color:var(--ink-soft);background:rgba(223,246,241,.5)}
+th,td{padding:10px 14px;border-bottom:1px solid var(--rule-soft);line-height:1.7}
+tr.total td{border-top:1.5px solid var(--line);background:rgba(223,246,241,.45);font-weight:700}
+tr.hi td{background:rgba(223,246,241,.7)}
+
+/* --- 注記・凡例 --- */
+.legend,.legend-cost,.legend-rent,.legend-own{font-size:13.5px}
+.chart,svg.chart{background:rgba(255,255,255,.7);border-radius:16px}
+
+:root{--pagew:1460px;--pagepad:24px}
+
 /* ==== 可読性の底上げ ==== */
 .hint,.row .hint,.field small,.calc__hint,.tab small,.kpi b{
   font-size:13px;color:var(--ink-soft)}
@@ -226,6 +335,16 @@ footer{border-top:1px solid var(--rule);margin-top:34px;padding:22px 24px 46px;f
 footer,.foot__links a{color:var(--ink-soft)}
 th{color:var(--ink)}
 label,.row>label,.field label{color:var(--ink);font-weight:600}
+
+/* ==== 固定ヘッダーぶんのオフセット ==== */
+:root{--headh:59px}
+.controls{top:calc(var(--headh) + 16px) !important;
+  max-height:calc(100vh - var(--headh) - 32px) !important}
+.sticky,.side,.panel.controls{top:calc(var(--headh) + 16px) !important}
+html{scroll-padding-top:calc(var(--headh) + 12px)}
+[id]{scroll-margin-top:calc(var(--headh) + 12px)}
+@media(max-width:1020px){.controls{position:static !important;max-height:none !important}}
+@media(max-width:640px){:root{--headh:52px}}
 
 /* ==== 文字を太く・くっきり ==== */
 body{font-weight:500}
@@ -259,9 +378,17 @@ input,select,textarea,button{font-weight:600}
 </script>
 </head>
 <body>
-<div style="background:#1F3251;color:#EAEDF0;font:500 13px/1 -apple-system,'Hiragino Sans',sans-serif;padding:11px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap"><a href="/" style="color:#EAEDF0;text-decoration:none;letter-spacing:.14em">← 数字のものさし</a><a href="/#tools" style="color:#A8862F;text-decoration:none">ほかのツール</a><a href="/#excel" style="color:#A8862F;text-decoration:none">Excel版</a><a href="/contact/" style="color:#A8862F;text-decoration:none">お問い合わせ</a></div>
-
-
+<header class="sitehead">
+<div class="sitehead__inner">
+<a class="brand" href="/">数字の<span>ものさし</span></a>
+<nav class="sitenav" aria-label="サイト内">
+<a href="/#tools">ツール</a>
+<a href="/articles/">読みもの</a>
+<a href="/#excel">Excel版</a>
+<a href="/contact/">お問い合わせ</a>
+</nav>
+</div>
+</header>
 <header class="masthead">
   <div class="masthead-in">
     <div>
@@ -1002,9 +1129,9 @@ function drawNotes(S){
 }
 
 /* ================= SVGチャート ================= */
-const CH = {navy:"#1F3251", navy2:"#5B7BA8", teal:"#0F6E64", teal2:"#6FB3AA",
-            gold:"#A8862F", crim:"#8E2F3A", gray:"#C2CBD4", grayL:"#E3E8ED",
-            ink:"#131A21", ink2:"#4E5A65", ink3:"#828D97", rule:"#DEE4EA"};
+const CH = {navy:"#33526C", navy2:"#5B7BA8", teal:"#33526C", teal2:"#6FB3AA",
+            gold:"#B67AB4", crim:"#B5623F", gray:"#C2CBD4", grayL:"#E3E8ED",
+            ink:"#0F1A22", ink2:"#2A3D4D", ink3:"#465A6C", rule:"rgba(24,38,47,.09)"};
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const SVG = (w,h,inner,cls) =>
   `<svg class="cv ${cls||""}" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"
