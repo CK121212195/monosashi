@@ -28,7 +28,7 @@
 <style>
 :root{
   --paper:#FAF9F6; --card:#FFFFFF;
-  --ink:#0F1A22; --ink-soft:#2A3D4D; --ink-faint:#465A6C;
+  --ink:#0F1A22; --ink-soft:#202F3B; --ink-faint:#242F38;
   --sea-deep:#33526C; --sea:#527695; --sky:#84D2F5; --aqua:#B0F1F0; --mist:#DFF6F1;
   --dawn:#FEEEDF; --rose:#F4C3D3; --bloom:#F8A3BF; --plum:#B67AB4;
   --peridot:#82B33A; --lime:#D4E157; --mint:#E8F5E9;
@@ -175,10 +175,22 @@ a{color:inherit;}
 /* ==== 可読性の底上げ ==== */
 .hint,.row .hint,.field small,.calc__hint,.tab small,.kpi b{
   font-size:13px;color:var(--ink-soft)}
-.metric .d,.check,.verdict-note,.band-legend,.note,.sub{color:var(--ink-soft)}
+.band-legend,.metric .d{color:var(--ink-soft)}
+/* 読ませる文章は本文と同じ濃さ・大きさに */
+.note,.verdict-note,.check,.sub,.notes,.about p,.about li,.disclaimer p,
+.expbody,.legend,.remarks li{color:var(--ink)}
+.note{font-size:14px;line-height:1.8}
+.verdict-note,.check{font-size:14px}
+.note .tag{font-weight:700}
 footer,.foot__links a{color:var(--ink-soft)}
 th{color:var(--ink)}
 label,.row>label,.field label{color:var(--ink);font-weight:600}
+
+/* ==== 文字を太く・くっきり ==== */
+body{font-weight:500}
+th,b,strong,dt{font-weight:700}
+h1,h2,h3,h4{font-weight:700}
+input,select,textarea,button{font-weight:600}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>

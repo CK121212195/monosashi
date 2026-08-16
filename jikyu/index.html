@@ -47,7 +47,7 @@
 <style>
 :root{
   --paper:#E8EBEA; --card:#F8F9F8; --card-2:#F1F3F2;
-  --ink:#14191C; --ink-2:#4C565B; --ink-3:#7C868B;
+  --ink:#14191C; --ink-2:#292E31; --ink-3:#2B2E30;
   --rule:#C7CFCC; --rule-soft:#DCE2DF;
   --net:#17635C; --net-soft:#D5E4E1;
   --cost:#8E2F3A; --cost-soft:#EBD9DB;
@@ -153,6 +153,26 @@ footer a{color:var(--ink-2)}
   .bar{grid-template-columns:5.2em 1fr;grid-template-areas:"l v" "t t";gap:4px 8px}
   .bar b{grid-area:l} .bar .v{grid-area:v} .bar .track{grid-area:t}
 }
+
+/* ==== 可読性の底上げ ==== */
+.hint,.row .hint,.field small,.calc__hint,.tab small,.kpi b{
+  font-size:13px;color:var(--ink-soft)}
+.band-legend,.metric .d{color:var(--ink-soft)}
+/* 読ませる文章は本文と同じ濃さ・大きさに */
+.note,.verdict-note,.check,.sub,.notes,.about p,.about li,.disclaimer p,
+.expbody,.legend,.remarks li{color:var(--ink)}
+.note{font-size:14px;line-height:1.8}
+.verdict-note,.check{font-size:14px}
+.note .tag{font-weight:700}
+footer,.foot__links a{color:var(--ink-soft)}
+th{color:var(--ink)}
+label,.row>label,.field label{color:var(--ink);font-weight:600}
+
+/* ==== 文字を太く・くっきり ==== */
+body{font-weight:500}
+th,b,strong,dt{font-weight:700}
+h1,h2,h3,h4{font-weight:700}
+input,select,textarea,button{font-weight:600}
 </style>
 </head>
 <body>

@@ -12,8 +12,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#EAEDF0; --card:#FBFCFD; --card-2:#F1F4F7; --ink:#131A21; --ink-2:#4E5A65;
-  --ink-3:#828D97; --rule:#C9D1D9; --rule-soft:#DEE4EA;
+  --paper:#EAEDF0; --card:#FBFCFD; --card-2:#F1F4F7; --ink:#131A21; --ink-2:#282E34;
+  --ink-3:#2A2E31; --rule:#C9D1D9; --rule-soft:#DEE4EA;
   --navy:#1F3251; --navy-soft:#DDE4EF; --teal:#0F6E64; --teal-soft:#D6E7E4;
   --gold:#A8862F; --gold-soft:#F4EDDA; --crim:#8E2F3A; --crim-soft:#EFDBDD;
   --radius:3px;
@@ -212,6 +212,26 @@ footer{border-top:1px solid var(--rule);margin-top:34px;padding:22px 24px 46px;f
   .hero__blob--a{width:150px;height:150px;top:-60px;right:-60px;}
   .hero h1{font-size:24px;letter-spacing:.02em;}
 }
+
+/* ==== 可読性の底上げ ==== */
+.hint,.row .hint,.field small,.calc__hint,.tab small,.kpi b{
+  font-size:13px;color:var(--ink-soft)}
+.band-legend,.metric .d{color:var(--ink-soft)}
+/* 読ませる文章は本文と同じ濃さ・大きさに */
+.note,.verdict-note,.check,.sub,.notes,.about p,.about li,.disclaimer p,
+.expbody,.legend,.remarks li{color:var(--ink)}
+.note{font-size:14px;line-height:1.8}
+.verdict-note,.check{font-size:14px}
+.note .tag{font-weight:700}
+footer,.foot__links a{color:var(--ink-soft)}
+th{color:var(--ink)}
+label,.row>label,.field label{color:var(--ink);font-weight:600}
+
+/* ==== 文字を太く・くっきり ==== */
+body{font-weight:500}
+th,b,strong,dt{font-weight:700}
+h1,h2,h3,h4{font-weight:700}
+input,select,textarea,button{font-weight:600}
 </style>
 <link rel="canonical" href="https://kazumono.com/kabuka/">
 <meta property="og:type" content="website">

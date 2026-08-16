@@ -43,8 +43,8 @@
   /* ---- 紙とカード（A系＝トップ・住宅ローンと共通） ---- */
   --paper:#FAF9F6; --card:#FFFFFF; --card-2:#F4F6F5;
   /* ---- 文字 ---- */
-  --ink:#0F1A22; --ink-soft:#2A3D4D; --ink-faint:#465A6C;
-  --ink-2:#2A3D4D; --ink-3:#465A6C;
+  --ink:#0F1A22; --ink-soft:#202F3B; --ink-faint:#242F38;
+  --ink-2:#202F3B; --ink-3:#242F38;
   /* ---- 早朝のシーグラス ---- */
   --sea-deep:#33526C; --sea:#527695; --sky:#84D2F5; --aqua:#B0F1F0; --mist:#DFF6F1;
   /* ---- 朝焼け ---- */
@@ -335,6 +335,12 @@ html{scroll-padding-top:calc(var(--headh) + 12px)}
 [id]{scroll-margin-top:calc(var(--headh) + 12px)}
 @media(max-width:1020px){.controls{position:static !important;max-height:none !important}}
 @media(max-width:640px){:root{--headh:52px}}
+
+/* ==== 文字を太く・くっきり ==== */
+body{font-weight:500}
+th,b,strong,dt{font-weight:700}
+h1,h2,h3,h4{font-weight:700}
+input,select,textarea,button{font-weight:600}
 </style>
 </head>
 <body>
