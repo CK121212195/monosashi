@@ -60,9 +60,9 @@
   --sans:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Noto Sans JP",sans-serif;
   --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
   --num:"Helvetica Neue",Arial,sans-serif;
-  --net:#17635C; --net-soft:#DFF6F1;
+  --net:#33526C; --net-soft:#DFF6F1;
   --cost:#B5623F; --cost-soft:#F9E7DE;
-  --brass:#A8862F;
+  --brass:#B67AB4;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -222,31 +222,111 @@ footer{border-top:1px solid var(--rule);margin-top:36px;padding:22px 24px 48px;
 }
 @media print{.controls,.actions{display:none}.wrap{grid-template-columns:1fr}}
 
-/* ==== A系トーンへの調整（カードを白く浮かせる） ==== */
-.panel,.card,.box,details.src,.promo,.result,.hero,.figure,.tblwrap{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-}
-.stamp{border-radius:10px}
-table th,table td{border-color:var(--rule-soft)}
-/* 太い黒罫（新聞的）を淡い罫へ */
-.masthead{border-bottom:1px solid var(--line)}
-.promo{border:1px solid var(--line)}
-.sec-t,.section-title{border-bottom-color:var(--line)}
+/* ================================================================
+   A系シェル（kinri / credit と同じ骨格）への上書き
+   ================================================================ */
+body{font-family:var(--sans);font-size:16.5px;line-height:1.92;letter-spacing:.015em;
+  -webkit-font-smoothing:antialiased;background:var(--paper);color:var(--ink)}
+
+/* --- サイトヘッダー：濃紺の帯をやめ、白地にロゴ＋ナビ --- */
+.sitehead{background:var(--paper);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:60}
+.sitehead__inner{max-width:1080px;margin:0 auto;padding:10px 24px;min-height:58px;
+  display:flex;align-items:center;justify-content:space-between;gap:6px 24px;flex-wrap:wrap}
+.brand{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.16em;
+  text-decoration:none;color:var(--ink);white-space:nowrap}
+.brand span{color:var(--sea-deep)}
+.sitenav{display:flex;gap:26px;flex-wrap:wrap}
+.sitenav a{font-size:14px;font-weight:500;letter-spacing:.1em;text-decoration:none;
+  color:var(--ink-soft);border-bottom:2px solid transparent;padding:6px 0;
+  transition:color .2s,border-color .2s}
+.sitenav a:hover{color:var(--ink);border-bottom-color:var(--bloom)}
+@media(max-width:640px){.brand{font-size:17px;letter-spacing:.1em}.sitenav{gap:16px}
+  .sitenav a{font-size:13px;letter-spacing:.04em}}
+
+/* --- ページ見出し：等幅の英字ラベルをやめ、丸ミストを添える --- */
+.masthead{border-bottom:none;background:transparent;position:relative;isolation:isolate}
+.masthead-in{max-width:1080px;padding:22px 24px 30px}
+.masthead-in::before{content:"";position:absolute;top:-10px;right:8px;width:156px;height:156px;
+  border-radius:50%;background:var(--mist);pointer-events:none;z-index:-1}
+.mark{font-family:var(--num);font-size:11.5px;font-weight:700;letter-spacing:.26em;
+  color:var(--ink-faint);text-transform:uppercase;display:block;margin-bottom:12px}
+.masthead h1{font-family:var(--serif);font-weight:600;
+  font-size:clamp(26px,4.2vw,38px);line-height:1.55;letter-spacing:.04em;margin:0 0 16px}
+h1 .slash{color:var(--sea);font-weight:600;padding:0 .25em}
+.masthead .sub{color:var(--ink-soft);font-size:16.5px;line-height:2;max-width:34em;margin-top:0}
+@media(max-width:640px){.masthead-in::before{display:none}}
+
+/* --- 準拠時点スタンプ：pill に --- */
+.stamp{font-family:var(--num);font-size:12.5px;line-height:1.9;color:var(--ink-soft);
+  border:1.5px solid var(--line);border-left:5px solid var(--peridot);
+  border-radius:0 16px 16px 0;padding:16px 20px;background:rgba(232,245,233,.55)}
+
+/* --- カード：角丸を大きく、影で浮かせる --- */
+.panel,details.src,.promo,.otbox,.deathbox{
+  background:var(--card);border:1.5px solid var(--line);border-radius:22px;
+  box-shadow:var(--shadow)}
+.panel{padding:4px}
+.otbox,.deathbox{border-left:5px solid var(--sea);border-radius:0 18px 18px 0;
+  background:linear-gradient(150deg,var(--mist),rgba(255,255,255,.92));box-shadow:none}
+
+/* --- 結果ブロック：ミントのグラデ＋左の太いライン --- */
+.verdict{background:linear-gradient(150deg,var(--mist),rgba(255,255,255,.92));
+  border-left:6px solid var(--sea);border-radius:22px;padding:32px 30px}
+.verdict .n,.delta .n{font-family:var(--num);font-weight:700;font-variant-numeric:tabular-nums}
+
+/* --- セクション見出し：等幅の小さいキッカーを丸ドット付きに --- */
+.blk-head{padding:0 4px 14px;align-items:center}
+.blk-head .kicker{font-family:var(--num);font-size:11.5px;font-weight:700;
+  letter-spacing:.26em;color:var(--ink-faint)}
+.blk-head h2{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.08em}
+.blk-head h2::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;
+  background:var(--bloom);margin-right:11px;vertical-align:middle}
+
+/* --- 入力欄：丸角＋淡い地。フォーカスで白に --- */
+input,select,textarea{font-family:var(--num);font-size:16px;
+  border:1.5px solid var(--line);border-radius:12px;background:var(--paper);
+  color:var(--ink);padding:11px 14px}
+input:focus,select:focus{border-color:var(--sea-deep);outline:none;background:#fff}
+select{font-family:var(--sans);font-size:15px}
+.row .hint,.hint{font-size:12.5px;color:var(--ink-faint);line-height:1.6}
+.row>label,.row label{font-size:14px;font-weight:600}
+input[type=range]{accent-color:var(--sea);border:none;background:transparent;padding:0}
+
+/* --- ボタン：pill 型 --- */
+button{font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:.05em;
+  padding:11px 24px;border-radius:999px;background:var(--sea-deep);color:#fff;
+  border:1.5px solid var(--sea-deep);cursor:pointer;transition:transform .2s,box-shadow .2s}
+button:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(51,82,108,.28)}
+button.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+button.ghost:hover{border-color:var(--sea-deep);box-shadow:none}
+.actions{border-top:1px solid var(--line);padding:16px 20px;gap:10px}
+
+/* --- 表：角丸で囲い、罫を淡く --- */
+table{font-size:14.5px;background:rgba(255,255,255,.8);border-radius:14px;overflow:hidden}
+th{font-family:var(--sans);font-size:12.5px;font-weight:600;letter-spacing:.04em;
+  color:var(--ink-soft);background:rgba(223,246,241,.5)}
+th,td{padding:10px 14px;border-bottom:1px solid var(--rule-soft);line-height:1.7}
+tr.total td{border-top:1.5px solid var(--line);background:rgba(223,246,241,.45);font-weight:700}
+tr.hi td{background:rgba(223,246,241,.7)}
+
+/* --- 注記・凡例 --- */
+.legend,.legend-cost,.legend-rent,.legend-own{font-size:13.5px}
+.chart,svg.chart{background:rgba(255,255,255,.7);border-radius:16px}
 </style>
 </head>
 <body>
-<div style="background:#33526C;color:#FAF9F6;font:500 13px/1.5 -apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',sans-serif;padding:11px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:relative;z-index:99999">
-<a href="/" style="color:#FAF9F6;text-decoration:none;letter-spacing:.12em">← 数字のものさし</a>
-<a href="/#tools" style="color:#A8862F;text-decoration:none">ほかのツール</a>
-<a href="/articles/" style="color:#A8862F;text-decoration:none">読みもの</a>
-<a href="/#excel" style="color:#A8862F;text-decoration:none">Excel版</a>
-<a href="/contact/" style="color:#A8862F;text-decoration:none">お問い合わせ</a>
+<header class="sitehead">
+<div class="sitehead__inner">
+<a class="brand" href="/">数字の<span>ものさし</span></a>
+<nav class="sitenav" aria-label="サイト内">
+<a href="/#tools">ツール</a>
+<a href="/articles/">読みもの</a>
+<a href="/#excel">Excel版</a>
+<a href="/contact/">お問い合わせ</a>
+</nav>
 </div>
-
-
+</header>
 <header class="masthead">
   <div class="masthead-in">
     <div>
@@ -654,7 +734,7 @@ function annualFromGrade(std, kenpoRate, kaigoRate){
    描画
    ========================================================================= */
 const SEG = [
-  ['net','手取り','#17635C'],
+  ['net','手取り','#33526C'],
   ['kenpo','健康保険','#C46A5E'],
   ['kaigo','介護保険','#D4897E'],
   ['kosei','厚生年金','#B5623F'],
@@ -778,11 +858,11 @@ function drawStep(S){
   // 現在位置
   const cur = pts.reduce((a,p) => Math.abs(p.h - S.otPeak) < Math.abs(a.h - S.otPeak) ? p : a, pts[0]);
   const cx = X(S.otPeak), cy = Yv(cur.y);
-  out += `<line x1="${cx}" y1="${T}" x2="${cx}" y2="${T+ih}" stroke="#A8862F" stroke-width="1.6" stroke-dasharray="2 3"/>`;
-  out += `<circle cx="${cx}" cy="${cy}" r="5" fill="#A8862F" stroke="#fff" stroke-width="1.6"/>`;
+  out += `<line x1="${cx}" y1="${T}" x2="${cx}" y2="${T+ih}" stroke="#B67AB4" stroke-width="1.6" stroke-dasharray="2 3"/>`;
+  out += `<circle cx="${cx}" cy="${cy}" r="5" fill="#B67AB4" stroke="#fff" stroke-width="1.6"/>`;
   const anchor = S.otPeak > maxH*0.72 ? 'end' : 'start';
   const dx = S.otPeak > maxH*0.72 ? -10 : 10;
-  out += `<text x="${cx+dx}" y="${cy-14}" text-anchor="${anchor}" font-family="IBM Plex Mono" font-size="11.5" fill="#A8862F">いまの位置　${S.otPeak}h → ${yen(cur.y)}／年</text>`;
+  out += `<text x="${cx+dx}" y="${cy-14}" text-anchor="${anchor}" font-family="IBM Plex Mono" font-size="11.5" fill="#B67AB4">いまの位置　${S.otPeak}h → ${yen(cur.y)}／年</text>`;
   out += `<text x="${L}" y="${T-8}" font-family="IBM Plex Mono" font-size="10.5" fill="#33495B">縦軸＝9月から翌年8月までの本人負担（健康保険＋介護保険＋厚生年金）。会社も同額を負担します。</text>`;
   $('stepSvg').innerHTML = out;
 }
