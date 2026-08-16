@@ -214,7 +214,7 @@ body{font-family:var(--sans);font-size:16.5px;line-height:1.92;letter-spacing:.0
 /* --- サイトヘッダー：濃紺の帯をやめ、白地にロゴ＋ナビ --- */
 .sitehead{background:var(--paper);border-bottom:1px solid var(--line);
   position:sticky;top:0;z-index:60}
-.sitehead__inner{max-width:1080px;margin:0 auto;padding:10px 24px;min-height:58px;
+.sitehead__inner{max-width:1440px;margin:0 auto;padding:10px 24px;min-height:58px;
   display:flex;align-items:center;justify-content:space-between;gap:6px 24px;flex-wrap:wrap}
 .brand{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.16em;
   text-decoration:none;color:var(--ink);white-space:nowrap}
@@ -229,7 +229,7 @@ body{font-family:var(--sans);font-size:16.5px;line-height:1.92;letter-spacing:.0
 
 /* --- ページ見出し：等幅の英字ラベルをやめ、丸ミストを添える --- */
 .masthead{border-bottom:none;background:transparent;position:relative;isolation:isolate}
-.masthead-in{max-width:1080px;padding:22px 24px 30px}
+.masthead-in{max-width:1440px;padding:22px 24px 34px}
 .masthead-in::before{content:"";position:absolute;top:-10px;right:8px;width:156px;height:156px;
   border-radius:50%;background:var(--mist);pointer-events:none;z-index:-1}
 .mark{font-family:var(--num);font-size:11.5px;font-weight:700;letter-spacing:.26em;
@@ -300,7 +300,13 @@ tr.hi td{background:rgba(223,246,241,.7)}
 /* ==== 可読性の底上げ ==== */
 .hint,.row .hint,.field small,.calc__hint,.tab small,.kpi b{
   font-size:13px;color:var(--ink-soft)}
-.metric .d,.check,.verdict-note,.band-legend,.note,.sub{color:var(--ink-soft)}
+.band-legend,.metric .d{color:var(--ink-soft)}
+/* 読ませる文章は本文と同じ濃さ・大きさに */
+.note,.verdict-note,.check,.sub,.notes,.about p,.about li,.disclaimer p,
+.expbody,.legend,.remarks li{color:var(--ink)}
+.note{font-size:14px;line-height:1.8}
+.verdict-note,.check{font-size:14px}
+.note .tag{font-weight:700}
 footer,.foot__links a{color:var(--ink-soft)}
 th{color:var(--ink)}
 label,.row>label,.field label{color:var(--ink);font-weight:600}
