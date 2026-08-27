@@ -6,12 +6,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>数字のものさし｜社会保険・税金・与信の実務ツールと解説</title>
-<meta name="description" content="社会保険料、手取り、住宅コスト、与信判断。実務で使う数字を自分で出せるツールと、財務・信用調査の現場から書いた解説記事。">
+<meta name="description" content="取引先の決算書PDFを置くだけで与信を判定する「与信判断シミュレーター Pro」（1社500円）。ほか社会保険料、手取り、住宅コストなど、実務で使う数字を自分で出せる12のツールと解説記事。">
 <link rel="canonical" href="https://kazumono.com/">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="数字のものさし｜社会保険・税金・与信の実務ツールと解説">
-<meta property="og:description" content="実務で使う数字を、自分で出せるように。">
+<meta property="og:description" content="決算書を置くだけで与信判定。実務で使う数字を、自分で出せるように。">
 <meta property="og:url" content="https://kazumono.com/">
 <meta property="og:image" content="https://kazumono.com/assets/ogp.png">
 <meta property="og:image:width" content="1200">
@@ -569,6 +569,94 @@ body{font-weight:500}
 th,b,strong,dt{font-weight:700}
 h1,h2,h3,h4{font-weight:700}
 input,select,textarea,button{font-weight:600}
+
+/* ===================== ヒーロー補足 ===================== */
+.hero__sub{
+  max-width:33em;margin:-22px 0 34px;
+  font-size:15px;line-height:1.95;color:var(--ink-soft);
+}
+.hero__sub a{color:var(--sea-deep);font-weight:700;text-underline-offset:4px;text-decoration-color:var(--sky);}
+.nav a.is-pro{color:var(--sea-deep);font-weight:700;}
+.nav a.is-pro:hover{border-bottom-color:var(--sea-deep);}
+
+/* ===================== 主力サービス ===================== */
+.flagsec{
+  padding:78px 0 84px;
+  background:linear-gradient(180deg,rgba(254,238,223,.62),rgba(250,249,246,0) 82%);
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.flag{
+  display:grid;grid-template-columns:1fr 296px;gap:48px;align-items:start;
+}
+.flag__eyebrow{
+  font-family:var(--num);font-size:11.5px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--sea-deep);margin:0 0 14px;
+}
+.flag__title{
+  font-family:var(--serif);font-weight:600;
+  font-size:clamp(26px,3.8vw,38px);letter-spacing:.07em;line-height:1.5;
+  margin:0 0 18px;color:var(--ink);
+}
+.flag__lead{margin:0 0 30px;font-size:16px;line-height:2;color:var(--ink);max-width:32em;}
+
+.flow{list-style:none;counter-reset:none;margin:0 0 30px;padding:0;display:grid;gap:14px;}
+.flow li{
+  display:grid;grid-template-columns:34px 1fr;gap:16px;align-items:start;
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:18px 20px;box-shadow:var(--shadow);
+}
+.flow__no{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--sea-deep);color:#fff;
+  display:grid;place-items:center;
+  font-family:var(--num);font-size:15px;font-weight:700;
+}
+.flow b{display:block;font-size:16px;letter-spacing:.04em;margin:0 0 4px;color:var(--ink);}
+.flow span.flow__d{display:block;font-size:14px;line-height:1.8;color:var(--ink-soft);}
+
+.price{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;
+  background:var(--card);border:2px solid var(--sea-deep);border-radius:18px;
+  padding:22px 26px;margin:0 0 26px;
+}
+.price__amt{margin:0;font-family:var(--num);font-size:16px;color:var(--ink-soft);letter-spacing:.04em;}
+.price__amt b{font-size:44px;font-weight:700;color:var(--sea-deep);letter-spacing:0;margin-right:4px;}
+.price__note{margin:0;font-size:14px;color:var(--ink);line-height:1.8;flex:1 1 15em;min-width:15em;}
+
+.flag__fine{margin:16px 0 0;font-size:13.5px;line-height:1.85;color:var(--ink-soft);}
+.flag__fine a{color:var(--sea-deep);font-weight:700;}
+
+.flag__shot{margin:0;}
+.flag__shot img{
+  display:block;width:100%;height:auto;border-radius:10px;
+  border:1px solid var(--line);box-shadow:var(--shadow-lift);background:#fff;
+}
+.flag__shot figcaption{margin:12px 0 0;font-size:12.5px;color:var(--ink-faint);letter-spacing:.04em;text-align:center;}
+
+/* 500円版とExcel版の使い分け */
+.compare{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;
+  margin-top:44px;padding-top:34px;border-top:1px solid var(--line);
+}
+.compare__col{background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:18px;padding:24px 24px 20px;}
+.compare__tag{
+  margin:0 0 12px;font-size:12.5px;font-weight:700;letter-spacing:.1em;
+  display:inline-block;padding:5px 13px;border-radius:999px;
+  background:var(--accent,var(--sea-deep));color:#fff;
+}
+.compare__col p.compare__d{margin:0 0 14px;font-size:14.5px;line-height:1.85;color:var(--ink);}
+.compare__go{font-size:14px;font-weight:700;letter-spacing:.05em;color:var(--sea-deep);text-decoration:none;}
+.compare__go:hover{text-decoration:underline;text-underline-offset:4px;}
+
+@media (max-width:900px){
+  .flag{grid-template-columns:1fr;gap:32px;}
+  .flag__shot{max-width:300px;margin:0 auto;}
+}
+@media (max-width:560px){
+  .price{padding:18px 20px;}
+  .price__amt b{font-size:38px;}
+}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
@@ -589,10 +677,10 @@ input,select,textarea,button{font-weight:600}
     <div class="wrap masthead__inner">
       <a class="brand" href="/">数字の<span>ものさし</span></a>
       <nav class="nav" aria-label="サイト内">
+        <a class="is-pro" href="/credit-pro/">与信判断 Pro</a>
         <a href="#tools">ツール</a>
         <a href="/articles/">読みもの</a>
         <a href="#excel">Excel版</a>
-        <a href="#author">書いている人</a>
         <a href="/contact/">お問い合わせ</a>
       </nav>
     </div>
@@ -607,11 +695,61 @@ input,select,textarea,button{font-weight:600}
       <span class="hero__blob hero__blob--c" aria-hidden="true"></span>
       <div class="wrap">
         <p class="eyebrow">numbers you can check yourself</p>
-        <h1>その数字、<em>人に聞く前に</em>自分で出せます。</h1>
-        <p>社会保険料、手取り、住宅の生涯コスト、取引先の与信。調べても「場合によります」としか書いていない数字を、条件を入れて自分で確かめられるようにしました。全部無料で、登録もいりません。</p>
+        <h1>調べても出てこない数字を、<em>その場で</em>出します。</h1>
+        <p>社会保険料、手取り、住宅の生涯コスト、取引先の与信。「場合によります」としか書かれていない数字を、条件を入れて自分で確かめられるようにしました。12のツールと解説記事は、登録なしでどなたでもお使いいただけます。</p>
+        <p class="hero__sub">そのうち、取引先の決算書を読む作業だけは、PDFを置くだけで終わるようにしました。<a href="/credit-pro/">与信判断シミュレーター Pro</a>。判定を見るところまでは料金がかからず、Excelが必要なときだけ1社500円です。</p>
         <div class="hero__actions">
-          <a class="btn btn--primary" href="#tools">ツールを使ってみる<span class="btn__arrow" aria-hidden="true">→</span></a>
-          <a class="btn btn--ghost" href="#posts">解説から読む</a>
+          <a class="btn btn--primary" href="/credit-pro/">与信判断 Pro を使う<span class="btn__arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn--ghost" href="#tools">ほかのツールを見る</a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============ 主力サービス ============ -->
+    <section class="flagsec" id="pro">
+      <div class="wrap">
+        <div class="flag">
+          <div class="flag__body">
+            <p class="flag__eyebrow">main service</p>
+            <h2 class="flag__title">決算書の入力を、もうしなくていい。</h2>
+            <p class="flag__lead">取引先の決算書PDFを置くだけで、数字を読み取り、業歴・資本構成・規模・損益・経営者・償還余力の6軸100点満点で信用力を判定します。信用程度A〜Eと与信限度額の目安まで、その場で出ます。</p>
+
+            <ol class="flow">
+              <li><span class="flow__no" aria-hidden="true">1</span><div><b>決算書PDFを置く</b><span class="flow__d">3期分をまとめて読み取ります。数字を直接入力しても構いません。</span></div></li>
+              <li><span class="flow__no" aria-hidden="true">2</span><div><b>その場で判定を見る</b><span class="flow__d">6軸100点、信用程度A〜E、与信限度額の目安。ここまで料金はかかりません。</span></div></li>
+              <li><span class="flow__no" aria-hidden="true">3</span><div><b>Excelを受け取る</b><span class="flow__d">稟議にそのまま添付できる5シート。料金がかかるのは、ここだけです。</span></div></li>
+            </ol>
+
+            <div class="price">
+              <p class="price__amt"><b>500</b><span>円（税込）／ 1社</span></p>
+              <p class="price__note">月額でも、会員登録でもありません。必要になったときに、必要な1社ぶんだけ。最初のダウンロードから24時間は、同じ会社を何度でも取り直せます。</p>
+            </div>
+
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="/credit-pro/">決算書を置いてみる<span class="btn__arrow" aria-hidden="true">&#8594;</span></a>
+            </div>
+
+            <p class="flag__fine">読み取りも判定もExcelの作成も、すべてご自身のブラウザの中で行います。決算書ファイルがどこかに送信されることはありません。／ 入力が数項目で済む<a href="/credit/">無料の簡易判定</a>もあります。</p>
+
+            <div class="compare">
+              <div class="compare__col" style="--accent:#33526C">
+                <p class="compare__tag">Web版　500円 / 1社</p>
+                <p class="compare__d"><strong>1〜2社を、いま見たいとき。</strong>入力の手間がありません。お渡しするのは数式を含まない5シート、1社分の記録です。</p>
+                <a class="compare__go" href="/credit-pro/">与信判断 Pro を使う &#8594;</a>
+              </div>
+              <div class="compare__col" style="--accent:#82B33A">
+                <p class="compare__tag">Excel版　note</p>
+                <p class="compare__d"><strong>これから何社も見るとき。</strong>数式が全て入った8シート。しきい値も配点も、自社の与信方針に合わせて書き換えられます。</p>
+                <a class="compare__go" href="#excel">Excel版を見る &#8594;</a>
+              </div>
+            </div>
+          </div>
+
+          <figure class="flag__shot">
+            <img src="/credit-pro/assets/1-summary.jpg" width="1000" height="1414" alt="出力されるExcelの総括シート。スコアと信用程度、財務指標の3期比較が1枚にまとまっている。" loading="lazy">
+            <figcaption>受け取るExcelの1シート目（総括）</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -722,7 +860,7 @@ input,select,textarea,button{font-weight:600}
         <div class="section__head">
           <p class="section__label">excel workbooks</p>
           <h2 class="section__title">実務でそのまま使う人へ</h2>
-          <p class="section__note">上のツールは「あたりを付ける」ためのものです。稟議や社内資料にそのまま載せる必要がある方向けに、計算過程まで追えるExcel版をnoteで販売しています。</p>
+          <p class="section__note">上のツールは「あたりを付ける」ためのものです。稟議や社内資料にそのまま載せる必要がある方向けに、計算過程まで追えるExcel版をnoteで販売しています。1社だけ今すぐ見たい、という場合は<a href="/credit-pro/" style="color:var(--sea-deep);font-weight:700;">与信判断 Pro（1社500円）</a>のほうが手早く済みます。</p>
         </div>
 
         <div class="shop">
@@ -882,34 +1020,13 @@ input,select,textarea,button{font-weight:600}
       </div>
     </section>
 
-    <!-- ============ 書いている人 ============ -->
-    <section class="section section--tint" id="author">
+    <!-- ============ ご利用にあたって ============ -->
+    <section class="section section--tint" id="notice">
       <div class="wrap">
-        <div class="section__head">
-          <p class="section__label">who writes this</p>
-          <h2 class="section__title">書いている人</h2>
-        </div>
-
-        <div class="author">
-          <img class="pic pic--l" src="/assets/eryael.png" width="480" height="480" alt="エリエール" loading="lazy">
-          <div>
-            <h3>エリエール</h3>
-            <p class="author__role">財務経理 → 金融機関 → 企業信用調査 → 独立</p>
-            <p>小売業の持株会社で財務経理を担当したあと、金融機関で法人営業・システム開発・制度対応に携わり、その後は大手信用調査会社で企業の信用調査をしていました。現在は独立して、実務で使う計算ツールを作っています。</p>
-            <p>「制度の説明は読んだけれど、結局うちの場合はいくらなのか分からない」という場面を、現場で何度も見てきました。このサイトはそんな方のために作っています。</p>
-            <ul class="career">
-              <li>財務経理</li>
-              <li>法人営業</li>
-              <li>制度対応</li>
-              <li>企業信用調査</li>
-              <li>個人開発</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="notice">
+        <div class="notice" style="margin-top:0;">
           <h4>ご利用にあたって</h4>
           <p>掲載している内容および計算結果は、一般的な情報提供を目的としたものです。個別の事情に応じた税務・労務・法務の判断については、税理士・社会保険労務士など各分野の専門家にご相談ください。制度改正により内容が古くなっている場合があります。各記事には参照した公的資料と参照日を記載しています。</p>
+          <p style="margin-top:14px;">このサイトを書いているのは、財務経理・金融機関・企業信用調査を経て独立した個人です。経歴と、作っている理由は<a href="/about/" style="color:var(--sea-deep);font-weight:700;">運営者情報</a>に記載しています。</p>
         </div>
       </div>
     </section>
@@ -921,6 +1038,7 @@ input,select,textarea,button{font-weight:600}
       <nav class="foot__links" aria-label="フッター">
         <a href="/about/">運営者情報</a>
         <a href="/privacy/">プライバシーポリシー</a>
+        <a href="/tokusho/">特定商取引法に基づく表記</a>
         <a href="/contact/">お問い合わせ</a>
         <a href="/sitemap.xml">サイトマップ</a>
       </nav>
