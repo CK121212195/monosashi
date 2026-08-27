@@ -3,10 +3,10 @@
  * 計算は engine.js、Excel生成は xlsx-export.js。ここはUIだけを担当する。
  * ========================================================================== */
 import { evaluate, emptyInput, INDUSTRIES, CAPITAL_TIERS, LISTING_OPTIONS, POLICY }
-  from "./engine.js?v=16";
-import { downloadXlsx } from "./xlsx-export.js?v=16";
-import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=16";
-import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=16";
+  from "./engine.js?v=18";
+import { downloadXlsx } from "./xlsx-export.js?v=18";
+import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=18";
+import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=18";
 
 const $ = (id) => document.getElementById(id);
 const COLS = ["今期（直近）", "前期", "前々期"];
@@ -549,7 +549,10 @@ async function readFiles(files) {
         setProgress(`${f.name} を読み取っています…（${pno} / ${total} ページ）`, pno / total));
       // スキャン画像PDF（テキストレイヤーが無い）は、その旨を明示する
       if (found._noText) { periods.push({ file: f.name, failed: true, image: true }); continue; }
-      if (found._outOfScope) { periods.push({ file: f.name, failed: true, scope: found._outOfScope }); continue; }
+      // 対象外の業種、および四半期・中間の決算書は、読めても判定に進ませない。
+      // 四半期の損益計算書は3か月ぶんなので、年商として扱うと回転率も償還年数も静かに狂う。
+      const reject = found._outOfScope || found._interim;
+      if (reject) { periods.push({ file: f.name, failed: true, scope: reject }); continue; }
       if (!found.BS && !found.PL) { periods.push({ file: f.name, failed: true }); continue; }
       // 有報・短信は1本で2期分（当期・前期）取れる
       const isTwoYear = (found.BS || found.PL).kind === "years";
@@ -862,17 +865,30 @@ function showRead(periods) {
     const anyImage = periods.some((p) => p.image);
     const scope = periods.find((p) => p.scope);
     $("readTable").innerHTML = "";
-    $("readBanner").innerHTML = scope
-      ? `<div class="read-banner is-ng"><b>${scope.scope === "bank" ? "銀行" : "保険会社"}の決算書のようです。このツールの対象外です</b>` +
-        `<span>${scope.scope === "bank" ? "銀行" : "保険会社"}の貸借対照表には流動・固定の区分が無く、損益計算書も売上高ではなく経常収益で構成されるため、` +
-        `本ツールの判定モデルには載りません。判定に用いる業界基準の統計も金融業・保険業を対象外としています。` +
-        `一般事業会社の決算書でお試しください。</span></div>`
+    const SCOPE_MSG = {
+      bank: ["銀行の決算書のようです。このツールの対象外です",
+        "銀行の貸借対照表には流動・固定の区分が無く、損益計算書も売上高ではなく経常収益で構成されるため、本ツールの判定モデルには載りません。判定に用いる業界基準の統計も金融業・保険業を対象外としています。一般事業会社の決算書でお試しください。"],
+      insurance: ["保険会社の決算書のようです。このツールの対象外です",
+        "保険会社の貸借対照表には流動・固定の区分が無く、損益計算書も売上高ではなく経常収益で構成されるため、本ツールの判定モデルには載りません。判定に用いる業界基準の統計も金融業・保険業を対象外としています。一般事業会社の決算書でお試しください。"],
+      securities: ["証券会社（金融商品取引業）の決算書のようです。このツールの対象外です",
+        "証券会社の損益計算書は営業収益と受入手数料で構成され、貸借対照表にも流動・固定の区分がありません。本ツールの判定モデルには載らず、業界基準の統計も金融業を対象外としています。一般事業会社の決算書でお試しください。"],
+      interim: ["四半期・中間の決算書のようです。このツールの対象外です",
+        "四半期の損益計算書に載っている売上高や利益は3か月ぶんの金額です。これを年間の実績として扱うと、総資産回転率も債務償還年数も与信限度額も実態からずれた数字になります。しかも一見それらしい数字が出るため、誤りに気づけません。通期（1年分）の決算書をご用意ください。"],
+    };
+    const msg = scope ? SCOPE_MSG[scope.scope] : null;
+    $("readBanner").innerHTML = msg
+      ? `<div class="read-banner is-ng"><b>${msg[0]}</b><span>${msg[1]}</span></div>`
       : `<div class="read-banner is-ng"><b>${anyImage ? "この決算書からは文字を取り出せませんでした" : "この様式は読み取れませんでした"}</b>` +
         `<span>下の入力欄に直接ご入力いただければ、判定もExcelの作成も問題なく行えます。</span></div>`;
     setFix("");
     $("readWarn").innerHTML = anyImage
       ? "<li>スキャンされた画像PDFのため、文字を読み取れませんでした（このツールは画像の文字起こし＝OCRは行いません）。お手数ですが、下の入力欄に直接ご入力ください。判定とExcelの作成は問題なく行えます。</li>"
       : "<li>この決算書は自動読み取りに対応していませんでした。お手数ですが、下の入力欄に直接ご入力ください。判定とExcelの作成は問題なく行えます。</li>";
+    if (scope && scope.scope === "interim") {
+      // 通期の決算書でない以上、手入力に誘導しても判定は成り立たない
+      $("readWarn").innerHTML = "<li>四半期・中間の決算書では判定を行いません。通期（1年分）の決算書をご用意ください。</li>";
+      return;
+    }
     $("btnApply").hidden = false;   // 手入力だけで判定できるようにする
     openManual();
     return;

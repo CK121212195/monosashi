@@ -27,7 +27,11 @@ export function norm(s) {
     // 小計ラベルを囲む隅付き括弧・かぎ括弧を除去する。
     // 例:「【流動資産】」「【売上高】」を辞書の「流動資産」「売上高」と一致させるため。
     // 単位表記（単位：千円）や（連結）は丸括弧なので影響しない。
-    .replace(/[【】「」『』〔〕［］]/g, "");
+    .replace(/[【】「」『』〔〕［］]/g, "")
+    // IFRSの有価証券報告書は、科目名の直後に注記番号を置く。
+    // 例:「営業債権及びその他の債権7、27」「リース負債12、27」
+    // 末尾の数字（と区切りの読点）だけを落とす。先頭の数字（1年内返済予定…）は残す。
+    .replace(/\d+(?:[、，,]\d+)*$/, "");
 }
 
 const NUM_RE = /^[△▲\-−(（]?[\d,]+[)）]?$/;
@@ -42,6 +46,15 @@ export function toNum(tok) {
 }
 
 const isNum = (tok) => NUM_RE.test(String(tok).normalize("NFKC")) && toNum(tok) !== null;
+
+/**
+ * 「数字の一部になりうる文字」かどうか。
+ * PDFによっては金額を1文字ずつ別のitemで出す（例: "4" "3" "2" "," "4" "6" "4"）。
+ * isNum は "," 単体を数値と見なさないため、そこで語の結合が切れ、
+ * カンマだけが科目名の側に取り残されて「流動資産合計,,」のようになり辞書と一致しなくなる。
+ * 結合の判定にはこちらを使い、数値としての判定には従来どおり isNum を使う。
+ */
+const isNumish = (tok) => /^[\d,.\u25b3\u25b2\-\u2212()（）]+$/.test(String(tok).normalize("NFKC"));
 
 /* -------------------------------------------------- pdf.js の item → 語 */
 /**
@@ -74,7 +87,11 @@ function itemsToWords(items, viewportHeight) {
     let cur = null;
     for (const it of ln.items) {
       const h = 10; // 想定文字高
-      if (cur && it.x0 - cur.x1 <= h * 0.9 && isNum(it.text) === isNum(cur.text)) {
+      // 決算公告は金額欄を【】で囲む。左段の「】」と右段の「【流動負債】」は
+      // 数ピクセルしか離れておらず、そのまま結合すると左右の段が1つの語になり、
+      // 段組みの分割が効かなくなる。隅付き括弧はまたいで結合しない。
+      const bracketBreak = /】$/.test(cur ? cur.text : "") || /^【/.test(it.text);
+      if (cur && !bracketBreak && it.x0 - cur.x1 <= h * 0.9 && isNumish(it.text) === isNumish(cur.text)) {
         cur.text += it.text; cur.x1 = it.x1;
       } else {
         if (cur) words.push(cur);
@@ -166,6 +183,38 @@ function rowsOf(words, pageWidth, pageText) {
   const bands = amountBands(words, pageWidth);
   const onBand = (w) => bands.some((b) => Math.abs(w.x1 - b) <= 4);
 
+  // 「１年以内返済／長期借入金」のように科目名が2行に折り返すと、
+  // 金額だけの行と、科目名だけの行に分かれてしまう。
+  // 同じ段の隣接する行どうしに限って、科目名を金額の行へ寄せる。
+  {
+    const keys = [...buckets.keys()];
+    const info = new Map();
+    for (const k of keys) {
+      const ws = buckets.get(k);
+      const [col, top] = k.split(":").map(Number);
+      info.set(k, { col, top, hasNum: ws.some((w) => isNum(w.text)),
+                    hasLabel: ws.some((w) => !isNum(w.text)) });
+    }
+    for (const k of keys) {
+      const me = info.get(k);
+      if (!me) continue;                               // 既に他の行へ寄せた行
+      if (!me.hasNum || me.hasLabel) continue;         // 金額だけの行が対象
+      // 折り返しは上下2行にまたがることがある（1行目「１年以内返済」/2行目「長期借入金」）。
+      // 上下とも科目名だけの行なら、上の行から順に金額の行へ寄せる。
+      let moved = 0;
+      for (const d of [-2, -1, 1, 2]) {
+        if (moved >= 2) break;
+        const nk = me.col + ":" + (me.top + d);
+        const nb = info.get(nk);
+        if (!nb || nb.hasNum || !nb.hasLabel) continue;
+        buckets.get(k).push(...buckets.get(nk));       // 科目名を金額の行へ移す
+        buckets.delete(nk);
+        info.delete(nk);
+        moved++;
+      }
+    }
+  }
+
   const rows = [];
   for (const ws of buckets.values()) {
     ws.sort((a, b) => a.x0 - b.x0);
@@ -185,27 +234,32 @@ function rowsOf(words, pageWidth, pageText) {
 // parts … 内訳科目。aggが無いときに全部足す
 const BS_DICT = {
   cash: { agg: ["現金及び預金", "現金預金", "現金・預金", "現金及び現金同等物"], parts: ["現金", "預金"] },
-  receivables: { agg: ["受取手形及び売掛金", "売上債権", "受取手形、売掛金及び契約資産", "売掛金及びその他の短期債権", "受取手形及び売掛金(純額)"], parts: ["受取手形", "売掛金", "契約資産", "電気事業未収金"] },
-  inventory: { agg: ["棚卸資産"], parts: ["商品及び製品", "商品", "製品", "仕掛品", "原材料及び貯蔵品", "原材料", "貯蔵品"] },
+  receivables: { agg: ["受取手形及び売掛金", "売上債権", "受取手形、売掛金及び契約資産", "売掛金及びその他の短期債権", "受取手形及び売掛金(純額)", "営業債権及びその他の債権", "営業債権及び契約資産", "受取手形、売掛金及び契約資産(純額)"], parts: ["受取手形", "売掛金", "契約資産", "電気事業未収金", "電子記録債権", "売掛金及び契約資産", "完成工事未収入金", "受取手形及び電子記録債権"] },
+  inventory: { agg: ["棚卸資産"], parts: ["商品及び製品", "商品", "製品", "仕掛品", "原材料及び貯蔵品", "原材料", "貯蔵品", "未成工事支出金", "販売用不動産", "仕掛販売用不動産", "未成業務支出金"] },
   tangible: { agg: ["有形固定資産合計", "有形固定資産"], parts: [] },
   currentAssets: { agg: ["流動資産合計", "流動資産"], parts: [] },
   // IFRSは「非流動資産合計」。日本基準の「固定資産合計」と同じ位置づけ
   fixedAssets: { agg: ["固定資産合計", "非流動資産合計", "固定資産"], parts: [] },
   deferred: { agg: ["繰延資産合計", "繰延資産"], parts: [] },
-  payables: { agg: ["支払手形及び買掛金", "仕入債務", "買掛金及びその他の短期債務"], parts: ["支払手形", "買掛金", "電気事業未払金"] },
+  payables: { agg: ["支払手形及び買掛金", "仕入債務", "買掛金及びその他の短期債務", "営業債務及びその他の債務"], parts: ["支払手形", "買掛金", "電気事業未払金", "電子記録債務", "工事未払金", "支払手形及び電子記録債務"] },
   shortDebt: { agg: [], parts: ["短期借入金", "1年内返済予定の長期借入金", "1年以内に期限到来の固定負債",
                                 "1年内償還予定の社債", "コマーシャル・ペーパー", "リース債務",
-                                "その他の短期金融負債", "リース負債", "短期借入債務"] },
+                                "その他の短期金融負債", "リース負債", "短期借入債務", "リース債務流動", "1年以内返済長期借入金", "1年内返済予定長期借入金",
+                                // 流動負債の節に載る「長期借入金」「社債」は1年内返済・償還分。
+                                // 節を限定して拾うので、固定負債側の同名科目とは混ざらない。
+                                "長期借入金", "社債"] },
   currentLiab: { agg: ["流動負債合計", "流動負債"], parts: [] },
-  longDebt: { agg: [], parts: ["長期借入金", "社債", "リース債務", "長期金融負債", "リース負債", "長期借入債務"] },
+  longDebt: { agg: [], parts: ["長期借入金", "社債", "リース債務", "長期金融負債", "リース負債", "長期借入債務", "借入金", "社債及び借入金", "リース債務固定"] },
   fixedLiab: { agg: ["固定負債合計", "非流動負債合計", "固定負債"], parts: [] },
   equity: { agg: ["純資産合計", "純資産の部合計", "資本合計"], parts: [] },
-  totalCapital: { agg: ["負債純資産合計", "負債及び純資産合計", "負債及び資本合計"], parts: [] },
+  totalCapital: { agg: ["負債純資産合計", "負債及び純資産合計", "負債及び資本合計", "負債・純資産合計", "負債・純資産の部合計", "負債純資産の部合計", "負債及び純資産の部合計",
+                       // 総資本は総資産と同額。上記が無い様式では資産側の合計で代用する
+                       "資産合計", "資産の部合計", "資産の部計"], parts: [] },
 };
 const PL_DICT = {
-  sales: { agg: ["売上高", "営業収益", "純営業収益", "売上収益", "営業収益合計"], parts: [] },
-  cogs: { agg: ["売上原価"], parts: [] },
-  sga: { agg: ["販売費及び一般管理費"], parts: [] },
+  sales: { agg: ["売上高", "営業収益", "純営業収益", "売上収益", "営業収益合計", "完成工事高", "売上高合計"], parts: [] },
+  cogs: { agg: ["売上原価", "完成工事原価", "売上原価合計"], parts: [] },
+  sga: { agg: ["販売費及び一般管理費", "販売費及び一般管理費合計", "販売費及び一般管理費計"], parts: [] },
   operating: { agg: ["営業利益", "営業損失", "営業利益又は営業損失", "営業損失(△)"], parts: [] },
   // IFRSには営業外収益/費用が無い。金融収益・その他収益・持分法投資利益を合算して同じ位置に置く
   nonOpInc: { agg: ["営業外収益", "営業外収益合計"], parts: ["金融収益", "その他収益", "持分法による投資利益"] },
@@ -213,8 +267,8 @@ const PL_DICT = {
   ordinary: { agg: ["経常利益", "経常損失", "当期経常利益", "経常利益又は経常損失"], parts: [] },
   extraInc: { agg: ["特別利益", "特別利益合計"], parts: [] },
   extraExp: { agg: ["特別損失", "特別損失合計"], parts: [] },
-  tax: { agg: ["法人税等", "法人税等合計", "法人所得税費用"], parts: [] },
-  net: { agg: ["当期純利益", "当期純損失", "当期利益", "中間利益", "中間(当期)利益"], parts: [] },
+  tax: { agg: ["法人税等", "法人税等合計", "法人所得税費用"], parts: ["法人税、住民税及び事業税", "法人税等調整額", "法人税住民税及び事業税"] },
+  net: { agg: ["当期純利益", "当期純損失", "当期利益", "中間利益", "中間(当期)利益", "親会社株主に帰属する当期純利益", "親会社の所有者に帰属する当期利益", "当期純利益又は当期純損失"], parts: [] },
 };
 const DEP = { agg: ["減価償却費", "減価償却費及びその他の償却費", "減価償却費及びその他の償却費", "減価償却費及び償却費", "減価償却費及びのれん償却額"], parts: [] };
 const OPEX = ["営業費用", "営業費用合計"];
@@ -263,8 +317,14 @@ function headingsOf(pageText) {
     const cut = mod.lastIndexOf("】");
     if (cut >= 0) mod = mod.slice(cut + 1);
     mod = mod.replace(/^[^ぁ-んァ-ヶ一-龥]+/, "");     // 先頭の数字・記号を落とす
+    // 「２．四半期連結財務諸表及び主な注記（１）四半期連結貸借対照表」のように、
+    // 直前に別の見出しの語が来ることがある。「注記」「財務諸表」より後ろだけを修飾語とする。
+    for (const cutWord of ["注記", "財務諸表等", "財務諸表"]) {
+      const j = mod.lastIndexOf(cutWord);
+      if (j >= 0) { mod = mod.slice(j + cutWord.length).replace(/^[^ぁ-んァ-ヶ一-龥]+/, ""); break; }
+    }
     if (/包括利益$/.test(mod)) continue;               // 包括利益計算書はPLではない
-    if (/注記|計上額|について|に関する|における/.test(mod)) continue;  // 本文中の言及を除く
+    if (/計上額|について|に関する|における|場合|とき|より|ため/.test(mod)) continue;  // 本文中の言及を除く
     const kind = /財政状態|貸借/.test(m[3]) ? "BS" : /損益/.test(m[3]) ? "PL" : "CF";
     out.push({ kind, text: mod + m[3], consolidated: mod.includes("連結") });
   }
@@ -275,7 +335,10 @@ function headingsOf(pageText) {
 function bodyLooksLike(kind, labels) {
   const has = (...ks) => ks.some((k) => labels.has(k));
   if (kind === "BS") return has("流動資産合計", "非流動資産合計", "固定資産合計", "資産合計",
-                                "流動負債合計", "非流動負債合計", "負債合計", "資本合計", "純資産合計");
+                                "流動負債合計", "非流動負債合計", "負債合計", "資本合計", "純資産合計",
+                                // 決算公告は「合計」ではなく「〜の部合計」と書く様式がある
+                                "資産の部合計", "負債の部合計", "純資産の部合計",
+                                "負債・純資産合計", "負債純資産合計", "負債及び純資産合計");
   // 利益科目が無いものは損益計算書とみなさない。
   // 「売上高」だけを条件にすると、経営指標の推移表などを誤って拾う。
   if (kind === "PL") return has("営業利益", "営業損失", "営業利益又は営業損失", "経常利益", "当期経常利益",
@@ -311,6 +374,9 @@ export function detectUnit(pageTexts) {
   let m = t.match(/単位[：:]?\s*([百千]?万?円)/);
   // ②有価証券報告書は「売上高(百万円)」「営業収益(百万円)」のように項目名に単位を付ける
   if (!m) m = t.match(/(?:売上高|営業収益|経常収益|純資産額|総資産額)[（(]([百千]?万?円)[）)]/);
+  // 決算公告には「（単位：〜）」を書かず、金額欄の見出しに単位だけを置く様式がある。
+  // 例:「科目 金額 科目 金額 円 円 流動資産 …」
+  if (!m) m = t.match(/金[\s　]*額[）)]?[\s　]*[（(]?([百千]?万?円)/);
   if (!m) return null;
   const u = m[1];
   if (u === "百万円") return { label: "百万円", toMillion: 1 };
@@ -338,12 +404,20 @@ export function detectCompany(pageTexts) {
     "|[ぁ-んァ-ヶ一-龥ａ-ｚＡ-Ｚa-zA-Z0-9・ー]{1,20}(?:" + KIND_RE + "))"));
   if (labeled) {
     // 直後の見出し語（英訳名 など）を巻き込んでいたら落とす
-    const n = labeled[1].replace(/(英訳名|代表者|本店|電話番号|事務連絡者|最寄り|縦覧).*$/, "");
+    const n = labeled[1].replace(/(英訳名|代表者|本店|電話番号|事務連絡者|最寄り|縦覧|上場取引所|コード番号|URL|証券コード|決算期|問合せ先).*$/, "")
+      // 有価証券報告書の表紙は社名の直後にEDINETコード（E04678）を置く。
+      // ページの区切りで「E」だけが残ることがあるため、日本語のあとに続くEは落とす。
+      .replace(/([ぁ-んァ-ヶ一-龥])E\d{0,6}$/, "$1");
     if (n.length >= 4) return n;
   }
 
   const cands = new Map();
-  const add = (n) => { if (n) cands.set(n, (cands.get(n) || 0) + 1); };
+  // 有価証券報告書の表紙は社名の直後にEDINETコード（E04678）を置く。
+  // ページの区切りで「E」だけが残ることがあるため、日本語のあとに続くEは落とす。
+  const add = (n0) => {
+    const n = String(n0 || "").replace(/([ぁ-んァ-ヶ一-龥])E\d{0,6}$/, "$1");
+    if (n) cands.set(n, (cands.get(n) || 0) + 1);
+  };
   for (const kind of CO_KINDS) {
     let i = -1;
     while ((i = t.indexOf(kind, i + 1)) !== -1) {
@@ -362,6 +436,10 @@ export function detectCompany(pageTexts) {
         cand = cand.replace(/^[年月日期至自現在]+/, "");
         // 「有価証券報告書GMO…」のように直前の見出し語を巻き込むのを防ぐ
         cand = cand.replace(/^(?:有価証券報告書|報告書|書類|表紙|提出会社|会社名|商号|名称|当社|同社)+/, "");
+        // 「…個別注記表浜銀ファイナンス」のように、直前の書類名を巻き込むのを防ぐ
+        cand = cand.replace(/^.*(?:個別注記表|注記表|計算書類|貸借対照表|損益計算書|決算公告|決算報告書)/, "");
+        // 「…牧港五丁目2番1号FRT」のように、直前の住所を巻き込むのを防ぐ
+        cand = cand.replace(/^.*(?:丁目|番地|[0-9０-９]+番[0-9０-９]*号?|[0-9０-９]+号)/, "");
         if (CO_OK.test(cand) && !CO_NG.test(cand) && !CO_EXCLUDE.test(cand + kind)) { add(cand + kind); break; }
       }
       i += kind.length;
@@ -400,7 +478,23 @@ export function detectOutOfScope(pageTexts) {
   if (bank) return "bank";
   const ins = /(?:保険料等収入|責任準備金|支払備金)/.test(t);
   if (ins) return "insurance";
+  // 証券会社・金融商品取引業。損益計算書が営業収益と受入手数料で構成され、
+  // 貸借対照表にも流動／固定の区分が無いため、本ツールの判定モデルに載らない。
+  const sec = /(?:受入手数料|トレーディング損益|信用取引資産|信用取引負債|金融商品取引業)/.test(t);
+  if (sec) return "securities";
   return null;
+}
+
+/**
+ * 四半期・中間の決算書かどうかを、見つかった財務諸表の「見出し」で判定する。
+ * 本文には有価証券報告書でも「四半期」の語が出るため、本文検索では誤判定する。
+ * 四半期の損益計算書は3か月ぶんなので、年商として扱うと
+ * 回転率も償還年数も与信限度額も静かに狂う。読めても判定してはいけない。
+ */
+export function detectInterim(found) {
+  const heads = [(found && found.BS && found.BS.heading) || "",
+                 (found && found.PL && found.PL.heading) || ""].join(" ");
+  return /四半期|中間/.test(heads) ? "interim" : null;
 }
 
 /* ------------------------------------------------------------------ 決算期 */
@@ -415,13 +509,24 @@ export function detectPeriod(pageTexts) {
   const t = pageTexts.join("");
   const out = { end: null, no: null, label: "" };
 
-  let m = t.match(/自(\d{4})年(\d{1,2})月(\d{1,2})日至(\d{4})年(\d{1,2})月(\d{1,2})日/);
-  if (m) out.end = `${m[4]}-${String(m[5]).padStart(2, "0")}-${String(m[6]).padStart(2, "0")}`;
-  if (!out.end) {
-    m = t.match(/(\d{4})年(\d{1,2})月(\d{1,2})日現在/);
-    if (m) out.end = `${m[1]}-${String(m[2]).padStart(2, "0")}-${String(m[3]).padStart(2, "0")}`;
-  }
-  m = t.match(/第(\d{1,3})期/);
+  // 決算書には前期と当期の2列があり、前期のほうが先に書かれている。
+  // 最初の一致を採ると必ず1期古い日付になるため、見つかった中で最も新しいものを採る。
+  const ends = [];
+  const pad = (x) => String(x).padStart(2, "0");
+  for (const mm of t.matchAll(/自\d{4}年\d{1,2}月\d{1,2}日至(\d{4})年(\d{1,2})月(\d{1,2})日/g))
+    ends.push(`${mm[1]}-${pad(mm[2])}-${pad(mm[3])}`);
+  if (!ends.length)
+    for (const mm of t.matchAll(/(\d{4})年(\d{1,2})月(\d{1,2})日現在/g))
+      ends.push(`${mm[1]}-${pad(mm[2])}-${pad(mm[3])}`);
+  // 決算公告には和暦で書かれたものがある（令和7年12月31日現在）
+  if (!ends.length)
+    for (const mm of t.matchAll(/(令和|平成)(\d{1,2})年(\d{1,2})月(\d{1,2})日現在/g)) {
+      const base = mm[1] === "令和" ? 2018 : 1988;
+      ends.push(`${base + Number(mm[2])}-${pad(mm[3])}-${pad(mm[4])}`);
+    }
+  if (ends.length) out.end = ends.sort()[ends.length - 1];
+
+  let m = t.match(/第(\d{1,3})期/);
   if (m) out.no = parseInt(m[1], 10);
 
   if (out.end) {
@@ -459,7 +564,7 @@ export async function scanPdf(pdfjs, buf, onProgress) {
     totalChars += pageText.length;
     if (pageTexts.length < 12) pageTexts.push(pageText);
     const { rows, kind } = words.length ? rowsOf(words, vp.width, pageText) : { rows: [], kind: "single" };
-    pages.push({ no: i, rows, kind, labels: new Set(rows.map((r) => r.label)),
+    pages.push({ no: i, rows, kind, text: pageText, labels: new Set(rows.map((r) => r.label)),
                  headings: headingsOf(pageText) });
   }
   await doc.destroy();
@@ -471,14 +576,12 @@ export async function scanPdf(pdfjs, buf, onProgress) {
   // 読めなくても処理は続ける（並べ替えを諦めて投入順にするだけ）。
   const period = detectPeriod(pageTexts);
   const outOfScope = detectOutOfScope(pageTexts);
-  const unit = detectUnit(pageTexts);
   const company = detectCompany(pageTexts);
 
   const found = {};
   // 減価償却費を全ページから探すために保持する。列挙対象に混ざらないよう非列挙にする。
   Object.defineProperty(found, "_pages", { value: pages, enumerable: false });
   Object.defineProperty(found, "_period", { value: period, enumerable: false });
-  Object.defineProperty(found, "_unit", { value: unit, enumerable: false });
   Object.defineProperty(found, "_company", { value: company, enumerable: false });
   Object.defineProperty(found, "_outOfScope", { value: outOfScope, enumerable: false });
   for (const wantConsolidated of [true, false]) {          // 連結を先に探す
@@ -489,9 +592,27 @@ export async function scanPdf(pdfjs, buf, onProgress) {
         if (!h || !bodyLooksLike(kind, pg.labels)) continue;
         found[kind] = { page: pg.no, rows: pg.rows.slice(), kind: pg.kind,
                         consolidated: h.consolidated, heading: h.text };
+        // 損益計算書が「特別損失合計」で切れ、税金と当期純利益だけが次ページに載る様式がある。
+        // 無条件に結合すると次ページの包括利益計算書を飲み込むため、
+        // ①見出しが無い ②包括利益の科目を含まない ③税金か純利益の科目を含む
+        // の3つを満たすページに限って、1ページだけ結合する。
+        if (kind === "PL") {
+          const taxRows = ["法人税等合計", "法人税等", "税金等調整前当期純利益", "税引前当期純利益",
+                           "当期純利益", "親会社株主に帰属する当期純利益"];
+          const hasTail = (labels) => taxRows.some((k) => labels.has(k));
+          if (!hasTail(pg.labels)) {
+            const nx = pages[pg.no];               // 次のページ（pagesは0起点）
+            const isComprehensive = (labels) =>
+              [...labels].some((k) => /包括利益/.test(k));
+            if (nx && !nx.headings.length && nx.rows.length &&
+                !isComprehensive(nx.labels) && hasTail(nx.labels)) {
+              found.PL.rows.push(...nx.rows);
+              found.PL.continued = [nx.no];
+            }
+          }
+        }
         // 続きのページを結合する。
         // 貸借対照表だけが「資産の部」と「資本の部」で2ページに割れるため、BSに限定する。
-        // 損益計算書に適用すると、次ページの包括利益計算書まで飲み込んでしまう。
         if (kind === "BS") {
           const need = ["資本合計", "純資産合計", "負債及び資本合計", "負債純資産合計", "負債及び純資産合計"];
           const hasEquity = (labels) => need.some((k) => labels.has(k));
@@ -508,22 +629,51 @@ export async function scanPdf(pdfjs, buf, onProgress) {
     }
     if (found.BS && found.PL) break;   // 連結で揃ったら単体は見ない
   }
+
+  // 金額の単位は「決算書そのもののページ」から採る。
+  // 全文の先頭から探すと、為替レート表の「（単位：円）」のような
+  // 決算書と無関係な記載を拾い、百万円を円と取り違える。桁が6つずれる。
+  const unitPages = [];
+  for (const k of ["BS", "PL"]) {
+    if (!found[k]) continue;
+    const nos = [found[k].page, ...(found[k].continued || [])];
+    for (const n of nos) { const pg = pages.find((x) => x.no === n); if (pg) unitPages.push(pg.text); }
+  }
+  const unit = detectUnit(unitPages.length ? unitPages : pageTexts) || detectUnit(pageTexts);
+  Object.defineProperty(found, "_unit", { value: unit, enumerable: false });
+  Object.defineProperty(found, "_interim", { value: detectInterim(found), enumerable: false });
+
   return found;
 }
 
 /** 負債の部を流動セクション／固定（非流動）セクションに切り分ける */
 function sliceSection(rows, which) {
-  const endCur = rows.findIndex((r) => /^(流動負債合計)$/.test(r.label));
-  const endFix = rows.findIndex((r) => /^(固定負債合計|非流動負債合計)$/.test(r.label));
-  if (endCur < 0 || endFix < 0 || endFix <= endCur) return rows;   // 判別できなければ全体を対象
-  // 流動負債の節は「流動負債」の見出し行から合計行まで。見出しが無ければ合計行の手前20行を見る
-  const startCur = Math.max(0, (() => {
-    const i = rows.findIndex((r) => /^(流動負債)$/.test(r.label));
-    return i >= 0 && i < endCur ? i : endCur - 20;
-  })());
-  return which === "current"
-    ? rows.slice(startCur, endCur + 1)
-    : rows.slice(endCur + 1, endFix + 1);
+  const find = (re) => rows.findIndex((r) => re.test(r.label));
+
+  // ① 合計行がある様式（有価証券報告書など）。合計行が節の末尾になる。
+  const endCur = find(/^流動負債合計$/);
+  const endFix = find(/^(固定負債合計|非流動負債合計)$/);
+  if (endCur >= 0 && endFix > endCur) {
+    const i = find(/^流動負債$/);
+    const startCur = Math.max(0, i >= 0 && i < endCur ? i : endCur - 20);
+    return which === "current"
+      ? rows.slice(startCur, endCur + 1)
+      : rows.slice(endCur + 1, endFix + 1);
+  }
+
+  // ② 合計行が無く、「流動負債」「固定負債」の見出し行だけがある様式（決算公告に多い）。
+  //    区切らないまま全体を渡すと、流動と固定の両方に同じ名前で載る「リース債務」等を
+  //    二重に拾い、有利子負債が実際の倍近くになる。数字は自然に見えるので気づけない。
+  const hCur = find(/^流動負債$/);
+  const hFix = find(/^(固定負債|非流動負債)$/);
+  if (hCur >= 0 && hFix > hCur) {
+    const hTot = find(/^(負債合計|負債の部合計|負債の部計|負債計)$/);
+    return which === "current"
+      ? rows.slice(hCur, hFix)
+      : rows.slice(hFix, hTot > hFix ? hTot : rows.length);
+  }
+
+  return rows;   // 判別できなければ全体を対象
 }
 
 /* -------------------------------------------------------- 1期分の組み立て */
@@ -630,6 +780,16 @@ export function buildPeriod(found, yi) {
     }
   }
 
+  // 固定負債が無い会社（決算公告の小規模会社に多い）は、固定負債の行そのものが存在しない。
+  // 総資本・流動負債・純資産が揃っていれば差額で埋められる。埋めないと区分が欠けたまま判定に入る。
+  if (out.fixedLiab === null && out.totalCapital !== null &&
+      out.currentLiab !== null && out.equity !== null) {
+    const rest = out.totalCapital - out.currentLiab - out.equity;
+    if (rest >= 0 && rest <= Math.abs(out.totalCapital) * 0.02) {
+      out.fixedLiab = rest;
+      source.fixedLiab = "差額（総資本−流動負債−純資産）";
+    }
+  }
   if (out.tangible === null && out.fixedAssets !== null)
     warnings.push("有形固定資産の内訳が特定できませんでした。固定資産合計は正しいですが、有形と無形の内訳はご確認ください。");
   for (const k of ["shortDebt", "longDebt"]) {
