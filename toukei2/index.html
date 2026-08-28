@@ -210,6 +210,12 @@ footer b{color:var(--ink);display:block;margin-bottom:3px;font-size:.78rem}
   table.dtbl th,table.dtbl td{padding:5px 8px;font-size:.8rem}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* サイト共通フッター。配色は各ページの既存トーンをそのまま使う */
+.site-foot{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px;padding-top:14px;
+  border-top:1px solid var(--line);font-size:.74rem;line-height:2}
+.site-foot a{color:var(--deep);text-decoration:none;border-bottom:1px solid transparent}
+.site-foot a:hover{border-bottom-color:var(--deep)}
 </style>
 </head>
 <body>
@@ -381,6 +387,7 @@ footer b{color:var(--ink);display:block;margin-bottom:3px;font-size:.78rem}
     <a href="https://kazumono.com/" style="color:var(--deep)">数字のものさし</a> の無料ツールです。<br>
     非公式の学習教材です。「統計検定」は一般財団法人統計質保証推進協会の登録商標です。<br>
     問題・解説・図表はすべてオリジナルです。過去問等の複製は含みません。データはすべて架空のものです。
+    <nav class="site-foot" aria-label="サイト共通"><a href="/">数字のものさし</a><a href="/about/">運営者情報</a><a href="/privacy/">プライバシーポリシー</a><a href="/tokusho/">特定商取引法に基づく表記</a><a href="/contact/">お問い合わせ</a></nav>
   </footer>
 </div>
 <div class="toast" id="toast"></div>

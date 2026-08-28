@@ -364,6 +364,12 @@ body{font-weight:500}
 th,b,strong,dt{font-weight:700}
 h1,h2,h3,h4{font-weight:700}
 input,select,textarea,button{font-weight:600}
+
+/* サイト共通フッター（AdSense利用規約が求める、常時アクセス可能なプライバシーポリシーへの導線） */
+.site-foot{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:14px;padding-top:14px;
+  border-top:1px solid var(--rule-soft,var(--rule));font-size:12px;line-height:2}
+.site-foot a{color:var(--sea-deep);text-decoration:none;border-bottom:1px solid transparent}
+.site-foot a:hover{border-bottom-color:var(--sea-deep)}
 </style>
 </head>
 <body>
@@ -626,6 +632,7 @@ input,select,textarea,button{font-weight:600}
 
 <footer>
   賃貸／持ち家 生涯コスト比較シミュレーター　—　入力値はブラウザ内でのみ計算され、どこにも送信されません。
+  <nav class="site-foot" aria-label="サイト共通"><a href="/">数字のものさし</a><a href="/about/">運営者情報</a><a href="/privacy/">プライバシーポリシー</a><a href="/tokusho/">特定商取引法に基づく表記</a><a href="/contact/">お問い合わせ</a></nav>
 </footer>
 
 <script>
