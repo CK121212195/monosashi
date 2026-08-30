@@ -103,6 +103,16 @@ function itemsToWords(items, viewportHeight) {
   return words;
 }
 
+/**
+ * 科目名を突き合わせるための鍵。括弧の類をすべて落とす。
+ * 決算公告は小計を「【流動資産】」と囲むが、PDFによっては半角で「流動資産[]」、
+ * 「有形固定資産(」のように括弧が科目名に貼りついた形で出てくる。
+ * norm では全角の隅付き括弧しか落としていなかったため、半角のものが残って辞書と一致せず、
+ * 区分の合計が丸ごと欠けて貸借が合わなくなっていた。
+ * ラベル側と辞書側の両方に同じ処理をかけるので、「(純額)」付きの辞書項目も壊れない。
+ */
+const keyOf = (s) => String(s).replace(/[【】「」『』〔〕［］\[\]（）()]/g, "");
+
 /* ------------------------------------------------------------ レイアウト判定 */
 /** 右揃えで3回以上現れるx1＝金額列。見出しの年号やページ番号は頻度で除外する */
 function amountBands(words, pageWidth) {
@@ -217,7 +227,10 @@ function rowsOf(words, pageWidth, pageText) {
 
   const rows = [];
   for (const ws of buckets.values()) {
-    ws.sort((a, b) => a.x0 - b.x0);
+    // 「販売費及び一般管／理費」のように2行へ折り返した科目名は、
+    // x0だけで並べると下の行が先に来て「理費販売費及び一般管」になる。
+    // 上下（top）を先に見てから左右（x0）で並べる。
+    ws.sort((a, b) => (Math.round(a.top / 3) - Math.round(b.top / 3)) || (a.x0 - b.x0));
     const nums = ws.filter((w) => isNum(w.text));
     const labels = ws.filter((w) => !isNum(w.text)).map((w) => w.text);
     let amountWords = bands.length ? nums.filter(onBand) : nums;
@@ -251,7 +264,9 @@ const BS_DICT = {
   currentLiab: { agg: ["流動負債合計", "流動負債"], parts: [] },
   longDebt: { agg: [], parts: ["長期借入金", "社債", "リース債務", "長期金融負債", "リース負債", "長期借入債務", "借入金", "社債及び借入金", "リース債務固定"] },
   fixedLiab: { agg: ["固定負債合計", "非流動負債合計", "固定負債"], parts: [] },
-  equity: { agg: ["純資産合計", "純資産の部合計", "資本合計"], parts: [] },
+  // 決算公告には合計行を置かず、区分の見出し行に金額を書く様式がある（「純資産の部 42,301,401」）。
+  // 「純資産の部」を拾えないと、貸借が純資産のぶんだけ合わなくなる。
+  equity: { agg: ["純資産合計", "純資産の部合計", "資本合計", "純資産の部", "純資産"], parts: [] },
   totalCapital: { agg: ["負債純資産合計", "負債及び純資産合計", "負債及び資本合計", "負債・純資産合計", "負債・純資産の部合計", "負債純資産の部合計", "負債及び純資産の部合計",
                        // 総資本は総資産と同額。上記が無い様式では資産側の合計で代用する
                        "資産合計", "資産の部合計", "資産の部計"], parts: [] },
@@ -286,10 +301,12 @@ function pull(rows, spec, yi) {
     return a.length >= 2 ? a[a.length - 2] : a[a.length - 1];
   };
   for (const name of spec.agg) {
-    const r = rows.find((x) => x.label === name);
+    const k = keyOf(name);
+    const r = rows.find((x) => keyOf(x.label) === k);
     if (r) return { value: val(r), source: name };
   }
-  const hits = rows.filter((x) => spec.parts.includes(x.label));
+  const partKeys = spec.parts.map(keyOf);
+  const hits = rows.filter((x) => partKeys.includes(keyOf(x.label)));
   if (hits.length) {
     return { value: hits.reduce((a, r) => a + val(r), 0), source: hits.map((h) => h.label).join("＋") };
   }
@@ -333,7 +350,8 @@ function headingsOf(pageText) {
 
 /** 見出しではなく中身で財務諸表と判断できるか（見出しが別ページにある場合の保険） */
 function bodyLooksLike(kind, labels) {
-  const has = (...ks) => ks.some((k) => labels.has(k));
+  const keys = new Set([...labels].map(keyOf));
+  const has = (...ks) => ks.some((k) => keys.has(keyOf(k)));
   if (kind === "BS") return has("流動資産合計", "非流動資産合計", "固定資産合計", "資産合計",
                                 "流動負債合計", "非流動負債合計", "負債合計", "資本合計", "純資産合計",
                                 // 決算公告は「合計」ではなく「〜の部合計」と書く様式がある
@@ -377,6 +395,10 @@ export function detectUnit(pageTexts) {
   // 決算公告には「（単位：〜）」を書かず、金額欄の見出しに単位だけを置く様式がある。
   // 例:「科目 金額 科目 金額 円 円 流動資産 …」
   if (!m) m = t.match(/金[\s　]*額[）)]?[\s　]*[（(]?([百千]?万?円)/);
+  // 単位の表示が一切なく、表の下の注記だけが単位を語っている決算公告がある。
+  // 例:「記載金額は、千円未満の端数を切り捨てて表示しております。」
+  // ここを読み落とすと桁が3つも6つもずれるため、必ず拾う。
+  if (!m) m = t.match(/([百千]?万?円)未満(?:の端数)?[をは]?切(?:り)?捨/);
   if (!m) return null;
   const u = m[1];
   if (u === "百万円") return { label: "百万円", toMillion: 1 };
@@ -440,6 +462,18 @@ export function detectCompany(pageTexts) {
         cand = cand.replace(/^.*(?:個別注記表|注記表|計算書類|貸借対照表|損益計算書|決算公告|決算報告書)/, "");
         // 「…牧港五丁目2番1号FRT」のように、直前の住所を巻き込むのを防ぐ
         cand = cand.replace(/^.*(?:丁目|番地|[0-9０-９]+番[0-9０-９]*号?|[0-9０-９]+号)/, "");
+        // 住所やページ番号の名残りで先頭に数字が付くことがある（「…2番1号1東京海上ミレア…」）
+        cand = cand.replace(/^[0-9０-９]+/, "");
+        // 数字を落とすと日付の助数詞が先頭に出てくる（「…3月31日東京生活館」→「日東京生活館」）
+        cand = cand.replace(/^[年月日期至自現在]+/, "");
+        // 切り出した先頭が語の途中だと、別の語の断片を社名にしてしまう。
+        // 例：「…個別注記表株式会社東京ドーム」から「記表株式会社」を作ってしまっていた。
+        // 直前の文字が日本語なら、語の境界ではないので採用しない。
+        {
+          const at = i - (before.length - s);
+          const prev = at > 0 ? t[at - 1] : "";
+          if (prev && /[ぁ-んァ-ヶ一-龥]/.test(prev) && cand === before.slice(s)) continue;
+        }
         if (CO_OK.test(cand) && !CO_NG.test(cand) && !CO_EXCLUDE.test(cand + kind)) { add(cand + kind); break; }
       }
       i += kind.length;
@@ -648,7 +682,7 @@ export async function scanPdf(pdfjs, buf, onProgress) {
 
 /** 負債の部を流動セクション／固定（非流動）セクションに切り分ける */
 function sliceSection(rows, which) {
-  const find = (re) => rows.findIndex((r) => re.test(r.label));
+  const find = (re) => rows.findIndex((r) => re.test(keyOf(r.label)));
 
   // ① 合計行がある様式（有価証券報告書など）。合計行が節の末尾になる。
   const endCur = find(/^流動負債合計$/);
@@ -677,6 +711,77 @@ function sliceSection(rows, which) {
 }
 
 /* -------------------------------------------------------- 1期分の組み立て */
+
+/**
+ * 損益計算書の「区分合計」を、内訳の右隣にある1つ多い金額から拾う。
+ *
+ * 中小企業の計算書類や決算公告には、こういう様式がある。
+ *
+ *     営業外収益
+ *       受取利息及び配当金   1,162
+ *       その他                  21     1,265   ← 区分合計は内訳の右隣
+ *     営業外費用
+ *       支払利息                58
+ *       その他                   4        62
+ *
+ * 「営業外収益」という見出し行そのものに金額が無いため、辞書では拾えない。
+ * そこで、内訳より金額が1つ多い行を区分合計とみなす。
+ *
+ * ただし推測なので、必ず算術で検算してから採用する。
+ *   営業利益 ＋ 営業外収益 − 営業外費用 ＝ 経常利益
+ *   経常利益 ＋ 特別利益   − 特別損失   ＝ 税引前当期純利益
+ * 合わなければ何も入れない。間違った値を静かに入れるくらいなら、未取得のままがよい。
+ */
+function inferPlSections(rows, out, source, yi) {
+  if (!rows.length) return;
+  const val = (r) => (yi === -1 ? r.amounts[r.amounts.length - 1]
+                                : (r.amounts.length >= 2 ? r.amounts[r.amounts.length - 2]
+                                                         : r.amounts[r.amounts.length - 1]));
+  // 内訳行がいくつ金額を持つか（最頻値）。区分合計はそれより1つ多い。
+  const freq = new Map();
+  for (const r of rows) freq.set(r.amounts.length, (freq.get(r.amounts.length) || 0) + 1);
+  let base = 1, best = -1;
+  for (const [n, c] of freq) if (c > best) { best = c; base = n; }
+
+  const idx = (names) => rows.findIndex((r) => names.includes(keyOf(r.label)));
+  const iOp  = idx(["営業利益", "営業損失"]);
+  const iOrd = idx(["経常利益", "経常損失"]);
+  const iPre = idx(["税引前当期純利益", "税引前当期純損失", "税金等調整前当期純利益", "税引前利益"]);
+
+  const subtotalsBetween = (a, b) => {
+    if (a < 0 || b < 0 || b <= a) return [];
+    return rows.slice(a + 1, b).filter((r) => r.amounts.length > base);
+  };
+  const near = (x, y) => Math.abs(x - y) <= Math.max(2, Math.abs(y) * 0.005);
+
+  // ① 営業外収益・営業外費用
+  if (out.nonOpInc === null && out.nonOpExp === null &&
+      out.operating !== null && out.ordinary !== null) {
+    const sub = subtotalsBetween(iOp, iOrd);
+    if (sub.length === 2) {
+      const inc = val(sub[0]), exp = val(sub[1]);
+      if (near(out.operating + inc - exp, out.ordinary)) {
+        out.nonOpInc = inc; source.nonOpInc = "営業外収益（区分合計より）";
+        out.nonOpExp = exp; source.nonOpExp = "営業外費用（区分合計より）";
+      }
+    }
+  }
+
+  // ② 特別利益・特別損失
+  if (out.extraInc === null && out.extraExp === null &&
+      out.ordinary !== null && iPre >= 0) {
+    const pre = val(rows[iPre]);
+    const sub = subtotalsBetween(iOrd, iPre);
+    if (sub.length === 2) {
+      const inc = val(sub[0]), exp = val(sub[1]);
+      if (near(out.ordinary + inc - exp, pre)) {
+        out.extraInc = inc; source.extraInc = "特別利益（区分合計より）";
+        out.extraExp = exp; source.extraExp = "特別損失（区分合計より）";
+      }
+    }
+  }
+}
+
 export function buildPeriod(found, yi) {
   const out = {}, source = {}, warnings = [];
   const bs = found.BS?.rows || [], pl = found.PL?.rows || [], cf = found.CF?.rows || [];
@@ -692,6 +797,22 @@ export function buildPeriod(found, yi) {
   for (const [k, spec] of Object.entries(PL_DICT)) {
     const { value, source: s } = pull(pl, spec, yi);
     out[k] = value; if (s) source[k] = s;
+  }
+
+  // 区分の見出し行に金額が無い様式では、内訳の右隣にある区分合計を推測する（検算つき）
+  inferPlSections(pl, out, source, yi);
+
+  // 「流動負債合計」「固定負債合計」を置かず、負債合計だけを書く様式への手当て。
+  // 区分が両方とも空のままだと貸借が合わず、判定にも進めない。
+  // 負債合計から固定負債（判明していれば）を引いた残りを流動負債とみなす。
+  // 流動負債を多めに見ることになるが、流動比率は低く出る方向なので与信では安全側。
+  if (out.currentLiab === null) {
+    const liab = pull(bs, { agg: ["負債合計", "負債の部合計", "負債の部計", "負債計"], parts: [] }, yi);
+    if (liab.value !== null) {
+      out.currentLiab = liab.value - (out.fixedLiab || 0);
+      source.currentLiab = "負債合計−固定負債（推定）";
+      warnings.push("流動負債と固定負債の区分がこの決算書には記載されていないため、負債合計から推定しました。区分の内訳が必要な場合は手入力で補ってください。");
+    }
   }
 
   // 減価償却費：CF計算書 →（無ければ）損益計算書 →（無ければ）全ページ の順に探す。
