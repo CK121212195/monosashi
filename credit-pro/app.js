@@ -3,10 +3,10 @@
  * 計算は engine.js、Excel生成は xlsx-export.js。ここはUIだけを担当する。
  * ========================================================================== */
 import { evaluate, emptyInput, INDUSTRIES, CAPITAL_TIERS, LISTING_OPTIONS, POLICY }
-  from "./engine.js?v=19";
-import { downloadXlsx } from "./xlsx-export.js?v=19";
-import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=19";
-import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=19";
+  from "./engine.js?v=20";
+import { downloadXlsx } from "./xlsx-export.js?v=20";
+import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=20";
+import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=20";
 
 const $ = (id) => document.getElementById(id);
 const COLS = ["今期（直近）", "前期", "前々期"];
@@ -793,8 +793,11 @@ const CORE_KEYS = ["sales", "cash", "currentAssets", "fixedAssets", "currentLiab
  */
 function gradePeriod(values, diff, messages) {
   const coreMiss = CORE_KEYS.some((k) => values[k] === null || values[k] === undefined);
-  const plNg = messages.some((m) => m.includes("経常利益"));
-  if (diff !== 0 || plNg || coreMiss) return "check";
+  // 検算メッセージは種類が増えた（営業利益・当期純利益の積み上がり、
+  // 有利子負債と区分合計の整合）。特定の文言だけを見ていると、
+  // 新しく検出した不整合を「そのまま使えます」と表示してしまう。
+  const anyNg = messages.length > 0;
+  if (diff !== 0 || anyNg || coreMiss) return "check";
   if (values.depreciation === null || values.depreciation === undefined) return "supp";
   return "ok";
 }

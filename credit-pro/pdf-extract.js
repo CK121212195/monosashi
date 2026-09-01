@@ -31,13 +31,27 @@ export function norm(s) {
     // IFRSの有価証券報告書は、科目名の直後に注記番号を置く。
     // 例:「営業債権及びその他の債権7、27」「リース負債12、27」
     // 末尾の数字（と区切りの読点）だけを落とす。先頭の数字（1年内返済予定…）は残す。
-    .replace(/\d+(?:[、，,]\d+)*$/, "");
+    .replace(/\d+(?:[、，,]\d+)*$/, "")
+    // 「法人税、住民税および事業税」のように接続詞を仮名で書く決算書がある。
+    // 辞書は漢字なので一致せず、その科目が丸ごと欠落する。
+    // 実例：法人税等が調整額だけになり、当期純利益が積み上がらなくなっていた。
+    .replace(/および/g, "及び").replace(/ならびに/g, "並びに")
+    .replace(/または/g, "又は").replace(/もしくは/g, "若しくは");
 }
 
 const NUM_RE = /^[△▲\-−(（]?[\d,]+[)）]?$/;
 
+/**
+ * pdf.js は「△ 63,414」のように、符号と数字のあいだに空白を含んだまま
+ * 1つの item として返すことがある（決算公告に多い）。
+ * 空白を落とさずに数値判定すると、その金額は数値と認められず科目名の側に流れ、
+ * さらに norm() の「末尾の注記番号を落とす」処理に削られて、金額ごと消える。
+ * 実例：「法人税等調整額△63,414」が消え、法人税等が合計だけになっていた。
+ */
+const deSpace = (s) => String(s).normalize("NFKC").replace(/[\s\u3000]+/g, "");
+
 export function toNum(tok) {
-  const t0 = String(tok).normalize("NFKC").replace(/,/g, "");
+  const t0 = deSpace(tok).replace(/,/g, "");
   const neg = /^[△▲\-−(（]/.test(t0);
   const t = t0.replace(/^[△▲\-−(（]/, "").replace(/[)）]$/, "");
   if (!/^\d+$/.test(t)) return null;
@@ -45,7 +59,7 @@ export function toNum(tok) {
   return neg ? -v : v;
 }
 
-const isNum = (tok) => NUM_RE.test(String(tok).normalize("NFKC")) && toNum(tok) !== null;
+const isNum = (tok) => NUM_RE.test(deSpace(tok)) && toNum(tok) !== null;
 
 /**
  * 「数字の一部になりうる文字」かどうか。
@@ -54,7 +68,7 @@ const isNum = (tok) => NUM_RE.test(String(tok).normalize("NFKC")) && toNum(tok) 
  * カンマだけが科目名の側に取り残されて「流動資産合計,,」のようになり辞書と一致しなくなる。
  * 結合の判定にはこちらを使い、数値としての判定には従来どおり isNum を使う。
  */
-const isNumish = (tok) => /^[\d,.\u25b3\u25b2\-\u2212()（）]+$/.test(String(tok).normalize("NFKC"));
+const isNumish = (tok) => /^[\d,.\u25b3\u25b2\-\u2212()（）]+$/.test(deSpace(tok));
 
 /* -------------------------------------------------- pdf.js の item → 語 */
 /**
@@ -111,7 +125,12 @@ function itemsToWords(items, viewportHeight) {
  * 区分の合計が丸ごと欠けて貸借が合わなくなっていた。
  * ラベル側と辞書側の両方に同じ処理をかけるので、「(純額)」付きの辞書項目も壊れない。
  */
-const keyOf = (s) => String(s).replace(/[【】「」『』〔〕［］\[\]（）()]/g, "");
+const keyOf = (s) => String(s)
+  .replace(/[【】「」『』〔〕［］\[\]（）()]/g, "")
+  // 「当期純損失(△)」「税金等調整前当期純損失(△)」のように、
+  // 損失であることを示す△が科目名に付く様式がある。括弧を外しても△が残り、
+  // 辞書の「当期純損失」と一致せず当期純利益が丸ごと欠測していた。
+  .replace(/[△▲]/g, "");
 
 /* ------------------------------------------------------------ レイアウト判定 */
 /** 右揃えで3回以上現れるx1＝金額列。見出しの年号やページ番号は頻度で除外する */
@@ -233,11 +252,33 @@ function rowsOf(words, pageWidth, pageText) {
     ws.sort((a, b) => (Math.round(a.top / 3) - Math.round(b.top / 3)) || (a.x0 - b.x0));
     const nums = ws.filter((w) => isNum(w.text));
     const labels = ws.filter((w) => !isNum(w.text)).map((w) => w.text);
+    // 決算公告には、マイナス記号を金額から離れた「符号欄」に置く様式がある。
+    //   法人税、住民税および事業税        △          627
+    // 「△」が単独の語になると数値と認められず科目名の側に流れ、
+    // 金額は正の数として読まれる。税額の還付が支払として入り、当期純利益が合わなくなる。
+    // ただし、隣の欄から紛れ込んだ「△」を巻き込むと符号を壊すので、
+    // 単独の△の個数が金額の個数と一致するときにだけ符号を反転する。
+    const signs = ws.filter((w) => { const t = deSpace(w.text); return t === "△" || t === "▲"; }).length;
     let amountWords = bands.length ? nums.filter(onBand) : nums;
     if (!amountWords.length) amountWords = nums;        // バンドを検出できない表は従来どおり
-    const amounts = amountWords.map((w) => toNum(w.text));
+    let amounts = amountWords.map((w) => toNum(w.text));
+    if (signs > 0 && signs === amounts.length && amounts.every((v) => v >= 0)) {
+      amounts = amounts.map((v) => -v);
+    }
+    // その金額が何列目にあるかを覚えておく。
+    // 「内訳の右隣に区分合計を置く」様式では、内訳と合計が別の列に並ぶ。
+    // 列を無視して右端を採ると、内訳を足すときに合計まで足してしまう。
+    const cols = amountWords.map((w) => {
+      if (!bands.length) return -1;
+      let bi = 0, bd = Infinity;
+      for (let i = 0; i < bands.length; i++) {
+        const d = Math.abs(w.x1 - bands[i]);
+        if (d < bd) { bd = d; bi = i; }
+      }
+      return bi;
+    });
     if (!labels.length || !amounts.length) continue;
-    rows.push({ label: norm(labels.join("")), amounts });
+    rows.push({ label: norm(labels.join("")), amounts, cols });
   }
   return { rows, kind };
 }
@@ -272,21 +313,36 @@ const BS_DICT = {
                        "資産合計", "資産の部合計", "資産の部計"], parts: [] },
 };
 const PL_DICT = {
-  sales: { agg: ["売上高", "営業収益", "純営業収益", "売上収益", "営業収益合計", "完成工事高", "売上高合計"], parts: [] },
-  cogs: { agg: ["売上原価", "完成工事原価", "売上原価合計"], parts: [] },
-  sga: { agg: ["販売費及び一般管理費", "販売費及び一般管理費合計", "販売費及び一般管理費計"], parts: [] },
-  operating: { agg: ["営業利益", "営業損失", "営業利益又は営業損失", "営業損失(△)"], parts: [] },
+  // 事業別に売上を並べる様式（建設・不動産）では、合計行を先に見ないと
+  // 最初の事業の売上だけを全社の売上として取り込んでしまう。
+  // 実例：大東建託で 1,842,357 のところを 540,975（完成工事高）にしていた。
+  sales: { agg: ["売上高合計", "営業収益合計", "売上収益合計", "売上高", "営業収益", "純営業収益",
+                 "売上収益", "完成工事高", "事業収益", "営業収益及び営業外収益"], parts: [] },
+  cogs: { agg: ["売上原価合計", "売上原価", "完成工事原価", "営業原価"], parts: [] },
+  sga: { agg: ["販売費及び一般管理費合計", "販売費及び一般管理費計", "販売費及び一般管理費",
+               "販売費及び一般管理費等", "一般管理費", "販売費"], parts: [] },
+  // IFRSには「営業利益」を置かず「コア営業利益」「事業利益」とする会社がある。
+  // 本来の営業利益が見つかったときはそちらが優先されるよう、末尾に置く。
+  operating: { agg: ["営業利益", "営業損失", "営業利益又は営業損失", "営業損失(△)", "コア営業利益", "事業利益"], parts: [] },
   // IFRSには営業外収益/費用が無い。金融収益・その他収益・持分法投資利益を合算して同じ位置に置く
   nonOpInc: { agg: ["営業外収益", "営業外収益合計"], parts: ["金融収益", "その他収益", "持分法による投資利益"] },
   nonOpExp: { agg: ["営業外費用", "営業外費用合計"], parts: ["金融費用", "その他費用", "持分法による投資損失"] },
   ordinary: { agg: ["経常利益", "経常損失", "当期経常利益", "経常利益又は経常損失"], parts: [] },
   extraInc: { agg: ["特別利益", "特別利益合計"], parts: [] },
   extraExp: { agg: ["特別損失", "特別損失合計"], parts: [] },
-  tax: { agg: ["法人税等", "法人税等合計", "法人所得税費用"], parts: ["法人税、住民税及び事業税", "法人税等調整額", "法人税住民税及び事業税"] },
+  // 「法人税等」は合計とはかぎらない。「法人税等」と「法人税等調整額」を別の行に置く様式があり、
+  // 「法人税等」を合計として採ると調整額のぶんだけ税額を取り違える。
+  // 実例：東京生活館で 147,774,199 のところを 219,353,700 にしていた。
+  // 明示的な合計行だけを agg に置き、それ以外は内訳として足し合わせる。
+  tax: { agg: ["法人税等合計", "法人所得税費用", "法人税、住民税及び事業税等合計"],
+         parts: ["法人税、住民税及び事業税", "法人税住民税及び事業税", "法人税等", "法人税等調整額"] },
   net: { agg: ["当期純利益", "当期純損失", "当期利益", "中間利益", "中間(当期)利益", "親会社株主に帰属する当期純利益", "親会社の所有者に帰属する当期利益", "当期純利益又は当期純損失"], parts: [] },
 };
-const DEP = { agg: ["減価償却費", "減価償却費及びその他の償却費", "減価償却費及びその他の償却費", "減価償却費及び償却費", "減価償却費及びのれん償却額"], parts: [] };
-const OPEX = ["営業費用", "営業費用合計"];
+const GROSS = { agg: ["売上総利益", "売上総利益合計", "営業総利益"], parts: [] };
+// 売上高のほかに「営業収入」を並べる様式（小売業）。営業収益はこの合算になる。
+const OPINCOME = { agg: ["営業収入合計", "営業収入", "その他の営業収入"], parts: [] };
+const DEP = { agg: ["減価償却費", "減価償却費及びその他の償却費", "減価償却費及び償却費", "減価償却費及びのれん償却額", "減価償却及び償却費"], parts: [] };
+const OPEX = ["営業費用", "営業費用合計", "営業費", "営業費合計", "経常費用", "経常費用合計"];
 
 /** yi: 0=左（有報なら前期）／-1=右（当期） */
 /**
@@ -305,12 +361,52 @@ function pull(rows, spec, yi) {
     const r = rows.find((x) => keyOf(x.label) === k);
     if (r) return { value: val(r), source: name };
   }
+  // 内訳の合算では、行の右端が「区分合計」であることがある。
+  //   法人税、住民税及び事業税   477,659            ← 内訳の列
+  //   法人税等調整額     29,373  507,032            ← 右端は区分合計の列
+  // 右端をそのまま足すと、内訳と合計を両方足して二重計上になる。
+  // 実例：テレビ大阪で法人税等が 507,032 → 984,691（＋94%）になっていた。
+  //
+  // かといって「金額が多い行は末尾を捨てる」では逆に壊れる。
+  // 有価証券報告書には、隣の表の数値が1つだけ紛れ込んで
+  // 前期・当期の左側に余分な列ができる行があり、そこでは捨てるべきは左端だからである。
+  // 実例：キオクシアの「社債及び借入金」。
+  //
+  // そこで列の位置そのものを見る。足し合わせる科目すべてに共通して存在する列を選ぶ。
+  // 内訳どうしは必ず同じ列に並ぶので、区分合計の列は自然に外れる。
   const partKeys = spec.parts.map(keyOf);
   const hits = rows.filter((x) => partKeys.includes(keyOf(x.label)));
   if (hits.length) {
-    return { value: hits.reduce((a, r) => a + val(r), 0), source: hits.map((h) => h.label).join("＋") };
+    const col = commonCol(hits, yi);
+    const valPart = (r) => {
+      if (col !== null) {
+        const i = r.cols ? r.cols.indexOf(col) : -1;
+        if (i >= 0) return r.amounts[i];
+      }
+      return val(r);
+    };
+    return { value: hits.reduce((a, r) => a + valPart(r), 0), source: hits.map((h) => h.label).join("＋") };
   }
   return { value: null, source: null };
+}
+
+/**
+ * 合算する行すべてに共通して存在する金額列のうち、当期にあたるものを返す。
+ * yi=-1 なら共通列の右端、yi=0 ならその1つ左。
+ * 列を特定できないときは null を返し、呼び出し側は従来どおり行の右端を使う。
+ */
+function commonCol(hits, yi) {
+  if (!hits.length || !hits.every((r) => Array.isArray(r.cols) && r.cols.length === r.amounts.length)) return null;
+  let common = null;
+  for (const r of hits) {
+    const s = new Set(r.cols.filter((c) => c >= 0));
+    if (!s.size) return null;
+    common = common === null ? s : new Set([...common].filter((c) => s.has(c)));
+    if (!common.size) return null;
+  }
+  const sorted = [...common].sort((a, b) => a - b);
+  if (yi === -1) return sorted[sorted.length - 1];
+  return sorted.length >= 2 ? sorted[sorted.length - 2] : sorted[sorted.length - 1];
 }
 
 /* ------------------------------------------------------------ 財務諸表の特定 */
@@ -352,6 +448,11 @@ function headingsOf(pageText) {
 function bodyLooksLike(kind, labels) {
   const keys = new Set([...labels].map(keyOf));
   const has = (...ks) => ks.some((k) => keys.has(keyOf(k)));
+  // 電気事業・ガス事業の貸借対照表は合計行を「合計」としか書かず、
+  // 「流動資産合計」「資産合計」のいずれも存在しない。
+  // 区分の見出し行だけで構成されるため、それを手掛かりに認める。
+  // これが無いと、見出しは正しく取れているのに本文で弾かれて丸ごと欠測になる。
+  if (kind === "BS" && has("流動資産") && has("固定資産", "非流動資産")) return true;
   if (kind === "BS") return has("流動資産合計", "非流動資産合計", "固定資産合計", "資産合計",
                                 "流動負債合計", "非流動負債合計", "負債合計", "資本合計", "純資産合計",
                                 // 決算公告は「合計」ではなく「〜の部合計」と書く様式がある
@@ -510,8 +611,16 @@ export function detectOutOfScope(pageTexts) {
   const t = pageTexts.join("");
   const bank = /経常収益/.test(t) && /(?:預金|貸出金|コールローン|資金運用収益)/.test(t);
   if (bank) return "bank";
-  const ins = /(?:保険料等収入|責任準備金|支払備金)/.test(t);
-  if (ins) return "insurance";
+  // 「責任準備金」だけで保険業と決めてはいけない。
+  // 退職給付の簡便法を説明する定型文
+  //   「年金財政計算上の責任準備金を退職給付債務とする方法を用いた簡便法」
+  // が中小企業の個別注記表に頻繁に載っており、正常な会社を対象外として
+  // 門前払いしていた（実例：鉄道会社の計算書類）。
+  // 保険業に固有の科目か、保険業であることが本文から明らかな場合に限る。
+  const insHard = /(?:保険料等収入|支払備金|保険引受収益|保険引受費用|支払保険金)/.test(t);
+  const insSoft = /責任準備金/.test(t) &&
+                  /(?:保険業法|少額短期保険|生命保険業|損害保険業|保険会社|共済事業)/.test(t);
+  if (insHard || insSoft) return "insurance";
   // 証券会社・金融商品取引業。損益計算書が営業収益と受入手数料で構成され、
   // 貸借対照表にも流動／固定の区分が無いため、本ツールの判定モデルに載らない。
   const sec = /(?:受入手数料|トレーディング損益|信用取引資産|信用取引負債|金融商品取引業)/.test(t);
@@ -707,6 +816,18 @@ function sliceSection(rows, which) {
       : rows.slice(hFix, hTot > hFix ? hTot : rows.length);
   }
 
+  // ③ 固定負債を先に書く様式（電気事業・ガス事業の貸借対照表）。
+  //    「固定負債 … 流動負債 … 負債合計」の順で、合計行を持たない。
+  //    ②は流動が先にある前提なので判別できず、全体を返してしまい、
+  //    固定側の社債・長期借入金を短期有利子負債にも計上していた。
+  //    実例：沖縄電力で短期有利子負債 320,460（流動負債 86,246）という値になっていた。
+  if (hFix >= 0 && hCur > hFix) {
+    const hTot = find(/^(負債合計|負債の部合計|負債の部計|負債計)$/);
+    return which === "fixed"
+      ? rows.slice(hFix, hCur)
+      : rows.slice(hCur, hTot > hCur ? hTot : rows.length);
+  }
+
   return rows;   // 判別できなければ全体を対象
 }
 
@@ -754,32 +875,105 @@ function inferPlSections(rows, out, source, yi) {
   };
   const near = (x, y) => Math.abs(x - y) <= Math.max(2, Math.abs(y) * 0.005);
 
-  // ① 営業外収益・営業外費用
-  if (out.nonOpInc === null && out.nonOpExp === null &&
-      out.operating !== null && out.ordinary !== null) {
-    const sub = subtotalsBetween(iOp, iOrd);
+  /**
+   * 区間内の区分合計から、収益側と費用側を決める。
+   * 2つあれば「前が収益・後が費用」。
+   * 1つしか無い様式（特別利益が無く特別損失だけ、など）もあるため、
+   * その場合は収益とみなす場合・費用とみなす場合の両方を検算し、合うほうを採る。
+   * どちらも合わなければ何も入れない。
+   */
+  const solve = (from, to, target, incKey, expKey, incLabel, expLabel) => {
+    if (out[incKey] !== null || out[expKey] !== null) return;
+    if (target === null || target === undefined) return;
+    const sub = subtotalsBetween(from, to);
+    const start = from === iOp ? out.operating : out.ordinary;
+    if (start === null || start === undefined) return;
     if (sub.length === 2) {
       const inc = val(sub[0]), exp = val(sub[1]);
-      if (near(out.operating + inc - exp, out.ordinary)) {
-        out.nonOpInc = inc; source.nonOpInc = "営業外収益（区分合計より）";
-        out.nonOpExp = exp; source.nonOpExp = "営業外費用（区分合計より）";
+      if (near(start + inc - exp, target)) {
+        out[incKey] = inc; source[incKey] = incLabel + "（区分合計より）";
+        out[expKey] = exp; source[expKey] = expLabel + "（区分合計より）";
       }
+      return;
     }
-  }
+    if (sub.length === 1) {
+      const x = val(sub[0]);
+      if (near(start - x, target)) {          // 費用だけがある
+        out[expKey] = x; source[expKey] = expLabel + "（区分合計より）";
+        out[incKey] = 0; source[incKey] = incLabel + "（記載なし）";
+      } else if (near(start + x, target)) {   // 収益だけがある
+        out[incKey] = x; source[incKey] = incLabel + "（区分合計より）";
+        out[expKey] = 0; source[expKey] = expLabel + "（記載なし）";
+      }
+      return;
+    }
+  };
+
+  // ① 営業外収益・営業外費用
+  solve(iOp, iOrd, out.ordinary, "nonOpInc", "nonOpExp", "営業外収益", "営業外費用");
 
   // ② 特別利益・特別損失
-  if (out.extraInc === null && out.extraExp === null &&
-      out.ordinary !== null && iPre >= 0) {
-    const pre = val(rows[iPre]);
-    const sub = subtotalsBetween(iOrd, iPre);
-    if (sub.length === 2) {
-      const inc = val(sub[0]), exp = val(sub[1]);
-      if (near(out.ordinary + inc - exp, pre)) {
-        out.extraInc = inc; source.extraInc = "特別利益（区分合計より）";
-        out.extraExp = exp; source.extraExp = "特別損失（区分合計より）";
+  if (iPre >= 0) {
+    solve(iOrd, iPre, val(rows[iPre]), "extraInc", "extraExp", "特別利益", "特別損失");
+  }
+
+  // ③ 売上高・売上原価。
+  // リース業などには、売上を内訳だけで並べ「売上高」の行を置かない様式がある。
+  //     リース売上高   29,079
+  //     割賦売上高        629
+  //     その他の売上高      8   31,116   ← 区分合計は内訳の右隣
+  // 売上高が取れないと回転率も月商倍率も出せないため、区分合計から推定する。
+  // 売上総利益（無ければ営業利益）と突き合わせて合う場合にだけ採用する。
+  if (out.sales === null && out.cogs === null) {
+    const iGross = idx(["売上総利益", "売上総利益合計", "営業総利益"]);
+    const end = iGross >= 0 ? iGross : iOp;
+    const target = iGross >= 0 ? val(rows[iGross]) : out.operating;
+    if (end > 0 && target !== null && target !== undefined) {
+      const sub = rows.slice(0, end).filter((r) => r.amounts.length > base);
+      if (sub.length === 2) {
+        const inc = val(sub[0]), exp = val(sub[1]);
+        if (near(inc - exp, target)) {
+          out.sales = inc; source.sales = "営業収益の区分合計より";
+          out.cogs = exp; source.cogs = "営業費用の区分合計より";
+          // 営業利益で突き合わせた場合、費用側の合計に販管費まで含まれている。
+          // そのまま販管費を別に引くと二重計上になるので、費用側から取り除く。
+          if (iGross < 0) {
+            if (out.sga !== null && out.sga !== undefined) {
+              out.cogs = exp - out.sga;
+              source.cogs = "営業費用の区分合計−販売費及び一般管理費";
+            } else {
+              out.sga = 0; source.sga = "営業費用に含まれるため区分なし";
+            }
+          }
+        }
       }
     }
   }
+}
+
+/**
+ * 事業別に損益を並べる様式で、全事業の合計に差し替える。
+ * 合算した収益と費用の差が「全事業営業利益」と一致する場合にだけ採用する。
+ * 合わなければ何も変えない。
+ */
+function mergeSegmentPl(rows, out, source, yi, warnings) {
+  const val = (r) => (yi === -1 ? r.amounts[r.amounts.length - 1]
+                                : (r.amounts.length >= 2 ? r.amounts[r.amounts.length - 2]
+                                                         : r.amounts[r.amounts.length - 1]));
+  const total = rows.find((r) => /^全事業(営業利益|営業損失)$/.test(keyOf(r.label)));
+  if (!total) return;
+  const totalOp = val(total);
+  const incRows = rows.filter((r) => ["営業収益", "売上高"].includes(keyOf(r.label)));
+  const expRows = rows.filter((r) => ["営業費", "営業費用", "売上原価"].includes(keyOf(r.label)));
+  if (incRows.length < 2 || !expRows.length) return;
+  const inc = incRows.reduce((a, r) => a + val(r), 0);
+  const exp = expRows.reduce((a, r) => a + val(r), 0);
+  if (Math.abs(inc - exp - totalOp) > Math.max(2, Math.abs(inc) * 0.0005)) return;
+  out.sales = inc;      source.sales = `全事業の営業収益（${incRows.length}事業の合計）`;
+  out.sga = exp;        source.sga = `全事業の営業費（${expRows.length}事業の合計）`;
+  out.cogs = 0;
+  out.operating = totalOp; source.operating = "全事業営業利益";
+  warnings.push("事業別に区分された損益計算書のため、全事業を合算しました。この様式には売上原価と販管費の区分がないため、営業費の全額を販管費として扱っています。");
 }
 
 export function buildPeriod(found, yi) {
@@ -799,6 +993,17 @@ export function buildPeriod(found, yi) {
     out[k] = value; if (s) source[k] = s;
   }
 
+  // 事業別に損益を積む様式（鉄道・不動産など）。
+  //   鉄道事業  営業収益 6,791,578 / 営業費 6,346,123 / 営業利益 445,454
+  //   不動産事業 営業収益   814,538 / 営業費   545,008 / 営業利益 269,529
+  //   全事業   営業利益   714,984
+  // 同じ科目名が繰り返されるため、そのままでは最初の事業の数字だけを
+  // 全社の売上高・営業利益として取り込んでしまう。
+  // 実例：売上高が 7,606,116 のところ 6,791,578（−10.7%）、
+  //       営業利益が 714,984 のところ 445,454（−37.7%）になっていた。
+  // 「全事業営業利益」がある場合に限り、各事業を合算して差し替える。
+  mergeSegmentPl(pl, out, source, yi, warnings);
+
   // 区分の見出し行に金額が無い様式では、内訳の右隣にある区分合計を推測する（検算つき）
   inferPlSections(pl, out, source, yi);
 
@@ -813,6 +1018,39 @@ export function buildPeriod(found, yi) {
       source.currentLiab = "負債合計−固定負債（推定）";
       warnings.push("流動負債と固定負債の区分がこの決算書には記載されていないため、負債合計から推定しました。区分の内訳が必要な場合は手入力で補ってください。");
     }
+  }
+
+  // 売上原価の内訳（期首棚卸＋仕入−期末棚卸）だけを並べ、「売上原価」の行を置かない様式。
+  // 売上総利益が読めていれば差額で確定できる。推測ではなく恒等式なので安全。
+  if (out.cogs === null && out.sales !== null) {
+    const g = pull(pl, GROSS, yi);
+    if (g.value !== null) {
+      out.cogs = out.sales - g.value;
+      source.cogs = "売上高−売上総利益";
+    }
+  }
+
+  // 小売業には「売上高」と「営業収入」を並べ、その合算を営業収益とする様式がある。
+  // 売上高だけを採ると、営業利益が積み上がらない。
+  // 実例：サンエーで 245,547 のところを 225,485 にしていた（営業収入 20,062 が抜けていた）。
+  // 足したほうが営業利益の計算に合う場合にだけ採用する。
+  if (out.sales !== null && out.cogs !== null && out.sga !== null && out.operating !== null) {
+    const gap = out.sales - out.cogs - out.sga - out.operating;
+    if (Math.abs(gap) > Math.max(2, Math.abs(out.sales) * 0.0005)) {
+      const oi = pull(pl, OPINCOME, yi);
+      if (oi.value !== null && Math.abs(out.sales + oi.value - out.cogs - out.sga - out.operating)
+                               <= Math.max(2, Math.abs(out.sales) * 0.0005)) {
+        out.sales += oi.value;
+        source.sales = (source.sales || "売上高") + "＋" + oi.source;
+      }
+    }
+  }
+
+  // 総資本の行が「合計」としか書かれない様式（電気事業など）。
+  // 資産側の区分が揃っていれば、その和が総資本と一致する。
+  if (out.totalCapital === null && out.currentAssets !== null && out.fixedAssets !== null) {
+    out.totalCapital = out.currentAssets + out.fixedAssets + (out.deferred || 0);
+    source.totalCapital = "流動資産＋固定資産（合計行なし）";
   }
 
   // 減価償却費：CF計算書 →（無ければ）損益計算書 →（無ければ）全ページ の順に探す。
@@ -846,6 +1084,25 @@ export function buildPeriod(found, yi) {
       }
     }
   }
+  // それでも見つからないときは、注記の本文から拾う。
+  // 中小企業の計算書類は「損益計算書に関する注記」に
+  //   （3）減価償却費 2,467,046千円
+  // と文章で書くことがあり、表になっていないため行としては取れない。
+  // 単位付きで書かれているものだけを採り、決算書本体の単位へ換算する。
+  if (dep.value === null && Array.isArray(found._pages) && found._unit) {
+    const RE = /減価償却費(?:及び[^0-9]{0,10})?[^0-9△▲]{0,4}([△▲]?[\d,]+)(円|千円|百万円)/;
+    const scale = { "円": 0.000001, "千円": 0.001, "百万円": 1 };
+    for (const pg of found._pages) {
+      const m = RE.exec(pg.text);
+      if (!m) continue;
+      const raw = toNum(m[1]);
+      if (raw === null || raw === 0) continue;
+      const v = Math.round(raw * scale[m[2]] / found._unit.toMillion);
+      dep = { value: v, source: `${pg.no}ページの注記より` };
+      warnings.push("減価償却費は注記の本文から読み取りました。金額をご確認ください。");
+      break;
+    }
+  }
   out.depreciation = dep.value;
   if (dep.source) source.depreciation = dep.source;
   if (dep.value === null)
@@ -854,9 +1111,14 @@ export function buildPeriod(found, yi) {
   // 売上原価／販管費の区分が無い様式（電気事業・通信事業など）
   if (out.cogs === null && out.sga === null) {
     for (const name of OPEX) {
-      const r = pl.find((x) => x.label === name);
+      const r = pl.find((x) => keyOf(x.label) === keyOf(name));
       if (r) {
-        out.sga = yi === -1 ? r.amounts[r.amounts.length - 1] : r.amounts[yi];
+        // 前期を取るときに左端から数えてはいけない。
+        // 有価証券報告書には、隣の表の数値が左に1つ紛れ込む行があり、
+        // そこを前期の金額として拾ってしまう。
+        // 実例：東京電力の営業費用が 6,575,938 のところ 2 になっていた。
+        const a = r.amounts;
+        out.sga = yi === -1 ? a[a.length - 1] : (a.length >= 2 ? a[a.length - 2] : a[a.length - 1]);
         out.cogs = 0;
         source.sga = name + "（売上原価との区分なし）";
         warnings.push("この様式には売上原価と販管費の区分がありません。営業費用の全額を販管費として扱っています。売上総利益率は実態を表しません。");
@@ -867,9 +1129,17 @@ export function buildPeriod(found, yi) {
 
   // IFRSの損益計算書は費用を「△835,371」のようにマイナス表記する。
   // 本シートは費用を正の数で扱うため、符号を揃える。
-  for (const k of ["cogs", "sga", "nonOpExp", "extraExp", "tax"]) {
+  // 反転する前に「費用を負で書く様式かどうか」を覚えておく。
+  const negStyle = ["cogs", "sga", "nonOpExp", "extraExp"]
+    .some((k) => typeof out[k] === "number" && out[k] < 0);
+  for (const k of ["cogs", "sga", "nonOpExp", "extraExp"]) {
     if (typeof out[k] === "number" && out[k] < 0) out[k] = -out[k];
   }
+  // 法人税等だけは別扱いにする。
+  // 税額は還付超過で本当にマイナスになることがあり、それを正に反転すると
+  // 当期純利益が積み上がらなくなる（実例：法人税等 △2,868 を ＋2,868 にしていた）。
+  // 費用を負で書く様式のときにだけ反転する。
+  if (typeof out.tax === "number" && out.tax < 0 && negStyle) out.tax = -out.tax;
   // 営業外収益がマイナスで返るケース（その他費用を含めて相殺された場合）も正に寄せる
   if (typeof out.nonOpInc === "number" && out.nonOpInc < 0) {
     out.nonOpExp = (out.nonOpExp || 0) + Math.abs(out.nonOpInc);
@@ -911,6 +1181,20 @@ export function buildPeriod(found, yi) {
       source.fixedLiab = "差額（総資本−流動負債−純資産）";
     }
   }
+  // 電気事業・鉄道事業の貸借対照表は「有形固定資産」という行を置かず、
+  // 「電気事業固定資産」「鉄軌道事業固定資産」のように事業別に並べる。
+  // 内訳を足し合わせると、その下位項目まで拾って二重計上になる（例：その他の電気事業固定資産）。
+  // 固定資産から投資その他の資産と無形固定資産を引く恒等式のほうが確実。
+  if (out.tangible === null && out.fixedAssets !== null) {
+    const hasBiz = bs.some((r) => /事業固定資産$/.test(keyOf(r.label)));
+    const inv = pull(bs, { agg: ["投資その他の資産", "投資その他の資産合計", "投資その他資産"], parts: [] }, yi);
+    const intan = pull(bs, { agg: ["無形固定資産", "無形固定資産合計"], parts: [] }, yi);
+    if (hasBiz && inv.value !== null) {
+      out.tangible = out.fixedAssets - inv.value - (intan.value || 0);
+      source.tangible = "固定資産−投資その他の資産" + (intan.value ? "−無形固定資産" : "");
+    }
+  }
+
   if (out.tangible === null && out.fixedAssets !== null)
     warnings.push("有形固定資産の内訳が特定できませんでした。固定資産合計は正しいですが、有形と無形の内訳はご確認ください。");
   for (const k of ["shortDebt", "longDebt"]) {
@@ -928,14 +1212,50 @@ export function validatePeriod(v) {
   const a = (v.currentAssets || 0) + (v.fixedAssets || 0) + (v.deferred || 0);
   const l = (v.currentLiab || 0) + (v.fixedLiab || 0) + (v.equity || 0);
   const msgs = [];
+  const has = (...ks) => ks.every((k) => v[k] !== null && v[k] !== undefined);
+  const jp = (n) => Number(n).toLocaleString();
+
   if (Math.abs(a - l) > Math.max(2, Math.abs(a) * 0.0001))
-    msgs.push(`貸借が一致しません（資産計 ${a.toLocaleString()} と 負債純資産計 ${l.toLocaleString()} の差 ${(a - l).toLocaleString()}）`);
-  if ([v.ordinary, v.operating, v.nonOpInc, v.nonOpExp].every((x) => x !== null && x !== undefined)) {
+    msgs.push(`貸借が一致しません（資産計 ${jp(a)} と 負債純資産計 ${jp(l)} の差 ${jp(a - l)}）`);
+
+  // 経常利益の積み上がり
+  if (has("ordinary", "operating", "nonOpInc", "nonOpExp")) {
     const calc = v.operating + v.nonOpInc - v.nonOpExp;
-    if (Math.abs(calc - v.ordinary) > 2)
-      msgs.push(`経常利益が積み上がりません（計算 ${calc.toLocaleString()} と 記載 ${v.ordinary.toLocaleString()}）`);
+    if (Math.abs(calc - v.ordinary) > tol(v.ordinary))
+      msgs.push(`経常利益が積み上がりません（計算 ${jp(calc)} と 記載 ${jp(v.ordinary)}）`);
   }
+
+  // 営業利益の積み上がり。
+  // 売上原価と販管費の区分が無い様式では cogs=0 として扱っているため、そこも通る。
+  if (has("sales", "cogs", "sga", "operating", "ordinary")) {   // IFRSは経常利益が無く、営業利益にその他収益/費用を含むため対象外
+    const calc = v.sales - v.cogs - v.sga;
+    if (Math.abs(calc - v.operating) > tol(v.operating, v.sales))
+      msgs.push(`営業利益が積み上がりません（売上高−売上原価−販管費 ${jp(calc)} と 記載 ${jp(v.operating)}）`);
+  }
+
+  // 当期純利益までの積み上がり。
+  // ここに検算が無かったため、法人税等の二重計上や事業別損益の取りこぼしが
+  // 貸借の一致だけをすり抜けて、そのまま判定に流れ込んでいた。
+  if (has("ordinary", "extraInc", "extraExp", "tax", "net")) {
+    const calc = v.ordinary + v.extraInc - v.extraExp - v.tax;
+    if (Math.abs(calc - v.net) > tol(v.net, v.ordinary))
+      msgs.push(`当期純利益が積み上がりません（経常利益＋特別損益−法人税等 ${jp(calc)} と 記載 ${jp(v.net)}）`);
+  }
+
+  // 区分をまたいだ二重計上の検出。
+  // 有利子負債は流動負債・固定負債の内数なので、区分の合計を超えることはない。
+  // 超えていれば、同名科目を流動と固定の両方で拾っている。
+  if (has("shortDebt", "currentLiab") && v.shortDebt > v.currentLiab * 1.001 + 2)
+    msgs.push(`短期有利子負債 ${jp(v.shortDebt)} が流動負債 ${jp(v.currentLiab)} を超えています（区分の重複の可能性）`);
+  if (has("longDebt", "fixedLiab") && v.longDebt > v.fixedLiab * 1.001 + 2)
+    msgs.push(`長期有利子負債 ${jp(v.longDebt)} が固定負債 ${jp(v.fixedLiab)} を超えています（区分の重複の可能性）`);
+
   return { diff: a - l, messages: msgs };
+}
+
+/** 決算書側の端数処理を吸収する許容差。基準額の0.5%か、規模の0.05%の大きいほう */
+function tol(base, scale) {
+  return Math.max(2, Math.abs(base || 0) * 0.005, Math.abs(scale || 0) * 0.0005);
 }
 
 /** エンジン入力のキー名に合わせて1期分を返す */
