@@ -3,10 +3,10 @@
  * 計算は engine.js、Excel生成は xlsx-export.js。ここはUIだけを担当する。
  * ========================================================================== */
 import { evaluate, emptyInput, INDUSTRIES, CAPITAL_TIERS, LISTING_OPTIONS, POLICY }
-  from "./engine.js?v=20";
-import { downloadXlsx } from "./xlsx-export.js?v=20";
-import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=20";
-import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=20";
+  from "./engine.js?v=21";
+import { downloadXlsx } from "./xlsx-export.js?v=21";
+import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=21";
+import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=21";
 
 const $ = (id) => document.getElementById(id);
 const COLS = ["今期（直近）", "前期", "前々期"];
@@ -47,13 +47,62 @@ const BS_ROWS = [
 let state = emptyInput();
 
 /* ------------------------------------------------------------------ 表示補助 */
+/* ------------------------------------------------------------ 表示単位
+ * 内部の計算はすべて百万円で行う。engine.js の規模スコアが
+ * 百万円の絶対額（100 / 300 / 1,000 …）を閾値に持っているためで、
+ * ここを動かすと採点そのものが変わってしまう。
+ *
+ * ただし state に入る値は整数に丸めない。
+ * 千円単位の決算書の 4,767,955千円 を 4,768百万円 に丸めてしまうと、
+ * 千円で表示し直したときに 4,768,000 となり、決算書と下3桁が食い違う。
+ * 4767.955 のまま持ち、表示のときだけ選ばれた単位に直して丸める。
+ */
+const UNITS = {
+  million:  { label: "百万円", mul: 1,    step: 1 },
+  thousand: { label: "千円",   mul: 1000, step: 1 },
+};
+let dispUnit = "million";
+const U_LABEL = () => UNITS[dispUnit].label;
+/** 内部値（百万円）→ 表示単位 */
+const toDisp = (v) => (typeof v === "number" ? v * UNITS[dispUnit].mul : v);
+/** 表示単位 → 内部値（百万円） */
+const fromDisp = (v) => (typeof v === "number" ? v / UNITS[dispUnit].mul : v);
+
 const yen = (n) => (!n ? "0" : (n < 0 ? "▲" : "") + Math.abs(Math.round(n)).toLocaleString());
+/** 内部値を表示単位に直して整形する。画面に金額を出すときは必ずこれを通す */
+const yenU = (n) => yen(toDisp(n));
+
+/**
+ * 表示単位を切り替える。state の値は触らないので、何度切り替えても数値は劣化しない。
+ * why は利用者への説明文（「決算書に合わせた」のか「自分で選んだ」のか）。
+ */
+function setDispUnit(u, why) {
+  if (!UNITS[u]) return;
+  dispUnit = u;
+  const radio = document.querySelector(`input[name="dispUnit"][value="${u}"]`);
+  if (radio) radio.checked = true;
+  document.querySelectorAll("[data-unit-tag]").forEach((el) => {
+    el.textContent = "単位：" + U_LABEL();
+  });
+  const note = $("unitNote");
+  if (note) {
+    note.textContent = why === "自動"
+      ? `読み込んだ決算書が${U_LABEL()}単位で記載されていたため、${U_LABEL()}に合わせました。必要であれば切り替えてください。`
+      : "";
+  }
+  // 見出しの単位表記は buildTable の中にも埋まっているため、表ごと作り直す
+  buildTable($("tPL"), PL_ROWS, true);
+  buildTable($("tBS"), BS_ROWS, false);
+  paint();
+  render();
+  if (lastRead) showRead(lastRead);
+}
 const pct = (n) => (n * 100).toFixed(1) + "%";
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g,
   (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 function buildTable(el, rows, withTerms) {
-  let h = "<thead><tr><th style='text-align:left'>項　目<span class=\"unit-tag\">単位：百万円</span></th>";
+  let h = "<thead><tr><th style='text-align:left'>項　目<span class=\"unit-tag\" data-unit-tag>単位：" + U_LABEL() + "</span></th>";
   COLS.forEach((c) => (h += `<th>${c}</th>`));
   h += "</tr></thead><tbody>";
   if (withTerms) {
@@ -68,7 +117,7 @@ function buildTable(el, rows, withTerms) {
     for (let i = 0; i < 3; i++) {
       h += isCalc
         ? `<td class="sum" data-calc="${calc}" data-i="${i}">0</td>`
-        : `<td><input type="number" step="1" data-k="${key}" data-i="${i}"></td>`;
+        : `<td><input type="number" step="any" data-k="${key}" data-i="${i}"></td>`;
     }
     h += "</tr>";
   }
@@ -89,7 +138,10 @@ function init() {
     "</tr></tbody>";
 
   document.addEventListener("input", onInput);
+  document.querySelectorAll('input[name="dispUnit"]').forEach((el) =>
+    el.addEventListener("change", () => setDispUnit(el.value, "手動")));
   $("btnDemo").addEventListener("click", () => { state = demo(); paint(); render(); openManual(); });
+  $("btnSample").addEventListener("click", onSample);
   $("btnClear").addEventListener("click", () => {
     state = emptyInput();
     state.baseDate = new Date().toISOString().slice(0, 10);
@@ -289,7 +341,10 @@ function restoreDraft() {
 function onInput(e) {
   const t = e.target, k = t.dataset.k, i = t.dataset.i;
   if (k !== undefined && i !== undefined) {
-    state[k][+i] = t.type === "number" ? (t.value === "" ? 0 : parseFloat(t.value)) : t.value;
+    // 金額欄は表示単位で入力されるので、内部の百万円へ戻してから収める
+    state[k][+i] = t.type === "number"
+      ? (t.value === "" ? 0 : fromDisp(parseFloat(t.value)))
+      : t.value;
   } else if (t.id && t.id.startsWith("f_")) {
     const f = t.id.slice(2);
     state[f] = t.type === "number" ? (t.value === "" ? 0 : parseFloat(t.value)) : t.value;
@@ -305,7 +360,10 @@ function paint() {
   });
   document.querySelectorAll("[data-k][data-i]").forEach((el) => {
     const v = state[el.dataset.k]?.[+el.dataset.i];
-    el.value = el.type === "number" ? (v === 0 ? "0" : v ?? "") : (v ?? "");
+    // 金額欄は選ばれた単位に直して見せる。丸めは表示のときだけで、state は元の精度を保つ
+    el.value = el.type === "number"
+      ? (typeof v === "number" ? Math.round(toDisp(v) * 100) / 100 : "")
+      : (v ?? "");
     // PDFから読み取れなかった項目は枠を赤くして、どこを埋めればよいか一目で分かるようにする
     const miss = missingCells[el.dataset.k];
     el.classList.toggle("is-missing", !!miss && miss.includes(+el.dataset.i));
@@ -346,7 +404,7 @@ function render() {
   const r = evaluate(state);
   document.querySelectorAll("[data-calc]").forEach((el) => {
     const v = r.fy[+el.dataset.i][el.dataset.calc];
-    el.textContent = yen(v);
+    el.textContent = yenU(v);
     if (el.dataset.calc === "balanceCheck")
       el.style.background = Math.abs(v) > 0.5 ? "#FBEDE6" : "";
   });
@@ -372,15 +430,15 @@ function report(r) {
       <div class="bar"><i style="width:${Math.round((got / max) * 100)}%"></i></div></div>`).join("");
 
   const p = r.ratios.periods;
-  const U = '<span class="unit-tag">百万円</span>', PC = '<span class="unit-tag">％</span>';
+  const U = `<span class="unit-tag">${U_LABEL()}</span>`, PC = '<span class="unit-tag">％</span>';
   const figs = [
-    ["売上高", U, yen(cur.sales), yen(r.prev.sales), yen(r.prev2.sales)],
-    ["経常利益", U, yen(cur.ordinaryProfit), yen(r.prev.ordinaryProfit), yen(r.prev2.ordinaryProfit)],
-    ["当期純利益", U, yen(cur.netProfit), yen(r.prev.netProfit), yen(r.prev2.netProfit)],
+    ["売上高", U, yenU(cur.sales), yenU(r.prev.sales), yenU(r.prev2.sales)],
+    ["経常利益", U, yenU(cur.ordinaryProfit), yenU(r.prev.ordinaryProfit), yenU(r.prev2.ordinaryProfit)],
+    ["当期純利益", U, yenU(cur.netProfit), yenU(r.prev.netProfit), yenU(r.prev2.netProfit)],
     ["自己資本比率", PC, pct(p[0].equityRatio), pct(p[1].equityRatio), pct(p[2].equityRatio)],
     ["売上高経常利益率", PC, pct(p[0].ordinaryMargin), pct(p[1].ordinaryMargin), pct(p[2].ordinaryMargin)],
-    ["有利子負債", U, yen(cur.interestBearingDebt), yen(r.prev.interestBearingDebt), yen(r.prev2.interestBearingDebt)],
-    ["簡易キャッシュフロー", U, yen(cur.simpleCF), yen(r.prev.simpleCF), yen(r.prev2.simpleCF)],
+    ["有利子負債", U, yenU(cur.interestBearingDebt), yenU(r.prev.interestBearingDebt), yenU(r.prev2.interestBearingDebt)],
+    ["簡易キャッシュフロー", U, yenU(cur.simpleCF), yenU(r.prev.simpleCF), yenU(r.prev2.simpleCF)],
   ].map(([n, u, a, b, c]) =>
     `<tr><th>${n}${u}</th><td>${a}</td><td>${b}</td><td>${c}</td></tr>`).join("");
 
@@ -400,14 +458,14 @@ function report(r) {
     <h2>与信限度額の目安</h2>
     <p class="calc__hint">自己資本を基準にした金額と月商を基準にした金額のうち、小さいほうです。一次スクリーニングの出発点としてお使いください。</p>
     <div class="result${cls}" style="text-align:center;">
-      <div class="result__score"><b>${yen(r.creditLimit.value)}</b> 百万円<span class="unit-tag">単位：百万円</span></div>
+      <div class="result__score"><b>${yenU(r.creditLimit.value)}</b> ${U_LABEL()}<span class="unit-tag">単位：${U_LABEL()}</span></div>
     </div>
   </div>
 
   <div class="calc">
     <h2>財務ハイライト（直近3期）</h2>
-    <p class="calc__hint">金額の単位は百万円です。比率は％で表示しています。</p>
-    <table class="figs"><thead><tr><th>項　目<span class="unit-tag">百万円 ／ ％</span></th><th>今期</th><th>前期</th><th>前々期</th></tr></thead>
+    <p class="calc__hint">金額の単位は${U_LABEL()}です。比率は％で表示しています。</p>
+    <table class="figs"><thead><tr><th>項　目<span class="unit-tag">${U_LABEL()} ／ ％</span></th><th>今期</th><th>前期</th><th>前々期</th></tr></thead>
       <tbody>${figs}</tbody></table>
     <p class="calc__hint" style="margin-top:10px;">
       自己資本比率の業種基準は ${pct(bm.equityRatio)}、売上高経常利益率の業種基準は ${pct(bm.ordinaryMarginAvg3)} です
@@ -423,6 +481,31 @@ function report(r) {
     <p style="font-weight:700;margin:18px 0 6px;">留意すべき点</p>
     <ul class="remarks">${r.comments.concerns.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
   </div>`;
+}
+
+/* ------------------------------------------------- サンプルExcel（購入前）
+ * 静的なファイルを置かず、その場で組み立てる。
+ * 出力の書式を直したときにサンプルだけ古くなる、という事故が起きない。
+ * 中身は記入例の架空データなので、購入前でも配れる。
+ */
+async function onSample() {
+  const btn = $("btnSample");
+  const note = $("sampleNote");
+  const label = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "作成中…";
+  if (note) note.textContent = "ファイルを組み立てています。数秒かかります。";
+  try {
+    const r = evaluate(demo());
+    await downloadXlsx(r, "与信判断検討書_サンプル.xlsx", UNITS[dispUnit]);
+    if (note) note.textContent = `ダウンロードしました（金額の単位：${U_LABEL()}）。`;
+    if (window.gtag) gtag("event", "xlsx_sample", { tool: "credit-pro" });
+  } catch (e) {
+    if (note) note.textContent = "作成に失敗しました：" + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = label;
+  }
 }
 
 /* -------------------------------------------------------------- ダウンロード */
@@ -451,7 +534,7 @@ async function onDownload() {
   btn.textContent = "Excelを作成中…";
   $("dlNote").textContent = "ファイルを組み立てています。数秒かかります。";
   try {
-    await downloadXlsx(r);
+    await downloadXlsx(r, null, UNITS[dispUnit]);
     $("dlNote").textContent = "ダウンロードしました";
     if (window.gtag) gtag("event", "xlsx_download", { tool: "credit-pro" });
   } catch (e) {
@@ -573,10 +656,8 @@ async function readFiles(files) {
         const raw = buildPeriod(found, yi);
         const values = scaleToMillion(raw.values, unit);
         const source = raw.source, warnings = raw.warnings.slice();
-        if (unit && unit.toMillion !== 1)
-          warnings.push(`この決算書は${unit.label}単位で記載されていたため、百万円に換算しました。`);
-        else if (!unit)
-          warnings.push("金額の単位を読み取れませんでした。百万円として扱っています。千円単位の決算書の場合は、下の入力欄で桁をご確認ください。");
+        if (!unit)
+          warnings.push("金額の単位を読み取れませんでした。百万円として扱っています。単位が違う場合は、上の「金額の単位」で切り替えてご確認ください。");
         const { diff, messages } = validatePeriod(values);
         const grade = gradePeriod(values, diff, messages);
         // 1本で2期取れる様式（有報・短信）は、yi=0 が前期。並べ替えの鍵をずらしておく
@@ -587,6 +668,11 @@ async function readFiles(files) {
       }
     }
     setProgress("読み取りが終わりました。", 1);
+    // 決算書の単位に表示を合わせる。
+    // 千円・円で書かれた決算書を百万円で見せると、利用者が原本と突き合わせられない。
+    // 読み取れた期のうち、最も細かい単位に寄せる（混在時に情報が落ちないようにするため）。
+    const units = periods.filter((p) => !p.failed && p.unit).map((p) => p.unit.toMillion);
+    if (units.length) setDispUnit(Math.min(...units) < 1 ? "thousand" : "million", "自動");
     sortPeriods(periods);
     // 3期を超えたぶんは、古いものから落とす（並べ替え済みなので後ろが古い）
     const live = periods.filter((p) => !p.failed);
@@ -690,8 +776,12 @@ const MONEY_KEYS = ["sales","cogs","sga","nonOpInc","nonOpExp","extraInc","extra
 function scaleToMillion(values, unit) {
   if (!unit || unit.toMillion === 1) return values;
   const out = { ...values };
+  // ここで四捨五入しない。
+  // 千円単位の 4,767,955千円 を 4,768百万円 に丸めると、千円で表示し直したときに
+  // 4,768,000 となり、決算書と下3桁が合わなくなる。
+  // 4767.955 のまま持てば、百万円でも千円でも決算書どおりの数字を出せる。
   for (const k of MONEY_KEYS)
-    if (typeof out[k] === "number") out[k] = Math.round(out[k] * unit.toMillion);
+    if (typeof out[k] === "number") out[k] = out[k] * unit.toMillion;
 
   // 各項目を個別に四捨五入すると、内訳の合計が小計と1単位ずれることがある。
   // 画面の表は内訳を足して小計を出すため、そのままだと決算書では合っていた貸借が
@@ -710,7 +800,10 @@ function reconcile(v) {
     // 小計が取れていなければ、内訳の合計をそのまま小計とする
     if (typeof v[sub] !== "number") { v[sub] = parts.reduce((a, k) => a + n(v[k]), 0); return; }
     const gap = v[sub] - parts.reduce((a, k) => a + n(v[k]), 0);
-    if (gap === 0 || Math.abs(gap) > 3) return;   // 大きなズレは読み取り誤りなので触らない
+    // 丸めをやめたことで、値が小数を持つようになった。
+    // 浮動小数点の計算誤差（1e-10 など）を「ズレ」と誤認しないよう、
+    // 0.0005百万円（＝500円）未満は一致とみなす。
+    if (Math.abs(gap) < 5e-4 || Math.abs(gap) > 3) return;   // 大きなズレは読み取り誤りなので触らない
     v[slack] = n(v[slack]) + gap;                  // 端数は「その他」で調整する
   };
   fit(["cash", "receivables", "inventory", "otherCurrentAssets"], "currentAssets", "otherCurrentAssets");
@@ -722,7 +815,7 @@ function reconcile(v) {
   const assets = n(v.currentAssets) + n(v.fixedAssets) + n(v.deferred);
   const liabEq = n(v.currentLiab) + n(v.fixedLiab) + n(v.equity);
   const gap = assets - liabEq;
-  if (gap !== 0 && Math.abs(gap) <= 3) {
+  if (Math.abs(gap) >= 5e-4 && Math.abs(gap) <= 3) {
     v.otherCurrentAssets = n(v.otherCurrentAssets) - gap;
     v.currentAssets = n(v.currentAssets) - gap;
   }
@@ -853,7 +946,10 @@ function bannerFor(worst, hasFields) {
   return ["check", "数値の確認・入力をお願いします", "読み取れなかった項目を下の欄に入力すると完成します。貸借がずれている場合は、各項目の値もあわせてご確認ください。"];
 }
 
+let lastRead = null;   // 単位を切り替えたとき、読み取り結果の表も作り直すために覚えておく
+
 function showRead(periods) {
+  lastRead = periods;
   const live = periods.filter((p) => !p.failed);
   const setFix = (html) => {
     const el = $("readFix");
@@ -911,7 +1007,7 @@ function showRead(periods) {
     `<div class="read-banner is-${cls}"><b>${title}</b><span>${lead}</span></div>`;
 
   // ---- 読み取り結果の表 ----
-  let h = '<thead><tr><th>科　目<span class="unit-tag">単位：百万円</span></th>';
+  let h = `<thead><tr><th>科　目<span class="unit-tag">単位：${U_LABEL()}</span></th>`;
   live.forEach((p, i) => {
     const lab = p.period && p.period.label ? `<br><span class="th-sub">${esc(p.period.label)}</span>` : "";
     // 元の決算書が何円単位だったかも出す。換算したことを隠さない
@@ -926,11 +1022,11 @@ function showRead(periods) {
       const v = p.values[key];
       return v === null || v === undefined
         ? '<td class="miss">未取得</td>'
-        : `<td class="ok">${yen(v)}</td>`;
+        : `<td class="ok">${yenU(v)}</td>`;
     }).join("") + "</tr>";
   }
   h += "<tr><th>貸借の検算</th>" + live.map((p) =>
-    `<td class="${p.diff === 0 ? "ok" : "miss"}">${p.diff === 0 ? "一致" : yen(p.diff) + " のズレ"}</td>`).join("") + "</tr>";
+    `<td class="${p.diff === 0 ? "ok" : "miss"}">${p.diff === 0 ? "一致" : yenU(p.diff) + " のズレ"}</td>`).join("") + "</tr>";
   $("readTable").innerHTML = h + "</tbody>";
 
   // ---- ここだけ入力してください（未取得のエンジン項目だけを欄にする） ----
@@ -943,7 +1039,7 @@ function showRead(periods) {
     if (miss.includes("depreciation")) depHint = true;
     fix += live.length > 1 ? `<p class="fix-period">${PERIOD_LABEL[i]}</p>` : "";
     if (unbalanced)
-      fix += `<p class="fix-warn">資産合計と負債・純資産合計が <b>${yen(p.diff)}</b> ずれています。下の項目、または反映後の入力欄で各数値をご確認ください。</p>`;
+      fix += `<p class="fix-warn">資産合計と負債・純資産合計が <b>${yenU(p.diff)}</b> ずれています。下の項目、または反映後の入力欄で各数値をご確認ください。</p>`;
     if (miss.length) {
       fix += '<div class="pro-2 fix-grid">';
       for (const k of miss) {

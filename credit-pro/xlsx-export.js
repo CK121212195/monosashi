@@ -84,6 +84,13 @@ function header(ws, row, labels, startCol = 1, h = 22) {
 
 const money = (v) => (typeof v === "number" ? Math.round(v) : 0);
 
+/* 金額の表示単位。
+ * 計算はすべて百万円で行い、書き出すときだけ選ばれた単位に直す。
+ * 人数・年数・資本金は単位の対象外なので、金額には amt() を使い分ける。 */
+let UNIT = { label: "百万円", mul: 1 };
+/** 金額（内部は百万円）を表示単位に直して整数にする */
+const amt = (v) => (typeof v === "number" ? Math.round(v * UNIT.mul) : 0);
+
 /* ==========================================================================
  * 1. 判定サマリー
  * ======================================================================== */
@@ -149,7 +156,7 @@ function sheetSummary(wb, r) {
   const items = [
     ["① 業歴", s.gyoreki, 10, `${r.businessYears}年`],
     ["② 資本構成", s.shihon, 12, `自己資本比率 ${(r.equityRatio * 100).toFixed(1)}％\n業種基準 ${(bm.equityRatio * 100).toFixed(1)}％`],
-    ["③ 規模", s.kibo, 18, `売上高 ${money(cur.sales).toLocaleString()}百万円\n${inp.listing}`],
+    ["③ 規模", s.kibo, 18, `売上高 ${amt(cur.sales).toLocaleString()}${UNIT.label}\n${inp.listing}`],
     ["④ 損益", s.soneki, 10, s.soneki_detail.pattern],
     ["⑤ 経営者", s.keiei, 20, `業界歴 ${money(inp.industryYears)}年 ／ 開示 ${inp.disclosure}`],
     ["⑥ 償還余力", s.shokan, 30, r.redemption.simpleCF <= 0 ? "返済原資なし" :
@@ -183,7 +190,7 @@ function sheetSummary(wb, r) {
   band(ws, 24, LC, "与信限度額の目安（一次スクリーニング）");
   put(ws, "B25", "★ 与信限度額の目安", { font: font(10, true), fill: C.steelL });
   ws.mergeCells("C25:D25");
-  put(ws, "C25", money(r.creditLimit.value), { numFmt: '#,##0" 百万円"', align: AL.c, font: font(14, true, C.navy), fill: C.steelL });
+  put(ws, "C25", amt(r.creditLimit.value), { numFmt: `#,##0" ${UNIT.label}"`, align: AL.c, font: font(14, true, C.navy), fill: C.steelL });
   ws.getCell(25, 4).fill = fill(C.steelL); ws.getCell(25, 4).border = BOX;
   ws.mergeCells("E25:H25");
   put(ws, "E25", "自己資本基準と月商基準のいずれか小さい方（算定係数は非公開）", { font: font(9, false, C.muted), fill: C.steelL, align: AL.w });
@@ -212,7 +219,7 @@ function sheetSummary(wb, r) {
     const row = 29 + i;
     const fmt = bench === null ? MONEY : PCT;
     put(ws, `B${row}`, n);
-    [a, b, c2].forEach((v, j) => put(ws, `${"CDE"[j]}${row}`, bench === null ? money(v) : v,
+    [a, b, c2].forEach((v, j) => put(ws, `${"CDE"[j]}${row}`, bench === null ? amt(v) : v,
       { numFmt: fmt, align: AL.r, fill: C.calc }));
     put(ws, `F${row}`, bench === null ? "－" : bench, { numFmt: bench === null ? undefined : PCT, align: AL.c, fill: C.calc });
     ws.mergeCells(row, 7, row, 8);
@@ -283,7 +290,7 @@ function sheetFinance(wb, r) {
                 { width: 13 }, { width: 15 }, { width: 10 }];
   const LC = 8;
   ws.mergeCells("A1:H1");
-  put(ws, "A1", " 財務分析（3期比較）", { font: font(14, true, C.white), align: AL.l, border: false });
+  put(ws, "A1", ` 財務分析（3期比較）　金額の単位：${UNIT.label}`, { font: font(14, true, C.white), align: AL.l, border: false });
   for (let i = 1; i <= LC; i++) ws.getCell(1, i).fill = fill(C.navyD);
   ws.getRow(1).height = 30;
 
@@ -303,7 +310,7 @@ function sheetFinance(wb, r) {
   };
 
   const P = [r.cur, r.prev, r.prev2];
-  const m = (k) => [money(P[0][k]), money(P[1][k]), money(P[2][k])];
+  const m = (k) => [amt(P[0][k]), amt(P[1][k]), amt(P[2][k])];
   table("1. 損益計算書", [
     ["売上高", m("sales"), MONEY, true], ["売上原価", m("cogs"), MONEY],
     ["売上総利益", m("grossProfit"), MONEY, true], ["販売費及び一般管理費", m("sga"), MONEY],
@@ -379,7 +386,7 @@ function sheetRedemption(wb, r) {
   ws.columns = [{ width: 3 }, { width: 46 }, { width: 20 }, { width: 3 }];
   const d = r.redemption;
   ws.mergeCells("A1:D1");
-  put(ws, "A1", " 資金償還表（償還余力の算定）", { font: font(14, true, C.white), align: AL.l, border: false });
+  put(ws, "A1", ` 資金償還表（償還余力の算定）　金額の単位：${UNIT.label}`, { font: font(14, true, C.white), align: AL.l, border: false });
   for (let i = 1; i <= 4; i++) ws.getCell(1, i).fill = fill(C.navyD);
   ws.getRow(1).height = 30;
 
@@ -390,15 +397,15 @@ function sheetRedemption(wb, r) {
     row++;
   };
   band(ws, row++, 4, "1. 簡易キャッシュフロー（返済原資）");
-  line("税引後当期純利益", money(r.cur.netProfit), MONEY);
-  line("（＋）減価償却費", money(r.cur.depreciation), MONEY);
-  line("（＝）簡易キャッシュフロー", money(d.simpleCF), MONEY, true);
+  line("税引後当期純利益", amt(r.cur.netProfit), MONEY);
+  line("（＋）減価償却費", amt(r.cur.depreciation), MONEY);
+  line("（＝）簡易キャッシュフロー", amt(d.simpleCF), MONEY, true);
   row++;
   band(ws, row++, 4, "2. 要償還債務");
-  line("有利子負債（短期借入金＋長期借入金・社債）", money(d.interestBearingDebt), MONEY);
-  line("（－）現金・預金", money(d.cash), MONEY);
-  line("（－）正常運転資金（売上債権＋棚卸資産－仕入債務）", money(d.workingCapital), MONEY);
-  line("（＝）要償還債務", money(d.required), MONEY, true);
+  line("有利子負債（短期借入金＋長期借入金・社債）", amt(d.interestBearingDebt), MONEY);
+  line("（－）現金・預金", amt(d.cash), MONEY);
+  line("（－）正常運転資金（売上債権＋棚卸資産－仕入債務）", amt(d.workingCapital), MONEY);
+  line("（＝）要償還債務", amt(d.required), MONEY, true);
   row++;
   band(ws, row++, 4, "3. 償還余力の判定");
   line("(A) 債務償還年数", d.simpleCF <= 0 && d.required > 0 ? "算定不能" : Number(d.years.toFixed(1)), '0.0"年"');
@@ -433,7 +440,7 @@ function sheetScore(wb, r) {
     ["①", "業歴", `${r.businessYears}年`, s.gyoreki, 10, true],
     ["②", "資本構成（自己資本比率）", `${(r.equityRatio * 100).toFixed(1)}％`, s.shihon, 12, true],
     ["③", "規模", "", s.kibo, 18, true],
-    ["", "　③-1 業容（売上高）", `${money(cur.sales).toLocaleString()}百万円`, s.kibo_detail.gyoyo, 12],
+    ["", "　③-1 業容（売上高）", `${amt(cur.sales).toLocaleString()}${UNIT.label}`, s.kibo_detail.gyoyo, 12],
     ["", "　③-2 年商", `${(cur.sales / 100).toFixed(0)}億円`, s.kibo_detail.nensho, 2],
     ["", "　③-3 上場区分", inp.listing, s.kibo_detail.listing, 2],
     ["", "　③-4 従業員数", `${money(inp.employees).toLocaleString()}人`, s.kibo_detail.employees, 2],
@@ -500,7 +507,7 @@ function sheetInput(wb, r) {
     row++;
   }
   row++;
-  band(ws, row++, 6, "決算数値（単位：百万円）");
+  band(ws, row++, 6, `決算数値（単位：${UNIT.label}）`);
   header(ws, row++, ["項　目", "今期（直近）", "前期", "前々期"], 2);
   put(ws, `B${row}`, "決算期", { fill: C.steelL });
   (inp.terms || ["", "", ""]).forEach((t, j) => put(ws, `${"CDE"[j]}${row}`, t || "", { align: AL.c, fill: C.calc }));
@@ -518,14 +525,14 @@ function sheetInput(wb, r) {
     ["負債・純資産合計", "totalCapital"], ["【検算】資産－負債純資産", "balanceCheck"]];
   for (const [name, key] of keys) {
     put(ws, `B${row}`, name);
-    [0, 1, 2].forEach((i) => put(ws, `${"CDE"[i]}${row}`, money(P[i][key]),
+    [0, 1, 2].forEach((i) => put(ws, `${"CDE"[i]}${row}`, amt(P[i][key]),
       { numFmt: MONEY, align: AL.r, fill: key === "balanceCheck" && Math.abs(P[i][key]) > 0.5 ? C.warn : C.calc }));
     row++;
   }
   row++;
   band(ws, row++, 6, "借入金返済計画（今後3年）");
   put(ws, `B${row}`, "年間約定返済額");
-  (inp.repayment || [0, 0, 0]).forEach((v, j) => put(ws, `${"CDE"[j]}${row}`, money(v), { numFmt: MONEY, align: AL.r, fill: C.calc }));
+  (inp.repayment || [0, 0, 0]).forEach((v, j) => put(ws, `${"CDE"[j]}${row}`, amt(v), { numFmt: MONEY, align: AL.r, fill: C.calc }));
   return ws;
 }
 
@@ -543,7 +550,13 @@ export async function buildWorkbook(result) {
   return wb;
 }
 
-export async function downloadXlsx(result, filename) {
+/**
+ * @param result   evaluate() の戻り値（金額はすべて百万円）
+ * @param filename 省略時は会社名から組み立てる
+ * @param unit     { label, mul } 表示単位。省略時は百万円
+ */
+export async function downloadXlsx(result, filename, unit) {
+  UNIT = unit && unit.label && unit.mul ? unit : { label: "百万円", mul: 1 };
   const wb = await buildWorkbook(result);
   const buf = await wb.xlsx.writeBuffer();
   const name = filename || `与信判断検討書_${(result.input.name || "無題").replace(/[\\/:*?"<>|]/g, "")}.xlsx`;

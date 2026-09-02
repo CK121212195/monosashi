@@ -84,6 +84,12 @@ a{color:inherit;}
 .btn-run:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(51,82,108,.42);}
 .btn-sample{background:none;border:1.5px solid var(--line);border-radius:999px;padding:13px 22px;font-family:var(--sans);font-size:14px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:border-color .2s,color .2s;}
 .btn-sample:hover{border-color:var(--sea-deep);color:var(--ink);}
+.btn-sample:disabled{opacity:.55;cursor:default;}
+
+/* サンプルExcelの案内 */
+.sample{margin:22px 0 0;padding:22px 24px;background:var(--card);border:1.5px solid var(--line);
+  border-left:5px solid var(--peridot);border-radius:18px;}
+.sample__lead{margin:0 0 14px;font-size:15px;line-height:1.9;}
 .err{margin:16px 0 0;font-size:14px;color:var(--warn);font-weight:600;display:none;}
 
 /* 結果 */
@@ -345,6 +351,17 @@ input,select,textarea,button{font-weight:600}
   border:1px solid var(--line);font-family:var(--num);font-size:11px;font-weight:700;color:var(--ink-soft);
   vertical-align:middle;letter-spacing:.02em;}
 
+/* 金額の単位切替 */
+.unit-switch{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
+.unit-switch label{position:relative;display:inline-flex;align-items:center;cursor:pointer;}
+.unit-switch input{position:absolute;opacity:0;width:0;height:0;}
+.unit-switch span{display:inline-block;padding:11px 30px;border:1.5px solid var(--line);border-radius:999px;
+  background:var(--card);font-weight:700;font-size:15px;letter-spacing:.06em;color:var(--ink-soft);
+  transition:background .18s,border-color .18s,color .18s;}
+.unit-switch input:checked + span{background:var(--sea-deep);border-color:var(--sea-deep);color:#fff;}
+.unit-switch input:focus-visible + span{outline:2.5px solid var(--sea-deep);outline-offset:3px;}
+.unit-switch label:hover span{border-color:var(--sea);}
+
 /* 解説のアコーディオン */
 .acc{border:1.5px solid var(--line);border-radius:16px;background:var(--card);margin:0 0 10px;overflow:hidden;}
 .acc>summary{cursor:pointer;list-style:none;padding:16px 20px;font-family:var(--serif);font-size:18px;
@@ -511,6 +528,12 @@ input,select,textarea,button{font-weight:600}
           <p class="shot__cap" id="shotCap">総合評点・信用程度A〜E・6軸の評点内訳・与信限度額の目安・財務ハイライト・自動所見までを1枚に収めています。</p>
         </div>
 
+        <div class="sample">
+          <p class="sample__lead"><b>実物をお手元でご確認いただけます。</b>架空の会社「サンプル情報システム株式会社」の数値で、実際に出力されるものとまったく同じ5シートのExcelファイルを作成します。購入前でもダウンロードできます。</p>
+          <button class="btn-sample" id="btnSample" type="button">サンプルExcelをダウンロード</button>
+          <p class="calc__hint" id="sampleNote" aria-live="polite"></p>
+        </div>
+
       </section>
 
       <!-- ============ STEP 2 投入 ============ -->
@@ -557,6 +580,15 @@ input,select,textarea,button{font-weight:600}
         <button class="btn-sample" id="btnManual" type="button" aria-expanded="true" aria-controls="manualBody">入力欄を閉じる</button>
 
         <div id="manualBody">
+          <div class="calc" id="unitBox">
+            <h3>金額の単位</h3>
+            <p class="calc__hint">入力欄・判定結果・Excelのすべてに反映されます。決算書PDFを読み込むと、その決算書の単位に自動で合わせます。いつ切り替えても数値は変わりません。</p>
+            <div class="unit-switch" role="radiogroup" aria-label="金額の単位">
+              <label><input type="radio" name="dispUnit" value="thousand"><span>千円</span></label>
+              <label><input type="radio" name="dispUnit" value="million" checked><span>百万円</span></label>
+            </div>
+            <p class="calc__hint" id="unitNote" style="margin-top:10px;"></p>
+          </div>
           <div class="calc">
             <h3>会社の基本情報</h3>
             <p class="calc__hint">業種と資本金階層は、判定に使う業界基準値の選択に使います。</p>
@@ -778,7 +810,7 @@ input,select,textarea,button{font-weight:600}
     </div>
   </main>
 
-  <p class="verstamp">ビルド v20 (2026-09-01)</p>
+  <p class="verstamp">ビルド v21 (2026-09-02)</p>
 
   <footer class="foot">
     <div class="wrap foot__inner">
@@ -796,7 +828,7 @@ input,select,textarea,button{font-weight:600}
 </div>
 
 <script src="../vendor/exceljs.min.js" defer></script>
-<script type="module" src="./app.js?v=20"></script>
+<script type="module" src="./app.js?v=21"></script>
 
 </body>
 </html>
