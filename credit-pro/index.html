@@ -619,7 +619,7 @@ input,select,textarea,button{font-weight:600}
           </div>
           <div class="calc">
             <h3>借入金の返済計画（今後3年）</h3>
-            <p class="calc__hint">単位は百万円。当座貸越や短期継続融資の折返し分は含めないでください。</p>
+            <p class="calc__hint"><span data-unit-lead>単位は百万円。</span>当座貸越や短期継続融資の折返し分は含めないでください。</p>
             <div class="tblwrap"><table class="fin" id="tRepay"></table></div>
           </div>
           <div class="calc">
@@ -627,7 +627,7 @@ input,select,textarea,button{font-weight:600}
               <summary><span>貸借対照表（直近3期）</span><span class="acc__state" id="accBS-state"></span></summary>
               <div class="acc__body">
             
-            <p class="calc__hint">単位は百万円。いちばん下の【検算】が0にならない場合は入力に誤りがあります。</p>
+            <p class="calc__hint"><span data-unit-lead>単位は百万円。</span>いちばん下の【検算】が0にならない場合は入力に誤りがあります。</p>
             <div class="alert" id="alertBalance"></div>
             <div class="tblwrap"><table class="fin" id="tBS"></table></div>
               </div>
@@ -638,7 +638,7 @@ input,select,textarea,button{font-weight:600}
               <summary><span>損益計算書（直近3期）</span><span class="acc__state" id="accPL-state"></span></summary>
               <div class="acc__body">
             
-            <p class="calc__hint">単位は百万円。売上総利益・営業利益・経常利益・当期純利益は自動で計算されます。</p>
+            <p class="calc__hint"><span data-unit-lead>単位は百万円。</span>売上総利益・営業利益・経常利益・当期純利益は自動で計算されます。</p>
             <div class="tblwrap"><table class="fin" id="tPL"></table></div>
               </div>
             </details>
@@ -810,7 +810,7 @@ input,select,textarea,button{font-weight:600}
     </div>
   </main>
 
-  <p class="verstamp">ビルド v21 (2026-09-02)</p>
+  <p class="verstamp">ビルド v22test (2026-09-02)</p>
 
   <footer class="foot">
     <div class="wrap foot__inner">
@@ -828,7 +828,7 @@ input,select,textarea,button{font-weight:600}
 </div>
 
 <script src="../vendor/exceljs.min.js" defer></script>
-<script type="module" src="./app.js?v=21"></script>
+<script type="module" src="./app.js?v=22"></script>
 
 </body>
 </html>

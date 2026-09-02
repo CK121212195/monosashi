@@ -3,10 +3,10 @@
  * 計算は engine.js、Excel生成は xlsx-export.js。ここはUIだけを担当する。
  * ========================================================================== */
 import { evaluate, emptyInput, INDUSTRIES, CAPITAL_TIERS, LISTING_OPTIONS, POLICY }
-  from "./engine.js?v=21";
-import { downloadXlsx } from "./xlsx-export.js?v=21";
-import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=21";
-import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=21";
+  from "./engine.js?v=22";
+import { downloadXlsx } from "./xlsx-export.js?v=22";
+import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=22";
+import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=22";
 
 const $ = (id) => document.getElementById(id);
 const COLS = ["今期（直近）", "前期", "前々期"];
@@ -84,6 +84,11 @@ function setDispUnit(u, why) {
   document.querySelectorAll("[data-unit-tag]").forEach((el) => {
     el.textContent = "単位：" + U_LABEL();
   });
+  // 表の上の説明文も追随させる。ここが「単位は百万円」のままだと、
+  // 見出しの単位表記と食い違って利用者を混乱させる。
+  document.querySelectorAll("[data-unit-lead]").forEach((el) => {
+    el.textContent = `単位は${U_LABEL()}。`;
+  });
   const note = $("unitNote");
   if (note) {
     note.textContent = why === "自動"
@@ -160,6 +165,7 @@ function init() {
   $("btnBuy").addEventListener("click", onBuy);
   initUploader();
   initShots();
+  initDevXlsx();   // ★テスト用。公開前に initDevXlsx の定義ごと削除する
 
   // 決済から戻ったときだけ、入力内容と判定を復元して段を開く。
   // 初回は空の状態で「決算書を置く」だけに集中してもらう。
@@ -361,8 +367,10 @@ function paint() {
   document.querySelectorAll("[data-k][data-i]").forEach((el) => {
     const v = state[el.dataset.k]?.[+el.dataset.i];
     // 金額欄は選ばれた単位に直して見せる。丸めは表示のときだけで、state は元の精度を保つ
+    // 表示は整数に丸める。state は元の精度を保つので、単位を往復しても値は劣化しない。
+    // 丸めないと百万円表示のときに 7426.9 のような小数が入力欄に出てしまう。
     el.value = el.type === "number"
-      ? (typeof v === "number" ? Math.round(toDisp(v) * 100) / 100 : "")
+      ? (typeof v === "number" ? Math.round(toDisp(v)) : "")
       : (v ?? "");
     // PDFから読み取れなかった項目は枠を赤くして、どこを埋めればよいか一目で分かるようにする
     const miss = missingCells[el.dataset.k];
@@ -507,6 +515,42 @@ async function onSample() {
     btn.textContent = label;
   }
 }
+
+/* =================================================================
+ * ▼▼▼ テスト用（動作確認が済んだら、このブロックごと削除すること）▼▼▼
+ *
+ * 実データでExcelを出力して確認するための抜け道。
+ * 500円の実決済を何度も通さずに済ませるための一時的なもの。
+ *
+ * 画面にボタンは置かない。公開中のサイトなので、置けば誰でも押せてしまう。
+ *   https://kazumono.com/credit-pro/?devxlsx=1
+ * のように URL に付けたときだけボタンが現れる。
+ * この行を消すだけで無効化できるよう、1か所にまとめてある。
+ * ================================================================= */
+function initDevXlsx() {
+  if (new URLSearchParams(location.search).get("devxlsx") !== "1") return;
+  const host = $("dlNote");
+  if (!host) return;
+  const box = document.createElement("div");
+  box.style.cssText = "margin-top:14px;padding:14px 16px;border:2px dashed #C0392B;border-radius:12px;background:#FDF3F1;";
+  box.innerHTML =
+    '<p style="margin:0 0 10px;font-size:13.5px;font-weight:700;color:#C0392B;">' +
+    'テスト用：決済を通さずにExcelを出力します。公開前に必ず削除してください。</p>' +
+    '<button class="btn-sample" id="btnDevXlsx" type="button">Excelを出力（テスト用・無料）</button>' +
+    '<p class="calc__hint" id="devNote" aria-live="polite"></p>';
+  host.parentNode.insertBefore(box, host.nextSibling);
+  $("btnDevXlsx").addEventListener("click", async () => {
+    const b = $("btnDevXlsx"), n = $("devNote");
+    b.disabled = true; n.textContent = "作成しています…";
+    try {
+      const r = evaluate(state);
+      await downloadXlsx(r, null, UNITS[dispUnit]);
+      n.textContent = `出力しました（金額の単位：${U_LABEL()}）`;
+    } catch (e) { n.textContent = "失敗：" + e.message; }
+    finally { b.disabled = false; }
+  });
+}
+/* ▲▲▲ テスト用ここまで ▲▲▲ */
 
 /* -------------------------------------------------------------- ダウンロード */
 async function onDownload() {

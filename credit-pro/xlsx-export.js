@@ -88,6 +88,8 @@ const money = (v) => (typeof v === "number" ? Math.round(v) : 0);
  * 計算はすべて百万円で行い、書き出すときだけ選ばれた単位に直す。
  * 人数・年数・資本金は単位の対象外なので、金額には amt() を使い分ける。 */
 let UNIT = { label: "百万円", mul: 1 };
+/** 千円表示は桁が3つ増えるぶん、金額を並べる列を広げる */
+const wide = (w) => (UNIT.mul > 1 ? w + 5 : w);
 /** 金額（内部は百万円）を表示単位に直して整数にする */
 const amt = (v) => (typeof v === "number" ? Math.round(v * UNIT.mul) : 0);
 
@@ -96,7 +98,7 @@ const amt = (v) => (typeof v === "number" ? Math.round(v * UNIT.mul) : 0);
  * ======================================================================== */
 function sheetSummary(wb, r) {
   const ws = wb.addWorksheet("①判定サマリー", { views: [{ showGridLines: false }] });
-  ws.columns = [{ width: 3 }, { width: 22 }, { width: 13 }, { width: 12 }, { width: 11 },
+  ws.columns = [{ width: 3 }, { width: 22 }, { width: wide(13) }, { width: wide(12) }, { width: wide(11) },
                 { width: 12 }, { width: 20 }, { width: 18 }, { width: 3 }];
   const s = r.scores, cur = r.cur, bm = r.benchmark, inp = r.input;
   const LC = 9;
@@ -286,7 +288,7 @@ function sheetSummary(wb, r) {
  * ======================================================================== */
 function sheetFinance(wb, r) {
   const ws = wb.addWorksheet("②財務分析", { views: [{ showGridLines: false }] });
-  ws.columns = [{ width: 3 }, { width: 32 }, { width: 15 }, { width: 15 }, { width: 15 },
+  ws.columns = [{ width: 3 }, { width: 32 }, { width: wide(15) }, { width: wide(15) }, { width: wide(15) },
                 { width: 13 }, { width: 15 }, { width: 10 }];
   const LC = 8;
   ws.mergeCells("A1:H1");
@@ -383,7 +385,7 @@ function sheetFinance(wb, r) {
  * ======================================================================== */
 function sheetRedemption(wb, r) {
   const ws = wb.addWorksheet("③資金償還表", { views: [{ showGridLines: false }] });
-  ws.columns = [{ width: 3 }, { width: 46 }, { width: 20 }, { width: 3 }];
+  ws.columns = [{ width: 3 }, { width: 46 }, { width: wide(20) }, { width: 3 }];
   const d = r.redemption;
   ws.mergeCells("A1:D1");
   put(ws, "A1", ` 資金償還表（償還余力の算定）　金額の単位：${UNIT.label}`, { font: font(14, true, C.white), align: AL.l, border: false });
@@ -428,7 +430,7 @@ function sheetRedemption(wb, r) {
  * ======================================================================== */
 function sheetScore(wb, r) {
   const ws = wb.addWorksheet("④配点内訳", { views: [{ showGridLines: false }] });
-  ws.columns = [{ width: 3 }, { width: 5 }, { width: 30 }, { width: 20 }, { width: 10 }, { width: 10 }, { width: 3 }];
+  ws.columns = [{ width: 3 }, { width: 5 }, { width: 30 }, { width: wide(20) }, { width: 10 }, { width: 10 }, { width: 3 }];
   const s = r.scores, inp = r.input, cur = r.cur;
   ws.mergeCells("A1:G1");
   put(ws, "A1", " 配点内訳（100点満点）", { font: font(14, true, C.white), align: AL.l, border: false });
@@ -485,7 +487,7 @@ function sheetScore(wb, r) {
  * ======================================================================== */
 function sheetInput(wb, r) {
   const ws = wb.addWorksheet("⑤入力データ", { views: [{ showGridLines: false }] });
-  ws.columns = [{ width: 3 }, { width: 36 }, { width: 16 }, { width: 16 }, { width: 16 }, { width: 3 }];
+  ws.columns = [{ width: 3 }, { width: 36 }, { width: wide(16) }, { width: wide(16) }, { width: wide(16) }, { width: 3 }];
   const inp = r.input, P = [r.cur, r.prev, r.prev2];
   ws.mergeCells("A1:F1");
   put(ws, "A1", " 入力データ（記録用）", { font: font(14, true, C.white), align: AL.l, border: false });
