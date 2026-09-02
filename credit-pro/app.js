@@ -165,7 +165,6 @@ function init() {
   $("btnBuy").addEventListener("click", onBuy);
   initUploader();
   initShots();
-  initDevXlsx();   // ★テスト用。公開前に initDevXlsx の定義ごと削除する
 
   // 決済から戻ったときだけ、入力内容と判定を復元して段を開く。
   // 初回は空の状態で「決算書を置く」だけに集中してもらう。
@@ -515,42 +514,6 @@ async function onSample() {
     btn.textContent = label;
   }
 }
-
-/* =================================================================
- * ▼▼▼ テスト用（動作確認が済んだら、このブロックごと削除すること）▼▼▼
- *
- * 実データでExcelを出力して確認するための抜け道。
- * 500円の実決済を何度も通さずに済ませるための一時的なもの。
- *
- * 画面にボタンは置かない。公開中のサイトなので、置けば誰でも押せてしまう。
- *   https://kazumono.com/credit-pro/?devxlsx=1
- * のように URL に付けたときだけボタンが現れる。
- * この行を消すだけで無効化できるよう、1か所にまとめてある。
- * ================================================================= */
-function initDevXlsx() {
-  if (new URLSearchParams(location.search).get("devxlsx") !== "1") return;
-  const host = $("dlNote");
-  if (!host) return;
-  const box = document.createElement("div");
-  box.style.cssText = "margin-top:14px;padding:14px 16px;border:2px dashed #C0392B;border-radius:12px;background:#FDF3F1;";
-  box.innerHTML =
-    '<p style="margin:0 0 10px;font-size:13.5px;font-weight:700;color:#C0392B;">' +
-    'テスト用：決済を通さずにExcelを出力します。公開前に必ず削除してください。</p>' +
-    '<button class="btn-sample" id="btnDevXlsx" type="button">Excelを出力（テスト用・無料）</button>' +
-    '<p class="calc__hint" id="devNote" aria-live="polite"></p>';
-  host.parentNode.insertBefore(box, host.nextSibling);
-  $("btnDevXlsx").addEventListener("click", async () => {
-    const b = $("btnDevXlsx"), n = $("devNote");
-    b.disabled = true; n.textContent = "作成しています…";
-    try {
-      const r = evaluate(state);
-      await downloadXlsx(r, null, UNITS[dispUnit]);
-      n.textContent = `出力しました（金額の単位：${U_LABEL()}）`;
-    } catch (e) { n.textContent = "失敗：" + e.message; }
-    finally { b.disabled = false; }
-  });
-}
-/* ▲▲▲ テスト用ここまで ▲▲▲ */
 
 /* -------------------------------------------------------------- ダウンロード */
 async function onDownload() {
