@@ -1,1 +1,1311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<script>if(location.protocol==='http:'){location.replace('https://'+location.host+location.pathname+location.search+location.hash);}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>個人向け国債の元本保証は本当か｜金利が1%上がると債券はいくら下がる</title>
+<meta name="description" content="金利が上がると債券価格はいくら下がるのか。スライダー1本で、個人向け国債・10年国債・30年国債・債券ファンド、さらに株やビットコインへの影響までまとめて表示します。個人向け国債が元本割れしない本当の理由も、財務省の計算式から説明。無料・登録不要。">
+<link rel="canonical" href="https://kazumono.com/kokusai/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="個人向け国債の元本保証は本当か｜金利が1%上がると債券はいくら下がる">
+<meta property="og:description" content="金利が1%上がったら、債券・株・ビットコインはどうなるか。スライダー1本で同時に見えます。個人向け国債が元本割れしない理由も財務省の計算式から。">
+<meta property="og:url" content="https://kazumono.com/kokusai/">
+<meta property="og:image" content="https://kazumono.com/assets/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="数字のものさし">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#33526C">
 
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "金利と債券価格シミュレーター",
+   "url": "https://kazumono.com/kokusai/",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "Web",
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "JPY"
+   },
+   "description": "金利が上がったときに個人向け国債・利付国債・債券ファンド・株式・ビットコインがどう動くかを試算する無料ツール。",
+   "isAccessibleForFree": true,
+   "publisher": {
+    "@type": "Organization",
+    "name": "数字のものさし",
+    "url": "https://kazumono.com/"
+   }
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "個人向け国債は本当に元本割れしないのですか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "しません。財務省の計算式では、中途換金時の受取額は「額面金額（元本）＋経過利子相当額 − 中途換金調整額」で、中途換金調整額は「直前2回分の各利子（税引前）相当額 × 0.79685」です。0.79685 は 1−0.20315 で、利子受取時の源泉徴収税率に対応する係数です。つまり直近2回分に受け取った利子を返すだけで、元本を削る項目がありません。ただし発行から1年間は原則として中途換金できません。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "「国債は元本割れする」という記事もあります。どちらが正しいのですか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "どちらも正しく、指している商品が違います。個人向け国債は国が額面で引き取るため元本割れしません。一方、新窓販国債、証券会社で買う利付国債（2〜40年）、債券ファンド・債券ETFは市場価格で売買するため、金利が上がれば元本割れします。どちらも「国債」と呼ばれるため混同が起きやすい部分です。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "金利が1%上がると債券価格はいくら下がりますか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "年限によって大きく違います。利回り水準にもよりますが、目安として2年債で約2%、10年債で約8%、30年債で約15%、40年債で約17%下落します。おおよそ「修正デュレーション（年）× 金利上昇幅（%）」が下落率（%）になります。デュレーションが長いほど下落は大きくなります。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "固定金利の個人向け国債と変動10年、どちらが金利上昇に強いですか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "変動10年です。変動10年は基準金利（10年固定利付国債の入札平均落札利回り）×0.66、下限年0.05%で半年ごとに利率が見直されるため、金利が上がれば受け取る利子も増えます。固定3年・固定5年は購入時の利率が満期まで変わらないため、金利上昇局面では低い利率に固定されたままになります。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "債券ファンドは満期まで持てば元本が戻りますか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "戻りません。ファンドには満期がなく、中の債券を入れ替え続けるため「満期まで待つ」という出口が存在しないからです。ただし金利上昇後はより高い利回りの債券に入れ替わっていくため、目安として平均デュレーションと同程度の年数を保有し続ければ、値下がりを利息収入で取り返せるとされています。"
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "元本保証なら損はしないということですか？",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "名目上の元本は守られますが、インフレによる購買力の目減りは防げません。たとえば年2%のインフレが3年続くと、物価は約6%上がります。受け取る利子がそれを下回れば、金額は増えていても買えるモノの量は減っています。元本保証は金額の保証であって、価値の保証ではありません。"
+     }
+    }
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "ホーム",
+     "item": "https://kazumono.com/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "ツール",
+     "item": "https://kazumono.com/#tools"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "国債・金利"
+    }
+   ]
+  }
+ ]
+}
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2146116373822311" crossorigin="anonymous"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-BETYS4R53Y');
+</script>
+
+<style>
+:root{
+  --paper:#FAF9F6; --card:#FFFFFF;
+  --ink:#0F1A22; --ink-soft:#202F3B; --ink-faint:#242F38;
+  --sea-deep:#33526C; --sea:#527695; --sky:#84D2F5; --aqua:#B0F1F0; --mist:#DFF6F1;
+  --dawn:#FEEEDF; --rose:#F4C3D3; --bloom:#F8A3BF; --plum:#B67AB4;
+  --peridot:#82B33A; --lime:#D4E157; --mint:#E8F5E9; --warn:#B5623F;
+  --line:rgba(24,38,47,.18);
+  --shadow:0 1px 2px rgba(24,38,47,.05), 0 10px 26px rgba(24,38,47,.07);
+  --shadow-lift:0 3px 6px rgba(24,38,47,.07), 0 20px 44px rgba(24,38,47,.14);
+  --serif:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Times New Roman",serif;
+  --sans:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Noto Sans JP",sans-serif;
+  --num:"Helvetica Neue",Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:16.5px;line-height:1.92;letter-spacing:.015em;font-weight:500;}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 24px;}
+.column{width:100%;max-width:900px;margin:0 auto;padding:0 24px;}
+a{color:inherit;}
+:focus-visible{outline:2.5px solid var(--sea-deep);outline-offset:3px;border-radius:4px;}
+.skip{position:absolute;left:-9999px;background:var(--sea-deep);color:#fff;padding:12px 20px;z-index:99;}
+.skip:focus{left:0;}
+
+.masthead{position:sticky;top:0;z-index:20;background:rgba(250,249,246,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.masthead__inner{display:flex;align-items:center;justify-content:space-between;gap:24px;height:70px;}
+.brand{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.16em;text-decoration:none;color:var(--ink);white-space:nowrap;}
+.brand span{color:var(--sea-deep);}
+.nav{display:flex;gap:26px;}
+.nav a{font-size:14px;font-weight:500;letter-spacing:.1em;text-decoration:none;color:var(--ink-soft);border-bottom:2px solid transparent;padding:6px 0;transition:color .2s,border-color .2s;}
+.nav a:hover{color:var(--ink);border-bottom-color:var(--bloom);}
+
+.crumbs{font-size:13px;color:var(--ink-soft);margin:34px 0 0;}
+.crumbs a{text-decoration:none;}
+.head{padding:22px 0 30px;position:relative;isolation:isolate;}
+.head__mark{position:absolute;top:-14px;right:-24px;width:156px;height:156px;border-radius:50%;background:var(--mist);pointer-events:none;z-index:-1;}
+.head h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,4.2vw,38px);line-height:1.55;letter-spacing:.04em;margin:0 0 18px;}
+.head p{margin:0;font-size:16.5px;line-height:2;max-width:34em;}
+.head__safe{display:inline-flex;align-items:center;gap:9px;margin-top:20px;padding:9px 18px;border-radius:999px;background:var(--mint);font-size:13.5px;font-weight:600;}
+.head__safe::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--peridot);}
+
+.alert{border-left:4px solid var(--warn);background:rgba(254,238,223,.75);border-radius:0 16px 16px 0;padding:24px 28px;margin:0 0 28px;}
+.alert h2{font-family:var(--serif);font-weight:700;font-size:18.5px;letter-spacing:.06em;margin:0 0 12px;}
+.alert p{margin:0 0 12px;font-size:15px;line-height:1.9;}
+.alert p:last-child{margin:0;}
+
+/* ===== hero tool ===== */
+.tool{background:var(--card);border:1.5px solid var(--line);border-radius:24px;padding:32px 30px;box-shadow:var(--shadow);margin:0 0 20px;}
+.tool h2{font-family:var(--serif);font-weight:700;font-size:20px;letter-spacing:.08em;margin:0 0 6px;}
+.tool__hint{margin:0 0 22px;font-size:14px;color:var(--ink-soft);}
+
+.dial{background:linear-gradient(150deg,var(--mist),rgba(255,255,255,.9));border:1.5px solid var(--line);border-radius:20px;padding:26px 26px 22px;}
+.dial__q{font-family:var(--serif);font-size:clamp(19px,3.4vw,25px);font-weight:700;letter-spacing:.03em;margin:0 0 4px;line-height:1.5;}
+.dial__q b{font-family:var(--num);font-size:1.5em;color:var(--warn);font-variant-numeric:tabular-nums;letter-spacing:-.02em;}
+.dial__sub{font-size:13.5px;color:var(--ink-soft);margin:0 0 16px;}
+input[type=range].big{width:100%;height:34px;accent-color:#33526C;cursor:pointer;margin:0;}
+.dial__ticks{display:flex;justify-content:space-between;font-family:var(--num);font-size:11.5px;color:var(--ink-faint);margin-top:-2px;}
+.dial__acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;align-items:center;}
+button.chip{font:inherit;font-family:var(--sans);font-size:13px;font-weight:600;padding:7px 15px;border-radius:999px;
+  border:1.5px solid var(--line);background:var(--card);color:var(--ink-soft);cursor:pointer;transition:all .18s;}
+button.chip:hover{border-color:var(--sea-deep);color:var(--ink);}
+button.chip[aria-pressed="true"]{background:var(--sea-deep);border-color:var(--sea-deep);color:#fff;}
+button.solid{font:inherit;font-family:var(--sans);font-size:14px;font-weight:600;padding:9px 20px;border-radius:999px;
+  border:none;background:var(--sea-deep);color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 8px 20px rgba(51,82,108,.3);}
+button.solid:hover{background:#264055;}
+
+/* ===== impact cards ===== */
+.zone{margin:26px 0 0;}
+.zone__hd{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 4px;}
+.zone__hd h3{font-family:var(--serif);font-weight:700;font-size:17.5px;letter-spacing:.05em;margin:0;}
+.zone__hd .why{font-size:12.5px;color:var(--ink-faint);}
+.zone__note{font-size:13px;color:var(--ink-soft);margin:0 0 14px;line-height:1.7;}
+.zone--math .zone__hd h3::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--sea-deep);margin-right:10px;vertical-align:middle;}
+.zone--model .zone__hd h3::before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--plum);margin-right:10px;vertical-align:middle;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(172px,1fr));gap:12px;}
+.cd{border:1.5px solid var(--line);border-radius:16px;padding:15px 17px;background:var(--card);position:relative;}
+.zone--model .cd{background:repeating-linear-gradient(135deg,rgba(182,122,180,.045) 0 8px,transparent 8px 16px),var(--card);border-style:dashed;}
+.cd__nm{font-size:13px;font-weight:700;color:var(--ink-soft);margin:0 0 2px;line-height:1.5;}
+.cd__nm small{display:block;font-size:11px;font-weight:400;color:var(--ink-faint);letter-spacing:.02em;}
+.cd__mv{font-family:var(--num);font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1.25;margin:4px 0 1px;}
+.cd__mv.dn{color:var(--warn);} .cd__mv.up{color:#4A7C36;}
+.cd__lv{font-family:var(--num);font-size:12.5px;color:var(--ink-faint);font-variant-numeric:tabular-nums;}
+.cd__bar{height:7px;border-radius:99px;background:rgba(24,38,47,.09);margin:9px 0 0;overflow:hidden;position:relative;}
+.cd__bar i{position:absolute;top:0;height:100%;border-radius:99px;background:var(--warn);transition:all .45s cubic-bezier(.2,.7,.3,1);}
+.cd__bar i.up{background:var(--peridot);}
+.cd__r2{font-size:11px;color:var(--ink-faint);margin-top:7px;letter-spacing:.01em;line-height:1.5;}
+.cd__r2 b{color:var(--plum);font-weight:700;}
+
+.punch{margin:20px 0 0;padding:18px 22px;border-radius:16px;background:var(--dawn);border-left:4px solid var(--warn);font-size:15px;line-height:1.85;}
+.punch b{font-weight:700;}
+
+/* ===== charts ===== */
+figure{margin:24px 0 0;}
+.chartbox{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:10px 10px 4px;overflow:hidden;}
+svg.ch{display:block;width:100%;height:auto;}
+figcaption{font-size:13px;color:var(--ink-soft);padding:11px 4px 0;line-height:1.75;}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-soft);margin:10px 2px 0;}
+.legend i{display:inline-block;width:16px;height:3px;vertical-align:middle;margin-right:6px;border-radius:2px;}
+
+/* ===== forms / tables ===== */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px 20px;}
+.f label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin:0 0 5px;}
+.f label small{display:block;font-size:12px;font-weight:400;color:var(--ink-faint);line-height:1.55;margin-top:1px;}
+.f input,.f select,.f textarea{width:100%;padding:10px 12px;font-size:15px;font-family:var(--num);
+  border:1.5px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);font-weight:600;}
+.f input{text-align:right;} .f select{font-family:var(--sans);text-align:left;}
+.f textarea{font-size:13px;text-align:left;line-height:1.6;resize:vertical;min-height:120px;}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--sea-deep);outline:none;background:#fff;}
+
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 22px;border-radius:14px;}
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--card);border-radius:14px;overflow:hidden;min-width:560px;}
+th,td{padding:10px 13px;text-align:right;border-bottom:1px solid var(--line);}
+thead th{background:var(--mist);font-weight:700;font-size:12.5px;color:var(--ink);line-height:1.45;}
+th:first-child,td:first-child{text-align:left;}
+tbody th{font-weight:700;text-align:left;}
+td{font-family:var(--num);font-variant-numeric:tabular-nums;}
+tr:last-child td,tr:last-child th{border-bottom:none;}
+tr.tot td,tr.tot th{font-weight:700;background:rgba(223,246,241,.5);}
+td.dn{color:var(--warn);font-weight:700;} td.up{color:#4A7C36;font-weight:700;}
+
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:18px 0 0;}
+.kpi div{background:rgba(255,255,255,.85);border:1.5px solid var(--line);border-radius:14px;padding:13px 16px;}
+.kpi b{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:3px;}
+.kpi span{font-family:var(--num);font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;}
+.kpi span.dn{color:var(--warn);} .kpi span.up{color:#4A7C36;}
+
+.verdict{margin:16px 0 0;padding:16px 20px;border-radius:0 14px 14px 0;font-size:14.5px;line-height:1.85;
+  background:rgba(232,245,233,.75);border-left:4px solid var(--peridot);}
+.verdict.bad{background:rgba(254,238,223,.75);border-left-color:var(--warn);}
+
+details.more{margin:22px 0 0;border:1.5px solid var(--line);border-radius:16px;background:var(--card);overflow:hidden;}
+details.more>summary{cursor:pointer;padding:15px 20px;font-weight:700;font-size:15px;list-style:none;
+  display:flex;align-items:center;gap:10px;background:var(--mist);}
+details.more>summary::-webkit-details-marker{display:none;}
+details.more>summary::before{content:"＋";font-family:var(--num);color:var(--sea-deep);font-size:17px;}
+details.more[open]>summary::before{content:"−";}
+details.more>.body{padding:22px 20px;}
+
+/* ===== 基準日の注記 ===== */
+.asof{margin:18px 0 0;font-size:13.5px;color:var(--ink-soft);background:var(--mist);
+  border-radius:12px;padding:11px 16px;line-height:1.7;}
+.asof b{color:var(--ink);}
+
+/* ===== prose ===== */
+.about{margin:64px 0 0;}
+.about h2{font-family:var(--serif);font-weight:700;font-size:clamp(21px,3vw,26px);letter-spacing:.08em;margin:0 0 20px;padding-bottom:13px;border-bottom:1px solid var(--line);}
+.about h3{font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:.05em;margin:36px 0 12px;}
+.about h3::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--bloom);margin-right:11px;vertical-align:middle;}
+.about p{margin:0 0 20px;}
+.about ul,.about ol{margin:0 0 20px;padding-left:1.4em;}
+.about li{margin:8px 0;}
+.about code{font-family:var(--num);background:var(--mist);padding:2px 8px;border-radius:6px;font-size:14.5px;}
+.callout{background:rgba(232,245,233,.7);border-left:4px solid var(--peridot);border-radius:0 16px 16px 0;padding:20px 24px;margin:0 0 22px;}
+.callout p{margin:0;font-size:15px;line-height:1.9;}
+.callout p + p{margin-top:12px;}
+.qa{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:20px 24px;margin:0 0 14px;}
+.qa h4{font-family:var(--sans);font-size:15.5px;font-weight:700;margin:0 0 8px;color:var(--sea-deep);}
+.qa p{margin:0;font-size:15px;}
+.qa p + p{margin-top:10px;}
+
+.upsell{position:relative;overflow:hidden;display:block;text-decoration:none;background:var(--card);
+  border:1.5px solid var(--line);border-left:5px solid var(--plum);border-radius:22px;
+  padding:30px 28px;margin:26px 0 0;box-shadow:var(--shadow);transition:transform .26s,box-shadow .26s;}
+.upsell::after{content:"";position:absolute;top:-46px;right:-46px;width:150px;height:150px;border-radius:50%;
+  background:linear-gradient(135deg,var(--rose),var(--plum));opacity:.9;transition:transform .38s;}
+.upsell:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift);}
+.upsell:hover::after{transform:scale(1.35);}
+.upsell__badge{position:relative;display:inline-block;font-size:12px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:999px;background:var(--plum);color:#fff;margin:0 0 14px;}
+.upsell__name{position:relative;font-family:var(--serif);font-weight:700;font-size:21px;letter-spacing:.04em;line-height:1.6;margin:0 0 10px;}
+.upsell__desc{position:relative;font-size:15px;line-height:1.9;margin:0 0 16px;max-width:33em;}
+.upsell__go{position:relative;font-size:15px;font-weight:600;letter-spacing:.06em;color:var(--sea-deep);}
+
+.disclaimer{margin:44px 0 0;border-left:4px solid var(--peridot);background:rgba(232,245,233,.7);border-radius:0 16px 16px 0;padding:24px 28px;}
+.disclaimer h3{font-family:var(--serif);font-weight:700;font-size:16.5px;letter-spacing:.08em;margin:0 0 10px;}
+.disclaimer p{margin:0 0 12px;font-size:14px;line-height:1.9;color:var(--ink-soft);}
+.disclaimer p:last-child{margin:0;}
+.foot{margin-top:80px;border-top:1px solid var(--line);padding:44px 0 56px;}
+.foot__inner{display:flex;flex-wrap:wrap;gap:26px;justify-content:space-between;align-items:center;}
+.foot__links{display:flex;flex-wrap:wrap;gap:26px;}
+.foot__links a{font-size:14px;font-weight:500;color:var(--ink-soft);text-decoration:none;}
+.copy{font-family:var(--num);font-size:12.5px;color:var(--ink-faint);margin:0;}
+
+h1,h2,h3,h4{font-weight:700;}
+th,b,strong,dt{font-weight:700;}
+input,select,textarea,button{font-weight:600;}
+
+@media (max-width:820px){
+  .masthead{background:var(--paper);backdrop-filter:none;-webkit-backdrop-filter:none;}
+  .masthead__inner{height:auto;min-height:58px;padding:10px 0;flex-wrap:wrap;gap:6px 16px;}
+  .brand{font-size:17px;letter-spacing:.1em;}
+  .nav{gap:16px;flex-wrap:wrap;} .nav a{font-size:12.5px;letter-spacing:.02em;}
+  .column,.wrap{padding-left:18px;padding-right:18px;}
+  .head__mark{display:none;}
+  .tool,.dial,.upsell{padding:22px 18px;}
+  .grid{grid-template-columns:1fr;}
+  .cards{grid-template-columns:1fr 1fr;gap:10px;}
+  .cd{padding:12px 13px;} .cd__mv{font-size:21px;}
+  .kpi{grid-template-columns:repeat(2,1fr);}
+  h1,h2,h3,p,li,td,th{overflow-wrap:anywhere;}
+}
+@media (max-width:420px){ .cards{grid-template-columns:1fr;} }
+@media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+<div class="page">
+
+  <header class="masthead">
+    <div class="wrap masthead__inner">
+      <a class="brand" href="/">数字の<span>ものさし</span></a>
+      <nav class="nav" aria-label="サイト内">
+        <a href="/#tools">ツール</a>
+        <a href="/articles/">読みもの</a>
+        <a href="/#excel">Excel版</a>
+        <a href="/contact/">お問い合わせ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="column">
+
+      <p class="crumbs"><a href="/">ホーム</a> ／ <a href="/#tools">ツール</a> ／ 国債・金利</p>
+
+      <header class="head">
+        <span class="head__mark" aria-hidden="true"></span>
+        <h1>個人向け国債の元本保証は本当か</h1>
+        <p>金利が上がると債券はいくら下がるのか。スライダーを1本動かすだけで、国債・債券ファンド・株・ビットコインへの影響が同時に見えます。専門用語はぜんぶ後ろで解説します。</p>
+        <span class="head__safe">入力内容は送信されません。すべてブラウザの中で計算します</span>
+      </header>
+
+      <div class="alert">
+        <h2>先に結論。3行で。</h2>
+        <p><strong>①「個人向け国債」は途中で解約しても元本割れしません。</strong>これは宣伝文句ではなく、財務省の計算式がそうなっているからです。ネットで見かける「個人向け国債も元本割れする」は、たいてい別の商品と混ざっています。</p>
+        <p><strong>② ただし元本割れするものが3つあります。</strong>新窓販国債、証券会社で買う利付国債（2〜40年）、そして<strong>債券ファンド・債券ETF</strong>です。「国債だから安全」でひとくくりにすると、ここで事故が起きます。</p>
+        <p><strong>③ そして、元本が守られていても損はします。</strong>インフレです。名目の元本保証と、買えるモノの量の保証は別の話です。この3つを、下のツールで数字にします。</p>
+      </div>
+
+      <!-- ============ HERO TOOL ============ -->
+      <section class="tool" id="tool">
+        <h2>金利を動かしてみる</h2>
+        <p class="tool__hint">つまみを動かすと、下のカードがぜんぶ同時に動きます。まずは右にぐいっと動かしてみてください。</p>
+
+        <div class="dial">
+          <p class="dial__q">いまから金利が <b id="dQ">+1.0</b>% 動いたら？</p>
+          <p class="dial__sub" id="dSub"></p>
+          <input class="big" type="range" id="dRange" min="-200" max="300" step="5" value="100"
+                 aria-label="金利の変化幅（ベーシスポイント）">
+          <div class="dial__ticks"><span>−2%</span><span>−1%</span><span>0</span><span>+1%</span><span>+2%</span><span>+3%</span></div>
+          <div class="dial__acts">
+            <button class="solid" id="dPlay"><span id="dPlayIco">▶</span><span id="dPlayLbl">ゆっくり再生</span></button>
+            <button class="chip" data-bp="0">動かさない</button>
+            <button class="chip" data-bp="50">+0.5%</button>
+            <button class="chip" data-bp="100" aria-pressed="true">+1%</button>
+            <button class="chip" data-bp="200">+2%</button>
+            <button class="chip" data-bp="-100">−1%</button>
+          </div>
+        </div>
+
+        <!-- zone A : math -->
+        <div class="zone zone--math">
+          <div class="zone__hd"><h3>計算で決まるもの（債券）</h3><span class="why">＝答えが一つに決まる。意見の入る余地なし</span></div>
+          <p class="zone__note">債券は「もらえる金額」と「もらえる日」が契約で決まっています。だから金利が動いたときの値段は、電卓を叩けば一意に出ます。ここに解釈の余地はありません。</p>
+          <div class="cards" id="cardsBond"></div>
+        </div>
+
+        <div class="punch" id="punch"></div>
+
+        <!-- zone B : model -->
+        <div class="zone zone--model">
+          <div class="zone__hd"><h3>仮定を置いたもの（株・金・ビットコイン）</h3><span class="why">＝モデル次第で答えが変わる</span></div>
+          <p class="zone__note">こちらは契約書がありません。「金利がこう動いたら株はこうなるはず」というモデルを人間が置いて、はじめて数字が出ます。<strong>だから枠を点線にしてあります。</strong>各カードの下にある R² は「その関係がどれくらい当てになるか」の目安で、0に近いほど当てになりません。</p>
+          <div class="cards" id="cardsRisk"></div>
+        </div>
+
+        <p class="asof">この数字は <b>2026年9月4日時点</b>のものです。自動更新はしていません。最新の相場で試したいときは、下の欄に入れ替えてください。</p>
+
+        <details class="more">
+          <summary>前提の数字を自分で入れ替える</summary>
+          <div class="body">
+            <div class="grid">
+              <div class="f"><label for="mNikkei">日経平均<small>円</small></label><input type="number" id="mNikkei" step="1"></div>
+              <div class="f"><label for="mPerMode">PERの種類<small>日経平均には2種類あります。指数ベースが指数の水準と対応します</small></label>
+                <select id="mPerMode">
+                  <option value="index">指数ベース（21.62倍）</option>
+                  <option value="wavg">加重平均ベース（17.23倍）</option>
+                  <option value="manual">自分で入れる</option>
+                </select></div>
+              <div class="f"><label for="mPer">日経平均のPER<small>倍・2026-09-04時点</small></label><input type="number" id="mPer" step="0.01"></div>
+              <div class="f"><label for="mBtc">ビットコイン<small>円</small></label><input type="number" id="mBtc" step="10000"></div>
+              <div class="f"><label for="mGold">金（1グラム）<small>円・小売価格。未設定なら空欄のまま</small></label><input type="number" id="mGold" step="10"></div>
+              <div class="f"><label for="mY10">10年国債利回り<small>%</small></label><input type="number" id="mY10" step="0.01"></div>
+              <div class="f"><label for="mY30">30年国債利回り<small>%</small></label><input type="number" id="mY30" step="0.01"></div>
+              <div class="f"><label for="mKojin">個人向け国債 変動10年の適用利率<small>%</small></label><input type="number" id="mKojin" step="0.01"></div>
+              <div class="f"><label for="mDur">お持ちの債券ファンドの平均デュレーション<small>年・運用報告書か月次レポートに載っています</small></label><input type="number" id="mDur" step="0.1"></div>
+              <div class="f"><label for="mBei">期待インフレ率（BEI）<small>%・普通国債と物価連動国債の利回り差</small></label><input type="number" id="mBei" step="0.05"></div>
+              <div class="f"><label for="mDbei">金利上昇のうち、インフレ期待によるぶん<small>%・残りは実質金利の上昇とみなします</small></label><input type="number" id="mDbei" step="0.05"></div>
+            </div>
+            <p style="font-size:13px;color:var(--ink-soft);margin:16px 0 0;line-height:1.75;" id="srcNote"></p>
+          </div>
+        </details>
+      </section>
+
+      <!-- ============ WHY ============ -->
+      <section class="about" id="why">
+        <h2>なぜ金利が上がると債券は下がるのか</h2>
+
+        <div class="callout">
+          <p><strong>友達に100万円を貸したとします。</strong>利息は年1万円（＝年1%）、10年後に100万円を返してもらう約束です。</p>
+          <p>ところが翌日、世の中の金利が上がって、<strong>いま貸す人は年3万円もらえる</strong>ようになりました。ここで質問です。あなたのその「年1万円しかもらえない約束」を、誰かが100万円で買ってくれると思いますか。</p>
+          <p><strong>買いません。</strong>同じ100万円を出すなら、年3万円もらえる新しい約束を買うからです。あなたの約束が売れるとしたら、<strong>値引きするしかない。</strong>これが「金利が上がると債券価格が下がる」の全部です。難しい話は一つもありません。</p>
+        </div>
+
+        <p>では、いくら値引きすれば売れるのか。<strong>足りない年2万円ぶんを、残っている年数だけ埋め合わせる金額</strong>です。残り10年なら約2万円×10年ぶん、残り2年なら約2万円×2年ぶん。</p>
+        <p><strong>ここが肝心なところで、残り年数が長いほど値引き幅は大きくなります。</strong>「損な約束を、あと何年抱えなきゃいけないか」が値引き幅を決めるからです。この「あと何年抱えるか」を専門用語で<strong>デュレーション</strong>と呼びます。名前は難しいですが、中身は「我慢する年数」です。</p>
+
+        <figure>
+          <div class="chartbox"><svg class="ch" id="chPY" viewBox="0 0 900 400" role="img" aria-label="金利と債券価格の関係"></svg></div>
+          <div class="legend">
+            <span><i style="background:#527695"></i>2年債</span>
+            <span><i style="background:#B67AB4"></i>10年債</span>
+            <span><i style="background:#B5623F"></i>30年債</span>
+            <span><i style="background:#82B33A"></i>いまの位置</span>
+          </div>
+          <figcaption id="capPY"></figcaption>
+        </figure>
+
+        <h3>グラフの3つの読みどころ</h3>
+        <ol>
+          <li><strong>どの線も右下がり。</strong>金利（横軸）が上がると価格（縦軸）が下がります。例外はありません。</li>
+          <li><strong>30年債の線がいちばん急。</strong>我慢する年数が長いから、同じ金利の動きでも値段が大きく動きます。</li>
+          <li><strong>線がまっすぐではなく、少し反っている。</strong>下に凸のカーブになっていますよね。おかげで<strong>金利が下がったときの喜びのほうが、同じ幅だけ上がったときの痛みより少し大きくなります。</strong>これを<strong>コンベクシティ</strong>（凸性）と呼びます。債券をもっている人へのささやかなボーナスです。</li>
+        </ol>
+      </section>
+
+      <!-- ============ 個人向け国債 ============ -->
+      <section class="about" id="kojin">
+        <h2>個人向け国債が元本割れしない、本当の理由</h2>
+
+        <p>ここまで「金利が上がると債券は下がる」と説明してきました。<strong>では個人向け国債もそうなのでは？</strong>と思った方、鋭いです。答えは<strong>ノー</strong>で、理由は個人向け国債が<strong>市場で売り買いする商品ではない</strong>からです。</p>
+        <p>証券会社で買う普通の国債は、途中で手放すときに<strong>他の投資家に売り</strong>ます。だから相手が値切ってくる。ところが個人向け国債は、途中でやめるとき<strong>国が引き取ってくれます</strong>。しかもその値段が、あらかじめ決まっています。</p>
+
+        <div class="callout">
+          <p><strong>中途換金でもらえる額 ＝ 額面金額（元本） ＋ 経過利子相当額 − 中途換金調整額</strong></p>
+          <p>そして、中途換金調整額 ＝ <strong>直前2回分の各利子（税引前）相当額 × 0.79685</strong>。</p>
+          <p>この 0.79685 という数字、なんだと思いますか。<strong>1 − 0.20315 です。</strong>利子を受け取るときに20.315%の税金が引かれているので、その税引後の金額に合わせるための係数。つまりこの式が言っているのは、<strong>「直近2回ぶんに受け取った利子を、返してね」</strong>ただそれだけです。</p>
+          <p>元本には一切手をつけていません。<strong>だから元本割れしようがない。</strong>これが「元本保証」の正体です。</p>
+        </div>
+
+        <p>「じゃあ利子2回分は損じゃないか」——そのとおりですが、<strong>すでに受け取った利子は手元に残っています。</strong>3年保有したなら利子は6回ぶん受け取っていて、返すのは2回ぶんだけ。差し引き4回ぶんは自分のものです。下の電卓で確かめてください。</p>
+
+        <div class="tool">
+          <h2>中途換金シミュレーター</h2>
+          <p class="tool__hint">財務省の計算式そのままで計算します。1年経たないと解約できない点だけ、ご注意ください。</p>
+          <div class="grid">
+            <div class="f"><label for="kType">商品</label>
+              <select id="kType">
+                <option value="f10">変動10年</option>
+                <option value="x5">固定5年</option>
+                <option value="x3">固定3年</option>
+              </select></div>
+            <div class="f"><label for="kFace">買った金額<small>円</small></label><input type="number" id="kFace" value="1000000" step="10000" min="10000"></div>
+            <div class="f"><label for="kRate">適用利率<small>%</small></label><input type="number" id="kRate" value="1.95" step="0.01" min="0"></div>
+            <div class="f"><label for="kHold">何年で解約するか<small>年</small></label><input type="number" id="kHold" value="3" step="0.5" min="1" max="10"></div>
+            <div class="f"><label for="kBase">今後の10年国債利回りの想定<small>%・変動10年の利率はこの66%になります</small></label><input type="number" id="kBase" value="2.90" step="0.05" min="0"></div>
+            <div class="f"><label for="kCpi">この間の年平均インフレ率<small>%</small></label><input type="number" id="kCpi" value="2.0" step="0.1"></div>
+          </div>
+          <div class="kpi" id="kOut"></div>
+          <div class="verdict" id="kVerdict"></div>
+          <p style="font-size:13px;color:var(--ink-soft);margin:14px 0 0;line-height:1.75;">利払いは半年ごと、利子への課税は20.315%として計算しています。変動10年は「いまの利率が最初の1年続き、その後は想定した10年国債利回り×0.66（下限 年0.05%）に移る」という単純な経路を置いています。初回利子の調整額がある銘柄や購入月の端数は簡略化しているので、正確な金額は財務省の中途換金シミュレーションでご確認ください。</p>
+        </div>
+
+        <h3>それでも見落とされがちな2つの落とし穴</h3>
+        <div class="qa">
+          <h4>落とし穴1：固定3年・固定5年は、金利上昇に置いていかれる</h4>
+          <p>固定金利ということは、<strong>買った瞬間の利率が満期まで変わらない</strong>ということです。その後に世の中の金利が上がっても、あなたの利率は上がりません。元本は減りませんが、<strong>「もっと有利に運用できたはずのお金が、低い利率に縛られている」</strong>という損は発生しています。</p>
+          <p>この点、<strong>変動10年は半年ごとに利率が見直される</strong>ので、金利上昇局面ではむしろ強い設計です。同じ「個人向け国債」でも性格がまるで違います。</p>
+        </div>
+        <div class="qa">
+          <h4>落とし穴2：元本は守られても、買えるモノは減る</h4>
+          <p>100万円が3年後に103万円になって戻ってきたとします。うれしいですか。<strong>その3年でモノの値段が7%上がっていたら、実質的には負けています。</strong></p>
+          <p>上の電卓の「インフレ調整後の実質価値」がこれです。<strong>元本保証とは、金額の保証であって、価値の保証ではありません。</strong>ここを混同しないでください。</p>
+        </div>
+      </section>
+
+      <!-- ============ 年限別 ============ -->
+      <section class="about" id="tenor">
+        <h2>年限ごとに、どれくらい違うのか</h2>
+        <p>ここからは、証券会社で買う「普通の国債」の話です。同じ金利の動きでも、年限によって値動きはまったく違います。</p>
+
+        <figure style="margin-top:0">
+          <div class="chartbox"><svg class="ch" id="chCurve" viewBox="0 0 900 380" role="img" aria-label="イールドカーブ"></svg></div>
+          <div class="legend">
+            <span><i style="background:#527695"></i>いまの金利</span>
+            <span><i style="background:#B5623F"></i>動いたあと</span>
+          </div>
+          <figcaption id="capCurve"></figcaption>
+        </figure>
+
+        <div class="tw" style="margin-top:22px">
+          <table id="tblTenor">
+            <thead><tr>
+              <th>年限</th><th>いまの利回り</th><th>価格</th><th>動いたあと</th><th>変化率</th>
+              <th>デュレーション<br><span style="font-weight:400;font-size:11px">我慢する年数</span></th>
+              <th>1年の利息で<br>耐えられる上昇</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <p><strong>いちばん右の列を見てください。ここが一番のキモです。</strong></p>
+          <p>これは「1年持っていれば利息がもらえるけど、その利息で吸収できる金利上昇はどこまでか」という数字です。2年債なら 1%以上の上昇に耐えられますが、<strong>30年債は 0.25%ちょっと上がっただけで、1年ぶんの利息が吹き飛びます。</strong></p>
+          <p><strong>「利回りが高い＝金利上昇に強い」ではありません。むしろ逆です。</strong>30年債の利回りが2年債より高いのは、そのぶん危ないからです。世の中うまい話はありません。</p>
+        </div>
+
+        <details class="more">
+          <summary>もっと細かく見る（3ヶ月〜40年・クーポン別・カーブの形も変えられる）</summary>
+          <div class="body">
+            <div class="grid" style="margin-bottom:18px">
+              <div class="f"><label for="cpMode">クーポンの置き方</label>
+                <select id="cpMode">
+                  <option value="par">いま発行される債券（クーポン＝現在の利回り）</option>
+                  <option value="low">ゼロ金利期に発行された債券（クーポン一律0.5%）</option>
+                </select></div>
+              <div class="f"><label for="sSlope">カーブの形<small>bp・＋で長期主導の上昇（スティープ化）、−でフラット化</small></label><input type="number" id="sSlope" value="0" step="10"></div>
+            </div>
+            <div class="tw"><table id="tblFull">
+              <thead><tr><th>年限</th><th>クーポン</th><th>利回り</th><th>価格</th><th>あと</th><th>変化率</th><th>損益</th><th>修正D</th><th>コンベクシティ</th><th>耐えられる上昇</th></tr></thead>
+              <tbody></tbody>
+            </table></div>
+            <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.8;margin:0">
+              「ゼロ金利期に発行された債券」に切り替えてみてください。2010年代に発行された低クーポンの超長期債が、いまどんな値段になっているかが出ます。<strong>これは仮定ではなく、割引計算をしただけの数字です。</strong>
+            </p>
+          </div>
+        </details>
+      </section>
+
+      <!-- ============ 回帰 ============ -->
+      <section class="about" id="reg">
+        <h2>株・金・ビットコインとの関係は、どこまで本当か</h2>
+
+        <p>「金利が上がると金は下がる」「ビットコインは金利に弱い」——よく聞きます。<strong>本当でしょうか。</strong>雰囲気で語らず、実際のデータで確かめる方法を用意しました。</p>
+        <p>やることは<strong>単回帰分析</strong>です。名前は物々しいですが、中身は<strong>「点をたくさん打って、その真ん中を通る直線を1本引く」</strong>だけです。小学校でやった折れ線グラフに、定規を当てるようなものだと思ってください。</p>
+
+        <div class="callout">
+          <p><strong>直線を引いたら、必ず R² を見てください。</strong>これは「その直線が、点のバラつきをどれだけ説明できているか」を 0〜1 で表した数字です。</p>
+          <p>R² = 1 なら点が全部きれいに直線に乗っている。R² = 0.1 なら、<strong>値動きの理由のうち直線で説明できるのは1割だけで、残り9割は別の理由</strong>ということ。<strong>R²が低い直線は、引けてしまうけれど、信じてはいけない直線です。</strong></p>
+          <p>ここが一番だいじです。<strong>回帰は「関係がある」ことを証明しません。</strong>ただ「この期間のデータに直線を当てるとこうなった」と言っているだけです。期間を変えると傾きの符号がひっくり返ることも、実際によくあります。</p>
+        </div>
+
+        <div class="tool">
+          <h2>自分のデータで直線を引いてみる</h2>
+          <p class="tool__hint">左に実質金利の変化（%）、右に資産の変化率（%）を、1行に1組ずつ貼り付けてください。カンマ区切りでもタブ区切りでも、スペース区切りでも読みます。証券会社やFREDからダウンロードしたCSVをそのまま貼れます。</p>
+          <div class="grid" style="grid-template-columns:1fr">
+            <div class="f">
+              <label for="regData">データ<small>1行につき「実質金利の変化, 資産の変化率」</small></label>
+              <textarea id="regData" spellcheck="false" placeholder="0.12, -1.8&#10;-0.05, 0.9&#10;0.31, -4.2"></textarea>
+            </div>
+          </div>
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-bottom:14px">
+            <div class="f"><label for="regTarget">この結果を反映させる資産<small>回した結果が、上のカードのβとR²に入ります</small></label>
+              <select id="regTarget">
+                <option value="gold">金</option>
+                <option value="btc">ビットコイン</option>
+                <option value="com">商品指数</option>
+              </select></div>
+          </div>
+          <div class="dial__acts">
+            <button class="solid" id="regRun">直線を引く</button>
+            <button class="chip" id="regClear">消す</button>
+            <span style="font-size:13px;color:var(--ink-soft)" id="regHint">データを貼って「直線を引く」を押してください。</span>
+          </div>
+
+          <figure style="margin-top:20px" id="regFig" hidden>
+            <div class="chartbox"><svg class="ch" id="chReg" viewBox="0 0 900 420" role="img" aria-label="散布図と回帰直線"></svg></div>
+            <figcaption id="capReg"></figcaption>
+          </figure>
+          <div class="kpi" id="regOut" hidden></div>
+          <div class="verdict" id="regVerdict" hidden></div>
+        </div>
+
+        <h3>今このページで使っている感応度</h3>
+        <p>上の「仮定を置いたもの」カードは、次の値を使って計算しています。<strong>回帰を回すと、その結果がここに入ります。</strong>回していない項目は初期値のままで、これは私が置いた仮の数字であって、統計的な裏付けはありません。<strong>カードにも「仮置き」と表示されます。</strong></p>
+        <div class="tw">
+          <table id="tblBeta">
+            <thead><tr><th>資産</th><th>β（実質金利+1%あたりの変化率）</th><th>R²</th><th>データ数</th><th>出どころ</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.8">
+          株式だけは β を使っていません。<strong>「株式益利回り − 国債利回り＝イールドスプレッド が一定に保たれる」</strong>という、実務でよく使われる考え方で計算しています。PERの逆数が益利回りなので、国債利回りが1%上がったら益利回りも1%上がる必要があり、そのぶんPERが縮む、という理屈です。これも仮定であることに変わりはありませんが、βの掛け算よりは筋が通っています。
+        </p>
+      </section>
+
+      <!-- ============ 用語 ============ -->
+      <section class="about" id="words">
+        <h2>難しい言葉を、ぜんぶやさしく</h2>
+
+        <div class="qa">
+          <h4>デュレーション</h4>
+          <p>「損な約束を、あと何年抱えるか」の平均年数です。<strong>金利が1%動いたときに価格が何%動くかの目安</strong>と覚えてもだいたい合います。デュレーション20年の債券は、金利1%上昇でおよそ20%下がる、という感覚です。</p>
+          <p>おもしろいのは、<strong>クーポンが低いほどデュレーションは長くなる</strong>こと。途中でもらえるお金が少ないぶん、満期まで待たされる度合いが強くなるからです。同じ40年債でも、クーポン0.5%のものは4.25%のものよりずっと激しく動きます。</p>
+        </div>
+        <div class="qa">
+          <h4>コンベクシティ（凸性）</h4>
+          <p>価格と金利の関係が、まっすぐな線ではなく<strong>少し反った曲線</strong>であること。この反りのおかげで、<strong>金利低下で得する額 ＞ 同じ幅の金利上昇で損する額</strong>になります。債券保有者へのおまけです。デュレーションだけで計算すると、金利上昇の損を大きく見積もりすぎます。</p>
+        </div>
+        <div class="qa">
+          <h4>イールドカーブ（利回り曲線）</h4>
+          <p>横軸に年限、縦軸に利回りを取って、点を線でつないだグラフ。ふつうは右上がりです。<strong>「長く貸すほど不安だから、その分おまけをくれ」</strong>という当たり前の話が、そのまま形になっています。</p>
+        </div>
+        <div class="qa">
+          <h4>スティープ化・フラット化</h4>
+          <p>カーブの傾きが<strong>きつくなるのがスティープ化</strong>、<strong>なだらかになるのがフラット化</strong>です。英語の steep（急な）と flat（平ら）そのままなので、覚える必要すらありません。</p>
+          <p>そこに「ベア（弱気＝金利上昇）」「ブル（強気＝金利低下）」がくっついて4種類になります。<strong>ベアスティープ</strong>なら「金利が上がって、しかも長期のほうが上がった」。財政への不安やインフレ懸念が出たときによく現れる形です。<strong>ベアフラット</strong>は「金利が上がって、短期のほうが上がった」で、中央銀行が利上げしたときの典型です。</p>
+        </div>
+        <div class="qa">
+          <h4>実質金利</h4>
+          <p><strong>実質金利 ＝ 名目金利 − 期待インフレ率。</strong>銀行の金利表に載っているのが名目、そこから物価上昇ぶんを引いたのが実質です。</p>
+          <p>これがなぜ大事かというと、<strong>金や株に効くのは実質金利のほう</strong>だからです。金利が1%上がっても、インフレ期待も1%上がっていれば実質金利は動いていない。<strong>同じ「金利1%上昇」でも、中身が違えば市場への影響はまるで別物になります。</strong>ニュースが「金利上昇で株安」としか言わないとき、この区別が抜けています。</p>
+        </div>
+        <div class="qa">
+          <h4>BEI（ブレークイーブン・インフレ率）</h4>
+          <p>ふつうの国債の利回りから、物価連動国債の利回りを引いた差。<strong>市場参加者が「この先これくらい物価が上がる」と思っている数字</strong>で、期待インフレ率の代わりに使われます。</p>
+        </div>
+        <div class="qa">
+          <h4>キャリー</h4>
+          <p>持っているだけで入ってくる利息のこと。<strong>値下がりをこの利息でどこまで相殺できるか</strong>が、債券投資の勝負どころです。年限表の右端の列がまさにこれを計算しています。</p>
+        </div>
+        <div class="qa">
+          <h4>R²（決定係数）</h4>
+          <p>回帰で引いた直線の<strong>成績表</strong>。0〜1で、1に近いほど「この直線でよく説明できている」。<strong>0.2 なら 8割は説明できていない</strong>ということなので、その直線を根拠に何かを決めるのは危険です。</p>
+        </div>
+      </section>
+
+      <!-- ============ FAQ ============ -->
+      <section class="about" id="faq">
+        <h2>よくある質問</h2>
+        <div class="qa">
+          <h4>Q. 個人向け国債は本当に元本割れしないの？ 裏があるのでは？</h4>
+          <p>A. 裏はありません。財務省の計算式に元本を削る項目が存在しないからです。ただし<strong>発行から1年間は原則として解約できません</strong>（災害で被災した場合と、保有者本人が亡くなった場合は例外）。この1年の縛りが、実質的な「代償」だと考えてください。</p>
+        </div>
+        <div class="qa">
+          <h4>Q. 「国債は元本割れする」という記事を読みました。嘘なのですか？</h4>
+          <p>A. 嘘ではなく、<strong>商品が違います</strong>。新窓販国債、証券会社で買う利付国債、債券ファンド・債券ETFは市場価格で売買するので、金利が上がれば元本割れします。「個人向け国債」という商品名は、これらとは別物を指しています。<strong>混同が起きやすいのは、どちらも「国債」と呼ばれるからです。</strong></p>
+        </div>
+        <div class="qa">
+          <h4>Q. 債券ファンドを持っています。満期まで持てば戻るのでは？</h4>
+          <p>A. <strong>ファンドに満期はありません。</strong>ここが個別の債券との決定的な違いです。個別の債券なら、値下がりしても満期まで持てば額面が返ってきます。しかしファンドは中の債券を入れ替え続けるので、「満期まで待つ」という出口自体が存在しません。</p>
+          <p>ただし、悪い話ばかりでもありません。金利が上がった環境では、ファンドは<strong>より高い利回りの債券に入れ替えていく</strong>ので、時間が経つほど分配の元になる利息は増えます。目安として<strong>「平均デュレーションと同じくらいの年数を持ち続ければ、値下がりを利息で取り返せる」</strong>と言われます。デュレーション7年のファンドなら7年、ということです。</p>
+        </div>
+        <div class="qa">
+          <h4>Q. いま金利が上がっている局面で、何を買えばいいですか？</h4>
+          <p>A. それは私にはお答えできません。金融商品の推奨はしませんし、そもそも「上がる」と分かっているなら誰も苦労しません。<strong>このツールでできるのは、「もし1%上がったら自分の資産がどうなるか」を事前に数えておくこと</strong>だけです。</p>
+          <p>ただ、判断の材料として一つ。<strong>持っている債券や債券ファンドのデュレーションを調べて、金利が1%上がったときの下落額を計算し、その金額を見て平気かどうか。</strong>平気なら、その持ち方は無理をしていません。青ざめるなら、無理をしています。それは推奨ではなく、算数です。</p>
+        </div>
+      </section>
+
+      <a class="upsell" href="/kinri/">
+        <span class="upsell__badge">関連ツール</span>
+        <h2 class="upsell__name" style="border:none;padding:0;">住宅ローン・預金金利シミュレーター</h2>
+        <p class="upsell__desc">金利が上がって困るのは債券だけではありません。変動金利の住宅ローンを抱えているなら、返済額がいくら増えるかを先に数えておく価値があります。預金がインフレでどれだけ目減りするかも同じ画面で出せます。</p>
+        <span class="upsell__go">返済額と預金の実質価値を計算する →</span>
+      </a>
+
+      <section class="disclaimer">
+        <h3>ご利用にあたって</h3>
+        <p>算出される金額は一般的な計算式による概算です。実際の債券には個別銘柄ごとの経過利子、日数計算、業者スプレッド、手数料、税金がかかり、結果は異なります。需給や信用リスクも織り込んでいません。</p>
+        <p>「仮定を置いたもの」に分類した株式・金・商品・暗号資産の数値は、<strong>統計的な予測ではなくモデル計算です。</strong>過去の関係は将来を保証しません。本ツールは特定の金融商品の売買を推奨するものではなく、利用により生じたいかなる損害についても作成者は責任を負いかねます。投資判断は一次情報（財務省、取扱金融機関の交付書面）をご確認のうえ、ご自身の責任で行ってください。</p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__inner">
+      <nav class="foot__links" aria-label="フッター">
+        <a href="/about/">運営者情報</a>
+        <a href="/privacy/">プライバシーポリシー</a>
+        <a href="/tokusho/">特定商取引法に基づく表記</a>
+        <a href="/contact/">お問い合わせ</a>
+        <a href="/sitemap.xml">サイトマップ</a>
+      </nav>
+      <p class="copy">© 2026 数字のものさし</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+"use strict";
+(function(){
+
+/* ==================================================================
+   0. MARKET SEEDS  — すべて出どころと日付つき。live取得で上書きされる
+   ================================================================== */
+var M = {
+  asof: "2026年9月4日",
+  nikkei:{ v:65020.94, asof:"2026-09-04 終値", src:"公表値" },
+  perMode:"index",
+  perIndex: 21.62,   /* 指数ベース  2026-09-04 */
+  perWavg : 17.23,   /* 加重平均ベース 2026-09-04 */
+  per   :{ v:21.62,    asof:"2026-09-04",     src:"指数ベース" },
+  btc   :{ v:12509138, asof:"2026-09上旬",    src:"概算" },
+  gold  :{ v:null,     asof:"—",              src:"未設定（入力欄で設定できます）" },
+  kojin :{ v:1.95,     asof:"2026年9月募集分", src:"財務省公表" },
+  bei   :{ v:1.80,     asof:"—",              src:"仮置き" },
+  fundDur:7.0,
+  dBei  : 0.00
+};
+
+/* 国債利回り。3年・7年・15年は隣接年限からの補間 */
+var NODES = [
+  {T:0.25,lbl:"3ヶ月",y:1.010},{T:0.5,lbl:"6ヶ月",y:1.180},{T:1,lbl:"1年",y:1.490},
+  {T:2,lbl:"2年",y:1.835},{T:3,lbl:"3年",y:1.980,ip:1},{T:5,lbl:"5年",y:2.285},
+  {T:7,lbl:"7年",y:2.620,ip:1},{T:10,lbl:"10年",y:2.900},{T:15,lbl:"15年",y:3.400,ip:1},
+  {T:20,lbl:"20年",y:3.810},{T:30,lbl:"30年",y:4.055},{T:40,lbl:"40年",y:4.250}
+];
+var I10 = 7, I2 = 3, I30 = 10;
+
+/* β：初期値は仮置き（統計的裏付けなし）。回帰を回すと置き換わる */
+var BETA = {
+  gold:{ b:-8,  r2:null, n:null, src:"仮置き" },
+  btc :{ b:-12, r2:null, n:null, src:"仮置き" },
+  com :{ b:-3,  r2:null, n:null, src:"仮置き" }
+};
+
+var ST = { bp:100, slope:0, cpMode:"par", regTarget:"gold" };
+
+/* ==================================================================
+   1. BOND MATH （検算済み）
+   ================================================================== */
+function metrics(y,c,T){
+  var i=y/2;
+  if(T<0.5){
+    var P=(100+c*100*T)*Math.pow(1+i,-2*T);
+    return {P:P,mac:T,mod:T/(1+i),conv:T*(T+0.5)/Math.pow(1+i,2)};
+  }
+  var n=Math.round(T*2), cp=c*100/2, P=0, sT=0, sC=0;
+  for(var k=1;k<=n;k++){
+    var cf=(k===n)?cp+100:cp, pv=cf*Math.pow(1+i,-k), t=k/2;
+    P+=pv; sT+=t*pv; sC+=t*(t+0.5)*pv;
+  }
+  var mac=sT/P;
+  return {P:P,mac:mac,mod:mac/(1+i),conv:sC/(P*Math.pow(1+i,2))};
+}
+function price(y,c,T){ return metrics(y,c,T).P; }
+
+/* 1年保有したとき、利息とちょうど釣り合う金利上昇幅（二分法） */
+function beRise(y,c,T){
+  if(T<=1) return null;
+  var P0=price(y,c,T), carry=c*100;
+  var f=function(d){ return price(y+d,c,T-1)+carry-P0; };
+  if(f(0)<=0) return 0;
+  var lo=0, hi=0.02;
+  while(f(hi)>0 && hi<1) hi*=2;
+  if(f(hi)>0) return null;
+  for(var k=0;k<80;k++){ var m=(lo+hi)/2; if(f(m)>0) lo=m; else hi=m; }
+  return (lo+hi)/2;
+}
+
+/* カーブの形（Nelson–Siegel型スロープローディング） */
+var TAU=6;
+function slopeLoad(t){ return 1-(1-Math.exp(-t/TAU))/(t/TAU); }
+function shiftedY(k){
+  return NODES[k].y + (ST.bp + ST.slope*slopeLoad(NODES[k].T))/100;
+}
+
+/* ==================================================================
+   2. HELPERS
+   ================================================================== */
+function $(id){ return document.getElementById(id); }
+function nf(v,d){ d=(d===undefined)?2:d;
+  return (v===null||v===undefined||!isFinite(v))?"—":
+    v.toLocaleString("ja-JP",{minimumFractionDigits:d,maximumFractionDigits:d}); }
+function sg(v,d){ return ((v>0)?"+":"")+nf(v,d); }
+function yen(v){ return (!isFinite(v)||v===null)?"—":Math.round(v).toLocaleString("ja-JP")+"円"; }
+function man(v){
+  if(!isFinite(v)||v===null) return "—";
+  var a=Math.abs(v);
+  if(a>=100000000) return (v/100000000).toFixed(2)+"億円";
+  if(a>=10000) return Math.round(v/10000).toLocaleString("ja-JP")+"万円";
+  return Math.round(v).toLocaleString("ja-JP")+"円";
+}
+var NS="http://www.w3.org/2000/svg";
+function E(t,a,x){ var e=document.createElementNS(NS,t);
+  for(var k in a) e.setAttribute(k,a[k]);
+  if(x!==undefined) e.textContent=x; return e; }
+var FONT='"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif';
+var NUMF='"Helvetica Neue",Arial,sans-serif';
+
+/* ==================================================================
+   3. HERO CARDS
+   ================================================================== */
+function bondCards(){
+  var d=ST.bp/10000;            /* 小数。100bp -> 0.01 */
+  var y10=NODES[I10].y/100, y30=NODES[I30].y/100;
+  var s10=shiftedY(I10)/100, s30=shiftedY(I30)/100;
+
+  var p10=price(y10,y10,10), q10=price(s10,y10,10);
+  var p30=price(y30,y30,30), q30=price(s30,y30,30);
+  var m10=metrics(y10,y10,10), m30=metrics(y30,y30,30);
+
+  /* 債券ファンド：デュレーション近似。コンベクシティは10年債のものを流用 */
+  var D=M.fundDur, cv=m10.conv*Math.pow(D/m10.mod,2);
+  var fund=(-D*d+0.5*cv*d*d)*100;
+
+  var C=[
+    { nm:"個人向け国債", sub:"変動10年", pct:0, fixed:true,
+      lv:"元本は減りません", note:"国が額面で引き取るため、市場価格の影響を受けません" },
+    { nm:"10年国債", sub:"新発・満期まで10年", pct:(q10/p10-1)*100,
+      lv:"100円 → "+nf(q10,2)+"円", note:"デュレーション "+nf(m10.mod,1)+"年" },
+    { nm:"30年国債", sub:"新発・満期まで30年", pct:(q30/p30-1)*100,
+      lv:"100円 → "+nf(q30,2)+"円", note:"デュレーション "+nf(m30.mod,1)+"年" },
+    { nm:"債券ファンド", sub:"平均デュレーション "+nf(M.fundDur,1)+"年", pct:fund,
+      lv:"100万円 → "+man(1000000*(1+fund/100)), note:"満期がないので「待てば戻る」が使えません" }
+  ];
+
+  var mx=Math.max(1,Math.max.apply(null,C.map(function(c){return Math.abs(c.pct);})));
+  $("cardsBond").innerHTML = C.map(function(c){
+    var cls=c.fixed?"":(c.pct<-0.005?"dn":c.pct>0.005?"up":"");
+    var w=Math.min(100,Math.abs(c.pct)/mx*100);
+    return '<div class="cd">'+
+      '<p class="cd__nm">'+c.nm+'<small>'+c.sub+'</small></p>'+
+      '<p class="cd__mv '+cls+'">'+(c.fixed?"± 0.00%":sg(c.pct,2)+"%")+'</p>'+
+      '<p class="cd__lv">'+c.lv+'</p>'+
+      '<div class="cd__bar"><i class="'+(c.fixed?"":(c.pct>0?"up":""))+'" style="left:0;width:'+(c.fixed?100:w)+'%;'+(c.fixed?'background:rgba(24,38,47,.16)':'')+'"></i></div>'+
+      '<p class="cd__r2">'+c.note+'</p></div>';
+  }).join("");
+
+  return {p10:p10,q10:q10,p30:p30,q30:q30,m10:m10,m30:m30,fund:fund};
+}
+
+function riskCards(){
+  var dNom = ST.bp/100;                  /* 名目金利の変化 % */
+  var dBei = M.dBei;                     /* うちインフレ期待ぶん */
+  var dReal = dNom - dBei;               /* 実質金利の変化 */
+
+  /* 株式：イールドスプレッド一定モデル */
+  var per=M.per.v, ey=(per>0)?100/per:null;              /* 益利回り % */
+  var eqPct=null, perAfter=null;
+  if(ey!==null && ey+dNom>0.01){ perAfter=100/(ey+dNom); eqPct=(perAfter/per-1)*100; }
+
+  function bcard(key,nm,sub,lv,unit){
+    var B=BETA[key], pct=B.b*dReal;
+    var lvTxt="—";
+    if(lv!==null && isFinite(lv)) lvTxt=(unit==="man"?man(lv):nf(lv,0))+" → "+(unit==="man"?man(lv*(1+pct/100)):nf(lv*(1+pct/100),0));
+    var r2 = (B.r2===null)
+      ? '<b>仮置き</b>：統計的な裏付けはありません。回帰を回すと置き換わります'
+      : 'β='+nf(B.b,1)+' / <b>R²='+nf(B.r2,2)+'</b>（n='+B.n+'）'+
+        (B.r2<0.2?' → この直線はほとんど説明できていません':B.r2<0.5?' → 説明力は弱めです':' → そこそこ説明できています');
+    return { nm:nm, sub:sub, pct:pct, lv:lvTxt, note:r2 };
+  }
+
+  var C=[
+    { nm:"日経平均", sub:"PER "+nf(M.per.v,1)+"倍・スプレッド一定と仮定",
+      pct:eqPct,
+      lv:(M.nikkei.v?nf(M.nikkei.v,0)+"円 → "+(eqPct===null?"—":nf(M.nikkei.v*(1+eqPct/100),0)+"円"):"—"),
+      note:(perAfter===null?'計算できません':'PER '+nf(per,1)+'倍 → '+nf(perAfter,1)+'倍。<b>これはモデルです</b>') },
+    bcard("btc","ビットコイン","実質金利への感応度",M.btc.v,"man"),
+    bcard("gold","金","実質金利への感応度",M.gold.v,"num"),
+    bcard("com","商品指数","実質金利への感応度",null,"num")
+  ];
+
+  var vals=C.map(function(c){return Math.abs(c.pct||0);});
+  var mx=Math.max(1,Math.max.apply(null,vals));
+  $("cardsRisk").innerHTML = C.map(function(c){
+    var p=c.pct, cls=(p===null)?"":(p<-0.005?"dn":p>0.005?"up":"");
+    var w=(p===null)?0:Math.min(100,Math.abs(p)/mx*100);
+    return '<div class="cd">'+
+      '<p class="cd__nm">'+c.nm+'<small>'+c.sub+'</small></p>'+
+      '<p class="cd__mv '+cls+'">'+(p===null?"—":sg(p,1)+"%")+'</p>'+
+      '<p class="cd__lv">'+c.lv+'</p>'+
+      '<div class="cd__bar"><i class="'+(p>0?"up":"")+'" style="left:0;width:'+w+'%"></i></div>'+
+      '<p class="cd__r2">'+c.note+'</p></div>';
+  }).join("");
+
+  return {dReal:dReal,dNom:dNom,eqPct:eqPct};
+}
+
+/* ==================================================================
+   4. CHART: price vs yield
+   ================================================================== */
+function chartPY(){
+  var svg=$("chPY"); svg.textContent="";
+  var W=900,H=400,mL=62,mR=110,mT=20,mB=44;
+  var sets=[{T:2,c:"#527695",lb:"2年"},{T:10,c:"#B67AB4",lb:"10年"},{T:30,c:"#B5623F",lb:"30年"}];
+  var base={2:NODES[I2].y/100,10:NODES[I10].y/100,30:NODES[I30].y/100};
+  var lo=0, hi=0.08;
+  var px=function(y){ return mL+(y-lo)/(hi-lo)*(W-mL-mR); };
+  var vLo=20, vHi=190;
+  var py=function(p){ return mT+(vHi-p)/(vHi-vLo)*(H-mT-mB); };
+  var g=E("g"); svg.appendChild(g);
+
+  for(var v=vLo;v<=vHi;v+=20){
+    g.appendChild(E("line",{x1:mL,x2:W-mR,y1:py(v),y2:py(v),stroke:"rgba(24,38,47,.09)"}));
+    g.appendChild(E("text",{x:mL-9,y:py(v)+4,"text-anchor":"end","font-size":11,fill:"#465A6C","font-family":NUMF},v));
+  }
+  for(var x=0;x<=8;x++){
+    g.appendChild(E("line",{x1:px(x/100),x2:px(x/100),y1:mT,y2:H-mB,stroke:"rgba(24,38,47,.09)"}));
+    g.appendChild(E("text",{x:px(x/100),y:H-mB+19,"text-anchor":"middle","font-size":11,fill:"#465A6C","font-family":NUMF},x+"%"));
+  }
+  g.appendChild(E("line",{x1:mL,x2:W-mR,y1:py(100),y2:py(100),stroke:"rgba(24,38,47,.28)","stroke-dasharray":"5 4"}));
+  g.appendChild(E("text",{x:W-mR+6,y:py(100)+4,"font-size":10.5,fill:"#465A6C","font-family":FONT},"額面100"));
+
+  sets.forEach(function(s){
+    var c=base[s.T], pts=[];
+    for(var y=0.001;y<=0.0801;y+=0.0015) pts.push(px(y)+","+py(price(y,c,s.T)));
+    g.appendChild(E("polyline",{points:pts.join(" "),fill:"none",stroke:s.c,"stroke-width":2.6,"stroke-linecap":"round"}));
+    var yn=c, ys=c+ST.bp/10000+(ST.slope*slopeLoad(s.T))/10000;
+    var pn=price(yn,c,s.T), ps=price(ys,c,s.T);
+    /* いまの位置 */
+    g.appendChild(E("circle",{cx:px(yn),cy:py(pn),r:6,fill:"#82B33A",stroke:"#fff","stroke-width":2}));
+    /* 動いたあと */
+    var moved=(Math.abs(ST.bp)>1||Math.abs(ST.slope)>1);
+    if(moved){
+      g.appendChild(E("line",{x1:px(yn),y1:py(pn),x2:px(ys),y2:py(ps),stroke:s.c,"stroke-width":1.6,"stroke-dasharray":"4 3",opacity:.85}));
+      g.appendChild(E("circle",{cx:px(ys),cy:py(ps),r:5.5,fill:s.c,stroke:"#fff","stroke-width":2}));
+    }
+    /* ラベルは右の余白に置く。マーカーの上に重ならないように */
+    var ly=py(moved?ps:pn);
+    g.appendChild(E("line",{x1:px(moved?ys:yn)+8,y1:ly,x2:W-mR-4,y2:ly,stroke:s.c,"stroke-width":1,opacity:.35}));
+    g.appendChild(E("text",{x:W-mR+4,y:ly+4,"font-size":11.5,"font-weight":700,fill:s.c,"font-family":FONT},
+      s.lb+(moved?" "+nf(ps,1):"")));
+  });
+  g.appendChild(E("text",{x:(mL+W-mR)/2,y:H-4,"text-anchor":"middle","font-size":11.5,fill:"#465A6C","font-family":FONT},"金利（利回り）"));
+  g.appendChild(E("text",{x:14,y:H/2,"text-anchor":"middle","font-size":11.5,fill:"#465A6C","font-family":FONT,
+    transform:"rotate(-90 14 "+(H/2)+")"},"債券の値段（額面100あたり）"));
+
+  var c10=NODES[I10].y/100, a=price(c10,c10,10), b=price(c10+ST.bp/10000,c10,10);
+  $("capPY").textContent = (Math.abs(ST.bp)<1)
+    ? "緑の丸がいまの位置です。つまみを動かすと、丸が線の上をすべって、値段が変わります。"
+    : "緑の丸がいま。線をすべった先が、金利が "+sg(ST.bp/100,2)+"% 動いたあとの値段です。10年債は 100円 → "+nf(b,2)+"円、30年債はもっと大きく動きます。";
+}
+
+/* ==================================================================
+   5. CHART: yield curve
+   ================================================================== */
+function chartCurve(){
+  var svg=$("chCurve"); svg.textContent="";
+  var W=900,H=380,mL=56,mR=26,mT=22,mB=46;
+  var sq=Math.sqrt, px=function(t){ return mL+(sq(t)-sq(0.25))/(sq(40)-sq(0.25))*(W-mL-mR); };
+  var all=[],i;
+  for(i=0;i<NODES.length;i++){ all.push(NODES[i].y); all.push(shiftedY(i)); }
+  var lo=Math.min.apply(null,all), hi=Math.max.apply(null,all), span=hi-lo;
+  var st=span>6?1:span>2.5?0.5:0.25, pad=Math.max(st,span*0.08);
+  lo=Math.max(0,Math.floor((lo-pad)/st)*st); hi=Math.ceil((hi+pad)/st)*st;
+  var py=function(v){ return mT+(hi-v)/(hi-lo)*(H-mT-mB); };
+  var g=E("g"); svg.appendChild(g);
+
+  for(var v=lo;v<=hi+1e-9;v+=st){
+    g.appendChild(E("line",{x1:mL,x2:W-mR,y1:py(v),y2:py(v),stroke:"rgba(24,38,47,.09)"}));
+    g.appendChild(E("text",{x:mL-9,y:py(v)+4,"text-anchor":"end","font-size":11,fill:"#465A6C","font-family":NUMF},v.toFixed(1)+"%"));
+  }
+  [0.25,1,2,5,10,20,30,40].forEach(function(t){
+    g.appendChild(E("line",{x1:px(t),x2:px(t),y1:mT,y2:H-mB,stroke:"rgba(24,38,47,.07)"}));
+    g.appendChild(E("text",{x:px(t),y:H-mB+19,"text-anchor":"middle","font-size":11,fill:"#465A6C","font-family":FONT},t<1?"3ヶ月":t+"年"));
+  });
+
+  var up=[],dn=[];
+  for(i=0;i<NODES.length;i++){ up.push(px(NODES[i].T)+","+py(NODES[i].y)); dn.unshift(px(NODES[i].T)+","+py(shiftedY(i))); }
+  g.appendChild(E("polygon",{points:up.concat(dn).join(" "),fill:(ST.bp>=0?"#B5623F":"#82B33A"),opacity:.13}));
+
+  function ln(fn,col,dash){
+    var p=[];
+    for(i=0;i<NODES.length;i++) p.push(px(NODES[i].T)+","+py(fn(i)));
+    var o={points:p.join(" "),fill:"none",stroke:col,"stroke-width":2.6,"stroke-linejoin":"round","stroke-linecap":"round"};
+    if(dash) o["stroke-dasharray"]=dash;
+    g.appendChild(E("polyline",o));
+    for(i=0;i<NODES.length;i++) g.appendChild(E("circle",{cx:px(NODES[i].T),cy:py(fn(i)),r:3.2,fill:col}));
+  }
+  ln(function(k){return NODES[k].y;},"#527695");
+  ln(shiftedY,"#B5623F","7 4");
+  g.appendChild(E("text",{x:(mL+W-mR)/2,y:H-5,"text-anchor":"middle","font-size":11.5,fill:"#465A6C","font-family":FONT},"満期までの年数"));
+
+  var s0=NODES[I10].y-NODES[I2].y, s1=shiftedY(I10)-shiftedY(I2), dd=(s1-s0)*100;
+  $("capCurve").textContent =
+    "10年 "+nf(NODES[I10].y,3)+"% → "+nf(shiftedY(I10),3)+"% ／ 30年 "+nf(NODES[I30].y,3)+"% → "+nf(shiftedY(I30),3)+"%。"+
+    "10年と2年の差は "+nf(s0*100,0)+"bp → "+nf(s1*100,0)+"bp（"+
+    (Math.abs(dd)<1?"形は変わらず平行移動":dd>0?"スティープ化＝カーブが急に":"フラット化＝カーブがなだらかに")+"）。";
+}
+
+/* ==================================================================
+   6. TENOR TABLES
+   ================================================================== */
+function tblTenor(){
+  var pick=[I2,5,I10,9,I30,11];   /* 2,5,10,20,30,40年 */
+  var h="";
+  pick.forEach(function(k){
+    var n=NODES[k], y=n.y/100, c=y, s=shiftedY(k)/100;
+    var m=metrics(y,c,n.T), q=price(s,c,n.T), r=(q/m.P-1)*100, be=beRise(y,c,n.T);
+    var cls=r<-0.005?"dn":r>0.005?"up":"";
+    h+='<tr><th>'+n.lbl+'</th><td>'+nf(n.y,3)+'%</td><td>'+nf(m.P,2)+'</td><td>'+nf(q,2)+'</td>'+
+       '<td class="'+cls+'">'+sg(r,2)+'%</td><td>'+nf(m.mod,1)+'年</td>'+
+       '<td>'+(be===null?"—":nf(be*100,2)+'%')+'</td></tr>';
+  });
+  $("tblTenor").querySelector("tbody").innerHTML=h;
+}
+
+function tblFull(){
+  var h="";
+  NODES.forEach(function(n,k){
+    var y=n.y/100;
+    var c = (n.T<1) ? 0 : (ST.cpMode==="low" ? 0.005 : y);
+    var m=metrics(y,c,n.T), s=shiftedY(k)/100, q=price(s,c,n.T);
+    var r=(q/m.P-1)*100, be=beRise(y,c,n.T);
+    var cls=r<-0.005?"dn":r>0.005?"up":"";
+    h+='<tr><th>'+n.lbl+(n.ip?' <span style="font-size:10px;font-weight:400;color:#5B6C78">補間</span>':'')+'</th>'+
+       '<td>'+nf(c*100,3)+'%</td><td>'+nf(n.y,3)+'%</td><td>'+nf(m.P,2)+'</td><td>'+nf(q,2)+'</td>'+
+       '<td class="'+cls+'">'+sg(r,2)+'%</td><td class="'+cls+'">'+yen(1000000*(q-m.P)/100)+'</td>'+
+       '<td>'+nf(m.mod,2)+'</td><td>'+nf(m.conv,1)+'</td>'+
+       '<td>'+(be===null?"—":nf(be*10000,0)+'bp')+'</td></tr>';
+  });
+  $("tblFull").querySelector("tbody").innerHTML=h;
+}
+
+function tblBeta(){
+  var rows=[["gold","金"],["btc","ビットコイン"],["com","商品指数"]];
+  $("tblBeta").querySelector("tbody").innerHTML = rows.map(function(r){
+    var B=BETA[r[0]];
+    return '<tr><th>'+r[1]+'</th><td>'+sg(B.b,1)+'%</td><td>'+(B.r2===null?"—":nf(B.r2,3))+'</td>'+
+      '<td>'+(B.n===null?"—":B.n)+'</td><td style="text-align:left;font-family:'+FONT+'">'+B.src+'</td></tr>';
+  }).join("") +
+  '<tr><th>日経平均</th><td colspan="4" style="text-align:left;font-family:'+FONT+'">βは使わず、イールドスプレッド一定モデルで計算</td></tr>';
+}
+
+/* ==================================================================
+   7. 個人向け国債
+   ================================================================== */
+var TAXF=0.79685;
+function kojin(){
+  var type=$("kType").value, face=Math.max(0,+$("kFace").value||0);
+  var r0=(+$("kRate").value||0)/100, hold=Math.max(1,+$("kHold").value||1);
+  var base=(+$("kBase").value||0)/100, cpi=(+$("kCpi").value||0)/100;
+  var per=Math.floor(hold*2), g=[], sum=0;
+  for(var j=1;j<=per;j++){
+    var rate = (type!=="f10") ? r0 : (j<=2 ? r0 : Math.max(0.0005, base*0.66));
+    var amt=face*rate/2; g.push(amt); sum+=amt;
+  }
+  var net=sum*TAXF;
+  var last2=g.slice(-2).reduce(function(a,b){return a+b;},0);
+  var adj=last2*TAXF, back=face-adj, total=back+net, real=total/Math.pow(1+cpi,hold);
+
+  $("kOut").innerHTML=
+    '<div><b>受け取った利子（税引後）</b><span class="up">'+yen(net)+'</span></div>'+
+    '<div><b>返す分（中途換金調整額）</b><span>−'+yen(adj)+'</span></div>'+
+    '<div><b>解約で戻る額</b><span>'+yen(back)+'</span></div>'+
+    '<div><b>手元に残る合計</b><span class="'+(total>=face?"up":"dn")+'">'+yen(total)+'</span></div>'+
+    '<div><b>買った金額との差</b><span class="'+(total>=face?"up":"dn")+'">'+(total>=face?"+":"")+yen(total-face)+'</span></div>'+
+    '<div><b>インフレ調整後の実質価値</b><span class="'+(real>=face?"up":"dn")+'">'+yen(real)+'</span></div>';
+
+  var nomOK=total>=face-1, realOK=real>=face-1;
+  $("kVerdict").className="verdict"+(realOK?"":" bad");
+  $("kVerdict").innerHTML=
+    '<strong>名目：'+(nomOK?"元本割れなし":"元本割れ")+'</strong>。'+yen(adj)+' を返しても、それまでに受け取った '+yen(net)+
+    ' が手元に残るので、合計 '+yen(total)+' で買った金額 '+yen(face)+' を下回りません。'+
+    '<br><strong>実質：'+(realOK?"購買力を維持":"購買力は目減り")+'</strong>。年'+nf(cpi*100,1)+'%のインフレが'+nf(hold,1)+'年続くと、'+
+    yen(total)+' で買えるモノの量は、いまの '+yen(real)+' 分'+
+    (realOK?'。インフレに勝っています。':'。元本は守られていても、実質では '+yen(face-real)+' 目減りしています。');
+}
+
+/* ==================================================================
+   8. 回帰（単回帰OLS）
+   ================================================================== */
+function parseData(txt){
+  var out=[];
+  txt.split(/\r?\n/).forEach(function(line){
+    var s=line.trim();
+    if(!s) return;
+    var p=s.split(/[,\t;\s]+/).filter(function(z){return z!=="";});
+    if(p.length<2) return;
+    var a=parseFloat(p[p.length-2]), b=parseFloat(p[p.length-1]);
+    if(isFinite(a)&&isFinite(b)) out.push([a,b]);
+  });
+  return out;
+}
+function ols(d){
+  var n=d.length, i, sx=0, sy=0;
+  for(i=0;i<n;i++){ sx+=d[i][0]; sy+=d[i][1]; }
+  var mx=sx/n, my=sy/n, sxx=0, sxy=0, syy=0;
+  for(i=0;i<n;i++){ var dx=d[i][0]-mx, dy=d[i][1]-my; sxx+=dx*dx; sxy+=dx*dy; syy+=dy*dy; }
+  if(sxx===0) return null;
+  var b=sxy/sxx, a=my-b*mx, ssr=0;
+  for(i=0;i<n;i++){ var e=d[i][1]-(a+b*d[i][0]); ssr+=e*e; }
+  var r2=(syy===0)?0:1-ssr/syy;
+  var se=(n>2 && sxx>0)?Math.sqrt(ssr/(n-2)/sxx):null;
+  return {a:a,b:b,r2:r2,n:n,r:(syy===0?0:(sxy/Math.sqrt(sxx*syy))),se:se,t:(se?b/se:null)};
+}
+function chartReg(d,f){
+  var svg=$("chReg"); svg.textContent="";
+  var W=900,H=420,mL=66,mR=26,mT=22,mB=52;
+  var xs=d.map(function(p){return p[0];}), ys=d.map(function(p){return p[1];});
+  var x0=Math.min.apply(null,xs), x1=Math.max.apply(null,xs);
+  var y0=Math.min.apply(null,ys), y1=Math.max.apply(null,ys);
+  var xp=Math.max(1e-6,(x1-x0)*0.09), yp=Math.max(1e-6,(y1-y0)*0.09);
+  x0-=xp; x1+=xp; y0-=yp; y1+=yp;
+  if(x0>0)x0=0; if(x1<0)x1=0; if(y0>0)y0=0; if(y1<0)y1=0;
+  var px=function(v){return mL+(v-x0)/(x1-x0)*(W-mL-mR);};
+  var py=function(v){return mT+(y1-v)/(y1-y0)*(H-mT-mB);};
+  var g=E("g"); svg.appendChild(g);
+  var k;
+  for(k=0;k<=5;k++){
+    var gy=mT+(H-mT-mB)*k/5, gv=y1-(y1-y0)*k/5;
+    g.appendChild(E("line",{x1:mL,x2:W-mR,y1:gy,y2:gy,stroke:"rgba(24,38,47,.09)"}));
+    g.appendChild(E("text",{x:mL-9,y:gy+4,"text-anchor":"end","font-size":11,fill:"#465A6C","font-family":NUMF},nf(gv,1)+"%"));
+  }
+  for(k=0;k<=5;k++){
+    var gx=mL+(W-mL-mR)*k/5, xv=x0+(x1-x0)*k/5;
+    g.appendChild(E("line",{x1:gx,x2:gx,y1:mT,y2:H-mB,stroke:"rgba(24,38,47,.09)"}));
+    g.appendChild(E("text",{x:gx,y:H-mB+19,"text-anchor":"middle","font-size":11,fill:"#465A6C","font-family":NUMF},nf(xv,2)+"%"));
+  }
+  if(x0<0&&x1>0) g.appendChild(E("line",{x1:px(0),x2:px(0),y1:mT,y2:H-mB,stroke:"rgba(24,38,47,.35)"}));
+  if(y0<0&&y1>0) g.appendChild(E("line",{x1:mL,x2:W-mR,y1:py(0),y2:py(0),stroke:"rgba(24,38,47,.35)"}));
+
+  d.forEach(function(p){ g.appendChild(E("circle",{cx:px(p[0]),cy:py(p[1]),r:4.2,fill:"#527695",opacity:.55})); });
+  g.appendChild(E("line",{x1:px(x0),y1:py(f.a+f.b*x0),x2:px(x1),y2:py(f.a+f.b*x1),
+    stroke:"#B5623F","stroke-width":3,"stroke-linecap":"round"}));
+  g.appendChild(E("text",{x:(mL+W-mR)/2,y:H-6,"text-anchor":"middle","font-size":12,fill:"#465A6C","font-family":FONT},"実質金利の変化"));
+  g.appendChild(E("text",{x:16,y:H/2,"text-anchor":"middle","font-size":12,fill:"#465A6C","font-family":FONT,
+    transform:"rotate(-90 16 "+(H/2)+")"},"資産の変化率"));
+}
+function runReg(){
+  var d=parseData($("regData").value);
+  if(d.length<3){ $("regHint").textContent="データが足りません。3行以上（できれば30行以上）貼ってください。"; return; }
+  var f=ols(d);
+  if(!f){ $("regHint").textContent="左の列がすべて同じ値です。横軸にバラつきがないと直線は引けません。"; return; }
+  $("regFig").hidden=false; $("regOut").hidden=false; $("regVerdict").hidden=false;
+  chartReg(d,f);
+  $("regOut").innerHTML=
+    '<div><b>傾き β</b><span>'+sg(f.b,2)+'</span></div>'+
+    '<div><b>R²（説明できた割合）</b><span class="'+(f.r2<0.2?"dn":(f.r2>=0.5?"up":""))+'">'+nf(f.r2,3)+'</span></div>'+
+    '<div><b>相関係数 r</b><span>'+sg(f.r,3)+'</span></div>'+
+    '<div><b>データ数 n</b><span>'+f.n+'</span></div>'+
+    '<div><b>切片</b><span>'+sg(f.a,3)+'</span></div>'+
+    (f.t!==null?'<div><b>t値</b><span>'+sg(f.t,2)+'</span></div>':'');
+  var pctExp=Math.round(f.r2*100);
+  $("regVerdict").className="verdict"+(f.r2<0.2?" bad":"");
+  $("regVerdict").innerHTML=
+    '<strong>読み方。</strong>実質金利が1%上がると、この資産は平均して '+sg(f.b,2)+'% 動いた、という直線が引けました。'+
+    'ただし R² は '+nf(f.r2,3)+' なので、<strong>この資産の値動きのうち実質金利で説明できるのは '+pctExp+'% だけ</strong>で、残り '+(100-pctExp)+'% は別の理由です。'+
+    (f.r2<0.2
+      ? ' <strong>これはほぼ「関係なし」に近い数字です。</strong>この直線を根拠に投資判断をするのは危険です。'
+      : f.r2<0.5
+        ? ' 弱いながら関係はありそうですが、これだけで判断するには足りません。'
+        : ' 比較的しっかりした関係です。ただし期間を変えると結果が変わることは、必ず確認してください。')+
+    (f.n<30?' <strong>データ数が '+f.n+' 件と少ないので、たまたまそう見えているだけの可能性があります。</strong>':'');
+  $("regHint").textContent="";
+  var t=$("regTarget").value;
+  if(BETA[t]){ BETA[t]={b:f.b,r2:f.r2,n:f.n,src:"貼り付けたデータの回帰（n="+f.n+"）"}; }
+  render();
+}
+
+/* ==================================================================
+   9. RENDER + WIRING
+   ================================================================== */
+function syncInputs(){
+  $("mNikkei").value = M.nikkei.v!==null?M.nikkei.v:"";
+  $("mPer").value    = M.per.v!==null?M.per.v:"";
+  $("mBtc").value    = M.btc.v!==null?M.btc.v:"";
+  $("mGold").value   = M.gold.v!==null?M.gold.v:"";
+  $("mY10").value    = NODES[I10].y;
+  $("mY30").value    = NODES[I30].y;
+  $("mKojin").value  = M.kojin.v;
+  $("mDur").value    = M.fundDur;
+  $("mBei").value    = M.bei.v;
+  $("mDbei").value   = M.dBei;
+  $("kRate").value   = M.kojin.v;
+  $("kBase").value   = NODES[I10].y;
+  $("mPerMode").value = M.perMode;
+  $("srcNote").innerHTML =
+    "<b>数値の出どころ（すべて2026年9月3〜4日時点）</b><br>"+
+    "国債利回り：新発国債利回りの公表値。ただし<b>3年・7年・15年だけは隣接年限からの補間値</b>です。<br>"+
+    "日経平均 65,020.94円（9/4終値）／ PER 指数ベース21.62倍・加重平均ベース17.23倍（9/4）。"+
+    "日経平均のPERに2種類あるのは、日経平均が株価の単純平均に近い指数だからです。"+
+    "指数の水準と直接対応するのは指数ベースのほうなので、初期値はそちらにしています。<br>"+
+    "ビットコイン：9月上旬の概算値。金：未設定なので、必要なら入力してください。<br>"+
+    "個人向け国債 変動10年 1.95%（2026年9月募集分・財務省公表。固定5年は2.24%、固定3年は1.96%）。<br>"+
+    "<b>自動更新はしていません。</b>時間が経つほど実勢から離れるので、大事な判断のときは最新値に入れ替えてください。";
+}
+
+function render(){
+  $("dQ").textContent = sg(ST.bp/100,1);
+  var dNom=ST.bp/100, dReal=dNom-M.dBei;
+  $("dSub").textContent =
+    (Math.abs(ST.bp)<1)
+      ? "いまは動かしていない状態です。つまみを右に動かすと金利上昇、左に動かすと低下です。"
+      : "そのうち "+nf(M.dBei,2)+"% はインフレ期待の上昇ぶん、残り "+nf(dReal,2)+"% が実質金利の動きとして扱われます。";
+  document.querySelectorAll('.dial__acts .chip[data-bp]').forEach(function(b){
+    b.setAttribute("aria-pressed", String(+b.dataset.bp===ST.bp));
+  });
+
+  var B=bondCards();
+  var R=riskCards();
+  chartPY(); chartCurve(); tblTenor(); tblFull(); tblBeta(); kojin();
+
+  var d=ST.bp/100;
+  if(Math.abs(ST.bp)<1){
+    $("punch").innerHTML="<b>つまみを動かしてください。</b>金利が動いたときに、どの資産がどれだけ動くかが同時に出ます。";
+  } else {
+    var dir = d>0 ? "上がる" : "下がる";
+    var f100 = 1000000*B.fund/100;
+    $("punch").innerHTML=
+      "<b>金利が "+sg(d,1)+"% "+dir+"と、こうなります。</b>"+
+      "個人向け国債は <b>0.00%</b>、10年国債は <b>"+sg((B.q10/B.p10-1)*100,1)+"%</b>、"+
+      "30年国債は <b>"+sg((B.q30/B.p30-1)*100,1)+"%</b>。"+
+      "デュレーション"+nf(M.fundDur,1)+"年の債券ファンドに100万円入れていたら "+
+      "<b>"+(f100>0?"+":"")+yen(f100)+"</b> です。"+
+      (d>0?"　同じ「国債」でも、この差です。":"　金利が下がる局面では、長い債券ほど得をします。");
+  }
+}
+
+/* wiring */
+$("dRange").addEventListener("input",function(e){ ST.bp=+e.target.value; render(); });
+document.querySelectorAll('.dial__acts .chip[data-bp]').forEach(function(b){
+  b.addEventListener("click",function(){ ST.bp=+b.dataset.bp; $("dRange").value=ST.bp; render(); });
+});
+var timer=null;
+$("dPlay").addEventListener("click",function(){
+  if(timer){ clearInterval(timer); timer=null; $("dPlayIco").textContent="▶"; $("dPlayLbl").textContent="ゆっくり再生"; return; }
+  $("dPlayIco").textContent="■"; $("dPlayLbl").textContent="止める";
+  ST.bp=-50; $("dRange").value=ST.bp;
+  timer=setInterval(function(){
+    ST.bp+=5;
+    if(ST.bp>250){ clearInterval(timer); timer=null; $("dPlayIco").textContent="▶"; $("dPlayLbl").textContent="ゆっくり再生"; return; }
+    $("dRange").value=ST.bp; render();
+  },60);
+});
+$("cpMode").addEventListener("change",function(e){ ST.cpMode=e.target.value; render(); });
+$("sSlope").addEventListener("input",function(e){ ST.slope=+e.target.value||0; render(); });
+
+[["mNikkei","nikkei"],["mPer","per"],["mBtc","btc"],["mGold","gold"],["mKojin","kojin"],["mBei","bei"]].forEach(function(pr){
+  $(pr[0]).addEventListener("input",function(e){
+    var v=parseFloat(e.target.value);
+    M[pr[1]]={v:isFinite(v)?v:null,asof:"手入力",src:"手入力"};
+    if(pr[1]==="kojin") $("kRate").value=v;
+    if(pr[1]==="per"){ M.perMode="manual"; $("mPerMode").value="manual"; }
+    render();
+  });
+});
+$("mPerMode").addEventListener("change",function(e){
+  M.perMode=e.target.value;
+  if(M.perMode==="index") M.per={v:M.perIndex,asof:"2026-09-04",src:"指数ベース"};
+  if(M.perMode==="wavg")  M.per={v:M.perWavg, asof:"2026-09-04",src:"加重平均ベース"};
+  if(M.perMode==="manual")M.per={v:M.per.v,   asof:"手入力",    src:"手入力"};
+  $("mPer").value=M.per.v;
+  render();
+});
+$("mY10").addEventListener("input",function(e){ var v=parseFloat(e.target.value); if(isFinite(v)){NODES[I10].y=v; $("kBase").value=v;} render(); });
+$("mY30").addEventListener("input",function(e){ var v=parseFloat(e.target.value); if(isFinite(v)) NODES[I30].y=v; render(); });
+$("mDur").addEventListener("input",function(e){ var v=parseFloat(e.target.value); if(isFinite(v)&&v>0) M.fundDur=v; render(); });
+$("mDbei").addEventListener("input",function(e){ var v=parseFloat(e.target.value); M.dBei=isFinite(v)?v:0; render(); });
+
+["kType","kFace","kRate","kHold","kBase","kCpi"].forEach(function(id){
+  $(id).addEventListener("input",kojin); $(id).addEventListener("change",kojin);
+});
+$("kType").addEventListener("change",function(e){
+  var d={f10:M.kojin.v,x5:2.24,x3:1.96}[e.target.value];
+  $("kRate").value=(+d).toFixed(2);
+  $("kHold").max={f10:10,x5:5,x3:3}[e.target.value];
+  if(+$("kHold").value>+$("kHold").max) $("kHold").value=$("kHold").max;
+  kojin();
+});
+$("regRun").addEventListener("click",runReg);
+$("regClear").addEventListener("click",function(){
+  $("regData").value=""; $("regFig").hidden=true; $("regOut").hidden=true; $("regVerdict").hidden=true;
+  $("regHint").textContent="データを貼って「直線を引く」を押してください。";
+});
+
+syncInputs();
+render();
+
+})();
+</script>
+</body>
+</html>
