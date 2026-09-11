@@ -473,6 +473,45 @@ input,select,textarea,button{font-weight:600}
 @media print{.viz{grid-template-columns:1fr 1fr;}.viz__card{break-inside:avoid;page-break-inside:avoid;}}
 
 .h1sub{display:block;font-size:.52em;font-weight:600;letter-spacing:.04em;margin-top:10px;color:var(--ink-soft);}
+
+/* ===== 見える化の訴求カード ===== */
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:24px 0 28px;}
+.feat__card{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:18px;
+  padding:22px 18px 18px;box-shadow:var(--shadow);}
+.feat__card--wide{grid-column:1/-1;}
+.feat__no{position:absolute;top:14px;right:16px;font-family:var(--num);font-size:13px;font-weight:700;
+  letter-spacing:.14em;color:var(--aqua);}
+.feat__card h3{font-family:var(--serif);font-weight:700;font-size:17px;letter-spacing:.04em;margin:0 0 8px;}
+.feat__card p{margin:0;font-size:14px;line-height:1.85;color:var(--ink-soft);}
+
+/* ===== 判定結果ヘッダ（バロメーター） ===== */
+.vizhead{background:linear-gradient(150deg,var(--mist),rgba(255,255,255,.92));
+  border:1.5px solid var(--line);border-left:6px solid var(--peridot);border-radius:20px;padding:26px 24px;}
+.vizhead.is-mid{border-left-color:var(--sea);}
+.vizhead.is-low{border-left-color:var(--warn);}
+.vizhead__co{font-family:var(--serif);font-size:20px;font-weight:700;letter-spacing:.04em;margin:0 0 4px;}
+.vizhead__meta{margin:0 0 18px;font-size:13px;color:var(--ink-soft);}
+.vizhead__row{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-end;}
+.vizhead__lab{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--ink-soft);}
+.vizhead__score{font-family:var(--num);font-size:20px;font-weight:600;margin:2px 0 0;}
+.vizhead__score b{font-size:46px;font-weight:700;line-height:1;}
+.vizhead__grade{font-family:var(--serif);font-size:46px;font-weight:700;line-height:1.05;margin:2px 0 0;}
+.vizhead__bar{flex:1 1 340px;min-width:280px;}
+.vizhead__bar svg{width:100%;height:auto;display:block;}
+.vizhead__policy{margin:16px 0 0;font-size:15px;line-height:1.8;}
+
+/* ===== 図のツールチップ ===== */
+.viz__hot{cursor:help;}
+.viz__hot:hover>rect:first-child,.viz__hot:hover>circle:first-child{filter:brightness(1.08);}
+.viz__tip{position:fixed;z-index:9999;max-width:300px;padding:12px 14px;border-radius:12px;
+  background:rgba(15,26,34,.95);color:#fff;font-family:var(--sans);font-size:12.5px;line-height:1.75;
+  box-shadow:0 8px 28px rgba(24,38,47,.28);opacity:0;transform:translateY(4px);
+  transition:opacity .14s,transform .14s;pointer-events:none;}
+.viz__tip.is-on{opacity:1;transform:translateY(0);}
+.viz__tip b{display:block;font-size:13.5px;margin-bottom:5px;color:var(--aqua);}
+.viz__tip span{display:block;}
+.viz__tip span+span{margin-top:3px;color:rgba(255,255,255,.82);}
+.repay-note{font-size:12.5px;color:var(--ink-soft);text-align:left;line-height:1.7;}
 </style>
 
 <!-- Google tag (gtag.js) -->
@@ -530,27 +569,38 @@ input,select,textarea,button{font-weight:600}
       </header>
 
       <section class="step" id="step1">
-        <div class="step__head"><span class="step__no">1</span><h2>受け取れるもの</h2></div>
-        <p class="step__lead">実際に出力されるExcelファイルです。5シート構成で、A4縦に収まるよう組んであります。数値・判定・所見まで入った状態でお渡しします。</p>
+        <div class="step__head"><span class="step__no">1</span><h2>画面で、ここまで見えます</h2></div>
+        <p class="step__lead">決算書を読み込むと、判定結果がそのまま<b>7つの図</b>になります。ここまでは<b>無料</b>です。
+        数字の表のままでは伝わらない相手に、形と色で見せるために作りました。
+        <b>図の上にマウスを乗せると、その数字が何を意味するのかが出ます。</b></p>
 
-        <div class="shot">
-          <div class="shot__tabs" role="tablist">
-            <button class="is-on" data-shot="0" role="tab" aria-selected="true">①判定サマリー</button>
-            <button data-shot="1" role="tab" aria-selected="false">②財務分析</button>
-            <button data-shot="2" role="tab" aria-selected="false">③資金償還表</button>
-            <button data-shot="3" role="tab" aria-selected="false">④配点内訳</button>
-            <button data-shot="4" role="tab" aria-selected="false">⑤入力データ</button>
-          </div>
-          <div class="shot__stage">
-            <button class="shot__nav shot__nav--prev" id="shotPrev" type="button" aria-label="前のシート">‹</button>
-            <img id="shotImg" src="./assets/1-summary.jpg" alt="判定サマリーシートの見本" loading="lazy" width="1000" height="1414">
-            <button class="shot__nav shot__nav--next" id="shotNext" type="button" aria-label="次のシート">›</button>
-          </div>
-          <p class="shot__cap" id="shotCap">総合評点・信用程度A〜E・6軸の評点内訳・与信限度額の目安・財務ハイライト・自動所見までを1枚に収めています。</p>
+        <div class="feat">
+          <div class="feat__card"><span class="feat__no">01</span>
+            <h3>スコアの内訳</h3>
+            <p>100点をどこで積み、どこで落としたか。バーの長さが配点なので、<b>重い項目で落としたのか軽い項目で落としたのか</b>が形で分かります。</p></div>
+          <div class="feat__card"><span class="feat__no">02</span>
+            <h3>財務指標のかたち</h3>
+            <p>6軸のレーダーチャート。点線の六角形が業種基準です。<b>へこんでいる方向が、そのまま弱点</b>になります。実額の比較表つき。</p></div>
+          <div class="feat__card"><span class="feat__no">03</span>
+            <h3>貸借対照表のかたち</h3>
+            <p>左が持ち物、右がお金の出どころ。<b>緑の厚みが自己資本比率、上の濃い青が有利子負債</b>。債務超過なら緑が消えます。</p></div>
+          <div class="feat__card"><span class="feat__no">04</span>
+            <h3>売上と利益の推移</h3>
+            <p>棒が売上高、折れ線が経常利益。増収減益なのか減収減益なのか、<b>水準ではなく「向き」</b>が最初に目に入ります。</p></div>
+          <div class="feat__card"><span class="feat__no">05</span>
+            <h3>返せるお金と、返す額</h3>
+            <p>1年で手元に残るお金と、その年の約定返済額を並べます。<b>青が桃色より低い年が続くなら、借換え前提の資金繰り</b>です。</p></div>
+          <div class="feat__card"><span class="feat__no">06</span>
+            <h3>借金を返し切るまでの年数</h3>
+            <p>健全・要注意・厳しいの3帯メーター。<b>10年を超えると銀行はまず気にします。</b>返済原資がないときは、年数を出さずにそう表示します。</p></div>
+          <div class="feat__card feat__card--wide"><span class="feat__no">07</span>
+            <h3>グラフから読み取れること</h3>
+            <p>6つの図を見て何を言えばいいのかを、入力された数字から自動で書き出します。稟議の所見欄にそのまま使える文章です。</p></div>
         </div>
 
         <div class="sample">
-          <p class="sample__lead"><b>実物をお手元でご確認いただけます。</b>架空の会社「サンプル情報システム株式会社」の数値で、実際に出力されるものとまったく同じ5シートのExcelファイルを作成します。購入前でもダウンロードできます。</p>
+          <p class="sample__lead"><b>稟議に添付するExcelは、判定のあと1社500円です。</b>画面の判定とグラフは何社でも無料でご覧いただけます。
+          Excelは5シート構成で、A4縦に収まるよう組んであります。架空の会社の数値で、実際に出力されるものとまったく同じファイルを購入前にお試しいただけます。</p>
           <button class="btn-sample" id="btnSample" type="button">サンプルExcelをダウンロード</button>
           <p class="calc__hint" id="sampleNote" aria-live="polite"></p>
         </div>
@@ -849,7 +899,7 @@ input,select,textarea,button{font-weight:600}
 </div>
 
 <script src="../vendor/exceljs.min.js" defer></script>
-<script type="module" src="./app.js?v=23"></script>
+<script type="module" src="./app.js?v=24"></script>
 
 </body>
 </html>

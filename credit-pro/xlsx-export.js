@@ -343,7 +343,7 @@ function sheetFinance(wb, r) {
   const rr = (k) => [q[0][k], q[1][k], q[2][k]];
   const ind = [
     ["売上高総利益率", rr("grossMargin"), PCT, "－", "業種により差"],
-    ["売上高営業利益率", rr("operatingMargin"), PCT, bm.operatingMarginR6, "業種基準比較"],
+    ["売上高営業利益率", rr("operatingMargin"), PCT, bm.operatingMarginLatest, "業種基準比較"],
     ["売上高経常利益率", rr("ordinaryMargin"), PCT, bm.ordinaryMarginAvg3, "業種基準比較"],
     ["総資本経常利益率（ROA）", rr("roa"), PCT, "－", "5％以上"],
     ["総資本回転率", rr("assetTurnover"), '0.00"回"', "－", "1.0回以上"],

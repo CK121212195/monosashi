@@ -21,6 +21,8 @@ const esc = (s) => String(s ?? "").replace(/[&<>"]/g,
 const n1 = (x) => (isFinite(x) ? x.toFixed(1) : "—");
 const n2 = (x) => (isFinite(x) ? x.toFixed(2) : "—");
 const p1 = (x) => (isFinite(x) ? (x * 100).toFixed(1) + "%" : "—");
+const red3 = (r) => r.redemption.required <= 0 ? "実質無借金"
+  : r.redemption.simpleCF <= 0 ? "返済原資なし" : n1(r.redemption.years) + "年";
 const clip = (t, n) => (String(t).length > n ? String(t).slice(0, n - 1) + "…" : String(t));
 
 function T(x, y, t, o = {}) {
@@ -56,27 +58,42 @@ function axis4(lo, hi) {
   } while (++guard < 20);
   return { lo: a, hi: b, ticks: [0, 1, 2, 3, 4].map((i) => a + step * i) };
 }
+/** ツールチップ付きの当たり判定。title|行|行… の形で渡す */
+const tip = (inner, lines) =>
+  `<g class="viz__hot" data-tip="${esc(lines.filter(Boolean).join("|"))}">${inner}</g>`;
+
 const svg = (vb, body) =>
   `<svg class="viz__svg" viewBox="${vb}" role="img" xmlns="http://www.w3.org/2000/svg">${body}</svg>`;
 
 /* ======================================================= ① スコアの内訳 */
 function scoreBars(r) {
-  const s = r.scores;
+  const s = r.scores, kd = s.kibo_detail, sd = s.soneki_detail, ke = s.keiei_detail;
   const rows = [
-    ["① 業歴", s.gyoreki, 10], ["② 資本構成", s.shihon, 12], ["③ 規模", s.kibo, 18],
-    ["④ 損益", s.soneki, 10], ["⑤ 経営者", s.keiei, 20], ["⑥ 償還余力", s.shokan, 30],
+    ["① 業歴", s.gyoreki, 10, `創業から${r.businessYears}年`, "長く続いていること自体が、環境変化を乗り越えてきた証拠になります。"],
+    ["② 資本構成", s.shihon, 12, `自己資本比率 ${p1(r.equityRatio)}／業種基準 ${p1(r.benchmark.equityRatio)}（倍率 ${n2(r.equityMultiple)}）`,
+      "業種と資本金規模で補正した基準の何倍かで採点します。"],
+    ["③ 規模", s.kibo, 18, `業容${kd.gyoyo}点＋年商${kd.nensho}点＋上場区分${kd.listing}点＋従業員${kd.employees}点`,
+      "規模そのものが信用の裏づけになるため、配点は18点と重めです。"],
+    ["④ 損益", s.soneki, 10, `${sd.pattern}（基礎${sd.base}点）＋加点${sd.bonus}点`,
+      "黒字がどれだけ続いているかを見ます。利益額による加点もあります。"],
+    ["⑤ 経営者", s.keiei, 20, `業界歴${ke.industry}点＋経営者歴${ke.ceo}点＋持ち家${ke.home}点＋開示姿勢${ke.disclosure}点`,
+      "数字に出ない部分。決算書の開示姿勢だけで14点を置いています。"],
+    ["⑥ 償還余力", s.shokan, 30, `債務償還年数${red3(r)}→${r.redemption.scoreA}点／3年返済充足率${n2(r.redemption.ratio)}倍→${r.redemption.scoreB}点`,
+      "返す力。100点のうち最も重い30点を割り当てています。"],
   ];
   const MAX = 30, bx = 108, bw = 250, rowH = 38, top = 14;
   let h = "";
-  rows.forEach(([name, got, max], i) => {
+  rows.forEach(([name, got, max, basis, why], i) => {
     const y = top + i * rowH, track = bw * max / MAX, ratio = max ? got / max : 0;
     const col = ratio >= 0.8 ? C.green : ratio >= 0.6 ? C.peridot
       : ratio >= 0.4 ? C.sea : ratio >= 0.2 ? C.warn : C.deep;
-    h += T(0, y + 18, name, { s: 12.5, w: "700", c: C.ink });
-    h += R(bx, y + 5, track, 17, C.track, { rx: 5 });
-    h += R(bx, y + 5, Math.max(track * ratio, ratio > 0 ? 2 : 0), 17, col, { rx: 5 });
-    h += T(bx + track + 9, y + 18, `${got} / ${max}`, { s: 11.5, w: "700", c: C.ink });
-    h += T(0, y + 31, `${Math.round(ratio * 100)}%を取得`, { s: 9.5, c: C.faint });
+    const body = T(0, y + 18, name, { s: 12.5, w: "700", c: C.ink })
+      + R(bx, y + 5, track, 17, C.track, { rx: 5 })
+      + R(bx, y + 5, Math.max(track * ratio, ratio > 0 ? 2 : 0), 17, col, { rx: 5 })
+      + T(bx + track + 9, y + 18, `${got} / ${max}`, { s: 11.5, w: "700", c: C.ink })
+      + T(0, y + 31, `${Math.round(ratio * 100)}%を取得`, { s: 9.5, c: C.faint })
+      + R(0, y, 420, rowH - 2, "transparent");
+    h += tip(body, [`${name}　${got} / ${max}点`, basis, why]);
   });
   const y = top + rows.length * rowH + 4;
   h += L(0, y, 420, y, "#C9D3D8", 1);
@@ -88,17 +105,17 @@ function scoreBars(r) {
 
 /* ================================================= ② 財務指標のかたち */
 const RADAR = [
-  { n: "自己資本比率", u: "%", dec: 1, dir: 1, star: true,
+  { tip: "総資本のうち、返さなくてよいお金の割合。高いほど財務は安全です。", n: "自己資本比率", u: "%", dec: 1, dir: 1, star: true,
     get: (r) => r.ratios.periods[0].equityRatio * 100, bm: (r) => r.benchmark.equityRatio * 100 },
-  { n: "経常利益率", u: "%", dec: 1, dir: 1, star: true,
+  { tip: "売上100円あたり、いくら経常利益が残るか。本業と財務を合わせた稼ぐ力です。", n: "経常利益率", u: "%", dec: 1, dir: 1, star: true,
     get: (r) => r.ratios.periods[0].ordinaryMargin * 100, bm: (r) => r.benchmark.ordinaryMarginAvg3 * 100 },
-  { n: "営業利益率", u: "%", dec: 1, dir: 1, star: true,
-    get: (r) => r.ratios.periods[0].operatingMargin * 100, bm: (r) => r.benchmark.operatingMarginR6 * 100 },
-  { n: "総資本回転率", u: "回", dec: 2, dir: 1, star: false,
+  { tip: "本業だけで売上100円あたりいくら稼げるか。原価と販管費の効率を映します。", n: "営業利益率", u: "%", dec: 1, dir: 1, star: true,
+    get: (r) => r.ratios.periods[0].operatingMargin * 100, bm: (r) => r.benchmark.operatingMarginLatest * 100 },
+  { tip: "投じた資本を1年で何回売上に変えたか。高いほど資産を効率よく使っています。", n: "総資本回転率", u: "回", dec: 2, dir: 1, star: false,
     get: (r) => r.ratios.periods[0].assetTurnover, bm: () => 1.0 },
-  { n: "流動比率", u: "%", dec: 0, dir: 1, star: false,
+  { tip: "1年以内に返す負債に対し、1年以内に現金化できる資産がどれだけあるか。", n: "流動比率", u: "%", dec: 0, dir: 1, star: false,
     get: (r) => r.ratios.periods[0].currentRatio * 100, bm: () => 120 },
-  { n: "借入金月商倍率", u: "か月", dec: 2, dir: -1, star: false,
+  { tip: "月商の何か月分の借入があるか。小さいほど身軽です。", n: "借入金月商倍率", u: "か月", dec: 2, dir: -1, star: false,
     get: (r) => r.ratios.periods[0].gearingMonths, bm: () => 6.0 },
 ];
 const norm = (v, b, dir) => {
@@ -139,7 +156,15 @@ function radar(r) {
   });
   h += `<polygon points="${base.join(" ")}" fill="none" stroke="#5A6B76" stroke-width="1.6" stroke-dasharray="5 4"/>`;
   h += `<polygon points="${mine.join(" ")}" fill="${C.sea}" fill-opacity="0.26" stroke="${C.sea}" stroke-width="2.4"/>`;
-  mine.forEach((p) => { const [x, y] = p.split(","); h += `<circle cx="${x}" cy="${y}" r="3.4" fill="${C.seaDeep}"/>`; });
+  mine.forEach((p, i) => {
+    const [x, y] = p.split(","), o = vals[i];
+    const v = isFinite(o.v) ? o.v.toFixed(o.ax.dec) + o.ax.u : "—";
+    h += tip(`<circle cx="${x}" cy="${y}" r="3.4" fill="${C.seaDeep}"/><circle cx="${x}" cy="${y}" r="13" fill="transparent"/>`,
+      [o.ax.n, `実績 ${v}　／　基準 ${o.b.toFixed(o.ax.dec)}${o.ax.u}`,
+       o.ax.dir > 0 ? (o.v >= o.b ? "基準を上回っています。" : "基準を下回っています。")
+                    : (o.v <= o.b ? "目安の範囲に収まっています。" : "目安を超えています。"),
+       o.ax.tip]);
+  });
   vals.forEach((o, i) => {
     const a = (i * 60 - 90) * Math.PI / 180;
     const lx = cx + Math.cos(a) * (RR + 24), ly = cy + Math.sin(a) * (RR + 24);
@@ -186,25 +211,31 @@ function bsBlock(r, f) {
     items.forEach((it) => {
       const hh = px(it.a);
       if (hh <= 0) return;
-      out += R(x, y, cw, hh, it.c, { st: "#FFFFFF", sw: 1 });
+      let blk = R(x, y, cw, hh, it.c, { st: "#FFFFFF", sw: 1 });
       if (hh >= 19) {
-        out += T(x + 8, y + hh / 2 - 2, it.n, { s: 10, w: "700", c: it.light ? "#FFFFFF" : C.ink });
-        out += T(x + cw - 8, y + hh / 2 + 11, `${f.yenU(it.a)}（${Math.round(it.a / scale * 100)}%）`,
+        blk += T(x + 8, y + hh / 2 - 2, it.n, { s: 10, w: "700", c: it.light ? "#FFFFFF" : C.ink });
+        blk += T(x + cw - 8, y + hh / 2 + 11, `${f.yenU(it.a)}（${Math.round(it.a / scale * 100)}%）`,
           { a: "end", s: 9.5, c: it.light ? "#FFFFFF" : C.soft });
       }
+      out += tip(blk, [it.n, `${f.yenU(it.a)} ${f.U_LABEL()}　／　総資産の ${Math.round(it.a / scale * 100)}%`, it.tip]);
       y += hh;
     });
     return out;
   };
   h += stack(lx, [
-    { n: "現金・預金", a: cur.cash, c: C.sky },
-    { n: "その他の流動資産", a: Math.max(cur.currentAssets - cur.cash, 0), c: C.aqua },
-    { n: "固定資産", a: cur.fixedAssets + cur.deferred, c: C.mist },
+    { n: "現金・預金", a: cur.cash, c: C.sky, tip: "すぐ使えるお金。月商の何か月分あるかが「手元流動性」です。" },
+    { n: "その他の流動資産", a: Math.max(cur.currentAssets - cur.cash, 0), c: C.aqua,
+      tip: "売掛金・受取手形・棚卸資産など、1年以内に現金化する見込みの資産です。" },
+    { n: "固定資産", a: cur.fixedAssets + cur.deferred, c: C.mist,
+      tip: "建物・機械・投資有価証券など、長く使う資産。多いほど資本が寝ています。" },
   ]);
   h += stack(rx, [
-    { n: "有利子負債", a: cur.interestBearingDebt, c: C.sea, light: true },
-    { n: "その他の負債", a: Math.max(cur.totalLiab - cur.interestBearingDebt, 0), c: "#CBDEE7" },
-    { n: "純資産", a: Math.max(cur.equity, 0), c: C.peridot, light: true },
+    { n: "有利子負債", a: cur.interestBearingDebt, c: C.sea, light: true,
+      tip: "利息を払って借りているお金（短期借入金＋長期借入金・社債）。債務償還年数の分子になります。" },
+    { n: "その他の負債", a: Math.max(cur.totalLiab - cur.interestBearingDebt, 0), c: "#CBDEE7",
+      tip: "買掛金・未払金など、利息のつかない負債です。" },
+    { n: "純資産", a: Math.max(cur.equity, 0), c: C.peridot, light: true,
+      tip: "返さなくていいお金。総資産に占めるこの厚みが自己資本比率です。" },
   ]);
   if (cur.equity < 0) {
     const yA = top + px(assets), yL = top + px(cur.totalLiab);
@@ -242,7 +273,10 @@ function trend(r, f) {
   S.forEach((s, i) => {
     const cx = x0 + pw * (i + 0.5) / 3;
     if (s > 0) {
-      h += R(cx - bw / 2, YS(s), bw, y1 - YS(s), C.sky, { rx: 3 });
+      h += tip(R(cx - bw / 2, YS(s), bw, y1 - YS(s), C.sky, { rx: 3 }),
+        [`${labels[i]}　売上高`, `${f.yenU(s)} ${f.U_LABEL()}`,
+         i > 0 ? (S[i] >= S[i - 1] ? `前期比 +${f.yenU(s - S[i - 1])}（増収）` : `前期比 ${f.yenU(s - S[i - 1])}（減収）`) : "",
+         "棒の高さより、折れ線の向きを先に見てください。"]);
       // 経常利益の点が棒より上にあるときは、棒のラベルを棒の中に入れて衝突を避ける
       const inside = YO(O[i]) < YS(s) + 10;
       h += T(cx, YS(s) + (inside ? 16 : -6), f.yenU(s),
@@ -254,7 +288,11 @@ function trend(r, f) {
   h += `<polyline points="${pts.join(" ")}" fill="none" stroke="${C.warn}" stroke-width="2.6"/>`;
   O.forEach((o, i) => {
     const cx = x0 + pw * (i + 0.5) / 3, yy = YO(o);
-    h += `<circle cx="${cx}" cy="${yy}" r="4.2" fill="${C.warn}" stroke="#fff" stroke-width="1.4"/>`;
+    h += tip(`<circle cx="${cx}" cy="${yy}" r="4.2" fill="${C.warn}" stroke="#fff" stroke-width="1.4"/>`
+      + `<circle cx="${cx}" cy="${yy}" r="13" fill="transparent"/>`,
+      [`${labels[i]}　経常利益`, `${f.yenU(o)} ${f.U_LABEL()}`,
+       S[i] > 0 ? `売上高経常利益率 ${(o / S[i] * 100).toFixed(1)}%` : "",
+       "本業の利益に、受取利息や支払利息などを加減したもの。会社の総合的な稼ぐ力です。"]);
     const onBar = S[i] > 0 && yy > YS(S[i]);
     h += T(cx, yy + (onBar ? 18 : -10), f.yenU(o), { a: "middle", s: 9.5, w: "700", c: C.warn, halo: 1 });
   });
@@ -286,8 +324,13 @@ function repay(r, f) {
   const gw = pw / 3, bw = gw * 0.28;
   for (let i = 0; i < 3; i++) {
     const gx = x0 + gw * i + gw / 2, a = cf, b = rp[i];
-    h += R(gx - bw - 3, Math.min(Y(a), Y(0)), bw, Math.abs(Y(a) - Y(0)), C.sea, { rx: 3 });
-    h += R(gx + 3, Math.min(Y(b), Y(0)), bw, Math.abs(Y(b) - Y(0)), C.rose, { rx: 3 });
+    h += tip(R(gx - bw - 3, Math.min(Y(a), Y(0)), bw, Math.abs(Y(a) - Y(0)), C.sea, { rx: 3 }),
+      [`${i + 1}年目　簡易キャッシュフロー`, `${f.yenU(a)} ${f.U_LABEL()}`,
+       "当期純利益＋減価償却費。1年で手元に残るお金の目安です。",
+       "減価償却費は、費用として引かれているのにお金が出ていかないため足し戻します。"]);
+    h += tip(R(gx + 3, Math.min(Y(b), Y(0)), bw, Math.abs(Y(b) - Y(0)), C.rose, { rx: 3 }),
+      [`${i + 1}年目　約定返済額`, `${f.yenU(b)} ${f.U_LABEL()}`,
+       a - b >= 0 ? `返済後に ${f.yenU(a - b)} 残る見込みです。` : `${f.yenU(b - a)} 不足します。借換えか手元資金の取り崩しが前提になります。`]);
     if (a !== 0) h += T(gx - bw / 2 - 3, Y(a) + (a < 0 ? 12 : -6), f.yenU(a), { a: "middle", s: 9, w: "700", c: C.seaDeep });
     if (b !== 0) h += T(gx + bw / 2 + 3, Y(b) - 6, f.yenU(b), { a: "middle", s: 9, w: "700", c: C.warn });
     h += T(gx, y1 + 16, `${i + 1}年目`, { a: "middle", s: 10, w: "700", c: C.ink });
@@ -323,7 +366,12 @@ function gauge(r) {
     h += T(210, 26, "返済原資なし（簡易CFがマイナス）", { a: "middle", s: 14, w: "700", c: C.deep });
   } else {
     const px = X(red.years);
-    h += `<polygon points="${px},${y - 2} ${px - 8},${y - 15} ${px + 8},${y - 15}" fill="${C.ink}"/>`;
+    h += tip(`<polygon points="${px},${y - 2} ${px - 8},${y - 15} ${px + 8},${y - 15}" fill="${C.ink}"/>`
+      + `<rect x="${px - 16}" y="${y - 18}" width="32" height="${bh + 20}" fill="transparent"/>`,
+      ["債務償還年数", `${n1(red.years)} 年`,
+       red.years <= 10 ? "10年以内で、健全とされる水準です。"
+         : red.years <= 20 ? "10年を超えており、銀行がまず気にする水準です。" : "20年超。いまの稼ぐペースでは返し切るのが難しい水準です。",
+       "業種で適正な長さは変わります。設備が重い業種は長く、サービス業は短くなりやすい指標です。"]);
     h += T(210, 26, `${n1(red.years)} 年`, { a: "middle", s: 20, w: "700", c: C.ink });
   }
   h += T(210, y + bh + 34, "要償還債務（有利子負債−現預金−正常運転資金）÷ 簡易キャッシュフロー",
@@ -416,4 +464,94 @@ export function renderViz(r, f) {
       </div>
     </div>
   </div>`;
+}
+
+/* ============================================ 信用程度バロメーター */
+const RANKS = [
+  ["E", 0, 35, "#8C3B22", "原則として新規与信は見合わせ、既存与信は回収・保全を優先"],
+  ["D", 36, 50, "#B5623F", "慎重な対応が必要。保全策の検討を推奨"],
+  ["C", 51, 65, "#527695", "概ね可としつつ、定期的なモニタリングが必要"],
+  ["B", 66, 85, "#82B33A", "通常の与信取引に支障はない水準"],
+  ["A", 86, 100, "#4E8F2E", "積極的に取り組んで差し支えない水準"],
+];
+function rankBar(total) {
+  const W = 640, x0 = 10, x1 = W - 10, y = 40, bh = 30;
+  const X = (v) => x0 + (x1 - x0) * Math.max(0, Math.min(100, v)) / 100;
+  let h = "";
+  RANKS.forEach(([g, lo, hi, col, pol]) => {
+    const a = X(lo), b = X(hi + (g === "A" ? 0 : 1));
+    h += tip(R(a, y, b - a - 2, bh, col, { rx: 3 })
+      + T((a + b) / 2, y + 20, g, { a: "middle", s: 15, w: "700", c: "#fff" }),
+      [`信用程度 ${g}`, `${lo}〜${hi}点`, pol]);
+  });
+  const px = X(total);
+  h += `<polygon points="${px},${y - 3} ${px - 7},${y - 15} ${px + 7},${y - 15}" fill="#0F1A22"/>`;
+  h += L(px, y - 3, px, y + bh + 3, "#0F1A22", 2.4);
+  h += T(Math.max(26, Math.min(W - 26, px)), y + bh + 20, `${total}点`, { a: "middle", s: 13, w: "700", c: C.ink });
+  h += T(x0, y + bh + 20, "0", { s: 11, c: C.faint });
+  h += T(x1, y + bh + 20, "100", { a: "end", s: 11, c: C.faint });
+  return svg("0 0 640 90", h);
+}
+
+/** 判定結果ヘッダ（総合スコア・信用程度・バロメーター） */
+export function renderHead(r, f, policy) {
+  const s = r.scores;
+  const cls = s.rank === "C" ? " is-mid" : (s.rank === "D" || s.rank === "E") ? " is-low" : "";
+  return `
+  <div class="calc">
+    <h2>判定結果</h2>
+    <div class="vizhead${cls}">
+      <p class="vizhead__co">${esc(r.input.name || "（会社名が未入力です）")}</p>
+      <p class="vizhead__meta">${esc(r.input.industry.trim())}　／　${esc(r.input.capitalTier)}　／　${esc(r.input.listing)}　／　単位：${f.U_LABEL()}</p>
+      <div class="vizhead__row">
+        <div class="vizhead__num">
+          <span class="vizhead__lab">総合スコア</span>
+          <p class="vizhead__score"><b>${s.total}</b> / 100</p>
+        </div>
+        <div class="vizhead__num">
+          <span class="vizhead__lab">信用程度</span>
+          <p class="vizhead__grade">${s.rank}</p>
+        </div>
+        <div class="vizhead__bar">${rankBar(s.total)}</div>
+      </div>
+      <p class="vizhead__policy">${esc(policy)}</p>
+    </div>
+  </div>`;
+}
+
+/* ================================================== ツールチップの配線 */
+let tipEl = null;
+/** 図の上にマウス（または指）を乗せると、その数字の意味を出す */
+export function attachTips(root) {
+  if (!root) return;
+  if (!tipEl) {
+    tipEl = document.createElement("div");
+    tipEl.className = "viz__tip";
+    tipEl.setAttribute("role", "tooltip");
+    document.body.appendChild(tipEl);
+  }
+  const hide = () => { tipEl.classList.remove("is-on"); };
+  const show = (el, x, y) => {
+    const raw = el.getAttribute("data-tip");
+    if (!raw) return;
+    const [head, ...rest] = raw.split("|");
+    tipEl.innerHTML = `<b>${head}</b>` + rest.map((t) => `<span>${t}</span>`).join("");
+    tipEl.classList.add("is-on");
+    const w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+    let left = x + 14, top = y + 16;
+    if (left + w > window.innerWidth - 8) left = x - w - 14;
+    if (top + h > window.innerHeight - 8) top = y - h - 14;
+    tipEl.style.left = Math.max(8, left) + "px";
+    tipEl.style.top = Math.max(8, top) + "px";
+  };
+  root.addEventListener("pointermove", (e) => {
+    const el = e.target.closest("[data-tip]");
+    if (el) show(el, e.clientX, e.clientY); else hide();
+  });
+  root.addEventListener("pointerleave", hide);
+  root.addEventListener("pointerdown", (e) => {
+    const el = e.target.closest("[data-tip]");
+    if (el) show(el, e.clientX, e.clientY);
+  });
+  window.addEventListener("scroll", hide, { passive: true });
 }

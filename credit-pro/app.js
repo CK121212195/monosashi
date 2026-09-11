@@ -3,11 +3,11 @@
  * 計算は engine.js、Excel生成は xlsx-export.js。ここはUIだけを担当する。
  * ========================================================================== */
 import { evaluate, emptyInput, INDUSTRIES, CAPITAL_TIERS, LISTING_OPTIONS, POLICY }
-  from "./engine.js?v=23";
-import { downloadXlsx } from "./xlsx-export.js?v=23";
-import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=23";
-import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=23";
-import { renderViz } from "./viz.js?v=23";
+  from "./engine.js?v=24";
+import { downloadXlsx } from "./xlsx-export.js?v=24";
+import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=24";
+import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=24";
+import { renderViz, renderHead, attachTips } from "./viz.js?v=24";
 
 const $ = (id) => document.getElementById(id);
 const COLS = ["今期（直近）", "前期", "前々期"];
@@ -141,7 +141,13 @@ function init() {
     "<thead><tr><th style='text-align:left'>項　目</th><th>1年目</th><th>2年目</th><th>3年目</th></tr></thead>" +
     "<tbody><tr><td class='lb'>年間約定返済額（元金）</td>" +
     [0, 1, 2].map((i) => `<td><input type="number" step="1" data-k="repayment" data-i="${i}"></td>`).join("") +
-    "</tr></tbody>";
+    "</tr><tr><td class='lb'>└ 自動見積の前提：長期借入金・社債の残存平均返済年数</td>" +
+    `<td><input type="number" step="1" min="1" id="f_repayYears"></td>` +
+    `<td colspan="2" class="repay-note"><span id="repayState"></span>` +
+    `<button type="button" class="linklike" id="btnRepayAuto">自動見積に戻す</button></td></tr></tbody>`;
+  $("btnRepayAuto").addEventListener("click", () => {
+    state.repayManual = false; applyAutoRepay(); paint(); render();
+  });
 
   document.addEventListener("input", onInput);
   document.querySelectorAll('input[name="dispUnit"]').forEach((el) =>
@@ -346,6 +352,8 @@ function restoreDraft() {
 
 function onInput(e) {
   const t = e.target, k = t.dataset.k, i = t.dataset.i;
+  // 返済額を手で触ったら、以後は自動見積で上書きしない
+  if (k === "repayment") state.repayManual = true;
   if (k !== undefined && i !== undefined) {
     // 金額欄は表示単位で入力されるので、内部の百万円へ戻してから収める
     state[k][+i] = t.type === "number"
@@ -408,7 +416,30 @@ function syncFinAccordions() {
 }
 
 /* ---------------------------------------------------------------- 再計算 */
+/**
+ * 借入金の返済計画を自動で見積もる。
+ * Excel版 Pro と同じ考え方：長期借入金・社債 ÷ 残存平均返済年数（既定5年）を、
+ * 1〜3年目とも同額の約定返済額とみなす。返済予定表がある場合は手で上書きできる。
+ * 当座貸越・短期継続融資の折返し分は、返済していないので含めない（＝短期借入金は使わない）。
+ */
+function applyAutoRepay() {
+  if (state.repayManual) return;
+  const yrs = Math.max(1, Number(state.repayYears) || 5);
+  const v = Math.round((Number(state.longDebt && state.longDebt[0]) || 0) / yrs);
+  state.repayment = [v, v, v];
+  [0, 1, 2].forEach((i) => {
+    const el = document.querySelector(`input[data-k="repayment"][data-i="${i}"]`);
+    if (el) el.value = toDisp(v);
+  });
+  const ys = $("f_repayYears"); if (ys && ys.value === "") ys.value = yrs;
+  const st2 = $("repayState");
+  if (st2) st2.textContent = v > 0
+    ? `長期借入金・社債 ${yenU(state.longDebt[0])}${U_LABEL()} ÷ ${yrs}年 を初期値にしています。　`
+    : "長期借入金・社債を入れると初期値が自動で入ります。　";
+}
+
 function render() {
+  applyAutoRepay();
   const r = evaluate(state);
   document.querySelectorAll("[data-calc]").forEach((el) => {
     const v = r.fy[+el.dataset.i][el.dataset.calc];
@@ -423,19 +454,13 @@ function render() {
     ? `${bad.join("・")}で、資産合計と負債・純資産合計が一致していません。指標がすべて狂うため、必ず0にしてください。`
     : "";
   $("resultCol").innerHTML = report(r);
+  attachTips($("resultCol"));
 }
 
 function report(r) {
   const s = r.scores, cur = r.cur, bm = r.benchmark, red = r.redemption;
   const cls = s.rank === "C" ? " is-mid" : (s.rank === "D" || s.rank === "E") ? " is-low" : "";
-  const axes = [
-    ["① 業歴", s.gyoreki, 10], ["② 資本構成", s.shihon, 12], ["③ 規模", s.kibo, 18],
-    ["④ 損益", s.soneki, 10], ["⑤ 経営者", s.keiei, 20], ["⑥ 償還余力", s.shokan, 30],
-  ].map(([n, got, max]) => `
-    <div class="axis"><div class="axis__top">
-      <span class="axis__name">${n}</span>
-      <span class="axis__val">${got} / ${max}点</span></div>
-      <div class="bar"><i style="width:${Math.round((got / max) * 100)}%"></i></div></div>`).join("");
+  // 6軸の内訳は renderViz の「スコアの内訳」で図として出している
 
   const p = r.ratios.periods;
   const U = `<span class="unit-tag">${U_LABEL()}</span>`, PC = '<span class="unit-tag">％</span>';
@@ -451,16 +476,7 @@ function report(r) {
     `<tr><th>${n}${u}</th><td>${a}</td><td>${b}</td><td>${c}</td></tr>`).join("");
 
   return `
-  <div class="calc">
-    <h2>判定結果</h2>
-    <div class="result${cls}">
-      <div class="result__label">信用程度</div>
-      <div class="result__grade">${s.rank}</div>
-      <div class="result__score"><b>${s.total}</b> / 100点</div>
-      <p style="margin:10px 0 0;">${POLICY[s.rank]}</p>
-    </div>
-    <div class="axes">${axes}</div>
-  </div>
+  ${renderHead(r, { U_LABEL }, POLICY[s.rank])}
 
   <div class="calc">
     <h2>与信限度額の目安</h2>
@@ -1191,7 +1207,7 @@ function demo() {
     longDebt: [700, 900, 1100], otherFixedLiab: [120, 120, 120], equity: [5000, 4240, 3590],
     ceoName: "見本　太郎", ceoAge: 54, industryYears: 26, ceoYears: 15,
     ownHome: "あり", disclosure: "あり", successor: "あり",
-    repayment: [250, 230, 220],
+    repayment: [250, 230, 220], repayManual: true,
     memo: "主力は金融機関向け業務システムの受託開発。上位5社で売上の約6割を占めるが、いずれも長期契約で取引関係は安定。3期連続の増収増益で、実質無借金。",
   });
   return d;
