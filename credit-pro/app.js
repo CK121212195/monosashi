@@ -3,10 +3,11 @@
  * 計算は engine.js、Excel生成は xlsx-export.js。ここはUIだけを担当する。
  * ========================================================================== */
 import { evaluate, emptyInput, INDUSTRIES, CAPITAL_TIERS, LISTING_OPTIONS, POLICY }
-  from "./engine.js?v=22";
-import { downloadXlsx } from "./xlsx-export.js?v=22";
-import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=22";
-import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=22";
+  from "./engine.js?v=23";
+import { downloadXlsx } from "./xlsx-export.js?v=23";
+import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=23";
+import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=23";
+import { renderViz } from "./viz.js?v=23";
 
 const $ = (id) => document.getElementById(id);
 const COLS = ["今期（直近）", "前期", "前々期"];
@@ -468,6 +469,8 @@ function report(r) {
       <div class="result__score"><b>${yenU(r.creditLimit.value)}</b> ${U_LABEL()}<span class="unit-tag">単位：${U_LABEL()}</span></div>
     </div>
   </div>
+
+  ${renderViz(r, { yenU, U_LABEL, pct })}
 
   <div class="calc">
     <h2>財務ハイライト（直近3期）</h2>
