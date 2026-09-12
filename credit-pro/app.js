@@ -3,11 +3,11 @@
  * 計算は engine.js、Excel生成は xlsx-export.js。ここはUIだけを担当する。
  * ========================================================================== */
 import { evaluate, emptyInput, INDUSTRIES, CAPITAL_TIERS, LISTING_OPTIONS, POLICY }
-  from "./engine.js?v=24";
-import { downloadXlsx } from "./xlsx-export.js?v=24";
-import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=24";
-import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=24";
-import { renderViz, renderHead, attachTips } from "./viz.js?v=24";
+  from "./engine.js?v=25";
+import { downloadXlsx } from "./xlsx-export.js?v=25";
+import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=25";
+import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=25";
+import { renderViz, renderHead, attachTips } from "./viz.js?v=25";
 
 const $ = (id) => document.getElementById(id);
 const COLS = ["今期（直近）", "前期", "前々期"];
@@ -154,6 +154,9 @@ function init() {
     el.addEventListener("change", () => setDispUnit(el.value, "手動")));
   $("btnDemo").addEventListener("click", () => { state = demo(); paint(); render(); openManual(); });
   $("btnSample").addEventListener("click", onSample);
+  document.querySelectorAll("[data-demo]").forEach((b) =>
+    b.addEventListener("click", () => renderDemo(b.dataset.demo)));
+  if ($("demoCol")) renderDemo("good");
   $("btnClear").addEventListener("click", () => {
     state = emptyInput();
     state.baseDate = new Date().toISOString().slice(0, 10);
@@ -272,6 +275,7 @@ async function pollLicense(order) {
     const { state, expiresAt } = await checkLicense(await companyFingerprint(state_name()));
     if (state === "licensed") {
       licensed = true;
+      try { render(); } catch (e) { /* 入力がまだ無いときは何もしない */ }
       showLicenseDiag("licensed", order, null, expiresAt);
       showGate("gateOk");
       if (window.gtag) gtag("event", "license_ok", { tool: "credit-pro" });
@@ -300,6 +304,7 @@ async function refreshLicense() {
   const fp = await companyFingerprint(state_name());
   const { state: st, order, reason, expiresAt } = await checkLicense(fp);
   licensed = st === "licensed";
+  if (licensed) { try { render(); } catch (e) { /* 入力がまだ無いときは何もしない */ } }
   showLicenseDiag(st, order, reason, expiresAt);
   // 決済直後は通知の到着が遅れることがあるので、記録が無いときだけ確認し直す
   if (st === "unlicensed" && order && reason === "not_found") { pollLicense(order); return; }
@@ -453,8 +458,9 @@ function render() {
   al.textContent = bad.length
     ? `${bad.join("・")}で、資産合計と負債・純資産合計が一致していません。指標がすべて狂うため、必ず0にしてください。`
     : "";
-  $("resultCol").innerHTML = report(r);
-  attachTips($("resultCol"));
+  // 判定結果とグラフは有料。未購入のあいだは中身を一切出さない。
+  $("resultCol").innerHTML = licensed ? report(r) : lockedCard();
+  if (licensed) attachTips($("resultCol"));
 }
 
 function report(r) {
@@ -515,23 +521,40 @@ function report(r) {
  * 中身は記入例の架空データなので、購入前でも配れる。
  */
 async function onSample() {
-  const btn = $("btnSample");
+  // サンプルは静的ファイル。⑥ダッシュボード（グラフ5点）入りで、数式は値に固めてある。
   const note = $("sampleNote");
-  const label = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = "作成中…";
-  if (note) note.textContent = "ファイルを組み立てています。数秒かかります。";
   try {
-    const r = evaluate(demo());
-    await downloadXlsx(r, "与信判断検討書_サンプル.xlsx", UNITS[dispUnit]);
-    if (note) note.textContent = `ダウンロードしました（金額の単位：${U_LABEL()}）。`;
+    const a = document.createElement("a");
+    a.href = "./assets/sample-dashboard.xlsx?v=25";
+    a.download = "財務でポン_サンプル.xlsx";
+    document.body.appendChild(a); a.click(); a.remove();
+    if (note) note.textContent = "ダウンロードしました。⑥ダッシュボードのシートにグラフが入っています。";
     if (window.gtag) gtag("event", "xlsx_sample", { tool: "credit-pro" });
   } catch (e) {
-    if (note) note.textContent = "作成に失敗しました：" + e.message;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = label;
+    if (note) note.textContent = "ダウンロードに失敗しました：" + e.message;
   }
+}
+
+
+/**
+ * 未購入のときに判定結果の代わりに出すカード。
+ * スコアもランクも出さない。何が見られるのかだけを書く。
+ */
+function lockedCard() {
+  return `
+  <div class="calc lock">
+    <div class="lock__badge">判定は完了しました</div>
+    <h2 class="lock__h">結果とグラフは、お支払い後にご覧いただけます</h2>
+    <p class="lock__lead">読み取った内容はこの画面に残っています。決済後、そのまま結果が開きます。</p>
+    <ul class="lock__list">
+      <li>総合評点（100点満点）と信用程度 A〜E、取引方針の目安</li>
+      <li>与信限度額の目安（自己資本基準・月商基準のいずれか小さい方）</li>
+      <li>財務ハイライト（直近3期）と自動所見</li>
+      <li>7つの図 — ①スコアの内訳／②財務指標のかたち／③貸借対照表のかたち／④売上と利益の推移／⑤返せるお金と、返す額／⑥借金を返し切るまでの年数／⑦グラフから読み取れること</li>
+      <li>稟議に添付できるExcel（6シート・ダッシュボード付き）</li>
+    </ul>
+    <p class="lock__note">どんなものが出てくるかは、<a href="#step1">ページ上部の「評価の高い会社／低い会社」</a>で実物をご覧いただけます。</p>
+  </div>`;
 }
 
 /* -------------------------------------------------------------- ダウンロード */
@@ -787,6 +810,72 @@ function initShots() {
   $("shotPrev").addEventListener("click", () => { shotAt = (shotAt + SHOTS.length - 1) % SHOTS.length; paintShot(); });
   $("shotNext").addEventListener("click", () => { shotAt = (shotAt + 1) % SHOTS.length; paintShot(); });
   paintShot();
+}
+
+
+/* ============================================================ 比較デモ
+ * 「評価の高い会社」「評価の低い会社」を並べて、出力される図を先に見てもらう。
+ * 判定エンジンは本番とまったく同じものを使う。
+ * ========================================================================= */
+const DEMO_GOOD = () => Object.assign(emptyInput(), {
+  name: "サンプル情報システム株式会社（評価の高い例）", industry: "　情報通信業",
+  capitalTier: "1億円以上10億円未満", listing: "未上場",
+  founded: "1998-04-01", baseDate: new Date().toISOString().slice(0, 10),
+  employees: 320, capital: 150,
+  terms: ["第28期（直近）", "第27期", "第26期"],
+  sales: [10200, 9600, 9100], cogs: [7140, 6816, 6552], sga: [2150, 2080, 2030],
+  nonOpInc: [20, 18, 16], nonOpExp: [30, 34, 38], extraInc: [0, 0, 0], extraExp: [0, 0, 30],
+  tax: [290, 220, 150], depreciation: [260, 250, 240],
+  cash: [2600, 2200, 1900], receivables: [1750, 1650, 1560], inventory: [320, 300, 290],
+  otherCurrentAssets: [230, 210, 200], tangible: [1900, 1880, 1860],
+  otherFixedAssets: [900, 850, 800], deferred: [0, 0, 0],
+  payables: [780, 750, 720], shortDebt: [250, 280, 300], otherCurrentLiab: [850, 800, 780],
+  longDebt: [700, 900, 1100], otherFixedLiab: [120, 120, 120], equity: [5000, 4240, 3590],
+  ceoName: "見本　太郎", ceoAge: 54, industryYears: 26, ceoYears: 15,
+  ownHome: "あり", disclosure: "あり", successor: "あり",
+  repayYears: 5, repayManual: false,
+});
+const DEMO_BAD = () => Object.assign(emptyInput(), {
+  name: "サンプル商事株式会社（評価の低い例）", industry: "　卸売業、小売業",
+  capitalTier: "1,000万円以上1億円未満", listing: "未上場",
+  founded: "2022-04-01", baseDate: new Date().toISOString().slice(0, 10),
+  employees: 25, capital: 30,
+  terms: ["第4期（直近）", "第3期", "第2期"],
+  sales: [850, 920, 1000], cogs: [700, 745, 790], sga: [190, 190, 190],
+  nonOpInc: [2, 2, 2], nonOpExp: [12, 10, 9], extraInc: [0, 0, 0], extraExp: [0, 0, 0],
+  tax: [0, 0, 4], depreciation: [12, 12, 12],
+  cash: [40, 70, 110], receivables: [180, 195, 210], inventory: [150, 160, 165],
+  otherCurrentAssets: [20, 20, 20], tangible: [90, 100, 110],
+  otherFixedAssets: [20, 20, 20], deferred: [0, 0, 0],
+  payables: [120, 125, 130], shortDebt: [160, 150, 130], otherCurrentLiab: [50, 50, 50],
+  longDebt: [130, 150, 170], otherFixedLiab: [10, 10, 10], equity: [30, 80, 105],
+  ceoName: "見本　次郎", ceoAge: 41, industryYears: 6, ceoYears: 4,
+  ownHome: "なし", disclosure: "なし", successor: "なし",
+  repayYears: 5, repayManual: false,
+});
+
+let demoKind = "good";
+function renderDemo(kind) {
+  demoKind = kind;
+  const col = $("demoCol"); if (!col) return;
+  const d = kind === "bad" ? DEMO_BAD() : DEMO_GOOD();
+  const yrs = Math.max(1, Number(d.repayYears) || 5);
+  const v = Math.round((Number(d.longDebt[0]) || 0) / yrs);
+  d.repayment = [v, v, v];
+  const r = evaluate(d);
+  // デモは百万円で固定して表示する（読み込んだ決算書の単位に引きずられないように）
+  const f = { yenU: (n) => fmtNum(n), U_LABEL: () => "百万円", pct: (n) => (n * 100).toFixed(1) + "%" };
+  col.innerHTML = renderHead(r, f, POLICY[r.scores.rank]) + renderViz(r, f);
+  attachTips(col);
+  document.querySelectorAll("[data-demo]").forEach((b) => {
+    const on = b.dataset.demo === kind;
+    b.classList.toggle("is-on", on);
+    b.setAttribute("aria-selected", String(on));
+  });
+}
+function fmtNum(n) {
+  if (!isFinite(n) || n === 0) return "0";
+  return (n < 0 ? "▲" : "") + Math.abs(Math.round(n)).toLocaleString("ja-JP");
 }
 
 /* ------------------------------------------------------- 金額単位の換算 */

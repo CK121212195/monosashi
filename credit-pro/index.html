@@ -512,6 +512,31 @@ input,select,textarea,button{font-weight:600}
 .viz__tip span{display:block;}
 .viz__tip span+span{margin-top:3px;color:rgba(255,255,255,.82);}
 .repay-note{font-size:12.5px;color:var(--ink-soft);text-align:left;line-height:1.7;}
+
+/* ===== 比較デモ ===== */
+.demo{margin:20px 0 30px;}
+.demo__tabs{display:flex;gap:10px;flex-wrap:wrap;}
+.demo__tabs button{font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:.04em;
+  padding:14px 26px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);
+  color:var(--ink-soft);cursor:pointer;transition:background .2s,color .2s,box-shadow .2s,border-color .2s;}
+.demo__tabs button:hover{border-color:var(--sea-deep);color:var(--ink);}
+.demo__tabs button.is-on{background:var(--sea-deep);border-color:var(--sea-deep);color:#fff;
+  box-shadow:0 10px 24px rgba(51,82,108,.30);}
+.demo__hint{margin:12px 0 16px;font-size:14px;color:var(--ink-soft);}
+.demo__col .calc{padding:0;border:none;box-shadow:none;background:none;}
+.demo__col h2{font-family:var(--serif);font-size:19px;margin:22px 0 12px;}
+
+/* ===== 未購入のときの判定結果 ===== */
+.lock{text-align:left;}
+.lock__badge{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.1em;
+  padding:5px 14px;border-radius:999px;background:var(--mist);color:var(--sea-deep);margin:0 0 14px;}
+.lock__h{font-family:var(--serif);font-size:20px;font-weight:700;letter-spacing:.04em;margin:0 0 10px;}
+.lock__lead{margin:0 0 18px;font-size:15px;line-height:1.9;color:var(--ink-soft);}
+.lock__list{list-style:none;margin:0 0 18px;padding:0;}
+.lock__list li{position:relative;padding-left:24px;margin:10px 0;font-size:15px;line-height:1.85;}
+.lock__list li::before{content:"";position:absolute;left:0;top:.72em;width:9px;height:9px;
+  border-radius:50%;background:var(--aqua);}
+.lock__note{margin:0;font-size:14px;color:var(--ink-soft);}
 </style>
 
 <!-- Google tag (gtag.js) -->
@@ -565,42 +590,24 @@ input,select,textarea,button{font-weight:600}
         <span class="badge">CREDIT ASSESSMENT PRO</span>
         <h1>財務でポン！<br><span class="h1sub">決算書を入れるだけで、決算分析と与信判定</span></h1>
         <p>決算書のPDFを置くだけで、自動分析してExcel形式で出力。取引先の信用力を6軸100点満点で判定し、稟議にそのまま添付できるレポートを作成します。信用程度A〜E、与信限度額の目安、主要財務指標14種まで自動で計算します。</p>
-        <p class="head__safe">判定は無料です。ファイルはブラウザの中だけで処理され、どこにも送信されません。</p>
+        <p class="head__safe">ファイルはブラウザの中だけで処理され、どこにも送信されません。</p>
       </header>
 
       <section class="step" id="step1">
-        <div class="step__head"><span class="step__no">1</span><h2>画面で、ここまで見えます</h2></div>
-        <p class="step__lead">決算書を読み込むと、判定結果がそのまま<b>7つの図</b>になります。ここまでは<b>無料</b>です。
-        数字の表のままでは伝わらない相手に、形と色で見せるために作りました。
-        <b>図の上にマウスを乗せると、その数字が何を意味するのかが出ます。</b></p>
+        <div class="step__head"><span class="step__no">1</span><h2>PDFを置くだけで、ポン。</h2></div>
+        <p class="step__lead">決算書のPDFをドラッグ＆ドロップ。それだけで、財務分析と与信判定が<b>7つの図</b>になって出てきます。</p>
 
-        <div class="feat">
-          <div class="feat__card"><span class="feat__no">01</span>
-            <h3>スコアの内訳</h3>
-            <p>100点をどこで積み、どこで落としたか。バーの長さが配点なので、<b>重い項目で落としたのか軽い項目で落としたのか</b>が形で分かります。</p></div>
-          <div class="feat__card"><span class="feat__no">02</span>
-            <h3>財務指標のかたち</h3>
-            <p>6軸のレーダーチャート。点線の六角形が業種基準です。<b>へこんでいる方向が、そのまま弱点</b>になります。実額の比較表つき。</p></div>
-          <div class="feat__card"><span class="feat__no">03</span>
-            <h3>貸借対照表のかたち</h3>
-            <p>左が持ち物、右がお金の出どころ。<b>緑の厚みが自己資本比率、上の濃い青が有利子負債</b>。債務超過なら緑が消えます。</p></div>
-          <div class="feat__card"><span class="feat__no">04</span>
-            <h3>売上と利益の推移</h3>
-            <p>棒が売上高、折れ線が経常利益。増収減益なのか減収減益なのか、<b>水準ではなく「向き」</b>が最初に目に入ります。</p></div>
-          <div class="feat__card"><span class="feat__no">05</span>
-            <h3>返せるお金と、返す額</h3>
-            <p>1年で手元に残るお金と、その年の約定返済額を並べます。<b>青が桃色より低い年が続くなら、借換え前提の資金繰り</b>です。</p></div>
-          <div class="feat__card"><span class="feat__no">06</span>
-            <h3>借金を返し切るまでの年数</h3>
-            <p>健全・要注意・厳しいの3帯メーター。<b>10年を超えると銀行はまず気にします。</b>返済原資がないときは、年数を出さずにそう表示します。</p></div>
-          <div class="feat__card feat__card--wide"><span class="feat__no">07</span>
-            <h3>グラフから読み取れること</h3>
-            <p>6つの図を見て何を言えばいいのかを、入力された数字から自動で書き出します。稟議の所見欄にそのまま使える文章です。</p></div>
+        <div class="demo">
+          <div class="demo__tabs" role="tablist" aria-label="サンプルの切替">
+            <button class="is-on" data-demo="good" role="tab" aria-selected="true" type="button">評価の高い会社</button>
+            <button data-demo="bad" role="tab" aria-selected="false" type="button">評価の低い会社</button>
+          </div>
+          <p class="demo__hint">切り替えて見比べてください。<b>図の上にマウスを乗せると、その数字の意味が出ます。</b></p>
+          <div id="demoCol" class="demo__col"></div>
         </div>
 
         <div class="sample">
-          <p class="sample__lead"><b>稟議に添付するExcelは、判定のあと1社500円です。</b>画面の判定とグラフは何社でも無料でご覧いただけます。
-          Excelは5シート構成で、A4縦に収まるよう組んであります。架空の会社の数値で、実際に出力されるものとまったく同じファイルを購入前にお試しいただけます。</p>
+          <p class="sample__lead"><b>Excelも同じものが出ます。</b>グラフを載せたダッシュボードつき・6シート構成。架空の会社の数値で実物をお試しいただけます。</p>
           <button class="btn-sample" id="btnSample" type="button">サンプルExcelをダウンロード</button>
           <p class="calc__hint" id="sampleNote" aria-live="polite"></p>
         </div>
@@ -736,18 +743,18 @@ input,select,textarea,button{font-weight:600}
       <!-- ============ STEP 4 判定結果 ============ -->
       <section class="step" id="step4" hidden>
         <div class="step__head"><span class="step__no">4</span><h2>判定結果</h2></div>
-        <p class="step__lead">ここまでは無料です。内容をご確認のうえ、Excelが必要な場合だけお進みください。</p>
+        <p class="step__lead">判定結果・7つの図・Excelは、まとめて1社500円です。読み取った内容の確認までは無料でお使いいただけます。</p>
         <div id="resultCol"></div>
       </section>
 
       <!-- ============ STEP 5 決済 ============ -->
       <section class="step" id="step5" hidden>
-        <div class="step__head"><span class="step__no">5</span><h2>Excelを受け取る</h2></div>
+        <div class="step__head"><span class="step__no">5</span><h2>結果とExcelを受け取る</h2></div>
 
         <div id="gateBuy" hidden>
           <table class="figs">
             <tbody>
-              <tr><th>お渡しするもの</th><td>この判定結果のExcelファイル（5シート・1社分）</td></tr>
+              <tr><th>お渡しするもの</th><td>画面の判定結果と7つの図（①〜⑦）／この判定結果のExcelファイル（6シート・ダッシュボード付き・1社分）</td></tr>
               <tr><th>価格</th><td><b>500円（税込）</b>　1社分につき</td></tr>
             <tr><th>ご利用の範囲</th><td>お支払い後<b>24時間</b>、<b>この1社の判定結果</b>を何度でもダウンロードできます。<br>別の会社の判定結果をご入用の場合は、あらためてお求めください。</td></tr>
               <tr><th>お支払い</th><td>クレジットカード（Square）</td></tr>
@@ -899,7 +906,7 @@ input,select,textarea,button{font-weight:600}
 </div>
 
 <script src="../vendor/exceljs.min.js" defer></script>
-<script type="module" src="./app.js?v=24"></script>
+<script type="module" src="./app.js?v=25"></script>
 
 </body>
 </html>
