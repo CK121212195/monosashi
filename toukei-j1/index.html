@@ -346,7 +346,19 @@ footer b{color:var(--ink);display:block;margin-bottom:3px;font-size:.78rem}
     <section id="guide">
       <div class="card">
         <h2 class="sect-t" style="margin-top:0">統計検定準1級は、2級と何が違うか</h2>
-        <div class="expbody">
+        <button type="button" id="guideToggle" aria-expanded="false" aria-controls="guideBody"
+          style="display:flex;align-items:center;gap:7px;background:none;border:none;padding:2px 0 0;
+                 font-family:inherit;font-size:.86rem;color:var(--deep);cursor:pointer"
+          onclick="var b=document.getElementById('guideBody');var willOpen=b.classList.contains('hide');
+                   b.classList.toggle('hide');
+                   this.setAttribute('aria-expanded',willOpen?'true':'false');
+                   document.getElementById('guideToggleIcon').textContent=willOpen?'－':'＋';
+                   document.getElementById('guideToggleLabel').textContent=willOpen?'閉じる':'詳しく見る';">
+          <span id="guideToggleIcon" style="display:inline-grid;place-items:center;width:20px;height:20px;
+                 border:1.5px solid var(--sky);border-radius:6px;font-size:.9rem;line-height:1">＋</span>
+          <span id="guideToggleLabel">詳しく見る</span>
+        </button>
+        <div class="expbody hide" id="guideBody">
           <p>2級が「統計の道具を使えるか」を問う試験だとすれば、準1級は<b>「どの道具を、なぜ選ぶか」を問う試験</b>です。範囲が広がるだけでなく、問われ方の質が変わります。</p>
           <p>2級では「この場合はt検定を使う」と覚えていれば解けた問題が、準1級では「なぜt検定なのか、他の方法ではだめなのか」を判断させる形になります。手法の背後にある仮定を理解しているかどうかが、そのまま得点差になります。</p>
 
