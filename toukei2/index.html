@@ -336,7 +336,19 @@ footer b{color:var(--ink);display:block;margin-bottom:3px;font-size:.78rem}
     <section id="guide">
       <div class="card">
         <h2 class="sect-t" style="margin-top:0">統計検定2級とは、どんな試験か</h2>
-        <div class="expbody">
+        <button type="button" id="guideToggle" aria-expanded="false" aria-controls="guideBody"
+          style="display:flex;align-items:center;gap:7px;background:none;border:none;padding:2px 0 0;
+                 font-family:inherit;font-size:.86rem;color:var(--deep);cursor:pointer"
+          onclick="var b=document.getElementById('guideBody');var willOpen=b.classList.contains('hide');
+                   b.classList.toggle('hide');
+                   this.setAttribute('aria-expanded',willOpen?'true':'false');
+                   document.getElementById('guideToggleIcon').textContent=willOpen?'－':'＋';
+                   document.getElementById('guideToggleLabel').textContent=willOpen?'閉じる':'詳しく見る';">
+          <span id="guideToggleIcon" style="display:inline-grid;place-items:center;width:20px;height:20px;
+                 border:1.5px solid var(--sky);border-radius:6px;font-size:.9rem;line-height:1">＋</span>
+          <span id="guideToggleLabel">詳しく見る</span>
+        </button>
+        <div class="expbody hide" id="guideBody">
           <p>統計検定2級は、大学基礎課程レベルの統計学の知識を問う試験です。CBT方式で通年実施されており、試験時間は90分、4〜5肢選択の問題がおおむね35問、100点満点で60点以上が合格の目安とされています。</p>
           <p>出題範囲は10の領域に分かれます。1変数データ、2変数以上のデータ、推測のためのデータ収集法、確率、確率分布、標本分布、推定、仮説検定、カイ二乗検定、線形モデル。この教材の100問も、同じ配分で割り当てています。</p>
 
