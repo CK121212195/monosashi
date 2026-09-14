@@ -539,7 +539,80 @@ function sheetInput(wb, r) {
 }
 
 /* ------------------------------------------------------------------ 公開API */
-export async function buildWorkbook(result) {
+
+/* ------------------------------------------------------------ ⑥ダッシュボード
+ * 画面と同じ6枚の図を「画像」として貼る。
+ * Excelのグラフ機能は使わない＝参照先のデータ範囲も数式も付いてこないので、
+ * 配点表・しきい値・業界指標といったロジックは一切外に出ない。
+ * ------------------------------------------------------------------------ */
+function sheetDashboard(wb, r, figs, lines) {
+  const ws = wb.addWorksheet("⑥ダッシュボード", {
+    views: [{ showGridLines: false }],
+    pageSetup: { paperSize: 8, orientation: "portrait", fitToPage: true, fitToWidth: 1, fitToHeight: 0,
+                 margins: { left: 0.3, right: 0.3, top: 0.3, bottom: 0.3, header: 0.15, footer: 0.15 } },
+  });
+  ws.columns = [{ width: 2 }, ...Array.from({ length: 14 }, () => ({ width: 8.5 })), { width: 2 }];
+
+  ws.mergeCells("A1:P1");
+  put(ws, "A1", "与信判断検討書", { font: { name: F, size: 18, bold: true, color: { argb: C.white } },
+    fill: C.navyD, align: { vertical: "middle", horizontal: "left", indent: 1 } });
+  ws.getRow(1).height = 30;
+  ws.mergeCells("A2:P2");
+  put(ws, "A2", "　⑥ ダッシュボード　│　" + (r.input.name || ""),
+    { font: { name: F, size: 10, color: { argb: "FFB9C6D2" } }, fill: C.navyD,
+      align: { vertical: "middle", horizontal: "left", indent: 1 } });
+  ws.getRow(2).height = 18;
+
+  // 図は2列×3段。1枚あたり 420×(300前後) を約 8.4cm 幅で貼る。
+  let row = 4;
+  for (let i = 0; i < figs.length; i += 2) {
+    const pair = figs.slice(i, i + 2);
+    pair.forEach((g, k) => {
+      const col = k === 0 ? 1 : 8;                       // B列 / I列
+      const addr = (c, rr) => ws.getCell(rr, c + 1).address;
+      ws.mergeCells(`${addr(col, row)}:${addr(col + 5, row)}`);
+      put(ws, addr(col, row), `${g.no} ${g.title}`,
+        { font: { name: F, size: 11, bold: true, color: { argb: C.navy } }, fill: C.steelL,
+          align: { vertical: "middle", horizontal: "left", indent: 1 } });
+    });
+    ws.getRow(row).height = 20;
+    const H = Math.max(...pair.map((g) => g.h));
+    const px = 470;                                      // 貼り付け幅（ピクセル）
+    pair.forEach((g, k) => {
+      const id = wb.addImage({ base64: g.dataUrl.split(",")[1], extension: "png" });
+      ws.addImage(id, {
+        tl: { col: (k === 0 ? 1 : 8) + 0.1, row: row + 0.15 },
+        ext: { width: px, height: Math.round(px * g.h / g.w) },
+        editAs: "oneCell",
+      });
+    });
+    const rows = Math.ceil((px * H / 420) / 19) + 1;     // 行高19pxで割って必要行数を出す
+    for (let t = 0; t < rows; t++) ws.getRow(row + 1 + t).height = 14.4;
+    row += rows + 2;
+  }
+
+  // ⑦ 所見
+  ws.mergeCells(`B${row}:P${row}`);
+  put(ws, `B${row}`, "  ⑦ グラフから読み取れること",
+    { font: { name: F, size: 11, bold: true, color: { argb: C.white } }, fill: C.navy,
+      align: { vertical: "middle", horizontal: "left" } });
+  ws.getRow(row).height = 20;
+  row += 1;
+  (lines || []).forEach((t) => {
+    ws.mergeCells(`B${row}:P${row}`);
+    put(ws, `B${row}`, "・" + t, { font: { name: F, size: 9.5, color: { argb: C.ink } },
+      align: { vertical: "middle", horizontal: "left", wrapText: true, indent: 1 } });
+    ws.getRow(row).height = 26;
+    row += 1;
+  });
+  ws.mergeCells(`B${row}:P${row}`);
+  put(ws, `B${row}`, "図は入力された数字をそのまま描いたものです。計算式・配点表は含まれません。",
+    { font: { name: F, size: 8.5, color: { argb: C.muted } }, align: { horizontal: "left", indent: 1 } });
+  ws.pageSetup.printArea = `A1:P${row}`;
+  return ws;
+}
+
+export async function buildWorkbook(result, figs, lines) {
   const ExcelJS = await getExcelJS();
   const wb = new ExcelJS.Workbook();
   wb.creator = "数字のものさし｜与信判断検討書";
@@ -549,6 +622,7 @@ export async function buildWorkbook(result) {
   sheetRedemption(wb, result);
   sheetScore(wb, result);
   sheetInput(wb, result);
+  if (figs && figs.length) sheetDashboard(wb, result, figs, lines);
   return wb;
 }
 
@@ -557,9 +631,9 @@ export async function buildWorkbook(result) {
  * @param filename 省略時は会社名から組み立てる
  * @param unit     { label, mul } 表示単位。省略時は百万円
  */
-export async function downloadXlsx(result, filename, unit) {
+export async function downloadXlsx(result, filename, unit, figs, lines) {
   UNIT = unit && unit.label && unit.mul ? unit : { label: "百万円", mul: 1 };
-  const wb = await buildWorkbook(result);
+  const wb = await buildWorkbook(result, figs, lines);
   const buf = await wb.xlsx.writeBuffer();
   const name = filename || `与信判断検討書_${(result.input.name || "無題").replace(/[\\/:*?"<>|]/g, "")}.xlsx`;
   const url = URL.createObjectURL(new Blob([buf],

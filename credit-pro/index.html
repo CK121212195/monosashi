@@ -537,6 +537,11 @@ input,select,textarea,button{font-weight:600}
 .lock__list li::before{content:"";position:absolute;left:0;top:.72em;width:9px;height:9px;
   border-radius:50%;background:var(--aqua);}
 .lock__note{margin:0;font-size:14px;color:var(--ink-soft);}
+
+/* ===== 購入後に決算書を差し替えたときの断り書き ===== */
+.changed{border-left:5px solid var(--warn);background:rgba(254,238,223,.6);}
+.changed b{display:block;font-size:15.5px;line-height:1.8;margin-bottom:8px;}
+.changed p{margin:0;font-size:14px;line-height:1.85;color:var(--ink-soft);}
 </style>
 
 <!-- Google tag (gtag.js) -->
@@ -583,7 +588,7 @@ input,select,textarea,button{font-weight:600}
   <main id="main">
     <div class="column">
 
-      <p class="crumbs"><a href="/">ホーム</a> ／ <a href="/#tools">ツール</a> ／ 与信判断 Pro</p>
+      <p class="crumbs"><a href="/">ホーム</a> ／ <a href="/#tools">ツール</a> ／ 財務でポン！</p>
 
       <header class="head">
         <span class="head__mark" aria-hidden="true"></span>
@@ -633,6 +638,8 @@ input,select,textarea,button{font-weight:600}
         </div>
 
         <p class="note-s" style="margin-top:12px;">決算書PDFが手元に無い場合、または読み取れない決算書の場合は、<button type="button" class="linklike" id="btnNoPdf">数値を自分で入力して判定する</button>こともできます。</p>
+        <p class="note-s" style="margin-top:10px;">別の会社を判定する場合や、読み取り結果がおかしい場合は、
+        <button class="btn-reset" id="btnReread2" type="button">最初からやり直す（入力を全部消す）</button></p>
 
         <div id="readState" hidden>
           <p class="note-s" id="readMsg"></p>
@@ -906,7 +913,7 @@ input,select,textarea,button{font-weight:600}
 </div>
 
 <script src="../vendor/exceljs.min.js" defer></script>
-<script type="module" src="./app.js?v=25"></script>
+<script type="module" src="./app.js?v=26"></script>
 
 </body>
 </html>

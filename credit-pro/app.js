@@ -3,11 +3,11 @@
  * 計算は engine.js、Excel生成は xlsx-export.js。ここはUIだけを担当する。
  * ========================================================================== */
 import { evaluate, emptyInput, INDUSTRIES, CAPITAL_TIERS, LISTING_OPTIONS, POLICY }
-  from "./engine.js?v=25";
-import { downloadXlsx } from "./xlsx-export.js?v=25";
-import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=25";
-import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=25";
-import { renderViz, renderHead, attachTips } from "./viz.js?v=25";
+  from "./engine.js?v=26";
+import { downloadXlsx } from "./xlsx-export.js?v=26";
+import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=26";
+import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=26";
+import { renderViz, renderHead, attachTips, renderFigures, readingLines } from "./viz.js?v=26";
 
 const $ = (id) => document.getElementById(id);
 const COLS = ["今期（直近）", "前期", "前々期"];
@@ -168,7 +168,7 @@ function init() {
   const fg = $("btnForget");
   if (fg) fg.addEventListener("click", () => {
     if (!confirm("この端末に保存された購入情報を消します。まだ有効なお支払いがある場合は、消すと使えなくなります。よろしいですか？")) return;
-    forgetOrder();
+    forgetOrder(); clearSnap();
     refreshLicense();
   });
   $("btnRetry").addEventListener("click", refreshLicense);
@@ -193,6 +193,35 @@ function init() {
 
 /* ------------------------------------------------------------ 決済ゲート */
 let licensed = false;
+
+/* ------------------------------------------------------------------------
+ * 購入スナップショット
+ *
+ * 1回の支払い＝1社分を守るための仕組み。
+ * 解錠できた瞬間の入力内容をまるごと控えておき、判定結果もExcelも
+ * 「控えた内容」からだけ作る。あとから別の決算書に差し替えても、
+ * 画面に出るのは買ったときの会社のままになる。
+ *
+ * 会社名だけを合図にすると、名前を変えずに数字だけ入れ替えられてしまう。
+ * そこを塞ぐのがこの控えの役目。
+ * ---------------------------------------------------------------------- */
+const SNAP_KEY = "kazumono.credit-pro.paid";
+let paidSnap = null;
+function loadSnap() { try { return JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) { return null; } }
+function saveSnap(o) { try { localStorage.setItem(SNAP_KEY, JSON.stringify(o)); } catch (e) { /* noop */ } }
+function clearSnap() { paidSnap = null; try { localStorage.removeItem(SNAP_KEY); } catch (e) { /* noop */ } }
+
+/** 決算の中身が入れ替わっていないかを見るための指紋（会社名は含めない） */
+function figuresDigest(inp) {
+  const keys = ["sales","cogs","sga","nonOpInc","nonOpExp","extraInc","extraExp","tax","depreciation",
+    "cash","receivables","inventory","otherCurrentAssets","tangible","otherFixedAssets","deferred",
+    "payables","shortDebt","otherCurrentLiab","longDebt","otherFixedLiab","equity","terms"];
+  return JSON.stringify(keys.map((k) => (inp && inp[k]) || null));
+}
+/** いま画面にある内容が、買ったときの内容と同じか */
+function snapMatchesLive() {
+  return !!paidSnap && figuresDigest(paidSnap.input) === figuresDigest(state);
+}
 
 function showGate(which) {
   ["gateWait", "gateBuy", "gateOk", "gateOffline"].forEach((id) => {
@@ -275,7 +304,8 @@ async function pollLicense(order) {
     const { state, expiresAt } = await checkLicense(await companyFingerprint(state_name()));
     if (state === "licensed") {
       licensed = true;
-      try { render(); } catch (e) { /* 入力がまだ無いときは何もしない */ }
+      refreshLicense();
+      return;
       showLicenseDiag("licensed", order, null, expiresAt);
       showGate("gateOk");
       if (window.gtag) gtag("event", "license_ok", { tool: "credit-pro" });
@@ -304,7 +334,19 @@ async function refreshLicense() {
   const fp = await companyFingerprint(state_name());
   const { state: st, order, reason, expiresAt } = await checkLicense(fp);
   licensed = st === "licensed";
-  if (licensed) { try { render(); } catch (e) { /* 入力がまだ無いときは何もしない */ } }
+  if (licensed) {
+    // 控えは注文番号ごとに1回だけ取る。以後は差し替えても上書きしない。
+    const saved = loadSnap();
+    if (saved && saved.order === order) {
+      paidSnap = saved;
+    } else {
+      paidSnap = { order, fp, name: state_name(), input: JSON.parse(JSON.stringify(state)), at: Date.now() };
+      saveSnap(paidSnap);
+    }
+    try { render(); } catch (e) { /* 入力がまだ無いときは何もしない */ }
+  } else {
+    paidSnap = null;
+  }
   showLicenseDiag(st, order, reason, expiresAt);
   // 決済直後は通知の到着が遅れることがあるので、記録が無いときだけ確認し直す
   if (st === "unlicensed" && order && reason === "not_found") { pollLicense(order); return; }
@@ -459,8 +501,15 @@ function render() {
     ? `${bad.join("・")}で、資産合計と負債・純資産合計が一致していません。指標がすべて狂うため、必ず0にしてください。`
     : "";
   // 判定結果とグラフは有料。未購入のあいだは中身を一切出さない。
-  $("resultCol").innerHTML = licensed ? report(r) : lockedCard();
-  if (licensed) attachTips($("resultCol"));
+  // 購入済みのときは、買ったときの内容（控え）からだけ作る。
+  if (licensed && paidSnap) {
+    const paidR = evaluate(paidSnap.input);
+    const changed = !snapMatchesLive();
+    $("resultCol").innerHTML = (changed ? changedNotice(paidSnap.name) : "") + report(paidR);
+    attachTips($("resultCol"));
+  } else {
+    $("resultCol").innerHTML = lockedCard();
+  }
 }
 
 function report(r) {
@@ -521,40 +570,28 @@ function report(r) {
  * 中身は記入例の架空データなので、購入前でも配れる。
  */
 async function onSample() {
-  // サンプルは静的ファイル。⑥ダッシュボード（グラフ5点）入りで、数式は値に固めてある。
-  const note = $("sampleNote");
+  // サンプルは、購入者に渡すのとまったく同じ経路で作る。
+  // 静的ファイルを置くと本番と中身がずれるので、その場で組み立てる。
+  const btn = $("btnSample"), note = $("sampleNote");
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = "作成中…";
+  note.textContent = "図を描いてExcelに貼っています。数秒かかります。";
   try {
-    const a = document.createElement("a");
-    a.href = "./assets/sample-dashboard.xlsx?v=25";
-    a.download = "財務でポン_サンプル.xlsx";
-    document.body.appendChild(a); a.click(); a.remove();
-    if (note) note.textContent = "ダウンロードしました。⑥ダッシュボードのシートにグラフが入っています。";
+    const d = demoKind === "bad" ? DEMO_BAD() : DEMO_GOOD();
+    const yrs = Math.max(1, Number(d.repayYears) || 5);
+    const v = Math.round((Number(d.longDebt[0]) || 0) / yrs);
+    d.repayment = [v, v, v];
+    const r = evaluate(d);
+    const f = { yenU: (n) => fmtNum(n), U_LABEL: () => "百万円", pct: (n) => (n * 100).toFixed(1) + "%" };
+    const figs = await renderFigures(r, f, 2);
+    await downloadXlsx(r, "財務でポン_サンプル.xlsx", { label: "百万円", mul: 1 }, figs, readingLines(r, f));
+    note.textContent = "ダウンロードしました。⑥ダッシュボードのシートに図が入っています。";
     if (window.gtag) gtag("event", "xlsx_sample", { tool: "credit-pro" });
   } catch (e) {
-    if (note) note.textContent = "ダウンロードに失敗しました：" + e.message;
+    note.textContent = "作成に失敗しました：" + e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = label;
   }
-}
-
-
-/**
- * 未購入のときに判定結果の代わりに出すカード。
- * スコアもランクも出さない。何が見られるのかだけを書く。
- */
-function lockedCard() {
-  return `
-  <div class="calc lock">
-    <div class="lock__badge">判定は完了しました</div>
-    <h2 class="lock__h">結果とグラフは、お支払い後にご覧いただけます</h2>
-    <p class="lock__lead">読み取った内容はこの画面に残っています。決済後、そのまま結果が開きます。</p>
-    <ul class="lock__list">
-      <li>総合評点（100点満点）と信用程度 A〜E、取引方針の目安</li>
-      <li>与信限度額の目安（自己資本基準・月商基準のいずれか小さい方）</li>
-      <li>財務ハイライト（直近3期）と自動所見</li>
-      <li>7つの図 — ①スコアの内訳／②財務指標のかたち／③貸借対照表のかたち／④売上と利益の推移／⑤返せるお金と、返す額／⑥借金を返し切るまでの年数／⑦グラフから読み取れること</li>
-      <li>稟議に添付できるExcel（6シート・ダッシュボード付き）</li>
-    </ul>
-    <p class="lock__note">どんなものが出てくるかは、<a href="#step1">ページ上部の「評価の高い会社／低い会社」</a>で実物をご覧いただけます。</p>
-  </div>`;
 }
 
 /* -------------------------------------------------------------- ダウンロード */
@@ -567,23 +604,27 @@ async function onDownload() {
   const { state: st, order, reason, expiresAt } =
     await checkLicense(await companyFingerprint(state_name()));
   if (st !== "licensed") {
-    licensed = false;
+    licensed = false; paidSnap = null;
     showLicenseDiag(st, order, reason, expiresAt);
     $("dlNote").textContent = "";
     showGate(st === "offline" ? "gateOffline" : "gateBuy");
     return;
   }
   $("dlNote").textContent = "";
-  const r = evaluate(state);
+  if (!paidSnap) { showGate("gateBuy"); return; }
+  // 出力するのは、買ったときの内容。いま画面にある別の決算書ではない。
+  const r = evaluate(paidSnap.input);
   if (r.fy.some((x) => Math.abs(x.balanceCheck) > 0.5) &&
       !confirm("貸借対照表の検算が0になっていません。このまま出力しますか？")) return;
   const btn = $("btnXlsx");
   btn.disabled = true;
   const label = btn.textContent;
   btn.textContent = "Excelを作成中…";
-  $("dlNote").textContent = "ファイルを組み立てています。数秒かかります。";
+  $("dlNote").textContent = "図を描いてExcelに貼っています。数秒かかります。";
   try {
-    await downloadXlsx(r, null, UNITS[dispUnit]);
+    const vf = { yenU, U_LABEL, pct };
+    const figs = await renderFigures(r, vf, 2);
+    await downloadXlsx(r, null, UNITS[dispUnit], figs, readingLines(r, vf));
     $("dlNote").textContent = "ダウンロードしました";
     if (window.gtag) gtag("event", "xlsx_download", { tool: "credit-pro" });
   } catch (e) {
@@ -632,11 +673,13 @@ function initUploader() {
   $("btnApply").addEventListener("click", applyRead);
   // 最初からやり直す：手入力した内容も含めて、まっさらな状態に戻す。
   // 前回の入力が残っていると、次の会社の判定に混ざって事故になる。
-  $("btnReread").addEventListener("click", () => {
+  const doReread = () => {
     if (!confirm("入力した内容をすべて消して、最初からやり直します。よろしいですか？")) return;
     try { sessionStorage.removeItem("kazumono.credit-pro.draft"); } catch (err) { /* noop */ }
     location.reload();
-  });
+  };
+  $("btnReread").addEventListener("click", doReread);
+  { const b2 = $("btnReread2"); if (b2) b2.addEventListener("click", doReread); }
   // PDFが無い場合の導線
   $("btnNoPdf").addEventListener("click", () => {
     showStep("step3", true);

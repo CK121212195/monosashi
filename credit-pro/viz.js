@@ -576,3 +576,68 @@ export function attachTips(root) {
   });
   window.addEventListener("scroll", hide, { passive: true });
 }
+
+/* ====================================================== Excel用の図の書き出し
+ * 画面と同じ図を、そのまま画像にしてExcelに貼るためのもの。
+ * 画像なので、Excelのグラフ機能も、参照先のデータも、数式も付いてこない。
+ * ＝ 配点表やしきい値といったロジックは一切外に出ない。
+ * ========================================================================== */
+
+/** ダッシュボードに載せる6枚。番号は画面の①〜⑥と同じ。 */
+export function figures(r, f) {
+  return [
+    { no: "①", title: "評点の内訳", svg: scoreBars(r) },
+    { no: "②", title: "財務指標のかたち", svg: radar(r) },
+    { no: "③", title: "貸借対照表のかたち", svg: bsBlock(r, f) },
+    { no: "④", title: "売上と利益の推移", svg: trend(r, f) },
+    { no: "⑤", title: "返せるお金と、返す額", svg: repay(r, f) },
+    { no: "⑥", title: "借金を返し切るまでの年数", svg: gauge(r) },
+  ];
+}
+
+/** ⑦の所見は文章なので、そのまま配列で渡す */
+export function readingLines(r, f) {
+  const html = readings(r, f);
+  return [...html.matchAll(/<li>(.*?)<\/li>/g)].map((m) =>
+    m[1].replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&amp;/g, "&"));
+}
+
+/** SVGをPNGのdataURLにする。ブラウザの描画をそのまま使う。 */
+export function toPng(svgMarkup, scale = 2) {
+  return new Promise((resolve, reject) => {
+    const vb = /viewBox="0 0 (\d+) (\d+)"/.exec(svgMarkup);
+    if (!vb) return reject(new Error("viewBoxが読み取れません"));
+    const W = +vb[1], H = +vb[2];
+    let m = svgMarkup
+      .replace(/ data-tip="[^"]*"/g, "")
+      .replace(/class="viz__(?:svg|hot)"/g, "")
+      .replace(/^<svg/,
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" ` +
+        `font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,'Noto Sans JP',sans-serif"`);
+    m = m.replace(/>/, `><rect x="0" y="0" width="${W}" height="${H}" fill="#FFFFFF"/>`);
+    const img = new Image();
+    img.onload = () => {
+      const cv = document.createElement("canvas");
+      cv.width = Math.round(W * scale); cv.height = Math.round(H * scale);
+      const cx = cv.getContext("2d");
+      cx.fillStyle = "#FFFFFF"; cx.fillRect(0, 0, cv.width, cv.height);
+      cx.setTransform(scale, 0, 0, scale, 0, 0);
+      cx.drawImage(img, 0, 0);
+      resolve({ dataUrl: cv.toDataURL("image/png"), w: W, h: H });
+    };
+    img.onerror = () => reject(new Error("図を画像にできませんでした"));
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(m);
+  });
+}
+
+/** 6枚まとめてPNGにする。1枚失敗しても残りは出す。 */
+export async function renderFigures(r, f, scale = 2) {
+  const out = [];
+  for (const g of figures(r, f)) {
+    try {
+      const png = await toPng(g.svg, scale);
+      out.push({ no: g.no, title: g.title, ...png });
+    } catch (e) { /* この図だけ飛ばす */ }
+  }
+  return out;
+}
