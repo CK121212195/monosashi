@@ -542,6 +542,16 @@ input,select,textarea,button{font-weight:600}
 .changed{border-left:5px solid var(--warn);background:rgba(254,238,223,.6);}
 .changed b{display:block;font-size:15.5px;line-height:1.8;margin-bottom:8px;}
 .changed p{margin:0;font-size:14px;line-height:1.85;color:var(--ink-soft);}
+
+/* ===== 前の会社の購入情報が残っているときの案内 ===== */
+.forget{margin:18px 0 0;padding:22px 22px 20px;border:1.5px solid var(--warn);border-radius:18px;
+  background:rgba(254,238,223,.55);}
+.forget__h{font-family:var(--serif);font-size:17px;font-weight:700;letter-spacing:.03em;margin:0 0 10px;color:var(--ink);}
+.forget__d{margin:0 0 18px;font-size:14.5px;line-height:1.9;color:var(--ink-soft);}
+.forget__fine{margin:12px 0 0;font-size:12.5px;line-height:1.8;color:var(--ink-faint);}
+.btn-run--warn{background:var(--warn);box-shadow:0 10px 24px rgba(181,98,63,.32);}
+.btn-run--warn:hover{box-shadow:0 16px 32px rgba(181,98,63,.40);}
+@media (max-width:820px){.forget{padding:18px 14px;}.btn-run--warn{width:100%;justify-content:center;}}
 </style>
 
 <!-- Google tag (gtag.js) -->
@@ -783,8 +793,14 @@ input,select,textarea,button{font-weight:600}
           <p class="note-s" style="margin-top:8px;">決済したのに解錠されない場合は、
             <button type="button" class="linklike" id="btnRecheck">購入状況をもう一度確認する</button>
             （Squareからの通知が届くまで数十秒かかることがあります）</p>
-          <p class="note-s" id="forgetRow" hidden>使い終わった注文番号がこの端末に残っています。
-            <button type="button" class="linklike" id="btnForget">この端末から購入情報を消す</button></p>
+          <div class="forget" id="forgetRow" hidden>
+            <p class="forget__h">別の会社を判定するには、もう一度お求めください</p>
+            <p class="forget__d">お支払いは<b>1回につき1社分</b>です。この端末には、前にお支払いいただいた会社の控えが残っています。
+            いま読み取った会社を判定するには、前の会社の控えを消してから、あらためてお求めください。</p>
+            <button type="button" class="btn-run btn-run--warn" id="btnForget">前の会社の情報を消して、この会社の分を購入する</button>
+            <p class="forget__fine">消えるのは、この端末に残っている前の会社の購入情報と判定結果だけです。
+            いま画面に読み取っている決算書の数字は消えません。</p>
+          </div>
 
         </div>
 
@@ -807,7 +823,10 @@ input,select,textarea,button{font-weight:600}
           </div>
         </div>
 
-        <p class="note-s" style="margin-top:16px;">このファイルに計算式は含まれません。1社分の判定結果を記録したものです。配点やしきい値を自社の与信方針に合わせて書き換えながら何度でもお使いになりたい場合は、<a href="https://note.com/pythonddd/n/n9b4e7122fc05" target="_blank" rel="noopener">数式を隠していないExcel版</a>をご覧ください。</p>
+        <p class="note-s" style="margin-top:16px;">このファイルは、1社分の判定結果を記録したものです。計算式は含まれません。
+            配点やしきい値をご自身の与信方針に合わせて書き換えながら、何社でも繰り返しお使いになりたい方には、
+            <a href="https://note.com/pythonddd/n/n9b4e7122fc05" target="_blank" rel="noopener">計算ロジックをすべて開示したExcel版</a>をご用意しています。
+            6カテゴリの配点表、業種別のしきい値、償還余力の算定過程まで、数式のまま追えるものです。</p>
       </section>
 
 
@@ -913,7 +932,7 @@ input,select,textarea,button{font-weight:600}
 </div>
 
 <script src="../vendor/exceljs.min.js" defer></script>
-<script type="module" src="./app.js?v=26"></script>
+<script type="module" src="./app.js?v=27"></script>
 
 </body>
 </html>

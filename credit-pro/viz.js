@@ -603,41 +603,50 @@ export function readingLines(r, f) {
 }
 
 /** SVGをPNGのdataURLにする。ブラウザの描画をそのまま使う。 */
+const FONT_STACK = "'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic UI','Yu Gothic',YuGothic," +
+  "'Noto Sans JP','Noto Sans CJK JP','Meiryo','MS PGothic',sans-serif";
 export function toPng(svgMarkup, scale = 2) {
   return new Promise((resolve, reject) => {
     const vb = /viewBox="0 0 (\d+) (\d+)"/.exec(svgMarkup);
     if (!vb) return reject(new Error("viewBoxが読み取れません"));
     const W = +vb[1], H = +vb[2];
+    // svg() が出力する時点で xmlns は入っている。ここで足すと属性が重複し、
+    // XMLとして壊れて画像化に失敗するので、足さないこと。
     let m = svgMarkup
       .replace(/ data-tip="[^"]*"/g, "")
-      .replace(/class="viz__(?:svg|hot)"/g, "")
-      .replace(/^<svg/,
-        `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" ` +
-        `font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',YuGothic,'Noto Sans JP',sans-serif"`);
-    m = m.replace(/>/, `><rect x="0" y="0" width="${W}" height="${H}" fill="#FFFFFF"/>`);
+      .replace(/ class="viz__(?:svg|hot)"/g, "")
+      .replace(/^<svg/, `<svg width="${W}" height="${H}" font-family="${FONT_STACK}"`);
+    m = m.replace(">", `><rect x="0" y="0" width="${W}" height="${H}" fill="#FFFFFF"/>`);
     const img = new Image();
     img.onload = () => {
-      const cv = document.createElement("canvas");
-      cv.width = Math.round(W * scale); cv.height = Math.round(H * scale);
-      const cx = cv.getContext("2d");
-      cx.fillStyle = "#FFFFFF"; cx.fillRect(0, 0, cv.width, cv.height);
-      cx.setTransform(scale, 0, 0, scale, 0, 0);
-      cx.drawImage(img, 0, 0);
-      resolve({ dataUrl: cv.toDataURL("image/png"), w: W, h: H });
+      try {
+        const cv = document.createElement("canvas");
+        cv.width = Math.round(W * scale); cv.height = Math.round(H * scale);
+        const cx = cv.getContext("2d");
+        cx.fillStyle = "#FFFFFF"; cx.fillRect(0, 0, cv.width, cv.height);
+        cx.setTransform(scale, 0, 0, scale, 0, 0);
+        cx.drawImage(img, 0, 0);
+        resolve({ dataUrl: cv.toDataURL("image/png"), w: W, h: H });
+      } catch (e) { reject(e); }
     };
-    img.onerror = () => reject(new Error("図を画像にできませんでした"));
+    img.onerror = () => reject(new Error("図を画像に変換できませんでした"));
     img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(m);
   });
 }
 
 /** 6枚まとめてPNGにする。1枚失敗しても残りは出す。 */
 export async function renderFigures(r, f, scale = 2) {
-  const out = [];
+  const out = []; const failed = [];
   for (const g of figures(r, f)) {
     try {
       const png = await toPng(g.svg, scale);
       out.push({ no: g.no, title: g.title, ...png });
-    } catch (e) { /* この図だけ飛ばす */ }
+    } catch (e) { failed.push(g.no + " " + g.title); }
+  }
+  // 1枚も作れなかったときは黙って落とさない。原因が分からなくなるため。
+  if (!out.length) throw new Error("図を画像にできませんでした（" + failed.join("／") + "）");
+  if (failed.length && typeof console !== "undefined") {
+    console.warn("[財務でポン] 画像化できなかった図:", failed.join("／"));
   }
   return out;
 }

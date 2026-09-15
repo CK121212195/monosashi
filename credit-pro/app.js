@@ -3,11 +3,11 @@
  * 計算は engine.js、Excel生成は xlsx-export.js。ここはUIだけを担当する。
  * ========================================================================== */
 import { evaluate, emptyInput, INDUSTRIES, CAPITAL_TIERS, LISTING_OPTIONS, POLICY }
-  from "./engine.js?v=26";
-import { downloadXlsx } from "./xlsx-export.js?v=26";
-import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=26";
-import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=26";
-import { renderViz, renderHead, attachTips, renderFigures, readingLines } from "./viz.js?v=26";
+  from "./engine.js?v=27";
+import { downloadXlsx } from "./xlsx-export.js?v=27";
+import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=27";
+import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=27";
+import { renderViz, renderHead, attachTips, renderFigures, readingLines } from "./viz.js?v=27";
 
 const $ = (id) => document.getElementById(id);
 const COLS = ["今期（直近）", "前期", "前々期"];
@@ -68,6 +68,13 @@ const U_LABEL = () => UNITS[dispUnit].label;
 const toDisp = (v) => (typeof v === "number" ? v * UNITS[dispUnit].mul : v);
 /** 表示単位 → 内部値（百万円） */
 const fromDisp = (v) => (typeof v === "number" ? v / UNITS[dispUnit].mul : v);
+/**
+ * 貸借が合っているとみなすか。
+ * 内部は百万円で持っているため、千円表示のときは 0.0005 百万円（＝500円）のような
+ * 端数が出る。画面に「▲0 のズレ」と出してしまうと、利用者は原因を探せない。
+ * そこで「表示している単位に直して四捨五入すると0」なら一致として扱う。
+ */
+const isBalanced = (v) => Math.round((Number(v) || 0) * UNITS[dispUnit].mul) === 0;
 
 const yen = (n) => (!n ? "0" : (n < 0 ? "▲" : "") + Math.abs(Math.round(n)).toLocaleString());
 /** 内部値を表示単位に直して整形する。画面に金額を出すときは必ずこれを通す */
@@ -90,6 +97,10 @@ function setDispUnit(u, why) {
   document.querySelectorAll("[data-unit-lead]").forEach((el) => {
     el.textContent = `単位は${U_LABEL()}。`;
   });
+  // 上のサンプル表示も同じ単位に揃える
+  if (typeof renderDemo === "function" && document.getElementById("demoCol")) {
+    try { renderDemo(demoKind); } catch (e) { /* 初期化前は何もしない */ }
+  }
   const note = $("unitNote");
   if (note) {
     note.textContent = why === "自動"
@@ -167,9 +178,12 @@ function init() {
   if (rc) rc.addEventListener("click", () => refreshLicense());
   const fg = $("btnForget");
   if (fg) fg.addEventListener("click", () => {
-    if (!confirm("この端末に保存された購入情報を消します。まだ有効なお支払いがある場合は、消すと使えなくなります。よろしいですか？")) return;
+    if (!confirm("前の会社の購入情報と判定結果を、この端末から消します。\n\nいま読み取っている決算書の数字は消えません。\nまだ使えるお支払いが残っている場合、それも使えなくなります。よろしいですか？")) return;
     forgetOrder(); clearSnap();
     refreshLicense();
+    // 消したあとは、そのまま購入に進めるよう購入ボタンまで運ぶ
+    const buy = $("btnBuy");
+    if (buy) { buy.scrollIntoView({ behavior: "smooth", block: "center" }); }
   });
   $("btnRetry").addEventListener("click", refreshLicense);
   $("btnBuy").addEventListener("click", onBuy);
@@ -492,9 +506,9 @@ function render() {
     const v = r.fy[+el.dataset.i][el.dataset.calc];
     el.textContent = yenU(v);
     if (el.dataset.calc === "balanceCheck")
-      el.style.background = Math.abs(v) > 0.5 ? "#FBEDE6" : "";
+      el.style.background = isBalanced(v) ? "" : "#FBEDE6";
   });
-  const bad = r.fy.map((p, i) => (Math.abs(p.balanceCheck) > 0.5 ? COLS[i] : null)).filter(Boolean);
+  const bad = r.fy.map((p, i) => (isBalanced(p.balanceCheck) ? null : COLS[i])).filter(Boolean);
   const al = $("alertBalance");
   al.className = "alert" + (bad.length ? " on" : "");
   al.textContent = bad.length
@@ -582,16 +596,48 @@ async function onSample() {
     const v = Math.round((Number(d.longDebt[0]) || 0) / yrs);
     d.repayment = [v, v, v];
     const r = evaluate(d);
-    const f = { yenU: (n) => fmtNum(n), U_LABEL: () => "百万円", pct: (n) => (n * 100).toFixed(1) + "%" };
+    // 画面で選んでいる単位（千円／百万円）をそのままサンプルにも反映する
+    const f = { yenU, U_LABEL, pct };
     const figs = await renderFigures(r, f, 2);
-    await downloadXlsx(r, "財務でポン_サンプル.xlsx", { label: "百万円", mul: 1 }, figs, readingLines(r, f));
-    note.textContent = "ダウンロードしました。⑥ダッシュボードのシートに図が入っています。";
+    await downloadXlsx(r, "財務でポン_サンプル.xlsx", UNITS[dispUnit], figs, readingLines(r, f));
+    note.textContent = `ダウンロードしました（単位：${U_LABEL()}）。⑥ダッシュボードのシートに図が入っています。`;
     if (window.gtag) gtag("event", "xlsx_sample", { tool: "credit-pro" });
   } catch (e) {
     note.textContent = "作成に失敗しました：" + e.message;
   } finally {
     btn.disabled = false; btn.textContent = label;
   }
+}
+
+/** 買ったあとに決算書を差し替えたときの断り書き */
+function changedNotice(paidName) {
+  return `
+  <div class="calc changed">
+    <b>いま表示しているのは、お支払い時に判定した「${esc(paidName || "（会社名なし）")}」の結果です。</b>
+    <p>そのあと画面の内容が変わっています。別の決算書を判定するには、あらためてお求めください。
+    1回のお支払いにつき1社分です。</p>
+  </div>`;
+}
+
+/**
+ * 未購入のときに判定結果の代わりに出すカード。
+ * スコアもランクも出さない。何が見られるのかだけを書く。
+ */
+function lockedCard() {
+  return `
+  <div class="calc lock">
+    <div class="lock__badge">判定は完了しました</div>
+    <h2 class="lock__h">結果とグラフは、お支払い後にご覧いただけます</h2>
+    <p class="lock__lead">読み取った内容はこの画面に残っています。決済後、そのまま結果が開きます。</p>
+    <ul class="lock__list">
+      <li>総合評点（100点満点）と信用程度 A〜E、取引方針の目安</li>
+      <li>与信限度額の目安（自己資本基準・月商基準のいずれか小さい方）</li>
+      <li>財務ハイライト（直近3期）と自動所見</li>
+      <li>7つの図 — ①スコアの内訳／②財務指標のかたち／③貸借対照表のかたち／④売上と利益の推移／⑤返せるお金と、返す額／⑥借金を返し切るまでの年数／⑦グラフから読み取れること</li>
+      <li>稟議に添付できるExcel（6シート・ダッシュボード付き）</li>
+    </ul>
+    <p class="lock__note">どんなものが出てくるかは、<a href="#step1">ページ上部の「評価の高い会社／低い会社」</a>で実物をご覧いただけます。</p>
+  </div>`;
 }
 
 /* -------------------------------------------------------------- ダウンロード */
@@ -614,7 +660,7 @@ async function onDownload() {
   if (!paidSnap) { showGate("gateBuy"); return; }
   // 出力するのは、買ったときの内容。いま画面にある別の決算書ではない。
   const r = evaluate(paidSnap.input);
-  if (r.fy.some((x) => Math.abs(x.balanceCheck) > 0.5) &&
+  if (r.fy.some((x) => !isBalanced(x.balanceCheck)) &&
       !confirm("貸借対照表の検算が0になっていません。このまま出力しますか？")) return;
   const btn = $("btnXlsx");
   btn.disabled = true;
@@ -907,7 +953,7 @@ function renderDemo(kind) {
   d.repayment = [v, v, v];
   const r = evaluate(d);
   // デモは百万円で固定して表示する（読み込んだ決算書の単位に引きずられないように）
-  const f = { yenU: (n) => fmtNum(n), U_LABEL: () => "百万円", pct: (n) => (n * 100).toFixed(1) + "%" };
+  const f = { yenU, U_LABEL, pct };
   col.innerHTML = renderHead(r, f, POLICY[r.scores.rank]) + renderViz(r, f);
   attachTips(col);
   document.querySelectorAll("[data-demo]").forEach((b) => {
@@ -916,11 +962,6 @@ function renderDemo(kind) {
     b.setAttribute("aria-selected", String(on));
   });
 }
-function fmtNum(n) {
-  if (!isFinite(n) || n === 0) return "0";
-  return (n < 0 ? "▲" : "") + Math.abs(Math.round(n)).toLocaleString("ja-JP");
-}
-
 /* ------------------------------------------------------- 金額単位の換算 */
 // 本シートは百万円で計算する。決算書は千円単位が多く、換算しないと
 // 規模の配点と与信限度額が1000倍ずれる。桁が大きいだけで数字は自然に見えるため気づけない。
@@ -1184,7 +1225,7 @@ function showRead(periods) {
     }).join("") + "</tr>";
   }
   h += "<tr><th>貸借の検算</th>" + live.map((p) =>
-    `<td class="${p.diff === 0 ? "ok" : "miss"}">${p.diff === 0 ? "一致" : yenU(p.diff) + " のズレ"}</td>`).join("") + "</tr>";
+    `<td class="${isBalanced(p.diff) ? "ok" : "miss"}">${isBalanced(p.diff) ? "一致" : yenU(p.diff) + " のズレ"}</td>`).join("") + "</tr>";
   $("readTable").innerHTML = h + "</tbody>";
 
   // ---- ここだけ入力してください（未取得のエンジン項目だけを欄にする） ----
