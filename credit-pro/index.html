@@ -552,6 +552,10 @@ input,select,textarea,button{font-weight:600}
 .btn-run--warn{background:var(--warn);box-shadow:0 10px 24px rgba(181,98,63,.32);}
 .btn-run--warn:hover{box-shadow:0 16px 32px rgba(181,98,63,.40);}
 @media (max-width:820px){.forget{padding:18px 14px;}.btn-run--warn{width:100%;justify-content:center;}}
+
+/* ===== 貸借が合っていないときの購入ボタン ===== */
+.btn-run.is-off{background:#AEB7BD;box-shadow:none;cursor:not-allowed;}
+.btn-run.is-off:hover{transform:none;box-shadow:none;}
 </style>
 
 <!-- Google tag (gtag.js) -->
@@ -773,7 +777,11 @@ input,select,textarea,button{font-weight:600}
             <tbody>
               <tr><th>お渡しするもの</th><td>画面の判定結果と7つの図（①〜⑦）／この判定結果のExcelファイル（6シート・ダッシュボード付き・1社分）</td></tr>
               <tr><th>価格</th><td><b>500円（税込）</b>　1社分につき</td></tr>
-            <tr><th>ご利用の範囲</th><td>お支払い後<b>24時間</b>、<b>この1社の判定結果</b>を何度でもダウンロードできます。<br>別の会社の判定結果をご入用の場合は、あらためてお求めください。</td></tr>
+            <tr><th>ご利用の範囲</th><td><b>1回のお支払いにつき1社分</b>です。お支払い後<b>24時間</b>は、
+                この1社の判定結果・7つの図・Excelを何度でも取り直せます。<br>
+                お支払いのあとで別の会社の決算書を読み込んでも、<b>画面に出る判定結果とダウンロードされるExcelは、お支払い時の会社のまま</b>です。
+                読み込んだ数字は画面に残りますが、その判定結果はご覧いただけません。<br>
+                別の会社を判定するには、あらためてお求めください。</td></tr>
               <tr><th>お支払い</th><td>クレジットカード（Square）</td></tr>
               <tr><th>受け取り</th><td>決済後この画面に戻り、その場でダウンロード</td></tr>
             </tbody>
@@ -823,7 +831,10 @@ input,select,textarea,button{font-weight:600}
           </div>
         </div>
 
-        <p class="note-s" style="margin-top:16px;">このファイルは、1社分の判定結果を記録したものです。計算式は含まれません。
+        <p class="note-s" style="margin-top:16px;"><b>このダウンロードは、お支払い時に判定した1社分です。</b>
+            24時間のあいだは、この画面を閉じても同じ会社の分を取り直せます。別の会社の決算書を読み込んだあとでも、
+            出てくるファイルはお支払い時の会社のままです。</p>
+            <p class="note-s" style="margin-top:12px;">このファイルは、1社分の判定結果を記録したものです。計算式は含まれません。
             配点やしきい値をご自身の与信方針に合わせて書き換えながら、何社でも繰り返しお使いになりたい方には、
             <a href="https://note.com/pythonddd/n/n9b4e7122fc05" target="_blank" rel="noopener">計算ロジックをすべて開示したExcel版</a>をご用意しています。
             6カテゴリの配点表、業種別のしきい値、償還余力の算定過程まで、数式のまま追えるものです。</p>
@@ -932,7 +943,7 @@ input,select,textarea,button{font-weight:600}
 </div>
 
 <script src="../vendor/exceljs.min.js" defer></script>
-<script type="module" src="./app.js?v=27"></script>
+<script type="module" src="./app.js?v=28"></script>
 
 </body>
 </html>

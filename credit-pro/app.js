@@ -3,11 +3,11 @@
  * 計算は engine.js、Excel生成は xlsx-export.js。ここはUIだけを担当する。
  * ========================================================================== */
 import { evaluate, emptyInput, INDUSTRIES, CAPITAL_TIERS, LISTING_OPTIONS, POLICY }
-  from "./engine.js?v=27";
-import { downloadXlsx } from "./xlsx-export.js?v=27";
-import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=27";
-import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=27";
-import { renderViz, renderHead, attachTips, renderFigures, readingLines } from "./viz.js?v=27";
+  from "./engine.js?v=28";
+import { downloadXlsx } from "./xlsx-export.js?v=28";
+import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=28";
+import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=28";
+import { renderViz, renderHead, attachTips, renderFigures, readingLines } from "./viz.js?v=28";
 
 const $ = (id) => document.getElementById(id);
 const COLS = ["今期（直近）", "前期", "前々期"];
@@ -221,6 +221,12 @@ let licensed = false;
  * ---------------------------------------------------------------------- */
 const SNAP_KEY = "kazumono.credit-pro.paid";
 let paidSnap = null;
+/**
+ * 貸借が合っていない期の名前。空でなければ購入させない。
+ * 資産合計と負債・純資産合計がずれたまま判定すると、自己資本比率も償還余力も
+ * 全部おかしくなる。おかしい数字にお金を払わせないための歯止め。
+ */
+let balanceBad = [];
 function loadSnap() { try { return JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) { return null; } }
 function saveSnap(o) { try { localStorage.setItem(SNAP_KEY, JSON.stringify(o)); } catch (e) { /* noop */ } }
 function clearSnap() { paidSnap = null; try { localStorage.removeItem(SNAP_KEY); } catch (e) { /* noop */ } }
@@ -372,8 +378,37 @@ async function refreshLicense() {
  * 購入へ進む。入力内容を保存してからSquareへ送る。
  * 決済後に戻ってきたとき、同じ内容のまま続けられるようにするため。
  */
+/**
+ * 貸借が合っていないあいだは、購入ボタンを押せない見た目にする。
+ * 押せてしまうと、狂った判定にお金を払わせることになる。
+ */
+function syncBuyState() {
+  const buy = $("btnBuy"); if (!buy) return;
+  const off = balanceBad.length > 0;
+  buy.classList.toggle("is-off", off);
+  buy.setAttribute("aria-disabled", String(off));
+  const note = $("buyNote");
+  if (off && note) {
+    note.textContent =
+      `${balanceBad.join("・")}で、資産合計と負債・純資産合計が一致していません。` +
+      `一致させてからお進みください（ずれたままの判定結果は、正しい数字になりません）。`;
+  } else if (note && note.dataset.balance === "1") {
+    note.textContent = ""; note.dataset.balance = "";
+  }
+  if (off && note) note.dataset.balance = "1";
+}
+
 function onBuy(e) {
   e.preventDefault();
+  // 貸借が合っていないときは、ここで止める。
+  if (balanceBad.length) {
+    $("buyNote").textContent =
+      `${balanceBad.join("・")}で、資産合計と負債・純資産合計が一致していません。` +
+      `この状態では判定結果が正しくならないため、購入できません。数値をご確認のうえ、一致させてからお進みください。`;
+    const al = $("alertBalance");
+    if (al) al.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
   // 支払いリンクが未設定のまま押されたときは、遷移せずに理由を出す。
   // 黙ってSquareのエラーページへ飛ばすと、原因の切り分けができなくなる。
   // 会社名が空だと、決済しても「どの会社の分か」を確定できず解錠できない
@@ -509,11 +544,15 @@ function render() {
       el.style.background = isBalanced(v) ? "" : "#FBEDE6";
   });
   const bad = r.fy.map((p, i) => (isBalanced(p.balanceCheck) ? null : COLS[i])).filter(Boolean);
+  balanceBad = bad;
   const al = $("alertBalance");
   al.className = "alert" + (bad.length ? " on" : "");
   al.textContent = bad.length
-    ? `${bad.join("・")}で、資産合計と負債・純資産合計が一致していません。指標がすべて狂うため、必ず0にしてください。`
+    ? `${bad.join("・")}で、資産合計と負債・純資産合計が一致していません。` +
+      `このままでは自己資本比率も償還余力も正しく出ないため、判定結果はお売りできません。` +
+      `「ここだけ入力してください」欄か、下の入力欄で数値をご確認ください。`
     : "";
+  syncBuyState();
   // 判定結果とグラフは有料。未購入のあいだは中身を一切出さない。
   // 購入済みのときは、買ったときの内容（控え）からだけ作る。
   if (licensed && paidSnap) {

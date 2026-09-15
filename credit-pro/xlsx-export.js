@@ -544,71 +544,121 @@ function sheetInput(wb, r) {
  * 画面と同じ6枚の図を「画像」として貼る。
  * Excelのグラフ機能は使わない＝参照先のデータ範囲も数式も付いてこないので、
  * 配点表・しきい値・業界指標といったロジックは一切外に出ない。
+ *
+ * 並びはA3横・3列×2段。無料サンプルも購入版も、まったく同じ手順で作る。
  * ------------------------------------------------------------------------ */
+const BANDS = [["E", "35点以下", "FF8C3B22"], ["D", "36〜50点", "FFB5623F"],
+               ["C", "51〜65点", "FF2E6E8E"], ["B", "66〜85点", "FF5E9E4A"],
+               ["A", "86〜100点", "FF1B7F5C"]];
+
 function sheetDashboard(wb, r, figs, lines) {
   const ws = wb.addWorksheet("⑥ダッシュボード", {
     views: [{ showGridLines: false }],
-    pageSetup: { paperSize: 8, orientation: "portrait", fitToPage: true, fitToWidth: 1, fitToHeight: 0,
-                 margins: { left: 0.3, right: 0.3, top: 0.3, bottom: 0.3, header: 0.15, footer: 0.15 } },
+    pageSetup: { paperSize: 8, orientation: "landscape", fitToPage: true, fitToWidth: 1, fitToHeight: 1,
+                 margins: { left: 0.25, right: 0.25, top: 0.25, bottom: 0.25, header: 0.12, footer: 0.12 } },
   });
-  ws.columns = [{ width: 2 }, ...Array.from({ length: 14 }, () => ({ width: 8.5 })), { width: 2 }];
+  // A3横：本文3ブロック（各8列）＋すき間。1ブロックがだいたい13cm。
+  ws.columns = [{ width: 2 },
+    ...Array.from({ length: 8 }, () => ({ width: 8.8 })), { width: 1.5 },
+    ...Array.from({ length: 8 }, () => ({ width: 8.8 })), { width: 1.5 },
+    ...Array.from({ length: 8 }, () => ({ width: 8.8 })), { width: 2 }];
+  const LAST = "AB";
+  const s = r.scores;
 
-  ws.mergeCells("A1:P1");
+  // --- タイトル ---
+  ws.mergeCells(`A1:${LAST}1`);
   put(ws, "A1", "与信判断検討書", { font: { name: F, size: 18, bold: true, color: { argb: C.white } },
-    fill: C.navyD, align: { vertical: "middle", horizontal: "left", indent: 1 } });
-  ws.getRow(1).height = 30;
-  ws.mergeCells("A2:P2");
-  put(ws, "A2", "　⑥ ダッシュボード　│　" + (r.input.name || ""),
+    fill: C.navyD, align: { vertical: "middle", horizontal: "left", indent: 1 }, border: false });
+  ws.getRow(1).height = 28;
+  ws.mergeCells(`A2:${LAST}2`);
+  put(ws, "A2", `　⑥ ダッシュボード　│　${r.input.name || ""}　／　${(r.input.industry || "").trim()}　／　単位：${UNIT.label}`,
     { font: { name: F, size: 10, color: { argb: "FFB9C6D2" } }, fill: C.navyD,
-      align: { vertical: "middle", horizontal: "left", indent: 1 } });
-  ws.getRow(2).height = 18;
+      align: { vertical: "middle", horizontal: "left", indent: 1 }, border: false });
+  ws.getRow(2).height = 17;
+  ws.getRow(3).height = 6;
 
-  // 図は2列×3段。1枚あたり 420×(300前後) を約 8.4cm 幅で貼る。
-  let row = 4;
-  for (let i = 0; i < figs.length; i += 2) {
-    const pair = figs.slice(i, i + 2);
-    pair.forEach((g, k) => {
-      const col = k === 0 ? 1 : 8;                       // B列 / I列
-      const addr = (c, rr) => ws.getCell(rr, c + 1).address;
-      ws.mergeCells(`${addr(col, row)}:${addr(col + 5, row)}`);
-      put(ws, addr(col, row), `${g.no} ${g.title}`,
-        { font: { name: F, size: 11, bold: true, color: { argb: C.navy } }, fill: C.steelL,
-          align: { vertical: "middle", horizontal: "left", indent: 1 } });
+  // --- 総合判定 ---
+  ws.mergeCells(`B4:${LAST}4`);
+  put(ws, "B4", "  総 合 判 定", { font: { name: F, size: 11, bold: true, color: { argb: C.white } },
+    fill: C.navy, align: { vertical: "middle", horizontal: "left" }, border: false });
+  ws.getRow(4).height = 19;
+  const cells = [["B5:E5", s.total, PT, 22, C.navy], ["F5:I5", s.rank, "@", 22, RANK_C[s.rank] || C.navy],
+                 ["K5:N5", Math.round(r.creditLimit.value * UNIT.mul), '#,##0"' + UNIT.label + '"', 15, C.steel]];
+  cells.forEach(([rng, v, fmt, sz, col]) => {
+    ws.mergeCells(rng);
+    put(ws, rng.split(":")[0], v, { font: { name: F, size: sz, bold: true, color: { argb: col } },
+      fill: C.steelL, numFmt: fmt, align: { vertical: "middle", horizontal: "center" } });
+  });
+  ws.mergeCells(`P5:${LAST}5`);
+  put(ws, "P5", POLICY[s.rank], { font: { name: F, size: 11, color: { argb: C.ink } },
+    align: { vertical: "middle", horizontal: "left", indent: 1, wrapText: true } });
+  ws.getRow(5).height = 32;
+  [["B6:E6", "総合評点（100点満点）"], ["F6:I6", "信用程度（A〜E）"], ["K6:N6", "与信限度額の目安"],
+   [`P6:${LAST}6`, "取引方針の目安"]].forEach(([rng, t]) => {
+    ws.mergeCells(rng);
+    put(ws, rng.split(":")[0], t, { font: { name: F, size: 8.5, color: { argb: C.muted } },
+      align: { vertical: "middle", horizontal: "center" }, border: false });
+  });
+  ws.getRow(6).height = 14;
+
+  // --- A〜Eの帯 ---
+  const SPAN = [["B", "F"], ["G", "K"], ["L", "P"], ["Q", "U"], ["V", LAST]];
+  BANDS.forEach(([g, note, col], i) => {
+    const rng = `${SPAN[i][0]}7:${SPAN[i][1]}7`;
+    ws.mergeCells(rng);
+    const here = g === s.rank;
+    put(ws, rng.split(":")[0], (here ? "▼ この会社　" : "") + g + "　" + note,
+      { font: { name: F, size: 10.5, bold: true, color: { argb: C.white } },
+        fill: here ? C.navyD : col, align: { vertical: "middle", horizontal: "center" }, border: false });
+  });
+  ws.getRow(7).height = 21;
+  ws.getRow(8).height = 6;
+
+  // --- 図：3列×2段 ---
+  const COLS = [1, 10, 19];                 // B / K / T
+  const PX = 470;                           // 貼り付け幅（ピクセル）
+  let row = 9;
+  for (let i = 0; i < figs.length; i += 3) {
+    const line = figs.slice(i, i + 3);
+    line.forEach((g, k) => {
+      const c0 = COLS[k];
+      const a = ws.getCell(row, c0 + 1).address, b = ws.getCell(row, c0 + 8).address;
+      ws.mergeCells(`${a}:${b}`);
+      put(ws, a, `${g.no} ${g.title}`, { font: { name: F, size: 10.5, bold: true, color: { argb: C.navy } },
+        fill: C.steelL, align: { vertical: "middle", horizontal: "left", indent: 1 }, border: false });
     });
-    ws.getRow(row).height = 20;
-    const H = Math.max(...pair.map((g) => g.h));
-    const px = 470;                                      // 貼り付け幅（ピクセル）
-    pair.forEach((g, k) => {
+    ws.getRow(row).height = 19;
+    line.forEach((g, k) => {
       const id = wb.addImage({ base64: g.dataUrl.split(",")[1], extension: "png" });
-      ws.addImage(id, {
-        tl: { col: (k === 0 ? 1 : 8) + 0.1, row: row + 0.15 },
-        ext: { width: px, height: Math.round(px * g.h / g.w) },
-        editAs: "oneCell",
-      });
+      ws.addImage(id, { tl: { col: COLS[k] + 0.15, row: row + 0.2 },
+        ext: { width: PX, height: Math.round(PX * g.h / g.w) }, editAs: "oneCell" });
     });
-    const rows = Math.ceil((px * H / 420) / 19) + 1;     // 行高19pxで割って必要行数を出す
+    const maxH = Math.max(...line.map((g) => Math.round(PX * g.h / g.w)));
+    const rows = Math.ceil(maxH / 19) + 1;  // 行高14.4pt ≒ 19px
     for (let t = 0; t < rows; t++) ws.getRow(row + 1 + t).height = 14.4;
     row += rows + 2;
   }
 
-  // ⑦ 所見
-  ws.mergeCells(`B${row}:P${row}`);
+  // --- ⑦ 所見 ---
+  ws.mergeCells(`B${row}:${LAST}${row}`);
   put(ws, `B${row}`, "  ⑦ グラフから読み取れること",
-    { font: { name: F, size: 11, bold: true, color: { argb: C.white } }, fill: C.navy,
-      align: { vertical: "middle", horizontal: "left" } });
-  ws.getRow(row).height = 20;
+    { font: { name: F, size: 10.5, bold: true, color: { argb: C.white } }, fill: C.navy,
+      align: { vertical: "middle", horizontal: "left" }, border: false });
+  ws.getRow(row).height = 19;
   row += 1;
   (lines || []).forEach((t) => {
-    ws.mergeCells(`B${row}:P${row}`);
+    ws.mergeCells(`B${row}:${LAST}${row}`);
     put(ws, `B${row}`, "・" + t, { font: { name: F, size: 9.5, color: { argb: C.ink } },
-      align: { vertical: "middle", horizontal: "left", wrapText: true, indent: 1 } });
-    ws.getRow(row).height = 26;
+      align: { vertical: "middle", horizontal: "left", wrapText: true, indent: 1 }, border: false });
+    ws.getRow(row).height = 22;
     row += 1;
   });
-  ws.mergeCells(`B${row}:P${row}`);
-  put(ws, `B${row}`, "図は入力された数字をそのまま描いたものです。計算式・配点表は含まれません。",
-    { font: { name: F, size: 8.5, color: { argb: C.muted } }, align: { horizontal: "left", indent: 1 } });
-  ws.pageSetup.printArea = `A1:P${row}`;
+  ws.mergeCells(`B${row}:${LAST}${row}`);
+  put(ws, `B${row}`, "図は入力された数字をそのまま描いたものです。このファイルに計算式・配点表・しきい値は含まれません。",
+    { font: { name: F, size: 8.5, color: { argb: C.muted } },
+      align: { horizontal: "left", indent: 1 }, border: false });
+  ws.getRow(row).height = 16;
+  ws.pageSetup.printArea = `A1:${LAST}${row + 1}`;
   return ws;
 }
 
