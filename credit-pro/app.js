@@ -3,11 +3,11 @@
  * 計算は engine.js、Excel生成は xlsx-export.js。ここはUIだけを担当する。
  * ========================================================================== */
 import { evaluate, emptyInput, INDUSTRIES, CAPITAL_TIERS, LISTING_OPTIONS, POLICY }
-  from "./engine.js?v=28";
-import { downloadXlsx } from "./xlsx-export.js?v=28";
-import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=28";
-import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=28";
-import { renderViz, renderHead, attachTips, renderFigures, readingLines } from "./viz.js?v=28";
+  from "./engine.js?v=31";
+import { downloadXlsx } from "./xlsx-export.js?v=31";
+import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder } from "./license.js?v=31";
+import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=31";
+import { renderViz, renderHead, attachTips, renderFigures, readingLines } from "./viz.js?v=31";
 
 const $ = (id) => document.getElementById(id);
 const COLS = ["今期（直近）", "前期", "前々期"];
@@ -189,6 +189,7 @@ function init() {
   $("btnBuy").addEventListener("click", onBuy);
   initUploader();
   initShots();
+  if (FREE_MODE) markFreeMode();
 
   // 決済から戻ったときだけ、入力内容と判定を復元して段を開く。
   // 初回は空の状態で「決算書を置く」だけに集中してもらう。
@@ -206,6 +207,20 @@ function init() {
 }
 
 /* ------------------------------------------------------------ 決済ゲート */
+/* ------------------------------------------------------------------------
+ * テスト用の無料モード
+ *
+ * FREE_BUILD は、テスト用リポジトリ（test_credit_test）に置くファイルでだけ true。
+ * 本番リポジトリに置くファイルは false のままにすること。
+ *
+ * それに加えて、ホスト名が kazumono.com のときは何があっても無効にする。
+ * 取り違えてテスト用のファイルを本番へ上げてしまっても、課金は外れない。
+ * この二重の歯止めがあるので、事故で売上がゼロになることはない。
+ * ---------------------------------------------------------------------- */
+const FREE_BUILD = false;
+const FREE_MODE = FREE_BUILD &&
+  !/(^|\.)kazumono\.com$/i.test(String(location.hostname || ""));
+
 let licensed = false;
 
 /* ------------------------------------------------------------------------
@@ -247,6 +262,74 @@ function showGate(which) {
   ["gateWait", "gateBuy", "gateOk", "gateOffline"].forEach((id) => {
     $(id).hidden = (id !== which);
   });
+}
+
+/**
+ * テスト用の無料モードでの解錠状態。
+ * 本番と同じく「買ったときの会社名と一致するときだけ開く」ようにしてある。
+ * 挙動をそろえておかないと、テストの意味がなくなるため。
+ */
+function applyFreeMode() {
+  const snap = loadSnap();
+  const nm = state_name().trim();
+  if (snap && snap.free && nm && snap.name === nm) { paidSnap = snap; licensed = true; }
+  else { paidSnap = null; licensed = false; }
+  showLicenseDiag(licensed ? "licensed" : "unlicensed", paidSnap ? paidSnap.order : "", "", 0);
+  showGate(licensed ? "gateOk" : "gateBuy");
+  try { render(); } catch (e) { /* 入力がまだ無いときは何もしない */ }
+}
+
+/** テスト環境であることを画面に出す。本番と取り違えないための目印。 */
+function markFreeMode() {
+  const bar = document.createElement("div");
+  bar.className = "freebar";
+  bar.innerHTML = "<b>テスト環境</b><span>お支払いなしで解錠できます。本番（kazumono.com）ではこの表示は出ません。</span>" +
+    '<button type="button" id="btnFreeReset">解錠を取り消す</button>';
+  document.body.prepend(bar);
+  document.body.classList.add("has-freebar");
+  const buy = $("btnBuy");
+  if (buy) buy.textContent = "テスト用：無料で解錠してダウンロード";
+  const bt = $("btnFreeReset");
+  if (bt) bt.addEventListener("click", () => { clearSnap(); licensed = false; refreshLicense(); });
+}
+
+/** テスト用：お金を払わずに解錠する。本番の購入とまったく同じ控えを作る。 */
+function freeUnlock() {
+  const nm = state_name().trim();
+  if (!nm) {
+    $("buyNote").textContent = "会社名をご入力ください（テスト用の解錠でも、1社分の控えを作るため必要です）。";
+    $("f_name")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    $("f_name")?.focus();
+    return;
+  }
+  paidSnap = {
+    free: true, order: "TEST-" + Date.now().toString(36).toUpperCase(), fp: "test",
+    name: nm, input: JSON.parse(JSON.stringify(state)), at: Date.now(),
+  };
+  saveSnap(paidSnap);
+  licensed = true;
+  $("buyNote").textContent = "";
+  showLicenseDiag("licensed", paidSnap.order, "", 0);
+  showGate("gateOk");
+  render();
+  $("gateOk")?.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+/**
+ * ライセンスの確認口。checkLicense を直接呼ばず、必ずここを通す。
+ *
+ * テスト環境（FREE_MODE）では、サーバーに問い合わせても注文番号が無いため
+ * 必ず「未購入」が返る。呼び出し側それぞれに迂回を書くと、今回のように
+ * 書き忘れた1か所でダウンロードだけ止まる。入口をひとつにしておく。
+ */
+async function verifyLicense() {
+  if (FREE_MODE) {
+    const nm = state_name().trim();
+    const ok = !!(paidSnap && paidSnap.free && nm && paidSnap.name === nm);
+    return { state: ok ? "licensed" : "unlicensed",
+             order: paidSnap ? paidSnap.order : "", reason: "", expiresAt: 0 };
+  }
+  return checkLicense(await companyFingerprint(state_name()));
 }
 
 /** 決済まわりで何が起きているかを画面に出し、切り分けられるようにする */
@@ -321,14 +404,11 @@ async function pollLicense(order) {
     if (wait) wait.innerHTML =
       `<p class="note-s"><b>お支払いを確認しています…（経過 ${sec} 秒／最大3分）</b><br>` +
       `Squareからの通知待ちです。この画面のままお待ちください。</p>`;
-    const { state, expiresAt } = await checkLicense(await companyFingerprint(state_name()));
+    const { state, expiresAt } = await verifyLicense();
     if (state === "licensed") {
       licensed = true;
-      refreshLicense();
-      return;
-      showLicenseDiag("licensed", order, null, expiresAt);
-      showGate("gateOk");
       if (window.gtag) gtag("event", "license_ok", { tool: "credit-pro" });
+      refreshLicense();   // 控えの作成とゲートの開閉は refreshLicense に任せる
       return true;
     }
     if (state === "offline") break;
@@ -350,9 +430,10 @@ async function pollLicense(order) {
 function state_name() { return state && state.name ? state.name : ""; }
 
 async function refreshLicense() {
+  if (FREE_MODE) { applyFreeMode(); return; }
   showGate("gateWait");
   const fp = await companyFingerprint(state_name());
-  const { state: st, order, reason, expiresAt } = await checkLicense(fp);
+  const { state: st, order, reason, expiresAt } = await verifyLicense();
   licensed = st === "licensed";
   if (licensed) {
     // 控えは注文番号ごとに1回だけ取る。以後は差し替えても上書きしない。
@@ -409,6 +490,8 @@ function onBuy(e) {
     if (al) al.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
+  // テスト環境では、Squareへ行かずにその場で解錠する
+  if (FREE_MODE) { freeUnlock(); return; }
   // 支払いリンクが未設定のまま押されたときは、遷移せずに理由を出す。
   // 黙ってSquareのエラーページへ飛ばすと、原因の切り分けができなくなる。
   // 会社名が空だと、決済しても「どの会社の分か」を確定できず解錠できない
@@ -681,13 +764,11 @@ function lockedCard() {
 
 /* -------------------------------------------------------------- ダウンロード */
 async function onDownload() {
-  const btn0 = $("btnXlsx");
-  $("dlNote").textContent = "確認しています…";
+  $("dlNote").textContent = FREE_MODE ? "" : "確認しています…";
   // ボタンの表示状態だけに頼らず、実行の直前にもう一度確認する。
   // このとき会社名の指紋を必ず一緒に送る。送り忘れると
   // 「別の会社に使い回そうとしている」と判定され、解錠が取り消されてしまう。
-  const { state: st, order, reason, expiresAt } =
-    await checkLicense(await companyFingerprint(state_name()));
+  const { state: st, order, reason, expiresAt } = await verifyLicense();
   if (st !== "licensed") {
     licensed = false; paidSnap = null;
     showLicenseDiag(st, order, reason, expiresAt);
@@ -904,15 +985,17 @@ function warnCompany() {
 /* --------------------------------------------------- Excel見本スライダー */
 const SHOTS = [
   ["./assets/1-summary.jpg", "①判定サマリー",
-   "総合評点・信用程度A〜E・6軸の評点内訳・与信限度額の目安・財務ハイライト・自動所見までを1枚に収めています。"],
+   "総合評点・信用程度A〜E・6軸の評点内訳・与信限度額の目安・財務ハイライト・自動所見を1枚に。決裁欄つきで、そのまま回付できます。"],
   ["./assets/2-financial.jpg", "②財務分析",
-   "損益計算書と貸借対照表の3期比較、主要財務指標14種、運転資金分析。業種基準との対比つきです。"],
+   "損益計算書と貸借対照表の3期比較に、主要財務指標14種と運転資金分析。画面のレーダーは6指標ですが、ここでは14指標を業種基準と並べて見られます。"],
   ["./assets/3-repayment.jpg", "③資金償還表",
-   "簡易キャッシュフローから債務償還年数を算定し、今後3年の約定返済に返済原資が足りるかを見ます。"],
+   "簡易キャッシュフローの作り方から債務償還年数、3年返済充足率まで。画面では結果だけをお見せしていますが、ここでは算定の過程が数字で追えます。"],
   ["./assets/4-scoring.jpg", "④配点内訳",
-   "6軸それぞれの得点と、判定に用いた値。なぜその点数になったのかを稟議で説明できます。"],
+   "6軸それぞれの得点と、判定に用いた値。「なぜこの点数になったのか」を稟議の場で説明できます。"],
   ["./assets/5-input.jpg", "⑤入力データ",
-   "判定に使った数値をそのまま記録。あとから検証・引き継ぎができます。"],
+   "判定に使った数値をそのまま記録。あとからの検証と、担当者が替わったときの引き継ぎに使えます。"],
+  ["./assets/6-dashboard.jpg", "⑥ダッシュボード",
+   "画面でご覧いただいた7つの図を、A3横1枚に。印刷してそのまま配れます。"],
 ];
 let shotAt = 0;
 
