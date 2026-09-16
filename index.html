@@ -5,13 +5,14 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>財務でポン！｜決算書PDFから自動で財務分析・与信判定・Excel出力</title>
-<meta name="description" content="「財務でポン！」は決算書3期分を入力するだけで、取引先の信用力を業歴・資本構成・規模・損益・経営者・償還余力の6軸100点満点で判定します。信用程度A〜Eと与信限度額の目安、稟議に添付できるExcel（エクセル）ファイルまで自動作成。業種別の基準値は財務省の法人企業統計調査に準拠。計算はブラウザ内で完結し、入力内容は送信されません。">
-<link rel="canonical" href="https://kazumono.com/credit-pro/">
+<title>数字のものさし『KAZUMONO』｜社会保険や与信管理などの実務ツール集</title>
+<meta name="description" content="取引先の決算書PDFを置くだけで与信を判定する「財務でポン！」（1社500円）。ほか社会保険料、手取り、住宅コストなど、実務で使う数字を自分で出せる12のツールと解説記事。">
+<link rel="canonical" href="https://kazumono.com/">
+
 <meta property="og:type" content="website">
-<meta property="og:title" content="財務でポン！｜決算書を入れるだけで決算分析と与信判定・Excel出力">
-<meta property="og:description" content="決算書3期分を入力すると、取引先の信用力を業歴・資本構成・規模・損益・経営者・償還余力の6軸100点満点で判定します。信用程度A〜Eと与信限度額の目安、稟議に添付できるExcel（エクセル）ファイルまで自動作成。業種別の基準値は財務省の法人企業統計調査に準拠。計算はブラウザ内で完結し、入力内容は送信されません。">
-<meta property="og:url" content="https://kazumono.com/credit-pro/">
+<meta property="og:title" content="数字のものさし『KAZUMONO』｜社会保険や与信管理などの実務ツール集">
+<meta property="og:description" content="決算書を置くだけで与信判定。実務で使う数字を、自分で出せるように。">
+<meta property="og:url" content="https://kazumono.com/">
 <meta property="og:image" content="https://kazumono.com/assets/ogp.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -22,157 +23,477 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta name="theme-color" content="#33526C">
 
+
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2146116373822311" crossorigin="anonymous"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "数字のものさし",
+  "url": "https://kazumono.com/",
+  "publisher": {
+    "@type": "Person",
+    "name": "エリエール",
+    "description": "財務経理、金融機関での法人営業・制度対応、企業信用調査を経て独立。"
+  }
+}
+</script>
 
 <style>
 :root{
-  --paper:#FAF9F6; --card:#FFFFFF;
-  --ink:#0F1A22; --ink-soft:#202F3B; --ink-faint:#242F38;
-  --sea-deep:#33526C; --sea:#527695; --sky:#84D2F5; --aqua:#B0F1F0; --mist:#DFF6F1;
-  --dawn:#FEEEDF; --rose:#F4C3D3; --bloom:#F8A3BF; --plum:#B67AB4;
-  --peridot:#82B33A; --lime:#D4E157; --mint:#E8F5E9;
-  --warn:#B5623F;
+  /* ---- 紙 ---- */
+  --paper:#FAF9F6;
+  --card:#FFFFFF;
+
+  /* ---- 文字（527695 から派生した濃色。パレット外の追加色） ---- */
+  --ink:#0F1A22;        /* 本文・見出し */
+  --ink-soft:#202F3B;   /* 補助文。これでも十分読める濃さ */
+  --ink-faint:#242F38;  /* 日付など、読まなくてよい情報だけ */
+
+  /* ---- 早朝のシーグラス：土台と信頼 ---- */
+  --sea-deep:#33526C;   /* ボタン・ラベル用に 527695 を締めた色 */
+  --sea:#527695;
+  --sky:#84D2F5;
+  --aqua:#B0F1F0;
+  --mist:#DFF6F1;
+
+  /* ---- 朝焼け：親しみとアクセント ---- */
+  --dawn:#FEEEDF;
+  --rose:#F4C3D3;
+  --bloom:#F8A3BF;
+  --plum:#B67AB4;
+
+  /* ---- ペリドット：結果と肯定 ---- */
+  --peridot:#82B33A;
+  --lime:#D4E157;
+  --mint:#E8F5E9;
+
   --line:rgba(24,38,47,.18);
-  --shadow:0 1px 2px rgba(24,38,47,.05), 0 10px 26px rgba(24,38,47,.07);
-  --shadow-lift:0 3px 6px rgba(24,38,47,.07), 0 20px 44px rgba(24,38,47,.14);
+  --shadow:0 1px 2px rgba(35,53,67,.05), 0 10px 26px rgba(35,53,67,.07);
+  --shadow-lift:0 3px 6px rgba(35,53,67,.07), 0 20px 44px rgba(35,53,67,.14);
+
   --serif:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Times New Roman",serif;
   --sans:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Noto Sans JP",sans-serif;
   --num:"Helvetica Neue",Arial,sans-serif;
+
+  --wrap:1080px;
 }
+
 *,*::before,*::after{box-sizing:border-box;}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
-  font-size:16.5px;line-height:1.92;letter-spacing:.015em;}
-body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.26;mix-blend-mode:multiply;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23g)' opacity='0.22'/></svg>");}
+
+html{scroll-behavior:smooth;}
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16.5px;
+  line-height:1.92;
+  letter-spacing:.015em;
+}
+
+/* 紙の質感。前回より弱め、文字の鮮明さを優先 */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  opacity:.26;
+  mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23g)' opacity='0.22'/></svg>");
+}
+
 .page{position:relative;z-index:1;}
-.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 24px;}
-.column{width:100%;max-width:920px;margin:0 auto;padding:0 24px;}
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 24px;}
 a{color:inherit;}
-:focus-visible{outline:2.5px solid var(--sea-deep);outline-offset:3px;border-radius:4px;}
-.skip{position:absolute;left:-9999px;background:var(--sea-deep);color:#fff;padding:12px 20px;z-index:99;}
+
+.skip{
+  position:absolute;left:-9999px;top:0;
+  background:var(--sea-deep);color:#fff;padding:12px 20px;border-radius:0 0 12px 0;z-index:99;
+}
 .skip:focus{left:0;}
 
-.masthead{position:sticky;top:0;z-index:20;background:rgba(250,249,246,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
-.masthead__inner{display:flex;align-items:center;justify-content:space-between;gap:24px;height:70px;}
-.brand{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.16em;text-decoration:none;color:var(--ink);white-space:nowrap;}
+:focus-visible{outline:2.5px solid var(--sea-deep);outline-offset:3px;border-radius:4px;}
+
+/* ===================== ヘッダー ===================== */
+.masthead{
+  position:sticky;top:0;z-index:20;
+  background:rgba(250,249,246,.92);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.masthead__inner{
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  height:70px;
+}
+.brand{
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:20px;
+  letter-spacing:.16em;
+  text-decoration:none;
+  white-space:nowrap;
+  color:var(--ink);
+}
 .brand span{color:var(--sea-deep);}
-.nav{display:flex;gap:26px;}
-.nav a{font-size:14px;font-weight:500;letter-spacing:.1em;text-decoration:none;color:var(--ink-soft);border-bottom:2px solid transparent;padding:6px 0;transition:color .2s,border-color .2s;}
+
+.nav{display:flex;align-items:center;gap:28px;}
+.nav a{
+  font-size:14px;
+  font-weight:500;
+  letter-spacing:.1em;
+  text-decoration:none;
+  color:var(--ink-soft);
+  padding:6px 0;
+  border-bottom:2px solid transparent;
+  transition:color .2s, border-color .2s;
+}
 .nav a:hover{color:var(--ink);border-bottom-color:var(--bloom);}
 
-.crumbs{font-size:13px;color:var(--ink-soft);letter-spacing:.06em;margin:34px 0 0;}
-.crumbs a{text-decoration:none;}
-.head{padding:22px 0 38px;position:relative;}
-.head__mark{position:absolute;top:-14px;right:-24px;width:156px;height:156px;border-radius:50%;background:var(--mint);pointer-events:none;}
-.badge{position:relative;display:inline-block;font-size:12px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:999px;background:var(--lime);margin:0 0 16px;}
-.head h1{font-family:var(--serif);font-weight:600;font-size:clamp(27px,4.4vw,40px);line-height:1.55;letter-spacing:.04em;margin:0 0 18px;position:relative;}
-.head p{margin:0;font-size:16.5px;line-height:2;position:relative;max-width:34em;}
-.head__safe{display:inline-flex;align-items:center;gap:9px;margin-top:22px;padding:9px 18px;border-radius:999px;background:var(--mint);font-size:13.5px;font-weight:600;position:relative;}
-.head__safe::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--peridot);}
+/* ===================== ヒーロー ===================== */
+.hero{
+  position:relative;
+  padding:96px 0 84px;
+  overflow:hidden;
+  background:linear-gradient(168deg, rgba(254,238,223,.55) 0%, rgba(250,249,246,0) 58%);
+}
+.hero__blob{position:absolute;border-radius:50%;pointer-events:none;}
+.hero__blob--a{width:330px;height:330px;background:var(--mist);top:-80px;right:-60px;}
+.hero__blob--b{width:186px;height:186px;background:var(--rose);top:168px;right:196px;opacity:.75;}
+.hero__blob--c{width:118px;height:118px;background:var(--mint);bottom:-26px;left:-38px;}
 
-/* 入力 */
-.calc{background:var(--card);border:1.5px solid var(--line);border-radius:24px;padding:36px 32px;box-shadow:var(--shadow);margin:0 0 20px;}
-.calc h2{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.08em;margin:0 0 8px;}
-.calc__hint{margin:0 0 26px;font-size:14px;color:var(--ink-soft);}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;}
-.field label{display:block;font-size:14px;font-weight:600;margin:0 0 7px;}
-.field small{display:block;font-size:12.5px;font-weight:400;color:var(--ink-faint);line-height:1.6;margin-top:2px;}
-.field input{width:100%;padding:13px 15px;font-size:16px;font-family:var(--num);border:1.5px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);text-align:right;}
-.field input:focus{border-color:var(--sea-deep);outline:none;background:#fff;}
-.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;align-items:center;}
-.btn-run{display:inline-flex;align-items:center;gap:10px;padding:16px 34px;border:none;border-radius:999px;background:var(--sea-deep);color:#fff;font-family:var(--sans);font-size:16px;font-weight:600;letter-spacing:.08em;cursor:pointer;box-shadow:0 10px 24px rgba(51,82,108,.34);transition:transform .2s,box-shadow .2s;}
-.btn-run:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(51,82,108,.42);}
-.btn-sample{background:none;border:1.5px solid var(--line);border-radius:999px;padding:13px 22px;font-family:var(--sans);font-size:14px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:border-color .2s,color .2s;}
-.btn-sample:hover{border-color:var(--sea-deep);color:var(--ink);}
-.btn-sample:disabled{opacity:.55;cursor:default;}
+.eyebrow{
+  font-family:var(--num);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.34em;
+  text-transform:uppercase;
+  color:var(--sea-deep);
+  margin:0 0 24px;
+}
+.hero h1{
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:clamp(31px,5.4vw,54px);
+  line-height:1.56;
+  letter-spacing:.045em;
+  margin:0 0 30px;
+  max-width:17.5em;
+  color:var(--ink);
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(transparent 58%, var(--bloom) 58%, var(--bloom) 94%, transparent 94%);
+  padding:0 .05em;
+}
+.hero p{
+  max-width:33em;
+  margin:0 0 40px;
+  color:var(--ink);
+  font-size:16px;
+  line-height:2;
+}
+.hero__actions{display:flex;flex-wrap:wrap;gap:14px;}
 
-/* サンプルExcelの案内 */
-.sample{margin:22px 0 0;padding:22px 24px;background:var(--card);border:1.5px solid var(--line);
-  border-left:5px solid var(--peridot);border-radius:18px;}
-.sample__lead{margin:0 0 14px;font-size:15px;line-height:1.9;}
-.err{margin:16px 0 0;font-size:14px;color:var(--warn);font-weight:600;display:none;}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 32px;
+  border-radius:999px;
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-decoration:none;
+  border:2px solid transparent;
+  transition:transform .2s, box-shadow .2s, background .2s, border-color .2s;
+}
+.btn--primary{
+  background:var(--sea-deep);color:#fff;
+  box-shadow:0 10px 24px rgba(62,93,119,.34);
+}
+.btn--primary:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(62,93,119,.42);}
+.btn--ghost{border-color:var(--sea-deep);color:var(--sea-deep);background:rgba(255,255,255,.7);}
+.btn--ghost:hover{background:#fff;transform:translateY(-2px);}
+.btn__arrow{transition:transform .2s;}
+.btn:hover .btn__arrow{transform:translateX(4px);}
 
-/* 結果 */
-.result{display:block;background:linear-gradient(150deg,var(--mint),rgba(255,255,255,.92));border:1.5px solid var(--line);border-left:6px solid var(--peridot);border-radius:22px;padding:34px 32px;margin:0;}
-.result.is-mid{border-left-color:var(--lime);}
-.result.is-low{border-left-color:var(--warn);}
-.result__label{font-family:var(--num);font-size:11.5px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 10px;}
-.result__grade{font-family:var(--serif);font-weight:600;font-size:clamp(30px,5.4vw,44px);letter-spacing:.06em;margin:0 0 4px;line-height:1.35;}
-.result__score{font-family:var(--num);font-size:16px;font-weight:600;color:var(--ink-soft);margin:0 0 26px;font-variant-numeric:tabular-nums;}
-.result__score b{font-size:26px;color:var(--ink);}
+/* ===================== セクション共通 ===================== */
+.section{padding:84px 0;}
+.section--tint{background:linear-gradient(180deg,rgba(176,241,240,.34),rgba(250,249,246,0) 78%);}
 
-.axes{margin:0 0 26px;}
-.axis{margin:0 0 15px;}
-.axis__top{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;margin-bottom:6px;}
-.axis__name{font-weight:600;}
-.axis__val{font-family:var(--num);font-variant-numeric:tabular-nums;color:var(--ink-soft);font-size:13.5px;}
-.bar{height:9px;border-radius:999px;background:rgba(24,38,47,.1);overflow:hidden;}
-.bar i{display:block;height:100%;border-radius:999px;background:var(--c,var(--sea));transition:width .5s cubic-bezier(.2,.7,.3,1);}
+.section__head{margin-bottom:46px;}
+.section__label{
+  font-family:var(--num);
+  font-size:11.5px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--sea-deep);margin:0 0 14px;
+}
+.section__title{
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:clamp(25px,3.4vw,34px);
+  letter-spacing:.1em;
+  line-height:1.55;
+  margin:0 0 14px;
+}
+.section__note{margin:0;color:var(--ink);font-size:15px;max-width:38em;}
 
-.figs{width:100%;border-collapse:collapse;font-size:14.5px;background:rgba(255,255,255,.75);border-radius:14px;overflow:hidden;margin:0 0 24px;}
-.figs th,.figs td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--line);}
-.figs th{font-weight:600;width:56%;}
-.figs td{font-family:var(--num);font-variant-numeric:tabular-nums;text-align:right;}
-.figs tr:last-child th,.figs tr:last-child td{border-bottom:none;}
+/* ===================== ツールカード ===================== */
+.tools{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:22px;
+}
+.tool{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:32px 28px 26px;
+  min-height:236px;
+  text-decoration:none;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:transform .28s cubic-bezier(.2,.7,.3,1), box-shadow .28s;
+}
+.tool::after{
+  content:"";
+  position:absolute;
+  top:-34px;right:-34px;
+  width:112px;height:112px;
+  border-radius:50%;
+  background:var(--dot,var(--sky));
+  transition:transform .38s cubic-bezier(.2,.7,.3,1);
+}
+.tool:hover{transform:translateY(-5px);box-shadow:var(--shadow-lift);}
+.tool:hover::after{transform:scale(1.42);}
 
-.remarks{list-style:none;margin:0;padding:0;}
-.remarks li{position:relative;padding-left:22px;margin:9px 0;font-size:15px;line-height:1.85;}
-.remarks li::before{content:"";position:absolute;left:0;top:.7em;width:8px;height:8px;border-radius:50%;background:var(--c,var(--peridot));}
+.tool__kind{
+  position:relative;z-index:1;
+  font-family:var(--num);
+  font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink-faint);
+  margin:0 0 14px;
+}
+.tool__name{
+  position:relative;z-index:1;
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:20px;
+  letter-spacing:.05em;
+  line-height:1.66;
+  margin:0 0 12px;
+  max-width:9.5em;
+  color:var(--ink);
+}
+.tool__desc{
+  position:relative;z-index:1;
+  font-size:14.5px;
+  line-height:1.85;
+  color:var(--ink);
+  margin:0 0 20px;
+}
+/* 重なりの原因だった絶対配置をやめ、フレックスで最下部に固定 */
+.tool__go{
+  position:relative;z-index:1;
+  margin-top:auto;
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:.08em;
+  color:var(--sea-deep);
+}
 
-/*
-  ここに広告を置かないこと。
-  判定結果の直後は反応が最も強く、誤クリックが起きやすい位置です。
-  AdSense は意図しないクリックを誘発する配置をポリシー違反として扱います。
-*/
+/* ===================== 記事 ===================== */
+.posts{border-top:1px solid var(--line);}
+.post{
+  display:grid;
+  grid-template-columns:118px 1fr auto;
+  align-items:center;
+  gap:24px;
+  padding:24px 8px;
+  border-bottom:1px solid var(--line);
+  text-decoration:none;
+  transition:background .22s, padding-left .22s;
+}
+.post:hover{background:#fff;padding-left:18px;}
 
-/* note 導線 */
-.upsell{position:relative;overflow:hidden;display:block;text-decoration:none;background:var(--card);
-  border:1.5px solid var(--line);border-left:5px solid var(--peridot);border-radius:22px;
-  padding:34px 32px;margin:26px 0 0;box-shadow:var(--shadow);transition:transform .26s,box-shadow .26s;}
-.upsell::after{content:"";position:absolute;top:-46px;right:-46px;width:150px;height:150px;border-radius:50%;
-  background:linear-gradient(135deg,var(--lime),var(--peridot));opacity:.9;transition:transform .38s;}
-.upsell:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift);}
-.upsell:hover::after{transform:scale(1.35);}
-.upsell__badge{position:relative;display:inline-block;font-size:12px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:999px;background:var(--peridot);color:#fff;margin:0 0 16px;}
-.upsell__name{position:relative;font-family:var(--serif);font-weight:600;font-size:22px;letter-spacing:.04em;line-height:1.6;margin:0 0 12px;}
-.upsell__desc{position:relative;font-size:15px;line-height:1.9;margin:0 0 20px;max-width:33em;}
-.upsell__go{position:relative;font-size:15px;font-weight:600;letter-spacing:.06em;color:var(--sea-deep);}
+.tag{
+  justify-self:start;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.1em;
+  padding:5px 14px;
+  border-radius:999px;
+  white-space:nowrap;
+  color:var(--ink);
+}
+.tag--shaho{background:var(--aqua);}
+.tag--toukei{background:var(--mint);}
+.tag--yoshin{background:var(--mint);}
+.tag--lease{background:var(--dawn);}
+.tag--house{background:var(--rose);}
+.tag--kabu{background:var(--dawn);}
+.tag--shaho{background:var(--aqua);}
 
-.cmp{width:100%;border-collapse:collapse;font-size:14.5px;background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);margin:0 0 26px;position:relative;}
-.cmp th,.cmp td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--line);}
-.cmp thead th{background:var(--mist);font-weight:700;letter-spacing:.04em;}
-.cmp tbody th{font-weight:500;color:var(--ink-soft);}
-.cmp td{text-align:center;font-weight:600;}
-.cmp .no{color:var(--ink-faint);font-weight:400;}
-.cmp tr:last-child th,.cmp tr:last-child td{border-bottom:none;}
+.post__title{
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:17.5px;
+  letter-spacing:.03em;
+  line-height:1.72;
+  margin:0;
+  color:var(--ink);
+}
+.post__meta{
+  font-family:var(--num);
+  font-size:12.5px;
+  color:var(--ink-faint);
+  letter-spacing:.06em;
+  white-space:nowrap;
+}
 
-/* 解説 */
-.about{margin:64px 0 0;}
-.about h2{font-family:var(--serif);font-weight:600;font-size:clamp(21px,3vw,26px);letter-spacing:.08em;margin:0 0 22px;padding-bottom:14px;border-bottom:1px solid var(--line);}
-.about h3{font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:.05em;margin:38px 0 12px;}
-.about h3::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--bloom);margin-right:11px;vertical-align:middle;}
-.about p{margin:0 0 22px;}
-.about ul{margin:0 0 22px;padding-left:1.4em;}
-.about li{margin:8px 0;}
-.about code{font-family:var(--num);background:var(--mist);padding:2px 8px;border-radius:6px;font-size:14.5px;}
+.more{margin-top:34px;}
 
-.disclaimer{margin:44px 0 0;border-left:4px solid var(--peridot);background:rgba(232,245,233,.7);border-radius:0 16px 16px 0;padding:24px 28px;}
-.disclaimer h3{font-family:var(--serif);font-weight:600;font-size:16.5px;letter-spacing:.08em;margin:0 0 10px;}
-.disclaimer p{margin:0 0 12px;font-size:14px;line-height:1.92;color:var(--ink-soft);}
-.disclaimer p:last-child{margin:0;}
+/* ===================== 書いている人 ===================== */
+.author{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:34px;
+  align-items:start;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:26px;
+  padding:42px;
+  box-shadow:var(--shadow);
+}
+.author__mark{
+  width:96px;height:96px;border-radius:50%;
+  background:linear-gradient(135deg,var(--bloom),var(--plum));
+  display:grid;place-items:center;
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:32px;
+  color:#fff;
+  letter-spacing:.05em;
+}
+.author h3{
+  font-family:var(--serif);font-weight:600;font-size:22px;letter-spacing:.1em;margin:0 0 8px;color:var(--ink);
+}
+.author__role{
+  margin:0 0 20px;font-size:13.5px;font-weight:600;color:var(--sea-deep);letter-spacing:.08em;
+}
+.author p{margin:0 0 18px;font-size:15.5px;line-height:1.98;color:var(--ink);}
+.career{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px;}
+.career li{
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:.04em;
+  padding:6px 15px;
+  border-radius:999px;
+  border:1.5px solid var(--line);
+  color:var(--ink-soft);
+  background:#fff;
+}
 
-.foot{margin-top:90px;border-top:1px solid var(--line);padding:44px 0 56px;}
+/* ===================== 免責 ===================== */
+.notice{
+  margin-top:70px;
+  border-left:4px solid var(--peridot);
+  background:rgba(232,245,233,.7);
+  border-radius:0 16px 16px 0;
+  padding:26px 30px;
+}
+.notice h4{
+  font-family:var(--serif);font-weight:600;font-size:17px;letter-spacing:.1em;margin:0 0 10px;color:var(--ink);
+}
+.notice p{margin:0;font-size:14px;line-height:1.92;color:var(--ink-soft);}
+
+/* ===================== フッター ===================== */
+.foot{
+  margin-top:90px;
+  border-top:1px solid var(--line);
+  padding:44px 0 56px;
+}
 .foot__inner{display:flex;flex-wrap:wrap;gap:26px;justify-content:space-between;align-items:center;}
 .foot__links{display:flex;flex-wrap:wrap;gap:26px;}
 .foot__links a{font-size:14px;font-weight:500;letter-spacing:.08em;color:var(--ink-soft);text-decoration:none;}
-.copy{font-family:var(--num);font-size:12.5px;color:var(--ink-faint);margin:0;}
+.foot__links a:hover{color:var(--ink);}
+.copy{font-family:var(--num);font-size:12.5px;color:var(--ink-faint);letter-spacing:.06em;margin:0;}
 
-@media (max-width:820px){
-  .nav a:nth-child(n+3){display:none;}
-  .head__mark{display:none;}
-  .calc,.result,.upsell{padding:26px 20px;}
+
+/* ===================== note（Excel版）への導線 ===================== */
+.shop{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:22px;
 }
-@media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+.shop__card{
+  position:relative;
+  display:flex;flex-direction:column;
+  background:var(--card);
+  border:1.5px solid var(--line);
+  border-left:5px solid var(--accent,var(--plum));
+  border-radius:20px;
+  padding:32px 30px 26px;
+  text-decoration:none;
+  box-shadow:var(--shadow);
+  transition:transform .26s, box-shadow .26s, border-color .26s;
+}
+.shop__card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift);}
+.shop__badge{
+  align-self:flex-start;
+  font-size:12px;font-weight:700;letter-spacing:.1em;
+  padding:5px 13px;border-radius:999px;
+  background:var(--accent,var(--plum));color:#fff;
+  margin:0 0 16px;
+}
+.shop__name{
+  font-family:var(--serif);font-weight:600;font-size:21px;letter-spacing:.04em;
+  line-height:1.6;margin:0 0 12px;color:var(--ink);
+}
+.shop__desc{font-size:14.5px;line-height:1.85;color:var(--ink);margin:0 0 18px;}
+.shop__points{list-style:none;margin:0 0 22px;padding:0;}
+.shop__points li{
+  font-size:13.5px;line-height:1.8;color:var(--ink-soft);
+  padding-left:20px;position:relative;margin:6px 0;
+}
+.shop__points li::before{
+  content:"";position:absolute;left:0;top:.72em;
+  width:7px;height:7px;border-radius:50%;background:var(--peridot);
+}
+.shop__go{
+  margin-top:auto;
+  font-size:14.5px;font-weight:600;letter-spacing:.06em;color:var(--sea-deep);
+}
+.shop__note{
+  margin:26px 0 0;font-size:13.5px;color:var(--ink-soft);
+}
+
+/* ===================== レスポンシブ ===================== */
+@media (max-width:820px){
+  .nav{gap:18px;}
+  .nav a{font-size:13px;letter-spacing:.05em;}
+  .hero{padding:64px 0 56px;}
+  .section{padding:60px 0;}
+  .author{grid-template-columns:1fr;gap:24px;padding:32px 26px;}
+  .post{grid-template-columns:1fr;gap:10px;padding:22px 4px;}
+  .post__meta{display:none;}
+  .hero__blob--b{display:none;}
+  .tool__name{max-width:none;}
+}
+@media (max-width:560px){
+  .nav a:nth-child(n+3){display:none;}
+  .btn{padding:15px 26px;font-size:14px;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  *{transition:none !important;animation:none !important;}
+}
 
 /* ===== 表の横スクロール ===== */
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 28px;}
@@ -249,350 +570,94 @@ th,b,strong,dt{font-weight:700}
 h1,h2,h3,h4{font-weight:700}
 input,select,textarea,button{font-weight:600}
 
-/* ===== /credit-pro/ 固有 ===== */
-/* 1カラムに統一。左右2段組みは幅が足りず、数字と見出しが切れるため廃止 */
-.pro-grid{display:block;}
-.fin{width:100%;border-collapse:collapse;font-size:14.5px;font-weight:500;}
-.fin th,.fin td{border:1px solid var(--line);padding:5px 7px;}
-.fin thead th{background:var(--mist);color:var(--ink);font-size:13px;text-align:center;font-weight:700;}
-.fin td.lb{background:rgba(255,255,255,.6);white-space:nowrap;font-size:13.5px;}
-.fin td.sum{background:var(--mist);font-weight:700;text-align:right;font-family:var(--num);}
-.fin input{width:100%;border:1px solid var(--line);border-radius:8px;padding:5px 7px;
-  text-align:right;font:inherit;font-size:14px;font-family:var(--num);background:#fff;font-weight:600;}
-.fin input:focus{outline:2px solid var(--sea-deep);outline-offset:-1px;}
-.fin tr.total td.lb{font-weight:700;background:var(--mist);}
-.pro-field{display:block;margin-bottom:12px;}
-.pro-field>span{display:block;font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:4px;}
-.pro-field input,.pro-field select,.pro-field textarea{width:100%;border:1px solid var(--line);
-  border-radius:12px;padding:9px 12px;font:inherit;font-size:15px;font-weight:600;background:rgba(255,255,255,.7);}
-.pro-field input:focus,.pro-field select:focus,.pro-field textarea:focus{background:#fff;outline:2px solid var(--sea-deep);outline-offset:-1px;}
-.pro-2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;}
-@media(max-width:560px){.pro-2{grid-template-columns:1fr;}}
-.alert{background:#FBEDE6;border-left:6px solid var(--warn);border-radius:12px;
-  padding:12px 16px;margin:0 0 16px;font-size:14.5px;font-weight:600;color:var(--ink);display:none;}
-.alert.on{display:block;}
-.sec-t{font-family:var(--serif);font-size:19px;font-weight:700;margin:0 0 12px;
-  padding-bottom:8px;border-bottom:2px solid var(--line);}
-.dl{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px;}
-.note-s{font-size:13.5px;color:var(--ink-soft);font-weight:500;}
-.tokuyaku{background:#FBEDE6;border:1.5px solid var(--warn);border-radius:14px;padding:14px 18px;margin:14px 0;}
-.tokuyaku b{display:block;margin-bottom:6px;}
+/* ===================== ヒーロー補足 ===================== */
+.hero__sub{
+  max-width:33em;margin:-22px 0 34px;
+  font-size:15px;line-height:1.95;color:var(--ink-soft);
+}
+.hero__sub a{color:var(--sea-deep);font-weight:700;text-underline-offset:4px;text-decoration-color:var(--sky);}
+.nav a.is-pro{color:var(--sea-deep);font-weight:700;}
+.nav a.is-pro:hover{border-bottom-color:var(--sea-deep);}
 
-.drop{border:2px dashed var(--line);border-radius:16px;padding:30px 20px;text-align:center;
-  cursor:pointer;background:rgba(255,255,255,.5);transition:background .15s,border-color .15s;}
-.drop:hover,.drop:focus{border-color:var(--sea-deep);background:#fff;outline:none;}
-.drop.is-over{border-color:var(--sea-deep);background:var(--mist);}
-.drop__lead{font-size:17px;font-weight:700;margin:0 0 6px;}
-.drop__sub{font-size:14px;font-weight:600;margin:0 0 10px;color:var(--sea-deep);}
-.drop__note{font-size:13px;color:var(--ink-soft);margin:0;font-weight:500;}
-.prog{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:8px;}
-.prog>i{display:block;height:100%;width:0;background:var(--sea-deep);transition:width .2s;}
-.figs td.ok{color:var(--sea-deep);font-weight:700;}
-.figs td.miss{color:var(--warn);font-weight:700;}
+/* ===================== 主力サービス ===================== */
+.flagsec{
+  padding:78px 0 84px;
+  background:linear-gradient(180deg,rgba(254,238,223,.62),rgba(250,249,246,0) 82%);
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.flag{
+  display:grid;grid-template-columns:1fr 296px;gap:48px;align-items:start;
+}
+.flag__eyebrow{
+  font-family:var(--num);font-size:11.5px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--sea-deep);margin:0 0 14px;
+}
+.flag__title{
+  font-family:var(--serif);font-weight:600;
+  font-size:clamp(26px,3.8vw,38px);letter-spacing:.07em;line-height:1.5;
+  margin:0 0 18px;color:var(--ink);
+}
+.flag__lead{margin:0 0 30px;font-size:16px;line-height:2;color:var(--ink);max-width:32em;}
 
-/* 読み取れなかった入力欄 */
-.fin input.is-missing,.pro-field input.is-missing{border-color:var(--warn);
-  box-shadow:0 0 0 2px rgba(181,98,63,.14);background:var(--dawn);}
-.fin input.is-missing::placeholder{color:var(--warn);}
-.acc--fin>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;}
-.acc--fin>summary::after{position:static;transform:none;margin-left:6px;}
-.acc__state{font-family:var(--sans);font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:999px;}
-.acc__state.is-missing-tag{background:var(--dawn);color:var(--warn);}
-.acc__state.is-ok-tag{background:var(--mint);color:var(--ink-soft);}
+.flow{list-style:none;counter-reset:none;margin:0 0 30px;padding:0;display:grid;gap:14px;}
+.flow li{
+  display:grid;grid-template-columns:34px 1fr;gap:16px;align-items:start;
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:18px 20px;box-shadow:var(--shadow);
+}
+.flow__no{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--sea-deep);color:#fff;
+  display:grid;place-items:center;
+  font-family:var(--num);font-size:15px;font-weight:700;
+}
+.flow b{display:block;font-size:16px;letter-spacing:.04em;margin:0 0 4px;color:var(--ink);}
+.flow span.flow__d{display:block;font-size:14px;line-height:1.8;color:var(--ink-soft);}
 
+.price{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;
+  background:var(--card);border:2px solid var(--sea-deep);border-radius:18px;
+  padding:22px 26px;margin:0 0 26px;
+}
+.price__amt{margin:0;font-family:var(--num);font-size:16px;color:var(--ink-soft);letter-spacing:.04em;}
+.price__amt b{font-size:44px;font-weight:700;color:var(--sea-deep);letter-spacing:0;margin-right:4px;}
+.price__note{margin:0;font-size:14px;color:var(--ink);line-height:1.8;flex:1 1 15em;min-width:15em;}
 
-/* Excel見本のスライダー */
-.shot{border:1.5px solid var(--line);border-radius:18px;background:var(--card);box-shadow:var(--shadow);overflow:hidden;}
-.shot__tabs{display:flex;gap:2px;padding:10px 10px 0;flex-wrap:wrap;background:#EDEBE4;border-bottom:1px solid var(--line);}
-.shot__tabs button{font-family:var(--sans);font-size:12.5px;font-weight:700;color:var(--ink-soft);
-  padding:8px 12px;border:none;border-radius:10px 10px 0 0;background:transparent;cursor:pointer;}
-.shot__tabs button:hover{background:rgba(255,255,255,.6);}
-.shot__tabs button.is-on{background:var(--card);color:var(--ink);}
-.shot__stage{position:relative;background:#F5F4EF;padding:14px;}
-.shot__stage img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:#fff;}
-.shot__nav{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:999px;
-  border:1.5px solid var(--line);background:rgba(255,255,255,.94);color:var(--ink);font-size:22px;line-height:1;
-  cursor:pointer;z-index:2;box-shadow:var(--shadow);}
-.shot__nav--prev{left:20px;} .shot__nav--next{right:20px;}
-.shot__nav:hover{background:#fff;}
-.shot__cap{margin:0;padding:12px 16px 16px;font-size:13.5px;line-height:1.8;color:var(--ink);font-weight:500;}
+.flag__fine{margin:16px 0 0;font-size:13.5px;line-height:1.85;color:var(--ink-soft);}
+.flag__fine a{color:var(--sea-deep);font-weight:700;}
 
-/* 無料 / 有料の対比 */
-.freepaid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;}
-@media(max-width:640px){.freepaid{grid-template-columns:1fr;}}
-.freepaid>div{border:1.5px solid var(--line);border-radius:16px;padding:16px 18px;background:rgba(255,255,255,.7);}
-.freepaid__paid{background:linear-gradient(150deg,var(--mist),rgba(255,255,255,.92));border-color:var(--sea);}
-.freepaid__h{margin:0 0 8px;font-size:14px;font-weight:700;color:var(--ink);}
-.freepaid ul{margin:0;padding-left:1.1em;}
-.freepaid li{font-size:13.5px;line-height:1.85;color:var(--ink);font-weight:500;margin-bottom:3px;}
+.flag__shot{margin:0;}
+.flag__shot img{
+  display:block;width:100%;height:auto;border-radius:10px;
+  border:1px solid var(--line);box-shadow:var(--shadow-lift);background:#fff;
+}
+.flag__shot figcaption{margin:12px 0 0;font-size:12.5px;color:var(--ink-faint);letter-spacing:.04em;text-align:center;}
 
-/* 注意ボックス */
-/* hidden属性は display:none を指定するだけなので、後から display を指定した要素では効かなくなる。
-   .tip や他の箱で「中身が空の枠だけが残る」現象が起きるため、hidden を最優先で効かせる。 */
-[hidden]{display:none !important;}
-.tip{display:block;border-radius:14px;padding:14px 18px;margin:0 0 16px;
-  background:var(--mist);border:1.5px solid var(--line);}
-.tip b{display:block;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:4px;}
-.tip span{display:block;font-size:14px;line-height:1.8;color:var(--ink);font-weight:500;}
-.tip--warn{background:var(--dawn);border-color:var(--warn);}
-.tip--ok{background:var(--mint);border-color:rgba(130,179,58,.45);}
+/* 500円版とExcel版の使い分け */
+.compare{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;
+  margin-top:44px;padding-top:34px;border-top:1px solid var(--line);
+}
+.compare__col{background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:18px;padding:24px 24px 20px;}
+.compare__tag{
+  margin:0 0 12px;font-size:12.5px;font-weight:700;letter-spacing:.1em;
+  display:inline-block;padding:5px 13px;border-radius:999px;
+  background:var(--accent,var(--sea-deep));color:#fff;
+}
+.compare__col p.compare__d{margin:0 0 14px;font-size:14.5px;line-height:1.85;color:var(--ink);}
+.compare__go{font-size:14px;font-weight:700;letter-spacing:.05em;color:var(--sea-deep);text-decoration:none;}
+.compare__go:hover{text-decoration:underline;text-underline-offset:4px;}
 
-/* 判定に必要な会社情報 */
-#reqBox{margin:18px 0 4px;padding:20px;border:1.5px solid var(--sea);border-radius:16px;
-  background:linear-gradient(150deg,var(--mist),rgba(255,255,255,.9));}
-
-/* 単位バッジ */
-.verstamp{max-width:920px;margin:0 auto;padding:0 24px 8px;font-family:var(--num);font-size:11.5px;color:var(--ink-faint);text-align:right;letter-spacing:.04em;}
-.btn-reset{font-family:var(--sans);font-size:14.5px;font-weight:700;color:var(--warn);
-  background:var(--dawn);border:1.5px solid var(--warn);border-radius:999px;padding:13px 24px;cursor:pointer;}
-.btn-reset:hover{background:#F6E3D8;}
-.linklike{background:none;border:none;padding:0;font:inherit;color:var(--sea-deep);font-weight:700;text-decoration:underline;cursor:pointer;}
-.unit-tag{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:var(--mist);
-  border:1px solid var(--line);font-family:var(--num);font-size:11px;font-weight:700;color:var(--ink-soft);
-  vertical-align:middle;letter-spacing:.02em;}
-
-/* 金額の単位切替 */
-.unit-switch{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
-.unit-switch label{position:relative;display:inline-flex;align-items:center;cursor:pointer;}
-.unit-switch input{position:absolute;opacity:0;width:0;height:0;}
-.unit-switch span{display:inline-block;padding:11px 30px;border:1.5px solid var(--line);border-radius:999px;
-  background:var(--card);font-weight:700;font-size:15px;letter-spacing:.06em;color:var(--ink-soft);
-  transition:background .18s,border-color .18s,color .18s;}
-.unit-switch input:checked + span{background:var(--sea-deep);border-color:var(--sea-deep);color:#fff;}
-.unit-switch input:focus-visible + span{outline:2.5px solid var(--sea-deep);outline-offset:3px;}
-.unit-switch label:hover span{border-color:var(--sea);}
-
-/* 解説のアコーディオン */
-.acc{border:1.5px solid var(--line);border-radius:16px;background:var(--card);margin:0 0 10px;overflow:hidden;}
-.acc>summary{cursor:pointer;list-style:none;padding:16px 20px;font-family:var(--serif);font-size:18px;
-  font-weight:600;color:var(--ink);position:relative;}
-.acc>summary::-webkit-details-marker{display:none;}
-.acc>summary::after{content:"＋";position:absolute;right:20px;top:50%;transform:translateY(-50%);
-  font-family:var(--num);font-size:17px;color:var(--sea-deep);font-weight:700;}
-.acc[open]>summary::after{content:"−";}
-.acc>summary:hover{background:var(--mist);}
-.acc__body{padding:2px 20px 18px;border-top:1px solid var(--line);}
-.acc__body p{font-size:15.5px;line-height:1.92;}
-
-
-/* ===================== 1画面フロー ===================== */
-.step{margin:0 0 30px;}
-.step__head{display:flex;align-items:center;gap:12px;margin:0 0 8px;}
-.step__no{flex:none;width:32px;height:32px;border-radius:999px;background:var(--sea-deep);color:#fff;
-  display:flex;align-items:center;justify-content:center;font-family:var(--num);font-size:15px;font-weight:700;}
-.step__head h2{margin:0;font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ink);border:none;padding:0;}
-.step__lead{margin:0 0 16px;font-size:15px;line-height:1.9;color:var(--ink);font-weight:500;}
-
-/* 完成イメージ */
-.sample{border:1.5px solid var(--line);border-radius:18px;overflow:hidden;background:var(--card);box-shadow:var(--shadow);}
-.sample__bar{display:flex;gap:6px;padding:10px 14px;background:#EDEBE4;border-bottom:1px solid var(--line);}
-.sample__bar span{width:10px;height:10px;border-radius:50%;background:#C9C6BC;}
-.sample__sheet{padding:22px 20px;}
-.sample__title{margin:0;font-family:var(--serif);font-size:20px;font-weight:700;color:var(--ink);}
-.sample__sub{margin:2px 0 16px;font-family:var(--num);font-size:10.5px;letter-spacing:.22em;color:var(--ink-faint);}
-.sample__grade{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:14px 16px;border-radius:14px;
-  background:linear-gradient(150deg,var(--mist),rgba(255,255,255,.9));margin:0 0 16px;}
-.sample__grade>div:first-child b{font-family:var(--num);font-size:30px;font-weight:700;color:var(--ink);}
-.sample__grade>div:first-child span{display:block;font-size:11.5px;color:var(--ink-soft);font-weight:600;}
-.sample__rank{flex:none;width:52px;height:52px;border-radius:12px;background:var(--sea-deep);color:#fff;
-  display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:28px;font-weight:600;}
-.sample__policy{font-size:13.5px;font-weight:600;color:var(--ink);flex:1;min-width:150px;}
-.sample__rows>div{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;color:var(--ink);font-weight:600;}
-.sample__rows span{flex:none;width:86px;}
-.sample__rows i{flex:1;height:8px;border-radius:999px;background:var(--sea);display:block;max-width:100%;}
-.sample__rows b{flex:none;width:52px;text-align:right;font-family:var(--num);font-weight:700;}
-.sample__tabs{display:flex;gap:2px;padding:0 12px 12px;flex-wrap:wrap;}
-.sample__tabs span{font-size:11.5px;font-weight:600;color:var(--ink-soft);padding:5px 10px;border-radius:8px 8px 0 0;background:#F1EFE8;}
-.sample__tabs .is-on{background:var(--sea-deep);color:#fff;}
-.sample__note{margin-top:10px;}
-
-/* 投入口 */
-.drop__icon{display:block;width:38px;height:38px;margin:0 auto 10px;border-radius:10px;
-  border:2.5px solid var(--sea-deep);position:relative;}
-.drop__icon::after{content:"";position:absolute;left:50%;top:52%;width:12px;height:12px;
-  border-left:2.5px solid var(--sea-deep);border-top:2.5px solid var(--sea-deep);
-  transform:translate(-50%,-50%) rotate(45deg);}
-
-/* 判定バナー */
-.read-banner{display:block;padding:16px 20px;border-radius:14px;margin:0 0 18px;
-  border:1.5px solid var(--line);background:var(--mist);}
-.read-banner b{display:block;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:4px;}
-.read-banner span{display:block;font-size:14.5px;color:var(--ink);font-weight:500;line-height:1.8;}
-.read-banner.is-good{background:var(--mint);border-color:rgba(130,179,58,.45);}
-.read-banner.is-supp{background:var(--dawn);border-color:rgba(181,98,63,.35);}
-.read-banner.is-check{background:var(--dawn);border-color:var(--warn);}
-.read-banner.is-ng{background:var(--dawn);border-color:var(--warn);}
-
-/* 不足項目の入力 */
-#readFix{margin:18px 0 4px;padding:20px;border:1.5px solid var(--line);border-radius:16px;background:rgba(255,255,255,.8);}
-.fix-head{font-size:17px;font-weight:700;color:var(--ink);margin:0 0 6px;}
-.fix-period{font-size:14px;font-weight:700;color:var(--ink);margin:14px 0 6px;}
-.fix-warn{font-size:14px;color:var(--ink);font-weight:500;line-height:1.8;margin:0 0 10px;}
-.fix-grid{margin-top:4px;}
-
-/* 横スクロールで表の切れを防ぐ */
-.tblwrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-.tblwrap .fin,.tblwrap .figs{min-width:560px;}
-.figs th .th-sub{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);}
-#manualBody{margin-top:16px;}
-
-/* 読み取り結果の判定バナー */
-.read-banner{display:block;padding:14px 18px;border-radius:14px;margin:0 0 16px;
-  border:1.5px solid var(--line);background:var(--mist);}
-.read-banner b{display:block;font-size:15.5px;font-weight:700;color:var(--ink);margin-bottom:3px;}
-.read-banner span{display:block;font-size:14px;color:var(--ink);font-weight:500;line-height:1.7;}
-.read-banner.is-good{background:var(--mint);border-color:rgba(130,179,58,.45);}
-.read-banner.is-supp{background:var(--dawn);border-color:rgba(181,98,63,.35);}
-.read-banner.is-check{background:var(--dawn);border-color:var(--warn);}
-/* 不足項目の手入力ブロック */
-#readFix{margin:18px 0 4px;padding:18px;border:1.5px solid var(--line);
-  border-radius:16px;background:rgba(255,255,255,.75);}
-.fix-head{font-size:16px;font-weight:700;color:var(--ink);margin:0 0 6px;}
-.fix-period{font-size:14px;font-weight:700;color:var(--ink);margin:14px 0 6px;}
-.fix-warn{font-size:14px;color:var(--ink);font-weight:500;line-height:1.7;margin:0 0 10px;}
-.fix-grid{margin-top:4px;}
-.figs th .th-sub{font-size:12px;font-weight:600;color:var(--ink-soft);}
-
-/* ===== 見える化（viz.js が出力する図） ===== */
-.viz{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px;margin-top:18px;}
-.viz__card{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:20px 18px;box-shadow:var(--shadow);}
-.viz__card--wide{grid-column:1/-1;}
-.viz__h{font-family:var(--serif);font-weight:700;font-size:17px;letter-spacing:.05em;margin:0 0 6px;}
-.viz__hint{margin:0 0 14px;font-size:13px;line-height:1.75;color:var(--ink-soft);}
-.viz__svg{width:100%;height:auto;display:block;}
-.viz__table{width:100%;border-collapse:collapse;font-size:13.5px;margin:14px 0 0;}
-.viz__table th,.viz__table td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;}
-.viz__table thead th{background:var(--mist);font-weight:700;text-align:center;}
-.viz__table tbody th{text-align:left;font-weight:600;}
-.viz__bm{background:rgba(223,246,241,.5);}
-.viz__ok{color:#4E8F2E;font-weight:700;white-space:nowrap;}
-.viz__ng{color:#B5623F;font-weight:700;white-space:nowrap;}
-.viz__star{color:var(--sea-deep);}
-.viz__note{margin:10px 0 0;font-size:11.5px;line-height:1.7;color:var(--ink-faint);}
-@media (max-width:820px){.viz{grid-template-columns:1fr;}.viz__card{padding:16px 12px;}}
-@media print{.viz{grid-template-columns:1fr 1fr;}.viz__card{break-inside:avoid;page-break-inside:avoid;}}
-
-.h1sub{display:block;font-size:.52em;font-weight:600;letter-spacing:.04em;margin-top:10px;color:var(--ink-soft);}
-
-/* ===== 見える化の訴求カード ===== */
-.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:24px 0 28px;}
-.feat__card{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:18px;
-  padding:22px 18px 18px;box-shadow:var(--shadow);}
-.feat__card--wide{grid-column:1/-1;}
-.feat__no{position:absolute;top:14px;right:16px;font-family:var(--num);font-size:13px;font-weight:700;
-  letter-spacing:.14em;color:var(--aqua);}
-.feat__card h3{font-family:var(--serif);font-weight:700;font-size:17px;letter-spacing:.04em;margin:0 0 8px;}
-.feat__card p{margin:0;font-size:14px;line-height:1.85;color:var(--ink-soft);}
-
-/* ===== 判定結果ヘッダ（バロメーター） ===== */
-.vizhead{background:linear-gradient(150deg,var(--mist),rgba(255,255,255,.92));
-  border:1.5px solid var(--line);border-left:6px solid var(--peridot);border-radius:20px;padding:26px 24px;}
-.vizhead.is-mid{border-left-color:var(--sea);}
-.vizhead.is-low{border-left-color:var(--warn);}
-.vizhead__co{font-family:var(--serif);font-size:20px;font-weight:700;letter-spacing:.04em;margin:0 0 4px;}
-.vizhead__meta{margin:0 0 18px;font-size:13px;color:var(--ink-soft);}
-.vizhead__row{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-end;}
-.vizhead__lab{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--ink-soft);}
-.vizhead__score{font-family:var(--num);font-size:20px;font-weight:600;margin:2px 0 0;}
-.vizhead__score b{font-size:46px;font-weight:700;line-height:1;}
-.vizhead__grade{font-family:var(--serif);font-size:46px;font-weight:700;line-height:1.05;margin:2px 0 0;}
-.vizhead__bar{flex:1 1 340px;min-width:280px;}
-.vizhead__bar svg{width:100%;height:auto;display:block;}
-.vizhead__policy{margin:16px 0 0;font-size:15px;line-height:1.8;}
-
-/* ===== 図のツールチップ ===== */
-.viz__hot{cursor:help;}
-.viz__hot:hover>rect:first-child,.viz__hot:hover>circle:first-child{filter:brightness(1.08);}
-.viz__tip{position:fixed;z-index:9999;max-width:300px;padding:12px 14px;border-radius:12px;
-  background:rgba(15,26,34,.95);color:#fff;font-family:var(--sans);font-size:12.5px;line-height:1.75;
-  box-shadow:0 8px 28px rgba(24,38,47,.28);opacity:0;transform:translateY(4px);
-  transition:opacity .14s,transform .14s;pointer-events:none;}
-.viz__tip.is-on{opacity:1;transform:translateY(0);}
-.viz__tip b{display:block;font-size:13.5px;margin-bottom:5px;color:var(--aqua);}
-.viz__tip span{display:block;}
-.viz__tip span+span{margin-top:3px;color:rgba(255,255,255,.82);}
-.repay-note{font-size:12.5px;color:var(--ink-soft);text-align:left;line-height:1.7;}
-
-/* ===== 比較デモ ===== */
-.demo{margin:20px 0 30px;}
-.demo__tabs{display:flex;gap:10px;flex-wrap:wrap;}
-.demo__tabs button{font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:.04em;
-  padding:14px 26px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);
-  color:var(--ink-soft);cursor:pointer;transition:background .2s,color .2s,box-shadow .2s,border-color .2s;}
-.demo__tabs button:hover{border-color:var(--sea-deep);color:var(--ink);}
-.demo__tabs button.is-on{background:var(--sea-deep);border-color:var(--sea-deep);color:#fff;
-  box-shadow:0 10px 24px rgba(51,82,108,.30);}
-.demo__hint{margin:12px 0 16px;font-size:14px;color:var(--ink-soft);}
-.demo__col .calc{padding:0;border:none;box-shadow:none;background:none;}
-.demo__col h2{font-family:var(--serif);font-size:19px;margin:22px 0 12px;}
-
-/* ===== 未購入のときの判定結果 ===== */
-.lock{text-align:left;}
-.lock__badge{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.1em;
-  padding:5px 14px;border-radius:999px;background:var(--mist);color:var(--sea-deep);margin:0 0 14px;}
-.lock__h{font-family:var(--serif);font-size:20px;font-weight:700;letter-spacing:.04em;margin:0 0 10px;}
-.lock__lead{margin:0 0 18px;font-size:15px;line-height:1.9;color:var(--ink-soft);}
-.lock__list{list-style:none;margin:0 0 18px;padding:0;}
-.lock__list li{position:relative;padding-left:24px;margin:10px 0;font-size:15px;line-height:1.85;}
-.lock__list li::before{content:"";position:absolute;left:0;top:.72em;width:9px;height:9px;
-  border-radius:50%;background:var(--aqua);}
-.lock__note{margin:0;font-size:14px;color:var(--ink-soft);}
-
-/* ===== 購入後に決算書を差し替えたときの断り書き ===== */
-.changed{border-left:5px solid var(--warn);background:rgba(254,238,223,.6);}
-.changed b{display:block;font-size:15.5px;line-height:1.8;margin-bottom:8px;}
-.changed p{margin:0;font-size:14px;line-height:1.85;color:var(--ink-soft);}
-
-/* ===== 前の会社の購入情報が残っているときの案内 ===== */
-.forget{margin:18px 0 0;padding:22px 22px 20px;border:1.5px solid var(--warn);border-radius:18px;
-  background:rgba(254,238,223,.55);}
-.forget__h{font-family:var(--serif);font-size:17px;font-weight:700;letter-spacing:.03em;margin:0 0 10px;color:var(--ink);}
-.forget__d{margin:0 0 18px;font-size:14.5px;line-height:1.9;color:var(--ink-soft);}
-.forget__fine{margin:12px 0 0;font-size:12.5px;line-height:1.8;color:var(--ink-faint);}
-.btn-run--warn{background:var(--warn);box-shadow:0 10px 24px rgba(181,98,63,.32);}
-.btn-run--warn:hover{box-shadow:0 16px 32px rgba(181,98,63,.40);}
-@media (max-width:820px){.forget{padding:18px 14px;}.btn-run--warn{width:100%;justify-content:center;}}
-
-/* ===== 貸借が合っていないときの購入ボタン ===== */
-.btn-run.is-off{background:#AEB7BD;box-shadow:none;cursor:not-allowed;}
-.btn-run.is-off:hover{transform:none;box-shadow:none;}
-
-/* ===== テスト環境の帯（本番では出ない） ===== */
-.freebar{position:fixed;top:0;left:0;right:0;z-index:9998;display:flex;align-items:center;gap:14px;
-  flex-wrap:wrap;padding:10px 18px;background:#B5623F;color:#fff;font-family:var(--sans);font-size:13.5px;
-  box-shadow:0 2px 10px rgba(24,38,47,.25);}
-.freebar b{font-size:14px;letter-spacing:.08em;}
-.freebar span{flex:1 1 auto;opacity:.92;}
-.freebar button{font-family:var(--sans);font-size:12.5px;font-weight:700;color:#B5623F;background:#fff;
-  border:none;border-radius:999px;padding:7px 16px;cursor:pointer;}
-.freebar button:hover{background:#FFF3EC;}
-body.has-freebar{padding-top:46px;}
-body.has-freebar .masthead{top:46px;}
-@media (max-width:820px){.freebar{font-size:12px;padding:8px 12px;}body.has-freebar{padding-top:62px;}
-  body.has-freebar .masthead{top:62px;}}
-
-/* ===== 受け取れるもの（Excelのシート見本） ===== */
-.deliver{margin:26px 0 0;padding:26px 24px 22px;background:var(--card);border:1.5px solid var(--line);
-  border-left:5px solid var(--sea-deep);border-radius:20px;box-shadow:var(--shadow);}
-.deliver__head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;}
-.deliver__eyebrow{margin:0 0 4px;font-size:11.5px;font-weight:700;letter-spacing:.18em;color:var(--sea-deep);}
-.deliver__h{font-family:var(--serif);font-size:21px;font-weight:700;letter-spacing:.04em;margin:0;}
-.deliver__price{margin:0;font-family:var(--num);white-space:nowrap;color:var(--ink);}
-.deliver__price b{font-size:34px;font-weight:700;line-height:1;}
-.deliver__price span{font-family:var(--sans);font-size:13px;font-weight:600;margin-left:3px;color:var(--ink-soft);}
-.deliver__lead{margin:14px 0 18px;font-size:15px;line-height:1.95;}
-.deliver__foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:18px 0 0;}
-.deliver__foot .calc__hint{margin:0;flex:1 1 220px;}
-@media (max-width:820px){
-  .deliver{padding:20px 14px 18px;}
-  .deliver__h{font-size:18px;}
-  .deliver__price b{font-size:28px;}
-  .shot__tabs button{font-size:11.5px;padding:7px 10px;}
-  .shot__nav{width:32px;height:32px;}
-  .shot__nav--prev{left:10px;} .shot__nav--next{right:10px;}
+@media (max-width:900px){
+  .flag{grid-template-columns:1fr;gap:32px;}
+  .flag__shot{max-width:300px;margin:0 auto;}
+}
+@media (max-width:560px){
+  .price{padding:18px 20px;}
+  .price__amt b{font-size:38px;}
 }
 </style>
-
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
 <script>
@@ -601,23 +666,9 @@ body.has-freebar .masthead{top:46px;}
   gtag('js', new Date());
   gtag('config', 'G-BETYS4R53Y');
 </script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "財務でポン！",
-  "url": "https://kazumono.com/credit-pro/",
-  "applicationCategory": "FinanceApplication",
-  "operatingSystem": "Web",
-  "inLanguage": "ja",
-  "description": "決算書3期分から取引先の信用力を6軸100点満点で判定し、Excelレポートを作成します。",
-  "publisher": {"@type": "Person", "name": "エリエール"},
-  "isAccessibleForFree": true
-}
-</script>
 </head>
 <body>
+
 <a class="skip" href="#main">本文へ移動</a>
 
 <div class="page">
@@ -626,370 +677,373 @@ body.has-freebar .masthead{top:46px;}
     <div class="wrap masthead__inner">
       <a class="brand" href="/">数字の<span>ものさし</span></a>
       <nav class="nav" aria-label="サイト内">
-        <a href="/#tools">ツール</a>
+        <a class="is-pro" href="/credit-pro/">財務でポン！</a>
+        <a href="#tools">ツール</a>
         <a href="/articles/">読みもの</a>
-        <a href="/#excel">Excel版</a>
+        <a href="#excel">Excel版</a>
         <a href="/contact/">お問い合わせ</a>
       </nav>
     </div>
   </header>
 
   <main id="main">
-    <div class="column">
 
-      <p class="crumbs"><a href="/">ホーム</a> ／ <a href="/#tools">ツール</a> ／ 財務でポン！</p>
-
-      <header class="head">
-        <span class="head__mark" aria-hidden="true"></span>
-        <span class="badge">CREDIT ASSESSMENT PRO</span>
-        <h1>財務でポン！<br><span class="h1sub">決算書を入れるだけで、財務分析と与信判定</span></h1>
-        <p>決算書のPDFを置くだけで、自動分析してExcel形式で出力。取引先の信用力を6軸100点満点で判定し、稟議にそのまま添付できるレポートを作成します。信用程度A〜E、与信限度額の目安、主要財務指標14種まで自動で計算します。</p>
-        <p class="head__safe">ファイルはブラウザの中だけで処理され、どこにも送信されません。</p>
-      </header>
-
-      <section class="step" id="step1">
-        <div class="step__head"><span class="step__no">1</span><h2>PDFを置くだけで、分析完了。</h2></div>
-        <p class="step__lead">決算書のPDFをドラッグ＆ドロップ。それだけで、財務分析と与信判定が<b>7つの図</b>になって出てきます。</p>
-
-        <div class="demo">
-          <div class="demo__tabs" role="tablist" aria-label="サンプルの切替">
-            <button class="is-on" data-demo="good" role="tab" aria-selected="true" type="button">評価の高い会社</button>
-            <button data-demo="bad" role="tab" aria-selected="false" type="button">評価の低い会社</button>
-          </div>
-          <p class="demo__hint">切り替えて見比べてください。<b>図の上にマウスを乗せると、その数字の意味が出ます。</b></p>
-          <div id="demoCol" class="demo__col"></div>
+    <!-- ============ ヒーロー ============ -->
+    <section class="hero">
+      <span class="hero__blob hero__blob--a" aria-hidden="true"></span>
+      <span class="hero__blob hero__blob--b" aria-hidden="true"></span>
+      <span class="hero__blob hero__blob--c" aria-hidden="true"></span>
+      <div class="wrap">
+        <p class="eyebrow">numbers you can check yourself</p>
+        <h1>調べても出てこない数字を、<em>その場で</em>算出します。</h1>
+        <p>非上場会社の株価算出や昇給時の社会保険料の増減額のほか、住宅の生涯コスト、取引先の与信管理など。「立場や場合により異なります」としか判断されない数字を、条件を入れて自分で確かめられるようにしました。12のツールと解説記事は、登録なしでどなたでもお使いいただけます。</p>
+        <p class="hero__sub">取引先の決算書を読む作業は、PDFのドラッグ＆ドロップで終わります。<a href="/credit-pro/">財務でポン！</a>なら、1社500円で財務分析と与信判定が7つの図になって出てきます。</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="/credit-pro/">財務でポン！を使う<span class="btn__arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn--ghost" href="#tools">ほかのツールを見る</a>
         </div>
+      </div>
+    </section>
 
-        <div class="deliver">
-          <div class="deliver__head">
-            <div>
-              <p class="deliver__eyebrow">受け取れるもの</p>
-              <h3 class="deliver__h">Excelでは、もう一段くわしく見られます</h3>
+
+    <!-- ============ 主力サービス ============ -->
+    <section class="flagsec" id="pro">
+      <div class="wrap">
+        <div class="flag">
+          <div class="flag__body">
+            <p class="flag__eyebrow">main service</p>
+            <h2 class="flag__title">決算書の数値を自動で読み取ります。</h2>
+            <p class="flag__lead">取引先の決算書PDFを置くだけで、数字を読み取り、業歴・資本構成・規模・損益・経営者・償還余力の6軸100点満点で信用力を判定します。信用程度A〜E、与信限度額の目安、そして7つの図が出ます。</p>
+
+            <ol class="flow">
+              <li><span class="flow__no" aria-hidden="true">1</span><div><b>インタラクティブなグラフで財務分析</b><span class="flow__d">「評価の高い会社」「低い会社」を切り替えて、実物の判定と7つの図をご覧いただけます。</span></div></li>
+              <li><span class="flow__no" aria-hidden="true">2</span><div><b>決算書PDFを置く</b><span class="flow__d">無料で3期分をまとめて読み取ります。読み取った数字の確認や直接入力・修正も可能です。</span></div></li>
+              <li><span class="flow__no" aria-hidden="true">3</span><div><b>判定・図・Excelを受け取る</b><span class="flow__d">6軸100点、信用程度A〜E、与信限度額の目安、7つの図、稟議に添付できるExcelを受け取ります。</span></div></li>
+            </ol>
+
+            <div class="price">
+              <p class="price__amt"><b>500</b><span>円（税込）／ 1社</span></p>
+              <p class="price__note">月額でも、会員登録でもありません。必要になったときに、必要な1社ぶんだけ。最初のダウンロードから24時間は、同じ会社を何度でも取り直せます。</p>
             </div>
-            <p class="deliver__price"><b>500</b><span>円 ／ 1社</span></p>
-          </div>
-          <p class="deliver__lead">上でご覧いただいた7つの図は、そのままダッシュボードになります。
-          そのうえでExcelには、<b>3期比較の主要指標14種</b>、<b>償還余力の算定過程</b>、<b>100点の配点根拠</b>と、
-          画面には出していない数字が並びます。決裁欄つきで、稟議にそのまま添付できる6シート構成です。</p>
 
-          <div class="shot">
-            <div class="shot__tabs" role="tablist" aria-label="Excelのシート">
-              <button type="button" data-shot="0" class="is-on" role="tab" aria-selected="true">① 判定サマリー</button>
-              <button type="button" data-shot="1" role="tab" aria-selected="false">② 財務分析</button>
-              <button type="button" data-shot="2" role="tab" aria-selected="false">③ 資金償還表</button>
-              <button type="button" data-shot="3" role="tab" aria-selected="false">④ 配点内訳</button>
-              <button type="button" data-shot="4" role="tab" aria-selected="false">⑤ 入力データ</button>
-              <button type="button" data-shot="5" role="tab" aria-selected="false">⑥ ダッシュボード</button>
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="/credit-pro/">サンプルを見てみる<span class="btn__arrow" aria-hidden="true">&#8594;</span></a>
             </div>
-            <div class="shot__stage">
-              <img id="shotImg" src="./assets/1-summary.jpg" alt="Excelのシート見本" loading="lazy" decoding="async">
-              <button type="button" class="shot__nav shot__nav--prev" id="shotPrev" aria-label="前のシート">&#8249;</button>
-              <button type="button" class="shot__nav shot__nav--next" id="shotNext" aria-label="次のシート">&#8250;</button>
-            </div>
-            <p class="shot__cap" id="shotCap"></p>
-          </div>
 
-          <div class="deliver__foot">
-            <button class="btn-sample" id="btnSample" type="button">サンプルExcelをダウンロード</button>
-            <p class="calc__hint" id="sampleNote" aria-live="polite">架空の会社の数値です。実際に受け取るものとまったく同じ手順で作っています。</p>
-          </div>
-        </div>
+            <p class="flag__fine">読み取りも判定もExcelの作成も、すべてご自身のブラウザの中で行います。決算書ファイルがどこかに送信されることはありません。／ 入力が数項目で済む<a href="/credit/">無料の簡易判定</a>もあります。</p>
 
-      </section>
-
-      <!-- ============ STEP 2 投入 ============ -->
-      <section class="step" id="step2">
-        <div class="step__head"><span class="step__no">2</span><h2>決算書PDFを置く</h2></div>
-        <p class="step__lead">計算書類・有価証券報告書・決算短信に対応しています。会社名・決算期・金額の単位も自動で読み取ります。</p>
-        <div class="tip tip--warn">
-          <b>同じ会社の決算書だけを、まとめて置いてください（最大3期）</b>
-          <span>お手持ちの期数分（1期でも構いません）をすべて置き終えてから、判定を押してください。順番はばらばらでも、新しい順に自動で並べ替えます。<br>
-          <b>別の会社の決算書が混ざると、判定結果は意味を持ちません。</b>会社名が食い違う場合は画面上で警告し、判定できないようにしています。</span>
-        </div>
-
-        <div class="drop" id="dropZone" tabindex="0" role="button" aria-label="決算書PDFを選ぶ">
-          <span class="drop__icon" aria-hidden="true"></span>
-          <p class="drop__lead">ここにドラッグ＆ドロップ</p>
-          <p class="drop__sub">クリックしてファイルを選ぶこともできます</p>
-          <p class="drop__note">複数ファイルを一度に選べます。追加で置くと、すでに読み取った期に積み上がります。</p>
-          <input type="file" id="fileInput" accept="application/pdf,.pdf" multiple hidden>
-        </div>
-
-        <p class="note-s" style="margin-top:12px;">決算書PDFが手元に無い場合、または読み取れない決算書の場合は、<button type="button" class="linklike" id="btnNoPdf">数値を自分で入力して判定する</button>こともできます。</p>
-        <p class="note-s" style="margin-top:10px;">別の会社を判定する場合や、読み取り結果がおかしい場合は、
-        <button class="btn-reset" id="btnReread2" type="button">最初からやり直す（入力を全部消す）</button></p>
-
-        <div id="readState" hidden>
-          <p class="note-s" id="readMsg"></p>
-          <div class="prog"><i id="progBar"></i></div>
-        </div>
-      </section>
-
-      <!-- ============ STEP 1 受け取れるもの ============ -->
-      <!-- ============ STEP 3 読み取り結果 ============ -->
-      <section class="step" id="step3" hidden>
-        <div class="step__head"><span class="step__no">3</span><h2>読み取った内容</h2></div>
-
-        <div id="readResult">
-          <div id="readBanner"></div>
-          <div class="tip tip--warn" id="companyWarn" hidden></div>
-          <div class="tblwrap"><table class="figs" id="readTable"></table></div>
-          <div id="readFix" hidden></div>
-          <ul class="remarks" id="readWarn"></ul>
-
-      <div class="manualwrap" id="manual">
-        <h3 class="fix-head" style="margin-top:26px;">すべての項目を確認・入力する</h3>
-        <p class="fix-warn">会社の基本情報・代表者情報・返済計画は決算書PDFに載っていないため、必ずご入力ください。<b>ここまで埋めてから、いちばん下の「この内容で判定する」を押してください。</b></p>
-        <button class="btn-sample" id="btnManual" type="button" aria-expanded="true" aria-controls="manualBody">入力欄を閉じる</button>
-
-        <div id="manualBody">
-          <div class="calc" id="unitBox">
-            <h3>金額の単位</h3>
-            <p class="calc__hint">入力欄・判定結果・Excelのすべてに反映されます。決算書PDFを読み込むと、その決算書の単位に自動で合わせます。いつ切り替えても数値は変わりません。</p>
-            <div class="unit-switch" role="radiogroup" aria-label="金額の単位">
-              <label><input type="radio" name="dispUnit" value="thousand"><span>千円</span></label>
-              <label><input type="radio" name="dispUnit" value="million" checked><span>百万円</span></label>
-            </div>
-            <p class="calc__hint" id="unitNote" style="margin-top:10px;"></p>
-          </div>
-          <div class="calc">
-            <h3>会社の基本情報</h3>
-            <p class="calc__hint">業種と資本金階層は、判定に使う業界基準値の選択に使います。</p>
-            <p class="calc__hint"><b>会社名は必ずご確認ください。</b>判定結果とExcelにそのまま印字されます。</p>
-            <div class="pro-2">
-              <label class="pro-field"><span>会社名</span><input type="text" id="f_name" placeholder="株式会社◯◯"></label>
-              <label class="pro-field"><span>業種</span><select id="f_industry"></select></label>
-              <label class="pro-field"><span>資本金階層</span><select id="f_capitalTier"></select></label>
-              <label class="pro-field"><span>上場区分</span><select id="f_listing"></select></label>
-              <label class="pro-field"><span>設立年月日</span><input type="date" id="f_founded"></label>
-              <label class="pro-field"><span>評価基準日</span><input type="date" id="f_baseDate"></label>
-              <label class="pro-field"><span>期末従業員数（人）</span><input type="number" id="f_employees" step="1"></label>
-              <label class="pro-field"><span>資本金（百万円）</span><input type="number" id="f_capital" step="1"></label>
-            </div>
-          </div>
-          <div class="calc">
-            <h3>代表者情報</h3>
-            <p class="calc__hint">経営者の評価は20点。決算書の開示姿勢がそのうち14点を占めます。</p>
-            <div class="pro-2">
-              <label class="pro-field"><span>代表者名</span><input type="text" id="f_ceoName"></label>
-              <label class="pro-field"><span>年齢</span><input type="number" id="f_ceoAge" step="1"></label>
-              <label class="pro-field"><span>業界歴（年）</span><input type="number" id="f_industryYears" step="1"></label>
-              <label class="pro-field"><span>経営者歴（年）</span><input type="number" id="f_ceoYears" step="1"></label>
-              <label class="pro-field"><span>持ち家</span><select id="f_ownHome"><option>あり</option><option>なし</option><option>不明</option></select></label>
-              <label class="pro-field"><span>決算書の開示</span><select id="f_disclosure"><option>あり</option><option>一部</option><option>なし</option></select></label>
-              <label class="pro-field"><span>後継者</span><select id="f_successor"><option>あり</option><option>なし</option><option>不明</option></select></label>
-            </div>
-          </div>
-          <div class="calc">
-            <h3>借入金の返済計画（今後3年）</h3>
-            <p class="calc__hint"><span data-unit-lead>単位は百万円。</span>当座貸越や短期継続融資の折返し分は含めないでください。</p>
-            <div class="tblwrap"><table class="fin" id="tRepay"></table></div>
-          </div>
-          <div class="calc">
-            <details class="acc acc--fin" id="accBS" open>
-              <summary><span>貸借対照表（直近3期）</span><span class="acc__state" id="accBS-state"></span></summary>
-              <div class="acc__body">
-            
-            <p class="calc__hint"><span data-unit-lead>単位は百万円。</span>いちばん下の【検算】が0にならない場合は入力に誤りがあります。</p>
-            <div class="alert" id="alertBalance"></div>
-            <div class="tblwrap"><table class="fin" id="tBS"></table></div>
+            <div class="compare">
+              <div class="compare__col" style="--accent:#33526C">
+                <p class="compare__tag">Web版　500円 / 1社</p>
+                <p class="compare__d"><strong>1〜2社を、いま見たいとき。</strong>入力の手間がありません。お渡しするのは判定結果と7つの図、そしてダッシュボード付きの6シート、1社分の記録です。</p>
+                <a class="compare__go" href="/credit-pro/">財務でポン！を使う &#8594;</a>
               </div>
-            </details>
-          </div>
-          <div class="calc">
-            <details class="acc acc--fin" id="accPL" open>
-              <summary><span>損益計算書（直近3期）</span><span class="acc__state" id="accPL-state"></span></summary>
-              <div class="acc__body">
-            
-            <p class="calc__hint"><span data-unit-lead>単位は百万円。</span>売上総利益・営業利益・経常利益・当期純利益は自動で計算されます。</p>
-            <div class="tblwrap"><table class="fin" id="tPL"></table></div>
+              <div class="compare__col" style="--accent:#82B33A">
+                <p class="compare__tag">Excel版　note</p>
+                <p class="compare__d"><strong>これから何社も見るとき。</strong>数式が全て入った8シート。しきい値も配点も、自社の与信方針に合わせて書き換えられます。</p>
+                <a class="compare__go" href="#excel">Excel版を見る &#8594;</a>
               </div>
-            </details>
-          </div>
-          <div class="calc">
-            <h3>定性情報メモ</h3>
-            <p class="calc__hint">取引の経緯、業界動向、面談での所感など。判定結果と一緒に出力されます。</p>
-            <label class="pro-field"><textarea id="f_memo" rows="4"></textarea></label>
-            <div class="actions">
-              <button class="btn-sample" id="btnDemo" type="button">記入例を読み込む</button>
-              <button class="btn-sample" id="btnClear" type="button">入力をクリア</button>
             </div>
           </div>
+
+          <figure class="flag__shot">
+            <img src="/credit-pro/assets/1-summary.jpg" width="1000" height="1414" alt="出力されるExcelの総括シート。スコアと信用程度、財務指標の3期比較が1枚にまとまっている。" loading="lazy">
+            <figcaption>受け取るExcelの1シート目（総括）</figcaption>
+          </figure>
         </div>
       </div>
+    </section>
 
-          <div class="dl">
-            <button class="btn-run" id="btnApply" type="button">この内容で判定する</button>
-            <button class="btn-reset" id="btnReread" type="button">最初からやり直す（入力を全部消す）</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ STEP 4 判定結果 ============ -->
-      <section class="step" id="step4" hidden>
-        <div class="step__head"><span class="step__no">4</span><h2>判定結果</h2></div>
-        <p class="step__lead">判定結果・7つの図・Excelは、まとめて1社500円です。読み取った内容の確認までは無料でお使いいただけます。</p>
-        <div id="resultCol"></div>
-      </section>
-
-      <!-- ============ STEP 5 決済 ============ -->
-      <section class="step" id="step5" hidden>
-        <div class="step__head"><span class="step__no">5</span><h2>結果とExcelを受け取る</h2></div>
-
-        <div id="gateBuy" hidden>
-          <table class="figs">
-            <tbody>
-              <tr><th>お渡しするもの</th><td>画面の判定結果と7つの図（①〜⑦）／この判定結果のExcelファイル（6シート・ダッシュボード付き・1社分）</td></tr>
-              <tr><th>価格</th><td><b>500円（税込）</b>　1社分につき</td></tr>
-            <tr><th>ご利用の範囲</th><td><b>1回のお支払いにつき1社分</b>です。お支払い後<b>24時間</b>は、
-                この1社の判定結果・7つの図・Excelを何度でも取り直せます。<br>
-                お支払いのあとで別の会社の決算書を読み込んでも、<b>画面に出る判定結果とダウンロードされるExcelは、お支払い時の会社のまま</b>です。
-                読み込んだ数字は画面に残りますが、その判定結果はご覧いただけません。<br>
-                別の会社を判定するには、あらためてお求めください。</td></tr>
-              <tr><th>お支払い</th><td>クレジットカード（Square）</td></tr>
-              <tr><th>受け取り</th><td>決済後この画面に戻り、その場でダウンロード</td></tr>
-            </tbody>
-          </table>
-          <div class="tokuyaku" id="tokuyaku">
-            <p style="margin:0;font-size:14.5px;">デジタルコンテンツの性質上、<b>お客様のご都合による購入後のキャンセル・返金はお受けできません。</b>尚、ファイルが破損している、記載内容が本ページの説明と異なるなどといった不具合が生じた場合はこの限りではありません。スクリーンショットなどエラーが確認できるものをご準備のうえ、お問い合わせフォームよりご連絡ください。（<a href="/tokusho/">特定商取引法に基づく表記</a>）</p>
-          </div>
-          <div class="dl">
-            <a class="btn-run" id="btnBuy" href="#">500円で購入してダウンロード</a>
-          </div>
-          <p class="note-s" id="buyNote" style="margin-top:10px;color:var(--warn);font-weight:700;"></p>
-          <p class="note-s" style="margin-top:12px;">入力した内容はこの画面に残ります。決済後、同じ内容のまま続けてダウンロードできます。</p>
-
-          <!-- 決済の状態を画面に出す。公開前に削除して構いません（残しても害はありません） -->
-          <div class="tip tip--warn" id="dupWarn" hidden></div>
-          <div class="tip" id="licDiag" hidden></div>
-          <p class="note-s" style="margin-top:8px;">決済したのに解錠されない場合は、
-            <button type="button" class="linklike" id="btnRecheck">購入状況をもう一度確認する</button>
-            （Squareからの通知が届くまで数十秒かかることがあります）</p>
-          <div class="forget" id="forgetRow" hidden>
-            <p class="forget__h">別の会社を判定するには、もう一度お求めください</p>
-            <p class="forget__d">お支払いは<b>1回につき1社分</b>です。この端末には、前にお支払いいただいた会社の控えが残っています。
-            いま読み取った会社を判定するには、前の会社の控えを消してから、あらためてお求めください。</p>
-            <button type="button" class="btn-run btn-run--warn" id="btnForget">前の会社の情報を消して、この会社の分を購入する</button>
-            <p class="forget__fine">消えるのは、この端末に残っている前の会社の購入情報と判定結果だけです。
-            いま画面に読み取っている決算書の数字は消えません。</p>
-          </div>
-
+    <!-- ============ ツール ============ -->
+    <section class="section section--tint" id="tools">
+      <div class="wrap">
+        <div class="section__head">
+          <p class="section__label">tools</p>
+          <h2 class="section__title">計算できるもの</h2>
+          <p class="section__note">ブラウザの中だけで計算します。入力した内容はどこにも送信されません。</p>
         </div>
 
-        <div id="gateOk" hidden>
-          <div class="dl">
-            <button class="btn-run" id="btnXlsx" type="button">Excelをダウンロード</button>
-            <span class="note-s" id="dlNote"></span>
-          </div>
-          <p class="note-s" style="margin-top:12px;">ご購入ありがとうございます。この画面を開いている間、何度でもダウンロードできます。</p>
+        <div class="tools">
+
+          <a class="tool" href="/kabuka/" style="--dot:#527695">
+            <p class="tool__kind">business succession</p>
+            <h3 class="tool__name">非上場株式 株価算定シミュレーター</h3>
+            <p class="tool__desc">自社株の相続税評価額を、会社規模判定・類似業種比準・純資産価額・配当還元まで自動計算。DCF法など第三者間売買での評価も同時に表示します。</p>
+            <span class="tool__go">算定する →</span>
+          </a>
+
+          <a class="tool" href="/shaho/" style="--dot:#84D2F5">
+            <p class="tool__kind">social insurance</p>
+            <h3 class="tool__name">社会保険料・税金最適化シミュレーター</h3>
+            <p class="tool__desc">4〜6月の残業時間を動かすと、9月からの標準報酬月額と年間保険料がどう変わるかを見られます。</p>
+            <span class="tool__go">計算する →</span>
+          </a>
+
+          <a class="tool" href="/jikyu/" style="--dot:#17635C">
+            <p class="tool__kind">salary</p>
+            <h3 class="tool__name">実質時給 計算ツール</h3>
+            <p class="tool__desc">社会保険料と税を引いた手取りを、残業・通勤・休憩を含めた拘束時間で割ります。額面時給との差と、その支出が労働何時間分かを表示します。</p>
+            <span class="tool__go">計算する →</span>
+          </a>
+
+          <a class="tool" href="/rented_house/" style="--dot:#F8A3BF">
+            <p class="tool__kind">housing</p>
+            <h3 class="tool__name">賃貸 vs 持ち家 生涯コスト比較</h3>
+            <p class="tool__desc">団信、相続税、途中で亡くなった場合まで含めて、生涯の支出総額を並べます。</p>
+            <span class="tool__go">計算する →</span>
+          </a>
+
+          <a class="tool" href="/kinri/" style="--dot:#B0F1F0">
+            <p class="tool__kind">interest</p>
+            <h3 class="tool__name">住宅ローン・預金金利シミュレーター</h3>
+            <p class="tool__desc">返済スケジュールと繰上返済の効果、返済負担率の判定。預金は税引後とインフレ調整後の実質価値まで出します。</p>
+            <span class="tool__go">計算する →</span>
+          </a>
+
+          <a class="tool" href="/kokusai/" style="--dot:#B67AB4">
+            <p class="tool__kind">bond ／ 金利</p>
+            <h3 class="tool__name">個人向け国債と債券価格シミュレーター</h3>
+            <p class="tool__desc">つまみを1本動かすと、個人向け国債・10年国債・30年国債・債券ファンド・株・ビットコインが同時に動きます。個人向け国債が元本割れしない理由も財務省の計算式から説明します。</p>
+            <span class="tool__go">動かしてみる →</span>
+          </a>
+
+          <a class="tool" href="/bep/" style="--dot:#FEEEDF">
+            <p class="tool__kind">break-even ／ ゲーム</p>
+            <h3 class="tool__name">損益分岐点ゲーム</h3>
+            <p class="tool__desc">単価・変動費・固定費を動かすと、損益分岐点と利益がその場で変わります。感度分析と目標利益マトリクスつき。</p>
+            <span class="tool__go">動かしてみる →</span>
+          </a>
+
+          <a class="tool" href="/STATLAB/" style="--dot:#82B33A">
+            <p class="tool__kind">statistics</p>
+            <h3 class="tool__name">STATLAB 統計分析ダッシュボード</h3>
+            <p class="tool__desc">検定・分散分析・回帰・決定木・時系列・ディープラーニングまでブラウザ内で完結。結果の読み方の解説つき。</p>
+            <span class="tool__go">分析する →</span>
+          </a>
+
+          <a class="tool" href="/toukei2/" style="--dot:#84D2F5">
+            <p class="tool__kind">statistics ／ 試験対策</p>
+            <h3 class="tool__name">統計検定2級レベル 実戦100問</h3>
+            <p class="tool__desc">統計ソフトの出力読解、数式を選ぶ設問、記述の正誤判定まで本番の出題形式で100問。1問ごとに解法の手順を分解して解説します。</p>
+            <span class="tool__go">解いてみる →</span>
+          </a>
+
+          <a class="tool" href="/toukei-j1/" style="--dot:#E8799F">
+            <p class="tool__kind">statistics ／ 試験対策</p>
+            <h3 class="tool__name">統計検定準1級レベル 実戦100問</h3>
+            <p class="tool__desc">確率・漸近理論・多変量解析・時系列・ベイズ法・因果推論まで準1級の全分野を網羅した100問。解法の手順と考え方を1問ずつ解説します。</p>
+            <span class="tool__go">解いてみる →</span>
+          </a>
+
+          <a class="tool" href="/credit/" style="--dot:#D4E157">
+            <p class="tool__kind">credit ／ 簡易版</p>
+            <h3 class="tool__name">与信スコア 簡易判定</h3>
+            <p class="tool__desc">直近1期の決算数値から、取引先の安全性を4つの軸でざっくり判定します。3期比較と与信限度額はExcel版で。</p>
+            <span class="tool__go">判定する →</span>
+          </a>
+
+          <a class="tool" href="/lease/" style="--dot:#B67AB4">
+            <p class="tool__kind">lease ／ 簡易版</p>
+            <h3 class="tool__name">リース料 簡易計算</h3>
+            <p class="tool__desc">物件価額・期間・金利からリース料の目安を算出します。残価設定や税務処理はExcel版で。</p>
+            <span class="tool__go">計算する →</span>
+          </a>
+
+          <a class="tool" href="/lease-fo/" style="--dot:#B0F1F0">
+            <p class="tool__kind">lease ／ 簡易版</p>
+            <h3 class="tool__name">リース FO判定 簡易版</h3>
+            <p class="tool__desc">現在価値基準と経済的耐用年数基準で、ファイナンスかオペレーティングかを判定します。</p>
+            <span class="tool__go">判定する →</span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============ note（Excel版） ============ -->
+    <section class="section" id="excel">
+      <div class="wrap">
+        <div class="section__head">
+          <p class="section__label">excel workbooks</p>
+          <h2 class="section__title">実務でそのまま使う人へ</h2>
+          <p class="section__note">上のツールは「あたりを付ける」ためのものです。稟議や社内資料にそのまま載せる必要がある方向けに、計算過程まで追えるExcel版をnoteで販売しています。1社だけ今すぐ見たい、という場合は<a href="/credit-pro/" style="color:var(--sea-deep);font-weight:700;">財務でポン！（1社500円）</a>のほうが手早く済みます。</p>
         </div>
 
-        <div id="gateWait">
-          <p class="note-s">購入状況を確認しています…</p>
+        <div class="shop">
+
+          <a class="shop__card" href="https://note.com/pythonddd/n/n95c9b5e7654a" style="--accent:#33526C" target="_blank" rel="noopener">
+            <span class="shop__badge">Excel版 / Pro</span>
+            <h3 class="shop__name">非上場株式 株価算定シミュレーター Pro</h3>
+            <p class="shop__desc">全15シート、グラフ14本。会社規模・株主区分・特定の評価会社を判定過程ごと表示し、相続税評価とM&amp;A評価を1ファイルで並べます。VBAは使っていません。</p>
+            <ul class="shop__points">
+              <li>法人税額等相当額 37%／38% を課税時期から自動で切替</li>
+              <li>S1＋S2方式をフル実装（受取配当金等収受割合から）</li>
+              <li>端数処理を評価明細書 第4表に一致させている</li>
+              <li>感応度分析：利益金額・会社規模・WACC×永久成長率</li>
+            </ul>
+            <span class="shop__go">noteで見る →</span>
+          </a>
+
+          <a class="shop__card" href="https://note.com/pythonddd/n/n9b4e7122fc05" style="--accent:#82B33A" target="_blank" rel="noopener">
+            <span class="shop__badge">Excel版</span>
+            <h3 class="shop__name">与信判断検討書類 Pro</h3>
+            <p class="shop__desc">決算書3期分を入力すると、6つの軸で100点満点のスコアと信用程度（A〜E）、与信限度額の目安まで自動算出。A4縦1枚に収まるので、稟議書にそのまま添付できます。</p>
+            <ul class="shop__points">
+              <li>財務省「法人企業統計調査」と業種・資本金階層別に自動比較</li>
+              <li>財務指標14種の3期比較、運転資金分析、資金償還表</li>
+              <li>評価できる点／留意すべき点を文章で自動生成</li>
+              <li>しきい値と配点は自社の与信方針に合わせて書き換え可能</li>
+            </ul>
+            <span class="shop__go">noteで見る →</span>
+          </a>
+
+          <a class="shop__card" href="https://note.com/pythonddd/n/n96f5296cc5e4" style="--accent:#84D2F5" target="_blank" rel="noopener">
+            <span class="shop__badge">Excel版</span>
+            <h3 class="shop__name">社会保険料・税金最適化シミュレーター</h3>
+            <p class="shop__desc">全12シート、944の計算式。月次明細から年末調整、iDeCoの効果、会社の法定福利費、年収の壁までを一本で追えます。ブラウザ版のHTMLファイル本体も同梱。</p>
+            <ul class="shop__points">
+              <li>等級を1段下げたとき、将来の年金がいくら減るかまで試算</li>
+              <li>年収の壁を刻んで、世帯合計で損になる区間を可視化</li>
+              <li>根拠法令と、この試算が扱っていない範囲をシート内に明記</li>
+            </ul>
+            <span class="shop__go">noteで見る →</span>
+          </a>
+
+          <a class="shop__card" href="https://note.com/pythonddd/n/naf5e186ac81e" style="--accent:#B67AB4" target="_blank" rel="noopener">
+            <span class="shop__badge">Excel版</span>
+            <h3 class="shop__name">新リース会計基準 対応シート</h3>
+            <p class="shop__desc">2027年4月から借手のリースは原則すべてオンバランスになります。FO判定と、使用権資産・リース負債の計上額を一括で計算します。</p>
+            <ul class="shop__points">
+              <li>契約を並べて、資産と負債の総額を事前に把握できる</li>
+              <li>減価償却費と利息費用の期別配分まで自動</li>
+              <li>短期・少額リースの免除判定にも対応</li>
+            </ul>
+            <span class="shop__go">noteで見る →</span>
+          </a>
+
+          <a class="shop__card" href="https://note.com/pythonddd/n/n68ffdfe958ab" style="--accent:#F8A3BF" target="_blank" rel="noopener">
+            <span class="shop__badge">Excel版</span>
+            <h3 class="shop__name">リース料 原価6分解シート</h3>
+            <p class="shop__desc">提示されたリース料を、物件価額・金利・固定資産税・保険料・管理費・リース会社の利益に分解します。どこに交渉余地があるかが数字で見えます。</p>
+            <ul class="shop__points">
+              <li>見積書のリース料率から、リース会社の利益を逆算</li>
+              <li>複数社の見積を同じ土俵で比較できる</li>
+            </ul>
+            <span class="shop__go">noteで見る →</span>
+          </a>
+
+          <a class="shop__card" href="https://note.com/pythonddd/n/n0fb27f2ac58f" style="--accent:#527695" target="_blank" rel="noopener">
+            <span class="shop__badge">Excel版</span>
+            <h3 class="shop__name">賃貸か持ち家か｜遺族にいくら残るか</h3>
+            <p class="shop__desc">生涯コストの比較で終わらせず、相続税を払ったあとに遺族の手元へ何が残るかまで計算します。ブラウザ版のシミュレーターも公開中です。</p>
+            <ul class="shop__points">
+              <li>団信で住宅ローンが消えた場合まで織り込む</li>
+              <li>相続税の負担を反映した手残りで比較</li>
+            </ul>
+            <span class="shop__go">noteで見る →</span>
+          </a>
+
         </div>
 
-        <div id="gateOffline" hidden>
-          <div class="alert on">購入状況を確認できませんでした。通信環境をご確認のうえ、ページを再読み込みしてください。ご購入済みの場合、判定結果は画面に残っています。</div>
-          <div class="dl">
-            <button class="btn-sample" id="btnRetry" type="button">もう一度確認する</button>
-          </div>
-        </div>
+        <p class="shop__note">※ noteの販売ページに移動します。ブラウザ版のツールは今後も無料のまま公開を続けます。</p>
 
-        <p class="note-s" style="margin-top:16px;"><b>このダウンロードは、お支払い時に判定した1社分です。</b>
-            24時間のあいだは、この画面を閉じても同じ会社の分を取り直せます。別の会社の決算書を読み込んだあとでも、
-            出てくるファイルはお支払い時の会社のままです。</p>
-            <p class="note-s" style="margin-top:12px;">このファイルは、1社分の判定結果を記録したものです。計算式は含まれません。
-            配点やしきい値をご自身の与信方針に合わせて書き換えながら、何社でも繰り返しお使いになりたい方には、
-            <a href="https://note.com/pythonddd/n/n9b4e7122fc05" target="_blank" rel="noopener">計算ロジックをすべて開示したExcel版</a>をご用意しています。
-            6カテゴリの配点表、業種別のしきい値、償還余力の算定過程まで、数式のまま追えるものです。</p>
-      </section>
-
-
-      <div class="calc">
-
-      <details class="acc" id="acc-about"><summary><span id="about">このツールは何をするものか</span></summary><div class="acc__body">
-      <p>取引先の決算書を3期分入力すると、その会社の信用力を100点満点で評価し、信用程度をA〜Eの5段階で判定します。あわせて、与信限度額の目安、直近3期の財務指標、そして稟議書にそのまま添付できる形式のレポートを作成します。</p>
-      <p>与信判断でいちばん厄介なのは、決算書が読めないことではありません。読んだあと、その数字を「判断」に変換するものさしがないことです。自己資本比率が42パーセントという数字を見ても、それが高いのか低いのかは、比べる相手がいなければ決まりません。同じ42パーセントでも、製造業の大企業なら平均以下ですし、非製造業の小規模企業なら平均を大きく上回ります。</p>
-      <p>このツールは、その「比べる相手」を財務省の統計から自動で持ってきます。そして6つの観点から点数をつけ、なぜその点数になったのかを説明できる形で示します。根拠を説明できない評点は、稟議では使えないからです。</p>
-
-      </div></details>
-<details class="acc" id="acc-axes"><summary><span id="axes">6つの評価軸</span></summary><div class="acc__body">
-      <p>財務分析ツールの多くは「自己資本比率が高い会社は優良」といった単純な見方に偏りがちです。しかし実際の与信判断はそれだけでは足りません。財務が薄くても経営者の手腕で回している会社はありますし、数字は整っていてもキャッシュが詰まりかけている会社もあります。</p>
-      <p>そこで、実務で見られている観点を次の6つに整理しました。</p>
-      <p><b>① 業歴（2〜10点）</b>　創業からの経過年数です。長く続いていること自体が、環境変化を乗り越えてきた証拠になります。</p>
-      <p><b>② 資本構成（0〜12点）</b>　自己資本比率を、業種と企業規模の両方で補正した基準値と比較します。ここが本ツールの中核です。詳しくは後述します。</p>
-      <p><b>③ 規模（2〜18点）</b>　売上高、年商、上場区分、従業員数から総合的に評価します。ただし規模だけでは高得点になりません。中堅・中小企業でも、財務内容と返済能力が伴っていれば正当に評価される配点にしています。</p>
-      <p><b>④ 損益（0〜10点）</b>　直近3期の経常損益から、黒字・赤字の継続性と利益水準を評価します。単純な黒字年数のカウントではなく、直近期の状況を重く見ています。3期前が黒字でも今期が赤字なら、警戒すべきなのは今期のほうだからです。</p>
-      <p><b>⑤ 経営者（0〜20点）</b>　業界経験年数、代表取締役としての在任年数、資産背景、そして決算書の開示姿勢を評価します。特に決算書が出てこない相手は、財務実態そのものが確認できません。これは与信判断における最大のリスク要因なので、配点を厚くしています。</p>
-      <p><b>⑥ 償還余力（0〜30点）</b>　最大配点です。与信の本質は、突き詰めれば「返ってくるか」に尽きます。ここだけは詳しく説明します。</p>
-
-      </div></details>
-<details class="acc" id="acc-shokan"><summary><span id="shokan">なぜ償還余力に30点を置いたのか</span></summary><div class="acc__body">
-      <p>売掛でも融資でも、相手に信用を供与するということは、後で返ってくることを前提にお金や商品を先に渡すということです。であれば、いちばん重く見るべきは返済能力です。</p>
-      <p>ただし、有利子負債を利益で単純に割るような計算はしていません。実務では次のように考えます。</p>
-      <p>まず、手元の現預金は、いざとなれば返済に充てられます。次に、売上債権と棚卸資産から仕入債務を引いた正常運転資金は、事業を回し続けるために必ず必要なお金であり、これを返済に充てることはできません。この2つを有利子負債から差し引いて、はじめて「本当に返さなければならない借金」が見えてきます。</p>
-      <p>その返済に充てられる原資は、税引後の当期純利益に減価償却費を足し戻した金額です。減価償却費は現金の支出を伴わない費用なので、その分は手元に残っているからです。</p>
-      <p>この考え方で計算した債務償還年数に加えて、今後3年間の約定返済額をキャッシュフローで賄いきれるかも見ます。前者だけでは、返済がこれから重くなる会社を見逃します。後者だけでは、いま借金が重い会社を見逃します。両方を見て、はじめて返済能力の判断ができます。</p>
-
-      </div></details>
-<details class="acc" id="acc-benchmark"><summary><span id="benchmark">比較の基準をどこに置いているか</span></summary><div class="acc__body">
-      <p>比較の基準をどこに置くかで、判定の信頼性はほとんど決まります。ここは慎重に選びました。</p>
-      <p>採用したのは、財務省の<b>法人企業統計調査</b>です。統計法に基づく基幹統計調査で、昭和23年から続いており、毎年9月に前年度の確定計数が公表されます。民間のデータベースのように、ある日サービスが終了したり定義が変わったりする心配がありません。社内資料の根拠として提示したときに、出典を説明できることも重要です。</p>
-      <p>業種を選ぶと、その業種の売上高経常利益率と売上高営業利益率が自動で呼び出され、入力した会社の実績値と突き合わされます。</p>
-      <p>さらに、自己資本比率については<b>業種と企業規模の両方を踏まえた基準値</b>を用いています。自己資本比率は、業種の違いよりも会社の大きさの違いのほうが強く効く指標だからです。統計を見ても、業種の間の差より、資本金階層の間の差のほうが明確に大きく出ます。</p>
-      <p>業種平均だけで比較すると、小規模な会社が構造的に不利な評価を受けてしまいます。売上5億円の製造業を、上場企業を含む業界全体の平均と並べても意味がありません。この補正を入れているかどうかで、判定の質は大きく変わります。</p>
-
-      </div></details>
-<details class="acc" id="acc-howtoread"><summary><span id="howtoread">判定結果の読み方</span></summary><div class="acc__body">
-      <p>総合評点は100点満点、信用程度はA〜Eの5段階です。ただし、点数そのものより<b>どこで点を落としているか</b>を見てください。</p>
-      <p>たとえば、赤字なのに総合点が高く出ることがあります。これは規模と経営者評価が効いているためで、ツールの誤りではありません。そういうときは、資本構成・損益・償還余力の3項目を個別に確認してください。この3つが与信判断の核心です。逆にこの3つが崩れていれば、他の項目が高くても総合評価は落ちる設計になっています。</p>
-      <p>与信限度額の目安は、自己資本を基準にした金額と月商を基準にした金額のうち、小さいほうを採用しています。あくまで一次スクリーニングの出発点であり、実際の限度額は保全状況、取引実績、業界動向を踏まえて決裁権者が判断するものです。</p>
-      <p>自動所見は、該当する項目だけが日本語の文章として出てきます。稟議書の所見欄にそのまま書き写せる文体にしてあります。</p>
-
-      </div></details>
-<details class="acc" id="acc-tips"><summary><span id="tips">入力するときの注意</span></summary><div class="acc__body">
-      <p><b>貸借対照表の検算を0にしてください。</b>資産合計と負債・純資産合計が一致していないと、財務指標がすべて狂います。ズレているとその行が赤くなるので、必ず確認してください。</p>
-      <p><b>減価償却費は、販売費及び一般管理費に計上した分と、製造原価に計上した分の合計を入力してください。</b>製造業では製造原価に入っている分がかなり大きいことがあり、忘れるとキャッシュフローが小さく出ます。損益計算書に単独の行がない場合は、製造原価明細書や販管費明細を確認してください。</p>
-      <p><b>返済計画には、当座貸越や短期継続融資の折返し分を含めないでください。</b>実質的に返済していない資金を入れると、返済負担が過大に計算されます。</p>
-      <p><b>決算書が2期分しかない場合</b>は、存在しない期を0のままにしておいて構いません。ただし損益の評価が低めに出るので、稟議書に事情を一行添えてください。</p>
-      <p><b>純資産がマイナス（債務超過）の場合</b>は、資本構成が自動的に0点となり、与信限度額の目安もゼロになります。</p>
-
-      </div></details>
-<details class="acc" id="acc-ifrs"><summary><span id="ifrs">IFRSを採用している企業の場合</span></summary><div class="acc__body">
-      <p>国際会計基準（IFRS）には経常利益という科目がありません。その場合は次のように読み替えて入力してください。</p>
-      <p>営業外収益には「その他の収益」「持分法による投資利益」「金融収益」の合計を、営業外費用には「その他の費用」「金融費用」の合計を入れます。こうすると、自動計算される経常利益がIFRSの「税引前利益」と一致します。使用権資産は有形固定資産に、リース負債は有利子負債（短期借入金・長期借入金）に含めてください。</p>
-
-      </div></details>
-<details class="acc" id="acc-privacy"><summary><span id="privacy">入力内容は送信されません</span></summary><div class="acc__body">
-      <p>このページの計算はすべて、お使いのブラウザの中だけで行われます。入力した会社名や決算数値がサーバーへ送られることはなく、運営者がそれを見ることもできません。Excelファイルの作成も、ブラウザ上で行われます。</p>
-      <p>取引先の決算書は、社外に出したくない情報の代表格です。だからこそ、送らずに済む作りにしています。</p>
-
-      </div></details>
-<details class="acc" id="acc-source"><summary><span id="source">出典・準拠時点・免責</span></summary><div class="acc__body">
-      <p><b>業界基準値の出典</b>　財務省「年次別法人企業統計調査（令和7年度）」令和8年9月1日公表（統計法に基づく基幹統計調査）。売上高利益率および自己資本比率の公表計数を用いています。</p>
-      <p><b>準拠時点</b>　令和7年度確定計数。基準値は統計の更新状況を踏まえて見直します。最新の公表内容は財務省の該当ページをご確認ください。</p>
-      <p><b>免責</b>　本ツールは与信判断を支援する一次スクリーニングツールです。算出される評点・信用程度・与信限度額の目安は判断材料の一つであり、特定の取引や与信の可否を保証・推奨するものではありません。最終的な与信判断は、信用調査報告書・面談内容・業界動向・保全状況等を踏まえ、貴社の決裁権者が総合的に行ってください。本ツールの利用により生じたいかなる損害についても、作成者は責任を負いかねます。</p>
-      <p>本ツールは中小企業から中堅企業の与信判断を主な想定として設計しています。金融業・保険業は法人企業統計調査の対象外です。</p>
+        <a class="shop__card" href="https://note.com/pythonddd/membership/join" style="--accent:#33526C;margin-top:26px;" target="_blank" rel="noopener">
+          <span class="shop__badge">メンバーシップ</span>
+          <h3 class="shop__name">Excelツールを、まとめて使う</h3>
+          <p class="shop__desc">個別に購入するより、継続して実務で使う方に向いた月額プランを用意しています。価格帯に応じて3段階、最上位プランでは公開済みの全ツールが対象です。</p>
+          <span class="shop__go">プランを見る →</span>
+        </a>
 
       </div>
+    </section>
 
-      <div class="calc">
 
-      </div></details>
-<h2 class="sec-t">関連するツールと記事</h2>
-      <ul class="remarks">
-        <li><a href="/credit/">与信判定シミュレーター（無料・1期版）</a>　直近1期だけで、4軸60点のかんたん判定ができます。まずはこちらで感触をつかむのもおすすめです。</li>
-        <li><a href="/articles/kessansho-yoshin/">決算書のどこを見て与信を判断するか</a>　このツールが見ている観点を、決算書の読み方として解説しています。</li>
-        <li><a href="/articles/funshoku/">粉飾の兆候は数字のどこに出るか</a>　数字が実態と乖離しているとき、どこに歪みが出るのかをまとめています。</li>
-        <li><a href="/bep/">損益分岐点シミュレーター</a>　相手の収益構造を、固定費と変動費の面から確かめたいときに。</li>
-      </ul>
+    <!-- ============ 読みもの ============ -->
+    <section class="section" id="posts">
+      <div class="wrap">
+        <div class="section__head">
+          <p class="section__label">reading</p>
+          <h2 class="section__title">読みもの</h2>
+          <p class="section__note">実務で実際につまずいた場所から書いています。制度の条文をなぞるだけの説明はしません。</p>
+        </div>
 
+        <div class="posts">
+          <a class="post" href="/articles/suitei-kessansho/">
+            <span class="tag tag--yoshin">与信</span>
+            <h3 class="post__title">決算書が手に入らない会社を、外から推定する｜財務版フェルミ推定</h3>
+            <span class="post__meta">2026.08</span>
+          </a>
+          <a class="post" href="/articles/heikin-chuuouchi/">
+            <span class="tag tag--toukei">統計</span>
+            <h3 class="post__title">平均だけ見て判断すると、なぜ外すのか｜中央値と分布のかたち</h3>
+            <span class="post__meta">2026.08</span>
+          </a>
+          <a class="post" href="/articles/pchi-yuuisa/">
+            <span class="tag tag--toukei">統計</span>
+            <h3 class="post__title">その差は偶然か｜p値の読み方と、実務的に意味のある差</h3>
+            <span class="post__meta">2026.08</span>
+          </a>
+          <a class="post" href="/articles/lease-onbalance/">
+            <span class="tag tag--lease">リース</span>
+            <h3 class="post__title">2027年4月、リースが全部バランスシートに乗る｜今から数えるべきもの</h3>
+            <span class="post__meta">2026.08</span>
+          </a>
+          <a class="post" href="/articles/lease-6bunkai/">
+            <span class="tag tag--lease">リース</span>
+            <h3 class="post__title">リース料の中身は6つに割れる｜見積書の読み方</h3>
+            <span class="post__meta">2026.08</span>
+          </a>
+          <a class="post" href="/articles/funshoku/">
+            <span class="tag tag--yoshin">与信</span>
+            <h3 class="post__title">粉飾の兆候は数字のどこに出るか｜売掛金と在庫の増え方を見る</h3>
+            <span class="post__meta">2026.08</span>
+          </a>
+          <a class="post" href="/articles/hyoka-vs-ma/">
+            <span class="tag tag--kabu">事業承継</span>
+            <h3 class="post__title">相続税評価とM&amp;Aの価格が何倍も違う理由</h3>
+            <span class="post__meta">2026.08</span>
+          </a>
+          <a class="post" href="/articles/hyojun-hoshu/">
+            <span class="tag tag--shaho">社会保険</span>
+            <h3 class="post__title">標準報酬月額は4〜6月で決まる｜12か月分を3か月が決める仕組み</h3>
+            <span class="post__meta">2026.08</span>
+          </a>
+          <a class="post" href="/articles/kessansho-yoshin/">
+            <span class="tag tag--yoshin">与信</span>
+            <h3 class="post__title">決算書のどこを見て与信を判断するか｜最初に開く5か所</h3>
+            <span class="post__meta">2026.08</span>
+          </a>
+          <a class="post" href="/articles/kaisha-kibo/">
+            <span class="tag tag--lease">事業承継</span>
+            <h3 class="post__title">会社規模判定で評価額が変わる｜大会社・中会社・小会社の分かれ目</h3>
+            <span class="post__meta">2026.08</span>
+          </a>
+          <a class="post" href="/articles/jishakabu-takai/">
+            <span class="tag tag--lease">事業承継</span>
+            <h3 class="post__title">非上場株式の評価額は、なぜ社長の想像より高くなるのか</h3>
+            <span class="post__meta">2026.08</span>
+          </a>
+        </div>
+
+        <div class="more">
+          <a class="btn btn--ghost" href="/articles/">記事をすべて見る<span class="btn__arrow" aria-hidden="true">→</span></a>
+        </div>
       </div>
+    </section>
 
-    </div>
+    <!-- ============ ご利用にあたって ============ -->
+    <section class="section section--tint" id="notice">
+      <div class="wrap">
+        <div class="notice" style="margin-top:0;">
+          <h4>ご利用にあたって</h4>
+          <p>掲載している内容および計算結果は、一般的な情報提供を目的としたものです。個別の事情に応じた税務・労務・法務の判断については、税理士・社会保険労務士など各分野の専門家にご相談ください。制度改正により内容が古くなっている場合があります。各記事には参照した公的資料と参照日を記載しています。</p>
+          
+        </div>
+      </div>
+    </section>
+
   </main>
-
-  <p class="verstamp">ビルド v22 (2026-09-02)</p>
 
   <footer class="foot">
     <div class="wrap foot__inner">
@@ -1005,9 +1059,6 @@ body.has-freebar .masthead{top:46px;}
   </footer>
 
 </div>
-
-<script src="../vendor/exceljs.min.js" defer></script>
-<script type="module" src="./app.js?v=31"></script>
 
 </body>
 </html>
