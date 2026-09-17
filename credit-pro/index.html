@@ -846,7 +846,7 @@ body.has-freebar .masthead{top:46px;}
                 お支払いのあとで別の会社の決算書を読み込んでも、<b>画面に出る判定結果とダウンロードされるExcelは、お支払い時の会社のまま</b>です。
                 読み込んだ数字は画面に残りますが、その判定結果はご覧いただけません。<br>
                 別の会社を判定するには、あらためてお求めください。</td></tr>
-              <tr><th>お支払い</th><td>クレジットカード（Square）</td></tr>
+              <tr><th>お支払い</th><td>クレジットカード・PayPay・Apple Pay・Google Pay（Stripe）</td></tr>
               <tr><th>受け取り</th><td>決済後この画面に戻り、その場でダウンロード</td></tr>
             </tbody>
           </table>
@@ -864,7 +864,7 @@ body.has-freebar .masthead{top:46px;}
           <div class="tip" id="licDiag" hidden></div>
           <p class="note-s" style="margin-top:8px;">決済したのに解錠されない場合は、
             <button type="button" class="linklike" id="btnRecheck">購入状況をもう一度確認する</button>
-            （Squareからの通知が届くまで数十秒かかることがあります）</p>
+            （決済の画面を途中で閉じた場合なども、ここから確かめ直せます）</p>
           <div class="forget" id="forgetRow" hidden>
             <p class="forget__h">別の会社を判定するには、もう一度お求めください</p>
             <p class="forget__d">お支払いは<b>1回につき1社分</b>です。この端末には、前にお支払いいただいた会社の控えが残っています。
@@ -1007,7 +1007,7 @@ body.has-freebar .masthead{top:46px;}
 </div>
 
 <script src="../vendor/exceljs.min.js" defer></script>
-<script type="module" src="./app.js?v=31"></script>
+<script type="module" src="./app.js?v=32"></script>
 
 </body>
 </html>
