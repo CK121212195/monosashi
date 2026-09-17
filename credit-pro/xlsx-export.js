@@ -288,8 +288,9 @@ function sheetSummary(wb, r) {
  * ======================================================================== */
 function sheetFinance(wb, r) {
   const ws = wb.addWorksheet("②財務分析", { views: [{ showGridLines: false }] });
+  // 右端の H 列は余白。左端の A 列（3）とそろえ、見出しの帯が表より右にはみ出さないようにする
   ws.columns = [{ width: 3 }, { width: 32 }, { width: wide(15) }, { width: wide(15) }, { width: wide(15) },
-                { width: 13 }, { width: 15 }, { width: 10 }];
+                { width: 13 }, { width: 15 }, { width: 3 }];
   const LC = 8;
   ws.mergeCells("A1:H1");
   put(ws, "A1", ` 財務分析（3期比較）　金額の単位：${UNIT.label}`, { font: font(14, true, C.white), align: AL.l, border: false });
@@ -303,7 +304,7 @@ function sheetFinance(wb, r) {
     for (const [name, vals, fmt, bold] of rows) {
       put(ws, `B${row}`, name, { font: font(10, !!bold), fill: bold ? C.steelL : undefined });
       vals.forEach((v, j) => put(ws, `${"CDEFG"[j]}${row}`, v, {
-        numFmt: fmt, align: typeof v === "string" ? AL.c : AL.r,
+        numFmt: Array.isArray(fmt) ? fmt[j] : fmt, align: typeof v === "string" ? AL.c : AL.r,
         fill: C.calc, font: font(10, !!bold),
       }));
       row++;
@@ -312,32 +313,43 @@ function sheetFinance(wb, r) {
   };
 
   const P = [r.cur, r.prev, r.prev2];
-  const m = (k) => [amt(P[0][k]), amt(P[1][k]), amt(P[2][k])];
+  /* 損益計算書・貸借対照表は「今期・前期・前々期」に、前期比（額・率）の2列を足して、
+     下の財務指標の表と同じ幅（B〜G列）にそろえる。前期の決算が入っていないときは「－」 */
+  const prevExists = !!(Number(P[1].sales) || Number(P[1].totalAssets));
+  const CHG = '+#,##0;"▲"#,##0;"±0"';
+  const CHGR = '+0.0%;"▲"0.0%;"±0.0%"';
+  const FMT6 = [MONEY, MONEY, MONEY, CHG, CHGR];
+  const m = (k) => {
+    const a = amt(P[0][k]), b = amt(P[1][k]), c = amt(P[2][k]);
+    return [a, b, c,
+      prevExists ? a - b : "－",
+      prevExists && b > 0 ? a / b - 1 : "－"];
+  };
   table("1. 損益計算書", [
-    ["売上高", m("sales"), MONEY, true], ["売上原価", m("cogs"), MONEY],
-    ["売上総利益", m("grossProfit"), MONEY, true], ["販売費及び一般管理費", m("sga"), MONEY],
-    ["営業利益", m("operatingProfit"), MONEY, true], ["営業外収益", m("nonOpInc"), MONEY],
-    ["営業外費用", m("nonOpExp"), MONEY], ["経常利益", m("ordinaryProfit"), MONEY, true],
-    ["特別利益", m("extraInc"), MONEY], ["特別損失", m("extraExp"), MONEY],
-    ["税引前当期純利益", m("pretaxProfit"), MONEY], ["法人税等", m("tax"), MONEY],
-    ["当期純利益", m("netProfit"), MONEY, true], ["減価償却費", m("depreciation"), MONEY],
-  ], ["項　目", "今期（直近）", "前期", "前々期"]);
+    ["売上高", m("sales"), FMT6, true], ["売上原価", m("cogs"), FMT6],
+    ["売上総利益", m("grossProfit"), FMT6, true], ["販売費及び一般管理費", m("sga"), FMT6],
+    ["営業利益", m("operatingProfit"), FMT6, true], ["営業外収益", m("nonOpInc"), FMT6],
+    ["営業外費用", m("nonOpExp"), FMT6], ["経常利益", m("ordinaryProfit"), FMT6, true],
+    ["特別利益", m("extraInc"), FMT6], ["特別損失", m("extraExp"), FMT6],
+    ["税引前当期純利益", m("pretaxProfit"), FMT6], ["法人税等", m("tax"), FMT6],
+    ["当期純利益", m("netProfit"), FMT6, true], ["減価償却費", m("depreciation"), FMT6],
+  ], ["項　目", "今期（直近）", "前期", "前々期", "前期比（額）", "前期比（率）"]);
 
   table("2. 貸借対照表", [
-    ["現金・預金", m("cash"), MONEY], ["受取手形・売掛金", m("receivables"), MONEY],
-    ["棚卸資産", m("inventory"), MONEY], ["その他流動資産", m("otherCurrentAssets"), MONEY],
-    ["流動資産合計", m("currentAssets"), MONEY, true],
-    ["有形固定資産", m("tangible"), MONEY], ["無形固定資産・投資その他", m("otherFixedAssets"), MONEY],
-    ["固定資産合計", m("fixedAssets"), MONEY, true],
-    ["資産合計", m("totalAssets"), MONEY, true],
-    ["支払手形・買掛金", m("payables"), MONEY], ["短期借入金", m("shortDebt"), MONEY],
-    ["その他流動負債", m("otherCurrentLiab"), MONEY],
-    ["流動負債合計", m("currentLiab"), MONEY, true],
-    ["長期借入金・社債", m("longDebt"), MONEY], ["その他固定負債", m("otherFixedLiab"), MONEY],
-    ["固定負債合計", m("fixedLiab"), MONEY, true], ["負債合計", m("totalLiab"), MONEY, true],
-    ["純資産合計", m("equity"), MONEY, true],
-    ["負債・純資産合計（総資本）", m("totalCapital"), MONEY, true],
-  ], ["項　目", "今期（直近）", "前期", "前々期"]);
+    ["現金・預金", m("cash"), FMT6], ["受取手形・売掛金", m("receivables"), FMT6],
+    ["棚卸資産", m("inventory"), FMT6], ["その他流動資産", m("otherCurrentAssets"), FMT6],
+    ["流動資産合計", m("currentAssets"), FMT6, true],
+    ["有形固定資産", m("tangible"), FMT6], ["無形固定資産・投資その他", m("otherFixedAssets"), FMT6],
+    ["固定資産合計", m("fixedAssets"), FMT6, true],
+    ["資産合計", m("totalAssets"), FMT6, true],
+    ["支払手形・買掛金", m("payables"), FMT6], ["短期借入金", m("shortDebt"), FMT6],
+    ["その他流動負債", m("otherCurrentLiab"), FMT6],
+    ["流動負債合計", m("currentLiab"), FMT6, true],
+    ["長期借入金・社債", m("longDebt"), FMT6], ["その他固定負債", m("otherFixedLiab"), FMT6],
+    ["固定負債合計", m("fixedLiab"), FMT6, true], ["負債合計", m("totalLiab"), FMT6, true],
+    ["純資産合計", m("equity"), FMT6, true],
+    ["負債・純資産合計（総資本）", m("totalCapital"), FMT6, true],
+  ], ["項　目", "今期（直近）", "前期", "前々期", "前期比（額）", "前期比（率）"]);
 
   const q = r.ratios.periods, bm = r.benchmark;
   const rr = (k) => [q[0][k], q[1][k], q[2][k]];
@@ -369,12 +381,18 @@ function sheetFinance(wb, r) {
   }
   row++;
 
+  // 運転資金分析も同じ6列にそろえる。サイクル（ヶ月）の前期比は月数の差と率で出す
+  const MON = '0.0"ヶ月"';
+  const FMTM = [MON, MON, MON, '+0.0"ヶ月";"▲"0.0"ヶ月";"±0"', CHGR];
+  const withChg = (v3) => [v3[0], v3[1], v3[2],
+    prevExists ? Math.round((v3[0] - v3[1]) * 10) / 10 : "－",   // 表示と同じ0.1ヶ月単位に丸める（▲0.0ヶ月を出さない）
+    prevExists && v3[1] > 0 ? v3[0] / v3[1] - 1 : "－"];
   table("4. 運転資金分析", [
-    ["受取サイクル（棚卸資産＋売上債権）", rr("inventoryMonths").map((v, i) => v + rr("receivableMonths")[i]), '0.0"ヶ月"'],
-    ["支払サイクル（買入債務）", rr("payableMonths"), '0.0"ヶ月"'],
-    ["必要運転資金（正常運転資金）", m("workingCapital"), MONEY, true],
-    ["簡易キャッシュフロー", m("simpleCF"), MONEY, true],
-  ], ["項　目", "今期（直近）", "前期", "前々期"]);
+    ["受取サイクル（棚卸資産＋売上債権）", withChg(rr("inventoryMonths").map((v, i) => v + rr("receivableMonths")[i])), FMTM],
+    ["支払サイクル（買入債務）", withChg(rr("payableMonths")), FMTM],
+    ["必要運転資金（正常運転資金）", m("workingCapital"), FMT6, true],
+    ["簡易キャッシュフロー", m("simpleCF"), FMT6, true],
+  ], ["項　目", "今期（直近）", "前期", "前々期", "前期比（額）", "前期比（率）"]);
 
   ws.pageSetup = { paperSize: 9, orientation: "portrait", fitToPage: true, fitToWidth: 1, fitToHeight: 0 };
   return ws;
