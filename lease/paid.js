@@ -7,7 +7,7 @@
  * 1回の購入は見積1件。購入した瞬間の数字を控え（スナップショット）、
  * そのあと入力を変えても、グラフとExcelは控えた見積から作る。
  * ========================================================================== */
-import { analyze, negotiationValue, defaultLife, LIFE_MIN, LIFE_MAX } from "./engine.js?v=2";
+import { analyze, defaultLife, LIFE_MIN, LIFE_MAX } from "./engine.js?v=2";
 import { donutMarkup, lineCompare, areaRemaining, barsExpense, attachTips, toPng, METHODS } from "./viz.js?v=3";
 import { payUrl, payUrlReady, quoteFingerprint, verifyOrder, readReturnOrder, cleanReturnUrl } from "./license.js?v=2";
 import { downloadLeaseXlsx } from "./xlsx-export.js?v=4";
@@ -652,20 +652,15 @@ function paintAll() {
   }
   $("paid").hidden = !(P.quote && !P.snap);
   $("paidOpen").hidden = !P.snap;
-  if (P.quote && !P.snap) { paintAnchor(); paintBuy(); }
+  if (P.quote && !P.snap) { paintTotal(); paintBuy(); }
   if (P.snap) paintOpen(true);
 }
 
 /* ============================================================ 購入前 */
-function paintAnchor() {
+/** 見出しの文中に、この見積の支払総額を入れる */
+function paintTotal() {
   const q = P.quote;
-  const total = q.monthly * q.months;
-  $("anTotal").textContent = `${yen(total)}円`;
-  $("anShare").textContent = total > 0 ? `支払総額の${(1000 / total * 100).toFixed(3)}%` : "";
-  const nego = negotiationValue(q);
-  $("anNego").textContent = isFinite(nego) && nego > 0 ? `約${yen(nego)}円 減る` : "—";
-  $("anNegoNote").textContent = isFinite(nego) && nego > 0
-    ? `支払総額の減り方。料金の約${Math.floor(nego / 1000)}倍です` : "金利を計算できる見積で表示します";
+  $("paidTotal").textContent = `${yen(q.monthly * q.months)}円`;
 }
 
 function paintBuy() {
