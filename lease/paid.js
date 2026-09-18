@@ -10,7 +10,7 @@
 import { analyze, negotiationValue, defaultLife, LIFE_MIN, LIFE_MAX } from "./engine.js?v=2";
 import { donutMarkup, lineCompare, areaRemaining, barsExpense, attachTips, toPng, METHODS } from "./viz.js?v=3";
 import { payUrl, payUrlReady, quoteFingerprint, verifyOrder, readReturnOrder, cleanReturnUrl } from "./license.js?v=2";
-import { downloadLeaseXlsx } from "./xlsx-export.js?v=3";
+import { downloadLeaseXlsx } from "./xlsx-export.js?v=4";
 
 /* テスト環境（test_credit_test）では true にする。本番は必ず false。
    true でも kazumono.com の上では無料にならない（取り違えて上げたときの歯止め） */
@@ -34,19 +34,19 @@ const P = { quote: null, life: null, lifeTouched: false, snap: null, over: {}, c
 /* ============================================================ Excelのシート見本（自動で流れる）
  * 財務でポン！で検証済みの仕組みを、そのまま使っている */
 const SHOTS = [
-  ["./assets/lease-1-dashboard.jpg", "①ダッシュボード",
+  ["./assets/lease-1-dashboard.jpg?v=2", "①ダッシュボード",
    "月額・金利・リース会社の利益と、4つのグラフを1枚に。A4縦1枚で印刷して、そのまま稟議に添付できます。"],
-  ["./assets/lease-2-cost.jpg", "②原価内訳",
+  ["./assets/lease-2-cost.jpg?v=2", "②原価内訳",
    "物件代金・保険料・税金・資金の金利、そしてリース会社の利益。月額の中身を上から順に分けています。"],
-  ["./assets/lease-3-schedule.jpg", "③支払予定表",
+  ["./assets/lease-3-schedule.jpg?v=2", "③支払予定表",
    "毎回の支払を元本と利息に分け、その時点で残っている支払も並べました。途中で解約するときの目安になります。"],
-  ["./assets/lease-4-tax.jpg", "④償却資産税",
+  ["./assets/lease-4-tax.jpg?v=2", "④償却資産税",
    "リース会社が毎年納める税金を年度ごとに。買った場合に自社で払う税金の目安にもなります。"],
-  ["./assets/lease-5-compare.jpg", "⑤現金・借入との比較",
+  ["./assets/lease-5-compare.jpg?v=2", "⑤現金・借入との比較",
    "リース・現金・銀行借入を、税金の効果まで含めた実質負担で並べます。いちばん負担の小さい買い方が一目で分かります。"],
-  ["./assets/lease-6-kappu.jpg", "⑥割賦との比較",
+  ["./assets/lease-6-kappu.jpg?v=2", "⑥割賦との比較",
    "分割払いで買う割賦と、リースを比べます。お金の差に加えて、持ち主や途中でやめるときの違いも。"],
-  ["./assets/lease-7-depreciation.jpg", "⑦減価償却費",
+  ["./assets/lease-7-depreciation.jpg?v=2", "⑦減価償却費",
    "買った場合に、毎年いくら経費になるか。帳簿価額の移り変わりと合わせて年度別に。"],
 ];
 let shotAt = 0;

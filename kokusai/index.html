@@ -162,6 +162,13 @@ a{color:inherit;}
 .nav{display:flex;gap:26px;}
 .nav a{font-size:14px;font-weight:500;letter-spacing:.1em;text-decoration:none;color:var(--ink-soft);border-bottom:2px solid transparent;padding:6px 0;transition:color .2s,border-color .2s;}
 .nav a:hover{color:var(--ink);border-bottom-color:var(--bloom);}
+  /* 二大サービスへの入口。ほかのリンクより目立たせる（ここから下は後から足した部分） */
+  .nav__pill{font-weight:700;letter-spacing:.04em;color:var(--sea-deep);border:1.5px solid rgba(51,82,108,.28);
+    border-radius:999px;padding:5px 14px;background:rgba(255,255,255,.72);white-space:nowrap;}
+  .nav__pill:hover{color:#fff;background:var(--sea-deep);border-color:var(--sea-deep);}
+  .nav__pill[aria-current="page"]{color:#fff;background:var(--sea-deep);border-color:var(--sea-deep);}
+  @media (max-width:820px){.nav__pill{font-size:12px;padding:4px 11px;}}
+
 
 .crumbs{font-size:13px;color:var(--ink-soft);margin:34px 0 0;}
 .crumbs a{text-decoration:none;}
@@ -345,6 +352,8 @@ input,select,textarea,button{font-weight:600;}
     <div class="wrap masthead__inner">
       <a class="brand" href="/">数字の<span>ものさし</span></a>
       <nav class="nav" aria-label="サイト内">
+        <a class="nav__pill" href="/credit-pro/">財務でポン！</a>
+        <a class="nav__pill" href="/lease/">リース見積診断</a>
         <a href="/#tools">ツール</a>
         <a href="/articles/">読みもの</a>
         <a href="/#excel">Excel版</a>

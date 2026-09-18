@@ -54,10 +54,52 @@ function band(ws, row, fromCol, toCol, value, o = {}) {
 }
 
 /** どのシートにも付ける見出し（2行）と、シートの設定 */
+/* ------------------------------------------------------------ 列幅の自動調整
+ * 列が狭いと、Excel は数字を「###」と表示してしまう。物件価額が大きい見積ほど
+ * 桁が増えるので、書き込んだ数値の「実際の表示」から必要な幅を測って広げる。
+ * 画像を貼るダッシュボードは、列幅が変わると図の位置がずれるので対象にしない。 */
+function textWidth(str) {
+  let w = 0;
+  for (const ch of String(str)) w += /[\u3000-\u9FFF\uFF00-\uFFEF▲△▼]/.test(ch) ? 2 : 1.12;
+  return w;
+}
+/** その数値が、その書式で画面にどう出るか（幅を測るためのもの） */
+function shownText(v, fmt) {
+  if (typeof v !== "number") return String(v == null ? "" : v);
+  const sections = String(fmt || "").split(";");
+  const sec = v < 0 && sections.length > 1 ? sections[1] : sections[0];
+  const literals = (sec.match(/"[^"]*"/g) || []).map((x) => x.slice(1, -1)).join("");
+  const isPct = sec.includes("%");
+  const dec = ((sec.replace(/"[^"]*"/g, "").match(/\.(0+)/) || [, ""])[1] || "").length;
+  const n = Math.abs(v) * (isPct ? 100 : 1);
+  const body = n.toLocaleString("ja-JP", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+  return literals + body + (isPct ? "%" : "");
+}
+function fitNumbers(ws, { max = 28, pad = 2.2 } = {}) {
+  const need = new Map();
+  ws.eachRow({ includeEmpty: false }, (row) => {
+    row.eachCell({ includeEmpty: false }, (cell, col) => {
+      if (typeof cell.value !== "number" || cell.isMerged) return;   // 結合セルは複数列にまたがるので除く
+      // 字が大きい行・太字の行は、そのぶん幅も要る
+      const size = (cell.font && cell.font.size) || 10;
+      const bold = cell.font && cell.font.bold ? 1.05 : 1;
+      const w = textWidth(shownText(cell.value, cell.numFmt)) * (size / 10) * bold + pad;
+      need.set(col, Math.max(need.get(col) || 0, w));
+    });
+  });
+  need.forEach((w, col) => {
+    const c = ws.getColumn(col);
+    if ((c.width || 8.43) < w) c.width = Math.min(w, max);
+  });
+}
+
 function sheet(wb, name, title, r, widths, { landscape = false, onePage = false } = {}) {
   const ws = wb.addWorksheet(name, {
     views: [{ showGridLines: false }],
+    // 印刷はすべて A4。横幅は必ず1ページに収め、用紙の中央に置く。
+    // onePage のシートは縦も1ページに収める（2ページ目に数行だけあふれるのを防ぐ）
     pageSetup: { paperSize: 9, orientation: landscape ? "landscape" : "portrait", fitToPage: true, fitToWidth: 1, fitToHeight: onePage ? 1 : 0,
+      horizontalCentered: true,
       margins: { left: 0.4, right: 0.4, top: 0.5, bottom: 0.5, header: 0.2, footer: 0.2 } },
     properties: { defaultRowHeight: 18 },
   });
@@ -209,7 +251,7 @@ function dashboard(wb, r, figs) {
 
 /* ------------------------------------------------------------ ② 原価内訳 */
 function costSheet(wb, r) {
-  const ws = sheet(wb, "原価内訳", "原価内訳（リース会社の利益）", r, [2, 5, 34, 17, 52, 2]);
+  const ws = sheet(wb, "原価内訳", "原価内訳（リース会社の利益）", r, [2, 5, 34, 17, 52, 2], { onePage: true });
   const c = r.cost, L = r.lease, a = r.input;
   let row = 5;
   const line = (no, label, v, fmt, memo, o = {}) => {
@@ -275,7 +317,7 @@ function scheduleSheet(wb, r) {
 
 /* ------------------------------------------------------------ ④ 償却資産税 */
 function taxSheet(wb, r) {
-  const ws = sheet(wb, "償却資産税", "償却資産税（リース会社が毎年納める税金）", r, [2, 10, 18, 18, 16, 16, 2]);
+  const ws = sheet(wb, "償却資産税", "償却資産税（リース会社が毎年納める税金）", r, [2, 10, 18, 18, 16, 16, 2], { onePage: true });
   const head = ["年度", "評価額", "課税標準額", "税額", "税額の累計"];
   ws.getRow(5).height = 24;
   head.forEach((h, i) => put(ws, `${colL(i + 2)}5`, h, { font: font(9.5, true, C.white), fill: C.deep, align: AL.c }));
@@ -297,8 +339,9 @@ function taxSheet(wb, r) {
 /* ------------------------------------------------------------ ⑤⑥ 比べ方の表 */
 function compareSheet(wb, r, name, title, keys, lead, diffs) {
   const years = Math.min(12, Math.max(1, ...r.cmp.filter((x) => x.payCount > 0 || x.dep > 0 || x.tax > 0).map((x) => x.year)));
-  const widths = [2, 22, ...Array(years).fill(11.5), 13, 13, 2];
-  const ws = sheet(wb, name, title, r, widths, { landscape: true });
+  // 区分は「割賦の支払（元金＋手数料）」が、合計・現在価値は「▲1,745,340」が入る幅にする（狭いと ### になる）
+  const widths = [2, 26, ...Array(years).fill(11.5), 15, 15, 2];
+  const ws = sheet(wb, name, title, r, widths, { landscape: true, onePage: true });
   const lastCol = widths.length - 1;
   note(ws, 5, 2, lastCol, lead, 9.5);
   let row = 7;
@@ -362,7 +405,7 @@ function compareSheet(wb, r, name, title, keys, lead, diffs) {
 
 /* ------------------------------------------------------------ ⑦ 減価償却費 */
 function depSheet(wb, r) {
-  const ws = sheet(wb, "減価償却費", "減価償却費（買った場合）", r, [2, 10, 18, 16, 18, 18, 2]);
+  const ws = sheet(wb, "減価償却費", "減価償却費（買った場合）", r, [2, 10, 18, 16, 18, 18, 2], { onePage: true });
   const head = ["年度", "期首の帳簿価額", "減価償却費", "期末の帳簿価額", "償却費の累計"];
   ws.getRow(5).height = 24;
   head.forEach((h, i) => put(ws, `${colL(i + 2)}5`, h, { font: font(9.5, true, C.white), fill: C.deep, align: AL.c }));
@@ -397,6 +440,8 @@ export async function buildWorkbook(r, figs = [], opts = {}) {
      ["満了・完済のあと", "返却・再リース・買い取りから選ぶ", "そのまま自社の物"],
      ["途中でやめるとき", "原則として解約できず、残りのリース料に相当する額を払う", "残金を一括で払うのが一般的"]]);
   depSheet(wb, r);
+  // ダッシュボード以外は、入っている数字に合わせて列幅を確かめる（### を出さない）
+  wb.eachSheet((ws) => { if (ws.name !== "ダッシュボード") fitNumbers(ws); });
   return wb;
 }
 

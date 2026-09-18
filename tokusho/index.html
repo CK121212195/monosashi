@@ -63,6 +63,13 @@ a{color:inherit;}
 .nav{display:flex;gap:26px;}
 .nav a{font-size:14px;font-weight:500;letter-spacing:.1em;text-decoration:none;color:var(--ink-soft);border-bottom:2px solid transparent;padding:6px 0;transition:color .2s,border-color .2s;}
 .nav a:hover{color:var(--ink);border-bottom-color:var(--bloom);}
+  /* 二大サービスへの入口。ほかのリンクより目立たせる（ここから下は後から足した部分） */
+  .nav__pill{font-weight:700;letter-spacing:.04em;color:var(--sea-deep);border:1.5px solid rgba(51,82,108,.28);
+    border-radius:999px;padding:5px 14px;background:rgba(255,255,255,.72);white-space:nowrap;}
+  .nav__pill:hover{color:#fff;background:var(--sea-deep);border-color:var(--sea-deep);}
+  .nav__pill[aria-current="page"]{color:#fff;background:var(--sea-deep);border-color:var(--sea-deep);}
+  @media (max-width:820px){.nav__pill{font-size:12px;padding:4px 11px;}}
+
 
 .crumbs{font-size:13px;color:var(--ink-soft);letter-spacing:.06em;margin:34px 0 0;}
 .crumbs a{text-decoration:none;}
@@ -217,8 +224,10 @@ input,select,textarea,button{font-weight:600}
     <div class="wrap masthead__inner">
       <a class="brand" href="/">数字の<span>ものさし</span></a>
       <nav class="nav" aria-label="サイト内">
+        <a class="nav__pill" href="/credit-pro/">財務でポン！</a>
+        <a class="nav__pill" href="/lease/">リース見積診断</a>
         <a href="/#tools">ツール</a>
-        <a href="/credit-pro/">財務でポン！</a>
+        <a href="/articles/">読みもの</a>
         <a href="/#excel">Excel版</a>
         <a href="/contact/">お問い合わせ</a>
       </nav>
@@ -280,7 +289,7 @@ input,select,textarea,button{font-weight:600}
           <tbody>
             <tr>
               <th>販売価格</th>
-              <td><b>1件につき500円（税込）</b><br><span style="font-size:14px;color:var(--ink-soft);">財務でポン！ の場合。価格は各サービスのページに表示します。</span></td>
+              <td><b>財務でポン！：1社につき500円（税込）</b><br><b>リース見積診断：見積1件につき1,000円（税込）</b><br><span style="font-size:14px;color:var(--ink-soft);">価格は各サービスのページにも表示します。</span></td>
             </tr>
             <tr>
               <th>代金以外の必要料金</th>
@@ -288,7 +297,7 @@ input,select,textarea,button{font-weight:600}
             </tr>
             <tr>
               <th>支払方法</th>
-              <td>クレジットカード決済（Square）</td>
+              <td>クレジットカード・PayPay・Apple Pay・Google Pay（決済代行：Stripe）<br><span style="font-size:14px;color:var(--ink-soft);">カード番号などの決済情報は Stripe が扱い、当サイトでは受け取りません。</span></td>
             </tr>
             <tr>
               <th>支払時期</th>
@@ -300,7 +309,7 @@ input,select,textarea,button{font-weight:600}
             </tr>
             <tr>
               <th>ご利用の範囲</th>
-              <td>1回のお支払いにつき、<b>1社分</b>の判定結果が対象です。最初にファイルを取得された時点から<b>24時間</b>、同じ会社の判定結果を何度でもダウンロードいただけます。<br><span style="font-size:14px;color:var(--ink-soft);">別の会社の判定結果をご入用の場合は、あらためてお申し込みください。</span></td>
+              <td>1回のお支払いにつき、<b>財務でポン！は1社分</b>、<b>リース見積診断は見積1件分</b>です。お支払い後、サービス画面で<b>最初に開いた時点から24時間</b>は、同じ会社（同じ見積）の結果を何度でも取得いただけます。<br><span style="font-size:14px;color:var(--ink-soft);">別の会社・別の見積をご入用の場合は、あらためてお申し込みください。</span></td>
             </tr>
           </tbody>
         </table>
