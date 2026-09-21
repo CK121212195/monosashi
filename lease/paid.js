@@ -7,7 +7,7 @@
  * 1回の購入は見積1件。購入した瞬間の数字を控え（スナップショット）、
  * そのあと入力を変えても、グラフとExcelは控えた見積から作る。
  * ========================================================================== */
-import { analyze, defaultLife, LIFE_MIN, LIFE_MAX } from "./engine.js?v=3";
+import { analyze, defaultLife, LIFE_MIN, LIFE_MAX } from "./engine.js?v=4";
 import { donutMarkup, lineCompare, areaRemaining, barsExpense, attachTips, toPng, METHODS } from "./viz.js?v=3";
 import { payUrl, payUrlReady, quoteFingerprint, verifyOrder, readReturnOrder, cleanReturnUrl } from "./license.js?v=2";
 import { downloadLeaseXlsx } from "./xlsx-export.js?v=4";

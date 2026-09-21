@@ -8,7 +8,7 @@
  * 物件価額とリース期間は、2つの使い方で共通の入力欄を使う。
  * 残価は入力欄に置かず、結果の中のバーを押して選ぶ（入力を最小限にするため）。
  * ========================================================================== */
-import { forward, reverse, residualScenarios, residualPayments } from "./engine.js?v=3";
+import { forward, reverse, residualScenarios, residualPayments } from "./engine.js?v=4";
 
 const $ = (id) => document.getElementById(id);
 const yen = (n) => Math.round(n).toLocaleString("ja-JP");
@@ -34,7 +34,7 @@ function notifyPaid(q) {
   if (paid) { try { paid.updatePaid(q); } catch (e) { console.warn("[リース見積診断] 有料版の表示を更新できませんでした", e); } }
 }
 function loadPaid() {
-  import("./paid.js?v=6").then((m) => {
+  import("./paid.js?v=7").then((m) => {
     m.initPaid();
     paid = m;
     m.updatePaid(lastQuote);
@@ -77,8 +77,8 @@ function setMode(mode, { scroll = false } = {}) {
   document.querySelectorAll("[data-only]").forEach((el) => { el.hidden = el.dataset.only !== mode; });
   $("formTitle").textContent = mode === "calc" ? "条件を入力する" : "見積の数字を入力する";
   $("formHint").textContent = mode === "calc"
-    ? "単位は円。はじめての方は「例を入れる」を押すと、使い方がすぐ分かります。"
-    : "見積書に書かれた物件価額・リース期間・月額（またはリース料率）を入れてください。";
+    ? "単位は円。数字を書き換えると、その場で計算し直します。「例を入れる」で見本の数字に戻せます。"
+    : "見積書に書かれた物件価額・リース期間・月額（またはリース料率）に書き換えてください。その場で計算し直します。";
   history.replaceState(null, "", location.pathname + location.search + (mode === "reverse" ? "#reverse" : ""));
   render({ showErr: false });
   if (scroll) $("tool").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -175,7 +175,7 @@ function paintCalc(args) {
     kpi("実質年率（金利）", isFinite(r.effective) ? `${pct(r.effective)}%` : "—", "税や保険の費用も含めて、借入の金利に直した値") +
     kpi(extra >= 0 ? "物件価額より多く払う額" : "物件価額より少ない支払", `${yen(Math.abs(extra))}円`, extra >= 0 ? "支払総額 − 物件価額"
       : args.residual > 0 ? "満了時に物件を返すぶん、支払が少ない"
-      : "月額を1円単位にそろえたぶんの差です") +
+      : "月額を100円単位にそろえたぶんの差です") +
     kpi("支払総額は物件価額の", `${r.multiple.toFixed(3)}倍`, "1.2倍超は見直しの目安");
 
   // 支払総額の内訳（横に積み上げたバー）
@@ -204,6 +204,7 @@ function paintCalc(args) {
   if (isFinite(r.effective)) rem.push(`税や保険などの費用まで含めて金利に直すと、実質年率（金利）は ${pct(r.effective)}% です。入力した年利（${(args.annualRate * 100).toFixed(2)}%）との差が、費用の重さです。`);
   if (args.residual > 0) rem.push("残価を設定した分だけ月額が下がっています。満了時に物件を返すのか、残価で買い取るのかは、契約書で必ず確認してください。");
   if (r.multiple >= 1.2) rem.push("支払総額が物件価額の1.2倍を超えています。期間か金利のどちらかを見直せないか、確かめる余地があります。");
+  rem.push("月額は100円単位に四捨五入しています。支払総額と内訳は、この月額から計算しています。");
   $("cRemarks").innerHTML = rem.map((t) => `<li>${t}</li>`).join("");
   return r.monthly;
 }
@@ -298,8 +299,33 @@ function init() {
     setMode(a.dataset.go, { scroll: true });
   }));
 
+  // 開いた瞬間から結果が見えるように、見本の数字を入れておく（計算ボタンを押し忘れても離脱しないように）。
+  // ただし購入の途中・購入後の人は、自分の見積を見る場面なので入れない。
+  if (!inPurchase()) fillExample();
   setMode(location.hash === "#reverse" ? "reverse" : "calc");
   loadPaid();
+}
+
+/** 見本の数字を両方のモードの入力欄に入れる（計算・計測はしない） */
+function fillExample() {
+  const c = EXAMPLE.calc, r = EXAMPLE.reverse;
+  $("price").value = c.price;
+  $("months").value = c.months;
+  $("rate").value = c.rate.toFixed(1);
+  $("misc").value = c.misc.toFixed(1);
+  $("pay").value = r.pay;
+}
+
+/** Stripe から戻ってきた直後か、購入した見積がまだ開ける状態か */
+function inPurchase() {
+  try {
+    if (new URLSearchParams(location.search).has("session_id")) return true;
+    const snap = JSON.parse(localStorage.getItem("kazumono.lease.paid") || "null");
+    if (snap && snap.expiresAt > Date.now()) return true;
+    const ord = JSON.parse(localStorage.getItem("kazumono.lease.order") || "null");
+    if (ord && ord.order && Date.now() - ord.at < 7 * 24 * 3600e3) return true;
+  } catch (e) { /* 読めなければ、ふつうに見本を入れる */ }
+  return false;
 }
 
 /** 月額（円）とリース料率（%）の切り替え。入っている値は換算して残す */

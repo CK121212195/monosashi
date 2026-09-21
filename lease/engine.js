@@ -86,10 +86,11 @@ export function forward({ price, months, annualRate, residual = 0, miscRate = 0 
   const base = pmt(i, months, price, residual);
   const misc = price * miscRate / 12;
 
-  /* 見積書に載る月額は1円単位の数字なので、ここで先に確定させる。
+  /* 月額は100円単位に四捨五入して、ここで先に確定させる（金利や費用率はもともと目安なので、
+     1円まで出すと実際より細かく見えてしまう。キリのよい数字のほうが感覚的にも読みやすい）。
      支払総額・内訳・実質年率は、すべてこの確定した月額から導く。
      （丸める前の値で総額を出すと「月額×回数」と合わなくなる） */
-  const monthly = round(base + misc);
+  const monthly = round(base + misc, -2);
   const total = monthly * months;
   const principal = round(Math.abs(i) < 1e-12 ? price - residual : price - residual * Math.pow(1 + i, -months));
   const miscTotal = round(misc * months);
