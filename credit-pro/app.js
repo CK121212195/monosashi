@@ -6,7 +6,7 @@ import { evaluate, emptyInput, INDUSTRIES, CAPITAL_TIERS, LISTING_OPTIONS, POLIC
   from "./engine.js?v=31";
 import { downloadXlsx } from "./xlsx-export.js?v=33";
 import { checkLicense, payUrl, payUrlReady, companyFingerprint, forgetOrder, isStripeOrder, hasReturnOrder } from "./license.js?v=32";
-import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=31";
+import { scanPdf, buildPeriod, validatePeriod, toEngineFields } from "./pdf-extract.js?v=32";
 import { renderViz, renderHead, attachTips, renderFigures, readingLines } from "./viz.js?v=31";
 
 const $ = (id) => document.getElementById(id);
@@ -948,7 +948,13 @@ async function readFiles(files) {
         const source = raw.source, warnings = raw.warnings.slice();
         if (!unit)
           warnings.push("金額の単位を読み取れませんでした。百万円として扱っています。単位が違う場合は、上の「金額の単位」で切り替えてご確認ください。");
-        const { diff, messages } = validatePeriod(values);
+        const checked = validatePeriod(values, unit);
+        const messages = checked.messages;
+        // 千円・円の決算書は百万円に換算して持つため、足し引きで 1e-12 ほどの浮動小数の誤差が残る。
+        // これを「ズレ」と扱うと、表は「一致」なのに評価が「確認・入力をお願いします」になり、
+        // 「0 ずれています」という矛盾した文まで出ていた。原本の1単位の半分に満たない差は一致とみなす。
+        const eps = 0.5 * (unit ? unit.toMillion : 1);
+        const diff = Math.abs(checked.diff) < eps ? 0 : checked.diff;
         const grade = gradePeriod(values, diff, messages);
         // 1本で2期取れる様式（有報・短信）は、yi=0 が前期。並べ替えの鍵をずらしておく
         const key = yi === 0 ? shiftBack(per) : per;
@@ -1477,11 +1483,11 @@ const MONEY_KEYS = ["sales","cogs","sga","nonOpInc","nonOpExp","extraInc","extra
   "depreciation","cash","receivables","inventory","otherCurrentAssets","tangible",
   "otherFixedAssets","deferred","payables","shortDebt","otherCurrentLiab","longDebt",
   "otherFixedLiab","equity","currentAssets","fixedAssets","currentLiab","fixedLiab",
-  "totalCapital","ordinary","operating","net"];
+  "totalCapital","ordinary","operating","net","allowanceCA"];
 
-/** 読み取った1期分を百万円に揃える。単位が読めなければ触らない */
+/** 読み取った1期分を百万円に揃える。単位が読めなければ換算はしない */
 function scaleToMillion(values, unit) {
-  if (!unit || unit.toMillion === 1) return values;
+  if (!unit || unit.toMillion === 1) { const out = { ...values }; reconcile(out); return out; }
   const out = { ...values };
   // ここで四捨五入しない。
   // 千円単位の 4,767,955千円 を 4,768百万円 に丸めると、千円で表示し直したときに
@@ -1498,34 +1504,27 @@ function scaleToMillion(values, unit) {
 }
 
 /**
- * 換算で生じた端数を「その他◯◯」に吸収させ、内訳の合計＝小計＝貸借一致に揃える。
- * 元の決算書で合っていたものを、換算のせいで狂わせないための処理。
+ * 「その他◯◯」を、小計から内訳を引いた残りとして持ち直す（判定エンジンは内訳を足して小計を作るため）。
+ * 換算で生じた浮動小数の誤差もここで消える。
+ *
+ * 次の2つは行わない（以前は行っていたが、読み取りの誤りを隠していた）。
+ *  ・小計が読めていないときに、内訳の合計を小計にすること。
+ *    読み落とした科目のぶんだけ小さい小計が「読み取れた値」として並び、未取得の欄も出ないため気づけない。
+ *  ・資産側と負債・純資産側の差（3百万円まで）を、流動資産を書き換えて埋めること。
+ *    円・千円の小さな会社では3百万円は大きな額で、原本自体の不一致まで黙って消していた
+ *    （検証用の見本 T2：資産と負債・純資産が 2,500,000円 ずれている決算書で、流動資産を 2,500,000円 減らして「一致」にしていた）。
+ *    決算書自体の端数（数単位）は、読み取り側（buildPeriod）が原本の単位で吸収済み。ここに残る差は画面で知らせる。
  */
 function reconcile(v) {
   const n = (x) => (typeof x === "number" ? x : 0);
   const fit = (parts, sub, slack) => {
-    // 小計が取れていなければ、内訳の合計をそのまま小計とする
-    if (typeof v[sub] !== "number") { v[sub] = parts.reduce((a, k) => a + n(v[k]), 0); return; }
-    const gap = v[sub] - parts.reduce((a, k) => a + n(v[k]), 0);
-    // 丸めをやめたことで、値が小数を持つようになった。
-    // 浮動小数点の計算誤差（1e-10 など）を「ズレ」と誤認しないよう、
-    // 0.0005百万円（＝500円）未満は一致とみなす。
-    if (Math.abs(gap) < 5e-4 || Math.abs(gap) > 3) return;   // 大きなズレは読み取り誤りなので触らない
-    v[slack] = n(v[slack]) + gap;                  // 端数は「その他」で調整する
+    if (typeof v[sub] !== "number") return;
+    v[slack] = v[sub] - parts.reduce((a, k) => a + n(v[k]), 0);
   };
-  fit(["cash", "receivables", "inventory", "otherCurrentAssets"], "currentAssets", "otherCurrentAssets");
-  fit(["tangible", "otherFixedAssets"], "fixedAssets", "otherFixedAssets");
-  fit(["payables", "shortDebt", "otherCurrentLiab"], "currentLiab", "otherCurrentLiab");
-  fit(["longDebt", "otherFixedLiab"], "fixedLiab", "otherFixedLiab");
-
-  // 最後に資産側と負債・純資産側を突き合わせ、残った端数もその他流動資産に寄せる
-  const assets = n(v.currentAssets) + n(v.fixedAssets) + n(v.deferred);
-  const liabEq = n(v.currentLiab) + n(v.fixedLiab) + n(v.equity);
-  const gap = assets - liabEq;
-  if (Math.abs(gap) >= 5e-4 && Math.abs(gap) <= 3) {
-    v.otherCurrentAssets = n(v.otherCurrentAssets) - gap;
-    v.currentAssets = n(v.currentAssets) - gap;
-  }
+  fit(["cash", "receivables", "inventory"], "currentAssets", "otherCurrentAssets");
+  fit(["tangible"], "fixedAssets", "otherFixedAssets");
+  fit(["payables", "shortDebt"], "currentLiab", "otherCurrentLiab");
+  fit(["longDebt"], "fixedLiab", "otherFixedLiab");
 }
 
 /* ----------------------------------------------------------- 画面の段 */
@@ -1616,15 +1615,19 @@ const MANUAL_LABELS = {
   currentLiab: ["流動負債合計", ""], fixedLiab: ["固定負債合計", ""],
   equity: ["純資産合計", ""],
   shortDebt: ["短期借入金（1年内返済分を含む）", ""], longDebt: ["長期借入金・社債", ""],
+  tax: ["法人税等", "法人税、住民税及び事業税と法人税等調整額の合計。"],
 };
 // 表示順（重要な順）
 const MANUAL_ORDER = ["depreciation", "sales", "cash", "currentAssets", "fixedAssets",
-                      "currentLiab", "fixedLiab", "equity", "shortDebt", "longDebt"];
+                      "currentLiab", "fixedLiab", "equity", "shortDebt", "longDebt", "tax"];
 
 /** その期で実際に入力を求めるべきキーを返す */
 function manualKeysFor(p) {
   const nil = (k) => p.values[k] === null || p.values[k] === undefined;
   return MANUAL_ORDER.filter((k) => {
+    // 法人税等は、当期純利益も読めていないときだけ尋ねる（どちらも無いと、判定では法人税等0として計算してしまう）。
+    // 損益計算書が無い決算書（貸借対照表だけ）では尋ねない
+    if (k === "tax") return nil("tax") && nil("net") && !(nil("sales") && nil("ordinary") && nil("operating"));
     if (k === "shortDebt" || k === "longDebt") {
       // buildPeriod は見つからなければ0を入れ、警告を出す。
       // 「無借金なのか読み落としなのか」を利用者に確かめてもらう
@@ -1678,6 +1681,8 @@ function showRead(periods) {
         "保険会社の貸借対照表には流動・固定の区分が無く、損益計算書も売上高ではなく経常収益で構成されるため、本ツールの判定モデルには載りません。判定に用いる業界基準の統計も金融業・保険業を対象外としています。一般事業会社の決算書でお試しください。"],
       securities: ["証券会社（金融商品取引業）の決算書のようです。このツールの対象外です",
         "証券会社の損益計算書は営業収益と受入手数料で構成され、貸借対照表にも流動・固定の区分がありません。本ツールの判定モデルには載らず、業界基準の統計も金融業を対象外としています。一般事業会社の決算書でお試しください。"],
+      crypto: ["暗号資産交換業（利用者から預かった暗号資産）を含む決算書のようです。このツールの対象外です",
+        "暗号資産交換業者の貸借対照表には、利用者から預かった暗号資産や金銭が、資産（利用者暗号資産・預託金など）と負債（預り暗号資産・預り金など）の両方にほぼ同じ額で載ります。総資産の大半がこの預かり分になるため、自己資本比率や回転率が一般事業会社と同じ物差しでは意味を持ちません。一般事業会社の決算書でお試しください。"],
       interim: ["四半期・中間の決算書のようです。このツールの対象外です",
         "四半期の損益計算書に載っている売上高や利益は3か月ぶんの金額です。これを年間の実績として扱うと、総資産回転率も債務償還年数も与信限度額も実態からずれた数字になります。しかも一見それらしい数字が出るため、誤りに気づけません。通期（1年分）の決算書をご用意ください。"],
     };
@@ -1751,7 +1756,8 @@ function showRead(periods) {
       fix += '<div class="pro-2 fix-grid">';
       for (const k of miss) {
         const label = MANUAL_LABELS[k][0];
-        fix += `<label class="pro-field"><span>${label}</span>` +
+        // 入力する単位を欄に明記する（表示単位に合わせて受け取り、内部の百万円へ直す）
+        fix += `<label class="pro-field"><span>${label}（${U_LABEL()}）</span>` +
                `<input type="number" step="1" inputmode="numeric" placeholder="未入力" ` +
                `data-fixkey="${k}" data-fixidx="${i}"></label>`;
       }
@@ -1848,16 +1854,47 @@ function applyValues() {
  * ここで取り込むのは「ここだけ入力してください」の欄だけ。
  */
 function applyRead() {
+  // 「ここだけ入力してください」の欄は、表示している単位（百万円／千円）で入力される。内部の百万円に直して収める。
+  // 以前は換算せずに収めていたため、千円表示のときに入れた値が1000倍になっていた（独立レビューの指摘）。
+  const typed = {};   // typed[項目][期] = 入力値（百万円）
   document.querySelectorAll("#readFix input[data-fixkey]").forEach((inp) => {
     if (inp.value === "") return;
     const num = parseFloat(inp.value);
     if (Number.isNaN(num)) return;
-    const k = inp.dataset.fixkey, i = +inp.dataset.fixidx;
-    if (!Array.isArray(state[k])) state[k] = [0, 0, 0];
-    state[k][i] = num;
-    // 埋まったので赤い表示を解除する
-    if (missingCells[k]) missingCells[k] = missingCells[k].filter((x) => x !== i);
+    (typed[inp.dataset.fixkey] ||= {})[+inp.dataset.fixidx] = fromDisp(num);
   });
+  // 判定エンジンは合計を内訳から作る（流動資産＝現金預金＋売上債権＋棚卸資産＋その他流動資産）。
+  // 合計の欄（流動資産合計など）に入れた値をそのまま収めても、エンジンは使わない。
+  // また、有利子負債や現金預金だけを後から入れると、内訳の和が決算書の合計からずれる。
+  // 内訳は内訳の欄へ入れ、そのうえで「その他◯◯」を 合計−内訳 として持ち直す。
+  const SUBTOTAL = {
+    currentAssets: ["otherCurrentAssets", ["cash", "receivables", "inventory"]],
+    fixedAssets: ["otherFixedAssets", ["tangible"]],
+    currentLiab: ["otherCurrentLiab", ["payables", "shortDebt"]],
+    fixedLiab: ["otherFixedLiab", ["longDebt"]],
+  };
+  for (const [k, byI] of Object.entries(typed)) {
+    if (SUBTOTAL[k]) continue;
+    if (!Array.isArray(state[k])) state[k] = [0, 0, 0];
+    for (const [i, v] of Object.entries(byI)) state[k][+i] = v;
+  }
+  (pending || []).forEach((p, i) => {
+    for (const [sub, [other, parts]] of Object.entries(SUBTOTAL)) {
+      const typedSub = typed[sub] ? typed[sub][i] : undefined;
+      const partTyped = parts.some((k) => typed[k] && typed[k][i] !== undefined);
+      if (typedSub === undefined && !partTyped) continue;
+      const total = typedSub !== undefined ? typedSub : (p.values || {})[sub];
+      if (typeof total !== "number") continue;
+      if (!Array.isArray(state[other])) state[other] = [0, 0, 0];
+      state[other][i] = total - parts.reduce((a, k) => a + (Number(state[k] && state[k][i]) || 0), 0);
+      // 合計から埋め直したので、未取得（赤）の表示を外す
+      if (missingCells[other]) missingCells[other] = missingCells[other].filter((x) => x !== i);
+    }
+  });
+  // 埋まったので赤い表示を解除する
+  for (const [k, byI] of Object.entries(typed))
+    for (const i of Object.keys(byI))
+      if (missingCells[k]) missingCells[k] = missingCells[k].filter((x) => x !== +i);
   paint(); render();
   if (window.gtag && pending) gtag("event", "pdf_applied", { tool: "credit-pro", periods: pending.length });
   accepted = pending || accepted;   // 追加のPDFを置いたときに積み上げられるよう残す
