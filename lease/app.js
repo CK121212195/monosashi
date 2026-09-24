@@ -299,11 +299,53 @@ function init() {
     setMode(a.dataset.go, { scroll: true });
   }));
 
-  // 開いた瞬間から結果が見えるように、見本の数字を入れておく（計算ボタンを押し忘れても離脱しないように）。
-  // ただし購入の途中・購入後の人は、自分の見積を見る場面なので入れない。
-  if (!inPurchase()) fillExample();
-  setMode(location.hash === "#reverse" ? "reverse" : "calc");
+  // LINEなどから、数字つきで開かれたときは、その数字で開く（①リース料の計算／②金利の逆算）
+  const pre = readPrefill();
+  if (pre) {
+    fillExample();                 // もう片方の使い方の欄は見本のまま
+    $("price").value = pre.price;
+    $("months").value = pre.months;
+    if (pre.mode === "reverse") $("pay").value = pre.pay;
+    else { $("rate").value = pre.rate; $("misc").value = pre.misc; }
+  } else if (!inPurchase()) {
+    // 開いた瞬間から結果が見えるように、見本の数字を入れておく（計算ボタンを押し忘れても離脱しないように）。
+    // ただし購入の途中・購入後の人は、自分の見積を見る場面なので入れない。
+    fillExample();
+  }
+  setMode(pre ? pre.mode : (location.hash === "#reverse" ? "reverse" : "calc"));
+  if (pre) {
+    // 数字は計測に含めない（どこから来たか・どちらの計算かだけを送る）
+    track("lease_prefill", { source: new URLSearchParams(location.search).get("utm_source") || "link", mode: pre.mode });
+    // 結果の大きな数字が、上に固定された帯の下に隠れない位置まで動かす
+    const box = pre.mode === "reverse" ? $("resRev") : $("resCalc");
+    const head = document.querySelector(".masthead");
+    const y = box.getBoundingClientRect().top + window.scrollY - (head ? head.offsetHeight : 0) - 12;
+    window.scrollTo({ top: Math.max(0, y) });
+  }
+  // LINEの友だち追加ボタン（押された回数だけを計測する）
+  document.querySelectorAll("[data-line]").forEach((a) => a.addEventListener("click", () => track("line_add_click", { place: a.dataset.line })));
   loadPaid();
+}
+
+/** 数字つきで開かれたときの数字（index.html の先頭で URL から外して渡している）。おかしな値なら使わない */
+function readPrefill() {
+  const o = window.__leasePrefill;
+  if (!o) return null;
+  const price = Number(o.price), months = Number(o.months);
+  if (!(price >= 1e4 && price <= 1e10)) return null;
+  if (!(Number.isInteger(months) && months >= 1 && months <= 240)) return null;
+  if (o.mode === "reverse") {
+    const pay = Number(o.pay);
+    if (!(pay > 0 && pay < price)) return null;
+    return { mode: "reverse", price, months, pay };
+  }
+  if (o.mode === "calc") {
+    const rate = Number(o.rate), misc = o.misc == null || o.misc === "" ? 0 : Number(o.misc);
+    if (o.rate == null || o.rate === "" || !(rate >= 0 && rate < 50)) return null;
+    if (!(misc >= 0 && misc < 30)) return null;
+    return { mode: "calc", price, months, rate, misc };
+  }
+  return null;
 }
 
 /** 見本の数字を両方のモードの入力欄に入れる（計算・計測はしない） */

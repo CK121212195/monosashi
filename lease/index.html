@@ -4,6 +4,11 @@
 <script>if(location.protocol==='http:'){location.replace('https://'+location.host+location.pathname+location.search+location.hash);}</script>
 
 <meta charset="UTF-8">
+<script>
+/* LINEなどから、数字つきで開かれたとき（#reverse&price=…&months=…&pay=… ／ #calc&price=…&months=…&rate=…&misc=…）。
+   #の後ろはサーバーに送られない。さらに広告やアクセス解析が読む前に、ここでURLから外し、画面の計算にだけ使う */
+(function(){try{var m=location.hash.match(/^#(reverse|calc)&(.*)$/);if(!m)return;var o={mode:m[1]};m[2].split("&").forEach(function(kv){var p=kv.split("=");if(/^(price|months|pay|rate|misc)$/.test(p[0]))o[p[0]]=p[1];});window.__leasePrefill=o;history.replaceState(null,"",location.pathname+location.search+(m[1]==="reverse"?"#reverse":""));}catch(e){}})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>リース料の計算と逆算｜リース会社の利益まで分かる・Excel版あり</title>
 <meta name="description" content="物件価額・リース期間・金利・残価から月額リース料とリース料率を計算。見積の月額やリース料率からは実質年率（金利）を逆算し、支払総額のうち元本・金利・その他費用の内訳を表示します。リース会社の利益はExcel（エクセル）版で分解できます。無料・登録不要。">
@@ -444,6 +449,27 @@ input,select,textarea,button{font-weight:600}
   .rbar__col{height:80px;padding:0 14%;}
 }
 @media (max-width:400px){.rbar__val{font-size:9.5px;}}
+/* ===================== LINEでも使える ===================== */
+.linecard{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:28px 30px;box-shadow:var(--shadow);margin:40px 0 0;}
+.linecard__eyebrow{margin:0 0 6px;font-family:var(--num);font-size:11.5px;font-weight:700;letter-spacing:.3em;color:#00843A;}
+.linecard__title .nw{display:inline-block;}
+.linecard__title{margin:0 0 14px;font-family:var(--sans);font-size:19px;font-weight:700;line-height:1.6;letter-spacing:.04em;color:var(--ink);}
+.linecard__list{list-style:none;margin:0 0 18px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.linecard__list li{background:var(--mint);border-radius:12px;padding:10px 14px;line-height:1.6;}
+.linecard__list b{display:block;font-size:15px;color:var(--ink);letter-spacing:.03em;}
+.linecard__list span{display:block;font-size:13.5px;color:var(--ink-soft);margin-top:2px;}
+.linecard__btn{display:inline-block;background:#00843A;color:#fff;font-weight:700;font-size:16px;letter-spacing:.06em;text-decoration:none;padding:12px 30px;border-radius:999px;box-shadow:0 8px 20px rgba(0,132,58,.22);transition:background .2s;}
+.linecard__btn:hover{background:#006F31;}
+.linecard__fine{margin:10px 0 0;font-size:12.5px;line-height:1.7;color:var(--ink-faint);}
+.linecard__qr{margin:0;text-align:center;}
+.linecard__qr img{display:block;width:150px;height:150px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:6px;box-sizing:content-box;}
+.linecard__qr figcaption{margin:8px 0 0;font-size:12px;color:var(--ink-faint);}
+@media (max-width:640px){
+  .linecard{grid-template-columns:1fr;padding:22px 20px;}
+  .linecard__list{grid-template-columns:1fr;}
+  .linecard__qr{display:none;}
+  .linecard__btn{display:block;text-align:center;}
+}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
@@ -707,6 +733,24 @@ input,select,textarea,button{font-weight:600}
         </div>
       </section>
 
+      <!-- ============ LINEでも使える ============ -->
+      <aside class="linecard" aria-labelledby="lineH">
+        <div class="linecard__text">
+          <p class="linecard__eyebrow">LINE</p>
+          <h2 class="linecard__title" id="lineH">スマホのLINEでも、<span class="nw">数字を送るだけ</span></h2>
+          <ul class="linecard__list">
+            <li><b>① リース料を計算する</b><span>例）500万 60回 3%</span></li>
+            <li><b>② 金利を逆算する</b><span>例）500万 60回 95000</span></li>
+          </ul>
+          <a class="linecard__btn" href="https://lin.ee/UwxKYtX" rel="noopener" data-line="lease">LINEで友だち追加</a>
+          <p class="linecard__fine">友だち追加は無料です。送った数字は計算にだけ使い、保存しません。</p>
+        </div>
+        <figure class="linecard__qr">
+          <img src="/assets/line-qr.png" width="150" height="150" alt="LINE公式アカウント「数字のものさし」の友だち追加用QRコード" loading="lazy" decoding="async">
+          <figcaption>スマホのカメラで読み取る</figcaption>
+        </figure>
+      </aside>
+
       <section class="about">
         <h2>この計算の前提</h2>
         <p>リース料は、リース会社が立て替えた物件価額を、期間中に金利をつけて回収する仕組みです。構造としては元利均等返済の住宅ローンとほとんど同じで、違いは「満了時に残価を残せる」点にあります。</p>
@@ -746,7 +790,7 @@ input,select,textarea,button{font-weight:600}
         <tr><td>管理コスト</td><td>与信審査・事務・回収の手間</td><td>表に出ない</td></tr>
         </tbody>
         </table></div>
-        <p>このうち、借り手にとって交渉できる余地があるのは<strong>スプレッド</strong>です。資金コストは市場金利で決まるので動きませんが、スプレッドはリース会社の判断で決まります。つまり<strong>中身が分かると、担当の方との相談がスムーズになります</strong></p>
+        <p>このうち、借り手にとって交渉できる余地があるのは<strong>スプレッド</strong>です。資金コストは市場金利で決まるので動きませんが、スプレッドはリース会社の判断で決まります。つまり<strong>中身が分かると、担当の方との相談がスムーズになります</strong>。</p>
         <p>上の「<a href="#reverse" data-go="reverse">金利を逆算する</a>」に、見積の月額を入れてみてください。出てくる実質年率（金利）が、そのリース取引の実質的な金利です。そこから、あなたの会社が銀行から借りるときの金利を引いた差が、おおよその税金・保険・管理コストとリース会社の利益の合計になります。</p>
 
         <h3>逆算の手順</h3>
@@ -864,6 +908,6 @@ input,select,textarea,button{font-weight:600}
 
 <noscript><p style="text-align:center;padding:12px">このツールはJavaScriptで計算します。ブラウザの設定でJavaScriptを有効にしてください。</p></noscript>
 <script src="../vendor/exceljs.min.js" defer></script>
-<script type="module" src="./app.js?v=8"></script>
+<script type="module" src="./app.js?v=9"></script>
 </body>
 </html>

@@ -633,9 +633,26 @@ input,select,textarea,button{font-weight:600}
 .flag__shot{margin:0;}
 /* 2つ目の看板（リース見積診断）は、図を左に置いて並びを変える */
 .flag--rev{grid-template-columns:296px 1fr;}
-.flag--rev .flag__shot{order:-1;}
+.flag--rev .flag__side{order:-1;}
 .flagsec--alt{background:linear-gradient(180deg,rgba(223,246,241,.60),rgba(250,249,246,0) 82%);}
-@media (max-width:880px){.flag--rev{grid-template-columns:1fr;}.flag--rev .flag__shot{order:0;}}
+@media (max-width:880px){.flag--rev{grid-template-columns:1fr;}.flag--rev .flag__side{order:0;}}
+
+/* LINEでも使える（リース見積診断の左の列。図の下の空きに置く） */
+.flag__side{display:grid;gap:26px;align-content:start;}
+.linecard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px 20px;box-shadow:var(--shadow);text-align:center;}
+.linecard__eyebrow{margin:0 0 6px;font-family:var(--num);font-size:11.5px;font-weight:700;letter-spacing:.3em;color:#00843A;}
+.linecard__title .nw{display:inline-block;}
+.linecard__title{margin:0 0 14px;font-size:17px;font-weight:700;line-height:1.6;letter-spacing:.04em;color:var(--ink);}
+.linecard__list{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:10px;text-align:left;}
+.linecard__list li{background:var(--mint);border-radius:12px;padding:10px 14px;line-height:1.6;}
+.linecard__list b{display:block;font-size:14.5px;color:var(--ink);letter-spacing:.03em;}
+.linecard__list span{display:block;font-size:13px;color:var(--ink-soft);margin-top:2px;}
+.linecard__qr{display:block;width:140px;height:140px;margin:0 auto 6px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:6px;box-sizing:content-box;}
+.linecard__hint{margin:0 0 14px;font-size:12.5px;line-height:1.7;color:var(--ink-soft);}
+.linecard__btn{display:block;background:#00843A;color:#fff;font-weight:700;font-size:15.5px;letter-spacing:.06em;text-decoration:none;padding:12px 16px;border-radius:999px;box-shadow:0 8px 20px rgba(0,132,58,.22);transition:background .2s;}
+.linecard__btn:hover{background:#006F31;}
+.linecard__fine{margin:10px 0 0;font-size:12px;line-height:1.7;color:var(--ink-faint);}
+@media (max-width:880px){.linecard__qr,.linecard__hint{display:none;}}
 .flag__shot img{
   display:block;width:100%;height:auto;border-radius:10px;
   border:1px solid var(--line);box-shadow:var(--shadow-lift);background:#fff;
@@ -660,6 +677,7 @@ input,select,textarea,button{font-weight:600}
 @media (max-width:900px){
   .flag{grid-template-columns:1fr;gap:32px;}
   .flag__shot{max-width:300px;margin:0 auto;}
+  .flag__side{max-width:300px;width:100%;margin:0 auto;}
 }
 @media (max-width:560px){
   .price{padding:18px 20px;}
@@ -803,10 +821,25 @@ input,select,textarea,button{font-weight:600}
             </div>
           </div>
 
-          <figure class="flag__shot">
-            <img src="/lease/assets/lease-1-dashboard.jpg" width="1400" height="1828" alt="リース見積診断が出力するExcelのダッシュボード。月額・金利・リース会社の利益と、4つのグラフが1枚にまとまっている。" loading="lazy">
-            <figcaption>受け取るExcelの1シート目（ダッシュボード）</figcaption>
-          </figure>
+          <div class="flag__side">
+            <figure class="flag__shot">
+              <img src="/lease/assets/lease-1-dashboard.jpg" width="1400" height="1828" alt="リース見積診断が出力するExcelのダッシュボード。月額・金利・リース会社の利益と、4つのグラフが1枚にまとまっている。" loading="lazy">
+              <figcaption>受け取るExcelの1シート目（ダッシュボード）</figcaption>
+            </figure>
+
+            <aside class="linecard" aria-label="LINE公式アカウントのご案内">
+              <p class="linecard__eyebrow">LINE</p>
+              <p class="linecard__title">LINEでも、<span class="nw">数字を送るだけ</span></p>
+              <ul class="linecard__list">
+                <li><b>① リース料を計算する</b><span>例）500万 60回 3%</span></li>
+                <li><b>② 金利を逆算する</b><span>例）500万 60回 95000</span></li>
+              </ul>
+              <img class="linecard__qr" src="/assets/line-qr.png" width="140" height="140" alt="LINE公式アカウント「数字のものさし」の友だち追加用QRコード" loading="lazy" decoding="async">
+              <p class="linecard__hint">スマホのカメラで読み取ると、<br>友だち追加できます</p>
+              <a class="linecard__btn" href="https://lin.ee/UwxKYtX" rel="noopener" data-line="top">LINEで友だち追加</a>
+              <p class="linecard__fine">友だち追加は無料です。<br>送った数字は保存しません。</p>
+            </aside>
+          </div>
         </div>
       </div>
     </section>
@@ -1118,5 +1151,9 @@ input,select,textarea,button{font-weight:600}
 
 </div>
 
+<script>
+/* LINEの友だち追加ボタン：押された回数だけを計測する */
+document.querySelectorAll("[data-line]").forEach(function(a){a.addEventListener("click",function(){try{if(typeof gtag==="function")gtag("event","line_add_click",{place:a.getAttribute("data-line")});}catch(e){}});});
+</script>
 </body>
 </html>
