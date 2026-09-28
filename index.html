@@ -683,6 +683,64 @@ input,select,textarea,button{font-weight:600}
   .price{padding:18px 20px;}
   .price__amt b{font-size:38px;}
 }
+
+/* ===================== 英語のものさし（無料・学習） ===================== */
+.nav a.is-eigo{color:#8A5A00;font-weight:700;background:#FFF3CC;border-radius:999px;padding:6px 14px;border-bottom:none}
+.nav a.is-eigo:hover{background:#FFE69A;border-bottom:none}
+.eigo-ribbon{display:block;background:linear-gradient(90deg,#FFE9A8,#FFF6D6 60%,#E2F0FF);border-top:1px solid #F4DF9C;border-bottom:1px solid #F4DF9C;text-decoration:none;color:var(--ink)}
+.eigo-ribbon__in{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 24px}
+.eigo-ribbon__tag{font-family:var(--num);font-size:11px;font-weight:800;letter-spacing:.2em;background:#FF7A59;color:#fff;border-radius:999px;padding:3px 10px}
+.eigo-ribbon__free{font-size:12px;font-weight:800;background:#1FAF78;color:#fff;border-radius:999px;padding:3px 10px}
+.eigo-ribbon__t{font-weight:700;font-size:15px;letter-spacing:.03em}
+.eigo-ribbon__go{margin-left:auto;font-weight:700;font-size:14px;color:#1B6FC7;white-space:nowrap}
+.eigo-ribbon:hover .eigo-ribbon__go{text-decoration:underline;text-underline-offset:4px}
+
+.eigosec{position:relative;overflow:hidden;padding:86px 0 90px;background:
+  radial-gradient(circle at 96% 6%,rgba(59,158,255,.16) 0,transparent 30%),
+  radial-gradient(circle at 2% 96%,rgba(31,175,120,.12) 0,transparent 30%),
+  linear-gradient(180deg,#FFF3CC 0%,#FFFBEF 70%,var(--paper) 100%);
+  border-top:1px solid #F4DF9C}
+.eigo{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
+.eigo__brand{display:flex;align-items:center;gap:14px;margin:0 0 20px}
+.eigo__mark{position:relative;width:52px;height:52px;border-radius:15px;background:#FFC83D;box-shadow:0 5px 0 #B98100;display:grid;place-items:center;font:800 26px var(--num);color:#222B45}
+.eigo__mark span{position:absolute;right:-8px;bottom:-8px;width:28px;height:28px;border-radius:50%;background:#3B9EFF;color:#fff;font-size:14px;display:grid;place-items:center;border:3px solid #FFF3CC;font-family:var(--sans)}
+.eigo__name{font-size:22px;font-weight:700;letter-spacing:.08em}
+.eigo__name b{color:#B98100}
+.eigo__free{font-size:13px;font-weight:800;background:#1FAF78;color:#fff;border-radius:999px;padding:4px 12px;letter-spacing:.06em}
+.eigo__title{font-family:var(--serif);font-size:clamp(28px,4.2vw,44px);line-height:1.45;letter-spacing:.04em;margin:0 0 18px}
+.eigo__title em{font-style:normal;background:linear-gradient(transparent 60%,#FFC83D 60%,#FFC83D 92%,transparent 92%)}
+.eigo__lead{font-size:16px;line-height:2;margin:0 0 24px;max-width:33em}
+.eigo__nums{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 26px;padding:0;list-style:none}
+.eigo__nums li{background:#fff;border:1px solid #F1E3B5;border-radius:16px;padding:12px 10px;text-align:center;box-shadow:var(--shadow)}
+.eigo__nums b{display:block;font-family:var(--num);font-size:28px;line-height:1.1;color:#222B45}
+.eigo__nums span{font-size:12px;font-weight:700;color:var(--ink-soft)}
+.eigo__cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn--eigo{background:#FFC83D;color:#222B45;box-shadow:0 6px 0 #B98100}
+.btn--eigo:hover{transform:translateY(-2px);background:#FFD25E}
+.btn--eigo-ghost{border-color:#3B9EFF;color:#1B6FC7;background:#fff}
+.btn--eigo-ghost:hover{transform:translateY(-2px)}
+.eigo__demo{background:#fff;border:1px solid #EDE6D6;border-radius:26px;padding:26px 26px 22px;box-shadow:0 4px 10px rgba(34,43,69,.06),0 24px 50px rgba(34,43,69,.12)}
+.eigo__demo-lab{margin:0 0 10px;font-size:12.5px;font-weight:700;color:#1B6FC7;letter-spacing:.04em}
+.eigo__demo-en{font-family:Georgia,"Times New Roman",serif;font-size:21px;line-height:2.05;margin:0 0 14px;color:#222B45}
+.ew{position:relative;cursor:pointer;border-radius:5px;padding:0 2px;background:#FFF3CC;box-shadow:0 2px 0 #FFC83D;outline:none}
+.ew:hover,.ew:focus{background:#FFE69A}
+.ew__tip{position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%) translateY(4px);min-width:200px;background:#fff;border:1.5px solid #E3EAF5;border-radius:14px;padding:10px 14px;box-shadow:0 12px 30px rgba(34,43,69,.18);font-family:var(--sans);font-size:14px;line-height:1.6;color:#222B45;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;z-index:5;white-space:normal;text-align:left}
+.ew:hover .ew__tip,.ew:focus .ew__tip,.ew.is-open .ew__tip{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.ew__tip b{font-family:Georgia,serif;font-size:17px}
+.ew__ipa{color:#1B6FC7;font-weight:600;margin-left:6px}
+.ew__warn{display:block;margin-top:6px;background:#EEE9FF;color:#5E43C4;border-radius:8px;padding:4px 8px;font-size:12.5px}
+.eigo__say{display:inline-flex;align-items:center;gap:6px;border:1.5px solid #E3EAF5;background:#fff;border-radius:999px;padding:6px 14px;font-weight:700;font-size:13.5px;cursor:pointer;color:#222B45}
+.eigo__say.playing{background:#DDF6EA;border-color:#1FAF78}
+.eigo__demo-foot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;border-top:1px dashed #EDE6D6;padding-top:14px}
+.eigo__demo-note{margin:0;font-size:12.5px;color:var(--ink-soft)}
+.eigo__doors{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:40px}
+.eigo__door{display:block;background:#fff;border:1px solid #EDE6D6;border-radius:18px;padding:18px 18px 16px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+.eigo__door:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift)}
+.eigo__door b{display:block;font-size:16.5px;margin:6px 0 4px}
+.eigo__door span{font-size:13.5px;line-height:1.75;color:var(--ink-soft)}
+.eigo__door i{font-style:normal;font-size:24px}
+@media (max-width:900px){.eigo{grid-template-columns:1fr;gap:34px}.eigo__doors{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.eigo__nums{grid-template-columns:repeat(2,1fr)}.eigo__doors{grid-template-columns:1fr}.eigo__demo-en{font-size:18.5px}.eigosec{padding:60px 0}.eigo-ribbon__go{margin-left:0}.ew__tip{min-width:170px}}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
@@ -705,6 +763,7 @@ input,select,textarea,button{font-weight:600}
       <nav class="nav" aria-label="サイト内">
         <a href="/credit-pro/">財務でポン！</a>
         <a href="/lease/">リース見積診断</a>
+        <a href="/eigo/" class="is-eigo">英語（無料）</a>
         <a href="#tools">ツール</a>
         <a href="/articles/">読みもの</a>
         <a href="#excel">Excel版</a>
@@ -733,6 +792,15 @@ input,select,textarea,button{font-weight:600}
       </div>
     </section>
 
+
+    <!-- ============ 英語のものさし：お知らせ帯 ============ -->
+    <a class="eigo-ribbon" href="#eigo">
+      <div class="wrap eigo-ribbon__in">
+        <span class="eigo-ribbon__tag">NEW</span><span class="eigo-ribbon__free">無料</span>
+        <span class="eigo-ribbon__t">英語のものさし ― 英検・TOEICの文法・長文・単語を、ホバー辞書と音声で。</span>
+        <span class="eigo-ribbon__go">くわしく見る ↓</span>
+      </div>
+    </a>
 
     <!-- ============ 主力サービス ============ -->
     <section class="flagsec" id="pro">
@@ -844,6 +912,43 @@ input,select,textarea,button{font-weight:600}
       </div>
     </section>
 
+
+    <!-- ============ 英語のものさし（無料） ============ -->
+    <section class="eigosec" id="eigo" aria-labelledby="eigo-title">
+      <div class="wrap">
+        <div class="eigo">
+          <div>
+            <div class="eigo__brand"><span class="eigo__mark" aria-hidden="true">A<span>あ</span></span><span class="eigo__name">英語の<b>ものさし</b></span><span class="eigo__free">無料・登録不要</span></div>
+            <h2 class="eigo__title" id="eigo-title">触れた単語が、<br><em>そのまま身につく。</em></h2>
+            <p class="eigo__lead">英検2級〜1級・TOEIC 600点以上をめざす人のための英語問題集です。本文のどの単語も、カーソルを合わせるだけで意味・発音記号・紛らわしい語が出て、🔊ですぐに発音が聞けます。題材は株式・金利・暗号資産・AI・アート・映画など、いまの社会とつながるものを選びました。</p>
+            <ul class="eigo__nums">
+              <li><b>151</b><span>穴埋め問題</span></li>
+              <li><b>20</b><span>長文（全訳つき）</span></li>
+              <li><b>32</b><span>文法単元</span></li>
+              <li><b>2,766</b><span>語の音声</span></li>
+            </ul>
+            <div class="eigo__cta">
+              <a class="btn btn--eigo" href="/eigo/">英語のものさしを開く<span class="btn__arrow" aria-hidden="true">→</span></a>
+              <a class="btn btn--eigo-ghost" href="/eigo/bunpou/">文法解説を読む</a>
+            </div>
+          </div>
+          <div class="eigo__demo">
+            <p class="eigo__demo-lab">試しに、黄色い単語にカーソルを（スマホはタップ）</p>
+            <p class="eigo__demo-en" lang="en">The central bank's <span class="ew" tabindex="0" data-src="/eigo/audio/w/us/6f65abe3.mp3">decision<span class="ew__tip"><b>decision</b><span class="ew__ipa">/dɪˈsɪʒən/</span><br>決定・決断</span></span> to <span class="ew" tabindex="0" data-src="/eigo/audio/w/us/5ef9ed23.mp3">raise<span class="ew__tip"><b>raise</b><span class="ew__ipa">/reɪz/</span><br>（他動詞）～を上げる<span class="ew__warn">混同注意：rise（自動詞）上がる</span></span></span> <span class="ew" tabindex="0" data-src="/eigo/audio/w/us/a8bafcd8.mp3">interest rates<span class="ew__tip"><b>interest rates</b><br>金利（熟語として表示）</span></span> <span class="ew" tabindex="0" data-src="/eigo/audio/w/us/df596087.mp3">rattled<span class="ew__tip"><b>rattle</b><span class="ew__ipa">/ˈrætl/</span><br>動揺させる（rattled → 原形）</span></span> the <span class="ew" tabindex="0" data-src="/eigo/audio/w/us/7f9a4c9b.mp3">stock market<span class="ew__tip"><b>stock market</b><br>株式市場</span></span>, yet investors who had <span class="ew" tabindex="0" data-src="/eigo/audio/w/us/1dd8fa8e.mp3">diversified<span class="ew__tip"><b>diversify</b><span class="ew__ipa">/daɪˈvɝːsɪfaɪ/</span><br>分散する</span></span> into bonds stayed calm.</p>
+            <div class="eigo__demo-foot">
+              <button class="eigo__say" type="button" data-src="/eigo/audio/s/us/03d9934b.mp3">🔊 この文を聞く</button>
+              <p class="eigo__demo-note">単語をクリックすると、その単語の発音が鳴ります。</p>
+            </div>
+          </div>
+        </div>
+        <div class="eigo__doors">
+          <a class="eigo__door" href="/eigo/#cloze"><i aria-hidden="true">✏️</i><b>穴埋め問題</b><span>語彙・熟語・文法・紛らわしい語。すべての選択肢の意味と「なぜ違うか」まで解説。</span></a>
+          <a class="eigo__door" href="/eigo/chobun/"><i aria-hidden="true">📰</i><b>長文読解</b><span>投資・AI・映画など20本。全訳・根拠のハイライト・読む速さの計測つき。</span></a>
+          <a class="eigo__door" href="/eigo/bunpou/"><i aria-hidden="true">📘</i><b>文法解説</b><span>仮定法・分詞構文・冠詞まで高校文法を網羅。TOEIC上級の語法も。</span></a>
+          <a class="eigo__door" href="/eigo/magirawashii/"><i aria-hidden="true">🔍</i><b>紛らわしい語</b><span>conform / confirm など69組。違う文字に色がついて一目でわかる。</span></a>
+        </div>
+      </div>
+    </section>
 
     <!-- ============ ツール ============ -->
     <section class="section section--tint" id="tools">
@@ -1158,6 +1263,14 @@ input,select,textarea,button{font-weight:600}
 
 </div>
 
+<script>
+/* 英語のものさしの見本：単語・文の音声を再生する（ファイルは /eigo/audio に同梱） */
+(function(){var cur=null,btn=null;function stop(){if(cur){cur.pause();cur=null;}if(btn){btn.classList.remove('playing');}btn=null;}
+document.addEventListener('click',function(e){var t=e.target.closest('#eigo [data-src]');if(!t)return;
+if(t.classList.contains('ew')){document.querySelectorAll('#eigo .ew.is-open').forEach(function(x){if(x!==t)x.classList.remove('is-open');});t.classList.toggle('is-open');}
+var again=btn===t;stop();if(again&&!t.classList.contains('ew'))return;var a=new Audio(t.getAttribute('data-src'));cur=a;btn=t;t.classList.add('playing');a.addEventListener('ended',function(){if(cur===a)stop();});a.play().catch(stop);
+try{if(typeof gtag==='function')gtag('event','eigo_demo_play');}catch(err){}});})();
+</script>
 <script>
 /* LINEの友だち追加ボタン：押された回数だけを計測する */
 document.querySelectorAll("[data-line]").forEach(function(a){a.addEventListener("click",function(){try{if(typeof gtag==="function")gtag("event","line_add_click",{place:a.getAttribute("data-line")});}catch(e){}});});

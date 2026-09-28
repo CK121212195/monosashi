@@ -1,0 +1,26 @@
+/* 解説ページ（検索エンジン向けの静的ページ）用の追加スタイル */
+.st{max-width:860px;padding-top:18px}
+.crumb{font-size:13px;color:var(--sub);margin:0 0 6px}
+.crumb a{color:var(--sub)}
+.st-h1{font-size:clamp(24px,3.8vw,34px);margin:4px 0 8px}
+.st-meta{margin:0 0 6px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.st-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;margin:14px 0 18px;background:var(--sun-s);border-color:#F4DF9C}
+.st-cta p{margin:2px 0 0;font-size:13.5px;color:var(--sub)}
+.st-cta .btn{white-space:nowrap}
+.st-q{padding:14px 16px 10px;margin-bottom:10px}
+.st-opts{margin:0 0 6px;padding-left:1.6em;font-family:var(--en);font-size:16px}
+.st-q details,.st-tr{margin-top:4px}
+.st-q summary,.st-tr summary{cursor:pointer;font-weight:700;color:var(--sky-d)}
+.st-tr{padding:14px 18px;margin:14px 0}
+.st-tr p{font-size:14.5px}
+.st-body{margin-bottom:18px}
+.st-more{margin-top:26px}
+.st-links{columns:2;column-gap:24px;padding-left:1.2em;font-size:14px}
+.st-links li{margin:3px 0;break-inside:avoid}
+.st-cf{width:100%;border-collapse:collapse}
+.st-cf td{padding:8px 6px;border-top:1px solid var(--line2);font-size:15px}
+.st-cf .cg-w{font-size:22px;white-space:nowrap}
+.st-cg{text-decoration:none;color:var(--ink)}
+.cg-row2{display:flex;gap:10px;align-items:baseline;margin-bottom:4px}
+.para-say{position:absolute;left:-38px;top:16px}
+@media (max-width:720px){.st-cta{flex-direction:column;align-items:stretch}.st-links{columns:1}.para-say{position:static;float:right}}
