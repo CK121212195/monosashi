@@ -2,8 +2,7 @@
    英語のものさし  app.js
    - 依存ライブラリなし。すべてブラウザ内で動作します。
    - 学習記録は localStorage にのみ保存し、外部へは送信しません。
-   - 発音：事前生成して同梱した音声ファイル（ニューラル音声合成）を再生します。
-           外部サービスには接続しません。
+   - 発音：サイト内の音声ファイルを再生します。
    ========================================================= */
 (() => {
 'use strict';
@@ -246,11 +245,11 @@ function matchIdiom(toks, i) {
 }
 
 /* ---------------- 音声 ----------------
-   単語と例文は、事前に生成して同梱した音声ファイル（Kokoro-82M によるニューラル音声合成）を再生する。
+   単語と例文は、サイト内の音声ファイルを再生する。
    ファイルがない文だけ端末の英語音声で読み上げる。端末に英語の音声がない場合は読み上げない
    （日本語の音声に英語を読ませるとカタカナ読みになり、誤った発音で覚えてしまうため）。 */
 function normText(t) { return String(t).replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim(); }
-// tools/gen_audio.py の fnv() と同じ計算（FNV-1a 32bit）
+// 音声ファイルの名前（文字列から決まる）
 function audioHash(t) { let h = 0x811c9dc5; for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
 const AUD = (() => { const src = E.AUDIO || {}; const set = k => new Set(String(src[k] || '').split(',').filter(Boolean)); return { 'w/us': set('w/us'), 'w/uk': set('w/uk'), 's/us': set('s/us') }; })();
 function audioSrc(text, kind) {
@@ -441,7 +440,7 @@ document.addEventListener('click', async ev => {
     if (ipaBox && r.kind !== 'stopped') {
       const e = DICT[key] || {};
       const src = r.kind === 'file'
-        ? `<span class="src src-rec">ニューラル音声合成（${r.acc === 'uk' ? '英' : '米'}）</span>`
+        ? `<span class="src src-rec">収録音声（${r.acc === 'uk' ? '英' : '米'}）</span>`
         : r.kind === 'tts' ? '<span class="src src-tts">端末の読み上げ音声（未収録のため）</span>' : '';
       ipaBox.innerHTML = (e.ipa ? `<span class="ipa">/${esc(e.ipa)}/</span>` : '') + src;
     }
@@ -500,7 +499,7 @@ function renderVoiceInfo() {
   const q = Speech.quality(Store.d.set.accent);
   const lab = { good: '良好', ok: '標準', low: '注意', none: '見つかりません' }[q.level];
   box.innerHTML = `<b>合成音声：</b>${q.name ? esc(q.name) : '（英語の音声がありません）'} <span class="pill ${q.level === 'good' ? 'pill-leaf' : q.level === 'ok' ? 'pill-sun' : 'pill-coral'}">${lab}</span>` +
-    (q.level === 'low' || q.level === 'none' ? '<p class="muted small">この端末の英語読み上げ音声は品質が低いか、見つかりません。同梱の音声はこれとは関係なく再生されます（端末の音声を使うのは、音声が未収録の文だけです）。</p>' : '');
+    (q.level === 'low' || q.level === 'none' ? '<p class="muted small">この端末の英語読み上げ音声は品質が低いか、見つかりません。収録済みの音声はこれとは関係なく再生されます（端末の音声を使うのは、音声が未収録の文だけです）。</p>' : '');
 }
 
 /* ---------------- ルーター ---------------- */
@@ -567,7 +566,7 @@ routes.home = () => {
   <section class="features">
     <h2 class="sec-title">間違った発音で覚えないための工夫</h2>
     <div class="feat-grid">
-      <div class="feat card"><h3>🎙️ すぐ鳴る、ぶれない発音</h3><p>全単語・全例文の音声を<strong>ニューラル音声合成で事前に作って同梱</strong>しています。端末の読み上げ機能に頼らないので、押した瞬間に、どの端末でも同じ発音で再生されます。</p></div>
+      <div class="feat card"><h3>🎙️ すぐ鳴る、ぶれない発音</h3><p>全単語・全例文の音声を<strong>あらかじめ用意</strong>しています。端末の読み上げ機能に頼らないので、押した瞬間に、どの端末でも同じ発音で再生されます。</p></div>
       <div class="feat card"><h3>🔤 発音記号とアクセント</h3><p>重要語には発音記号（IPA）を収録。強く読む位置（ˈ）が一目でわかります。米音・英音も切り替えられます。</p></div>
       <div class="feat card"><h3>⚠️ カタカナ発音の罠</h3><p>label（レイベル）、vitamin（ヴァイタミン）、debt（bを読まない）など、日本語のカタカナ読みで覚えやすい語に警告を出します。</p></div>
       <div class="feat card"><h3>🔁 品詞で発音が変わる語</h3><p>record・present・contract など、名詞と動詞で強勢が移る語は両方の読みを表示し、文ごとの読み上げで確かめるよう促します。</p></div>
@@ -827,19 +826,7 @@ function startGramDrill(onlyWrong) {
   renderQ();
 }
 
-/* ---------------- 試験対策（有料問題集・買い切り） ----------------
-   ・無料サンプルは data/shiken-sample.js（公開）
-   ・購入したセットは端末に保存（localStorage）。window.EIGO_SHIKEN.install(セットのデータ) が入口
-   ・音声：セットの audioBase（未指定ならサイト内の audio/p/）＋ au（ハッシュ）＋ .mp3
-     購入したセット（鍵 key を持つもの）は、暗号化した音声 .bin を鍵で開いて再生する
-
-   購入の流れ（Stripe の支払いリンク＋Worker。リース見積診断と同じ仕組み）
-     1. 購入ボタン：Worker の /eigo/status で受付中かを確かめてから、
-        client_reference_id に「eigo_セットID」を付けて支払いリンクへ移る
-     2. 支払いが終わると、Stripe が ?session_id=cs_live_… を付けて /eigo/ へ戻す（戻り先は Stripe の管理画面で設定）
-     3. Worker の /eigo/unlock が Stripe に直接問い合わせ、支払い済み・100円・どのセットかを確かめて、そのセットの鍵を返す
-     4. サイトに置いた暗号化データ（paid/セットID/set.bin）を鍵で開き、端末に保存する
-   判断はすべて Worker が行う。鍵が無ければ、暗号化されたデータは読めない。 */
+/* ---------------- 試験対策（有料問題集・買い切り） ---------------- */
 const SHK_PAY_URL = 'https://buy.stripe.com/5kQeVe1z00D94rL3sgaR202';
 const SHK_WORKER = 'https://square-license.stats-okinawa.workers.dev';
 const SHK_PEND = 'eigo-shiken-pending';   // 支払いへ進んだセットと、戻ってきた注文番号（確認が済むまで残す）
