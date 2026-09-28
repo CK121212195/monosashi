@@ -641,7 +641,9 @@ EIGO.IRREG = {
   men: "man", women: "woman", lives: "life", shelves: "shelf", mice: "mouse", better: "good", best: "good",
   worse: "bad", worst: "bad", fed: "feed", forgot: "forget", heard: "hear", hurt: "hurt", let: "let", read: "read",
   set: "set", put: "put", cut: "cut", hit: "hit", shut: "shut", spread: "spread", cost: "cost", bet: "bet",
-  outperformed: "outperform", mimicked: "mimic", panicked: "panic"
+  outperformed: "outperform", mimicked: "mimic", panicked: "panic",
+  forgotten: "forget", gone: "go", lying: "lie", met: "meet", spoke: "speak", spoken: "speak",
+  woke: "wake", woken: "wake", dying: "die", tying: "tie"
 };
 
 /* カタカナ発音の罠（日本語のカタカナ読みで覚えやすい語） */

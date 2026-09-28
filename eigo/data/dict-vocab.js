@@ -1886,3 +1886,296 @@ voice actors|phr|声優
 voting power|phr|議決権
 web page|phr|ウェブページ
 `);
+
+/* 文法解説の例文・演習で使う語 */
+EIGO.DICT_PARTS.push(`
+accent|n|なまり・アクセント|ˈæksent
+accord|n|一致・協定（in accord with）
+accordance|n|一致（in accordance with＝～に従って）|əˈkɔːrdns|B
+address|v|（問題に）取り組む・演説する；（名詞）住所
+affordable|adj|手ごろな価格の
+agenda|n|議題（一覧）|əˈdʒendə
+airport|n|空港
+alive|adj|生きている（補語のみ）|əˈlaɪv
+am|v|（I am）～である
+anyone|pron|誰でも・誰か
+apart|adv|離れて（apart from＝～を除いて）
+apologize|v|謝る（apologize to 人 for 事）|əˈpɑːlədʒaɪz
+applicable|adj|適用できる・当てはまる
+applicant|n|応募者|ˈæplɪkənt
+application|n|応募（書類）・申請・適用・アプリ
+apply|v|応募する（for）・当てはまる（to）・適用する
+arrival|n|到着
+arrive|v|到着する
+asia|pn|アジア
+assistance|n|手助け・支援
+assistant|n|助手・アシスタント
+attachment|n|添付ファイル・愛着
+attend|v|出席する（他動詞）；（attend to）対処する
+australia|pn|オーストラリア
+badge|n|バッジ・記章
+bat|n|コウモリ・バット
+beautiful|adj|美しい
+behalf|n|（on behalf of）～を代表して・～のために|bɪˈhæf
+bench|n|ベンチ
+bird|n|鳥
+boil|v|沸騰する
+bonus|n|賞与・ボーナス
+boston|pn|ボストン（米国の都市）
+branch|n|支店・枝
+breakfast|n|朝食
+briefing|n|事前説明（会）
+bus|n|バス
+busy|adj|忙しい
+can't|aux|～できない・～のはずがない（cannot）
+canada|pn|カナダ
+candidate|n|候補者・志願者
+card|n|カード
+care|n|注意・世話；（動詞）気にかける
+careful|adj|注意深い
+carefulness|n|注意深さ
+careless|adj|不注意な
+castle|n|城|ˈkæsl
+chairperson|n|議長
+chinese|pn|中国語；（形容詞）中国の
+circumstance|n|状況・事情（under no circumstances＝どんな場合も～ない）
+colleague|n|同僚|ˈkɑːliːɡ
+conference|n|会議・学会
+consecutive|adj|連続した|kənˈsekjətɪv|B
+contact|v|連絡する；（名詞）連絡・接触|ˈkɑːntækt
+contain|v|含む・入っている
+contributory|adj|一因となる
+convenience|n|都合・便利さ（at your earliest convenience＝ご都合がつき次第）
+cooperation|n|協力
+currently|adv|現在
+deadline|n|締め切り
+dedicated|adj|献身的な・専用の（be dedicated to ～ing＝～に力を注ぐ）
+deliver|v|配達する・届ける
+delivery|n|配達
+deny|v|否定する（deny ～ing）
+department|n|部門・部署
+detail|n|詳細（in detail＝詳しく）
+didn't|aux|～しなかった（did not）
+disappointment|n|失望
+don't|aux|～しない（do not）
+due|adj|予定の・支払期限の（due to＝～のために）
+ease|n|容易さ（with ease＝簡単に）
+easiness|n|容易さ
+emission|n|排出（量）
+enclose|v|同封する（Enclosed is ～＝～を同封します）
+everything|pron|すべてのもの
+export|v|輸出する|ɪkˈspɔːrt
+feedback|n|意見・感想（不可算）
+fish|n|魚
+forget|v|忘れる（forget to do / forget ～ing）
+form|n|用紙・書式・形
+fridge|n|冷蔵庫
+fuji|pn|富士（Mount Fuji＝富士山）
+glad|adj|うれしい
+go|v|行く（gone は過去分詞）
+guest|n|宿泊客・招待客
+hair|n|髪
+headquarters|n|本社・本部
+height|n|高さ
+herself|pron|彼女自身
+hesitate|v|ためらう（do not hesitate to＝遠慮なく～する）|ˈhezɪteɪt
+holiday|n|休日・休暇
+hometown|n|故郷
+hotel|n|ホテル|hoʊˈtel
+id|n|身分証（ID）|ˌaɪˈdiː
+ii|num|2（World War II＝第二次世界大戦）
+improvement|n|改善
+inconvenience|n|不便・迷惑
+inconvenient|adj|不便な
+inconveniently|adv|不便なことに
+independently|adv|自力で・独立して
+indoors|adv|屋内で
+inform|v|知らせる（inform 人 of 事）
+interestingly|adv|興味深いことに
+interface|n|操作画面・接点
+interview|n|面接
+investigate|v|捜査する・調査する
+item|n|品物・項目
+ito|pn|伊藤（人名）
+january|pn|1月
+jazz|n|ジャズ
+join|v|加わる
+judge|v|判断する（judging from＝～から判断すると）
+july|pn|7月
+june|pn|6月
+kim|pn|キム（人名）
+lain|v|lie（横たわる）の過去分詞
+laptop|n|ノートパソコン
+lee|pn|リー（人名）
+length|n|長さ
+lift|v|持ち上げる
+light|n|明かり・光
+london|pn|ロンドン
+lot|n|区画（parking lot＝駐車場）；（a lot of）たくさんの
+lie|v|横たわる・ある（lying は現在分詞）
+manual|n|手引き・マニュアル
+mba|n|経営学修士（MBA）|ˌem biː ˈeɪ
+meet|v|会う・（締め切りに）間に合わせる（met は過去形）
+milk|n|牛乳
+mind|v|嫌がる・気にする（Would you mind ～ing?＝～していただけますか）
+mine|pron|私のもの（a friend of mine）
+mount|n|（山の名で）～山
+mountain|n|山
+mr|n|～氏（男性の敬称 Mr.）
+ms|n|～さん（女性の敬称 Ms.）
+newspaper|n|新聞
+nobody|pron|誰も～ない
+noon|n|正午
+notify|v|通知する（notify 人 of 事）
+objection|n|反対・異議
+osaka|pn|大阪
+otherwise|adv|そうでなければ・それ以外の点では
+ought|aux|（ought to）～すべきだ・～のはずだ
+our|det|私たちの
+outage|n|（電気などの）停止（power outage＝停電）
+outdated|adj|時代遅れの・古くなった
+outdoors|adv|屋外で
+overseas|adj|海外の；（副詞）海外へ
+package|n|荷物・小包
+paris|pn|パリ
+party|n|パーティー・政党・当事者
+pass|v|合格する・通る
+password|n|パスワード
+patient|n|患者；（形容詞）忍耐強い
+perfect|adj|完璧な
+permit|v|許す（weather permitting＝天気がよければ）
+piece|n|1つ・1個（a piece of advice＝1つの助言）
+plain|adj|平易な・質素な
+plane|n|飛行機
+port|n|港
+postpone|v|延期する|poʊstˈpoʊn
+prepare|v|準備する
+previous|adj|前の・以前の
+printer|n|プリンター
+prior|adj|前の（prior to＝～より前に）|ˈpraɪɚ
+proud|adj|誇りに思う（be proud of）
+quarter|n|四半期・4分の1
+quick|adj|すばやい
+quit|v|辞める
+rain|n|雨；（動詞）雨が降る
+regardless|adv|（regardless of）～にかかわらず
+regret|v|後悔する（regret to inform＝残念ながら～をお知らせする）
+relax|v|くつろぐ
+remember|v|覚えている（remember to do / remember ～ing）
+remind|v|思い出させる（remind 人 of 事）
+renew|v|更新する
+renovate|v|改装する
+repair|v|修理する；（名詞）修理
+rest|n|休息・残り
+restaurant|n|レストラン
+reveal|v|明らかにする
+rewrite|v|書き直す
+roof|n|屋根
+satisfactory|adj|満足できる
+satisfy|v|満足させる（be satisfied with）
+schedule|n|予定（表）|ˈskedʒuːl
+seat|v|座らせる（remain seated＝座ったままでいる）
+seminar|n|セミナー
+shipment|n|出荷・荷物
+shuttle|n|送迎バス・シャトル
+significance|n|重要性
+signify|v|意味する
+silent|adj|黙っている・静かな
+silver|n|銀
+singapore|pn|シンガポール
+sister|n|姉妹
+smartphone|n|スマートフォン
+snow|n|雪
+solve|v|解決する
+song|n|歌
+sorry|adj|すまなく思う
+speaker|n|講演者・話し手
+speak|v|話す（spoke は過去形）
+spring|n|春
+station|n|駅
+submission|n|提出
+sum|n|合計・金額
+superior|adj|優れた（superior to＝～より優れた）|suːˈpɪriɚ
+superiorly|adv|優れて
+survive|v|生き残る
+table|n|テーブル・表
+tanaka|pn|田中（人名）
+taxi|n|タクシー
+technical|adj|技術的な
+technician|n|技術者
+thursday|pn|木曜日
+tomorrow|n|明日
+town|n|町
+track|v|追跡する
+traffic|n|交通（量）・渋滞（不可算）
+trip|n|旅行・出張
+truth|n|真実
+tv|n|テレビ
+umbrella|n|傘
+unclear|adj|不明な
+unemployed|adj|失業した（the unemployed＝失業者）
+unlocked|adj|鍵がかかっていない
+war|n|戦争
+weather|n|天気
+whale|n|クジラ
+whatever|pron|～するものは何でも・何が～しても
+whoever|pron|～する人は誰でも・誰が～しても
+whomever|pron|～する人は誰でも（目的格）
+wish|v|～であればいいのにと思う（I wish＋仮定法）
+wake|v|目を覚ます（woke は過去形）
+yesterday|n|昨日
+york|pn|ヨーク（New York＝ニューヨーク）
+m|n|（a.m. / p.m. の一部）
+r|n|（文字）
+as long as|phr|～する限り
+as soon as|phr|～するとすぐに
+as soon as possible|phr|できるだけ早く
+as of|phr|～付で・～現在で
+at least|phr|少なくとも
+at your earliest convenience|phr|ご都合がつき次第早めに
+be used to|phr|～に慣れている（to＋動名詞）
+day off|phr|休日
+do not hesitate to|phr|遠慮なく～する
+due to|phr|～のために（原因）
+each other|phr|お互い
+even though|phr|～だけれども（事実を前提に）
+far from|phr|決して～ではない・～には程遠い
+feel like|phr|～したい気がする（＋動名詞）
+had better|phr|～したほうがいい（しないと困る）
+in addition to|phr|～に加えて
+in case|phr|～するといけないので・～の場合に備えて
+in charge of|phr|～を担当して
+in detail|phr|詳しく
+in terms of|phr|～の点で
+instead of|phr|～の代わりに
+it is no use|phr|～してもむだだ（＋動名詞）
+judging from|phr|～から判断すると
+look after|phr|世話をする
+no later than|phr|遅くとも～までに
+no longer|phr|もはや～ない
+no less than|phr|～も（多さを強調）
+no more than|phr|～しか（少なさを強調）
+not only|phr|～だけでなく（not only A but also B）
+now that|phr|今や～なので
+on behalf of|phr|～を代表して・～に代わって
+on time|phr|時間どおりに
+only to|phr|（結果）～したが結局…
+out of order|phr|故障して
+owing to|phr|～のために（原因）
+please be advised that|phr|～をお知らせします（ビジネス定型）
+prior to|phr|～より前に
+provided that|phr|～という条件で
+regardless of|phr|～にかかわらず
+so that|phr|～するように（目的）
+take off|phr|離陸する・（休みを）取る
+the number of|phr|～の数（単数扱い）
+a number of|phr|多くの～（複数扱い）
+a piece of|phr|1つの～（不可算名詞を数える）
+under no circumstances|phr|どんな場合も～ない
+used to|phr|以前は～したものだ
+weather permitting|phr|天気がよければ
+when it comes to|phr|～ということになると
+with a view to|phr|～する目的で（＋動名詞）
+with regard to|phr|～に関して
+would rather|phr|むしろ～したい
+`);

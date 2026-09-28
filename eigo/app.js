@@ -2,8 +2,8 @@
    英語のものさし  app.js
    - 依存ライブラリなし。すべてブラウザ内で動作します。
    - 学習記録は localStorage にのみ保存し、外部へは送信しません。
-   - 発音：Wiktionary の録音（dictionaryapi.dev 経由）を優先し、
-           無い場合だけブラウザの合成音声を使います（画面に明示）。
+   - 発音：事前生成して同梱した音声ファイル（ニューラル音声合成）を再生します。
+           外部サービスには接続しません。
    ========================================================= */
 (() => {
 'use strict';
@@ -49,7 +49,8 @@ const Store = {
     d.words = d.words || {}; // 単語 -> {box, due, ctx, added}
     d.days = d.days || {};   // 日付 -> 解答数
     d.read = d.read || {};   // 長文ID -> {score, total, wpm, t}
-    d.set = Object.assign({ accent: 'us', rate: 0.9, hover: true }, d.set || {});
+    d.set = Object.assign({ accent: 'us', rate: 1, hover: true }, d.set || {});
+    d.gram = d.gram || {};   // 文法単元ID -> 学習済みの印
     return d;
   },
   save() { try { localStorage.setItem(KEY, JSON.stringify(this.d)); } catch (e) { /* 保存できない環境でも動かす */ } }
@@ -244,7 +245,24 @@ function matchIdiom(toks, i) {
   return null;
 }
 
-/* ---------------- 音声 ---------------- */
+/* ---------------- 音声 ----------------
+   単語と例文は、事前に生成して同梱した音声ファイル（Kokoro-82M によるニューラル音声合成）を再生する。
+   ファイルがない文だけ端末の英語音声で読み上げる。端末に英語の音声がない場合は読み上げない
+   （日本語の音声に英語を読ませるとカタカナ読みになり、誤った発音で覚えてしまうため）。 */
+function normText(t) { return String(t).replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim(); }
+// tools/gen_audio.py の fnv() と同じ計算（FNV-1a 32bit）
+function audioHash(t) { let h = 0x811c9dc5; for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
+const AUD = (() => { const src = E.AUDIO || {}; const set = k => new Set(String(src[k] || '').split(',').filter(Boolean)); return { 'w/us': set('w/us'), 'w/uk': set('w/uk'), 's/us': set('s/us') }; })();
+function audioSrc(text, kind) {
+  const h = audioHash(normText(text));
+  if (kind === 'w') {
+    const acc = Store.d.set.accent, other = acc === 'us' ? 'uk' : 'us';
+    if (AUD['w/' + acc].has(h)) return { url: 'audio/w/' + acc + '/' + h + '.mp3', acc };
+    if (AUD['w/' + other].has(h)) return { url: 'audio/w/' + other + '/' + h + '.mp3', acc: other };
+    return null;
+  }
+  return AUD['s/us'].has(h) ? { url: 'audio/s/us/' + h + '.mp3', acc: 'us' } : null;
+}
 const NOVELTY = /(albert|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|hysterical|jester|organ|superstar|trinoids|whisper|wobble|zarvox|fred|junior|ralph|kathy|espeak)/i;
 function voiceScore(v, acc) {
   const want = acc === 'uk' ? /en[-_]GB/i : /en[-_]US/i;
@@ -265,8 +283,9 @@ const Speech = {
     speechSynthesis.addEventListener && speechSynthesis.addEventListener('voiceschanged', load);
   },
   pick(acc) {
+    if (!this.voices.length && 'speechSynthesis' in window) this.voices = speechSynthesis.getVoices() || [];
     const best = this.voices.map(v => ({ v, s: voiceScore(v, acc) })).filter(x => x.s > 0).sort((a, b) => b.s - a.s)[0];
-    return best ? best : null;
+    return best || null;
   },
   quality(acc) {
     const p = this.pick(acc);
@@ -275,63 +294,50 @@ const Speech = {
   },
   speak(text, rate) {
     if (!('speechSynthesis' in window)) { toast('このブラウザは音声読み上げに対応していません'); return false; }
-    Rec.stop();
-    speechSynthesis.cancel();
-    const acc = Store.d.set.accent;
+    const p = this.pick(Store.d.set.accent);
+    // 英語の音声が見つからないときは読み上げない（日本語音声によるカタカナ読みを防ぐ）
+    if (!p) { toast('この文の音声は未収録で、端末にも英語の読み上げ音声がありません'); return false; }
     const u = new SpeechSynthesisUtterance(text);
-    const p = this.pick(acc);
-    if (p) { u.voice = p.v; u.lang = p.v.lang; } else u.lang = acc === 'uk' ? 'en-GB' : 'en-US';
+    u.voice = p.v; u.lang = p.v.lang;
     u.rate = rate || Store.d.set.rate;
     speechSynthesis.speak(u);
     return true;
   }
 };
-const Rec = {
-  cache: Object.create(null), audio: null,
-  stop() { if (this.audio) { try { this.audio.pause(); } catch (e) {} } },
-  async find(word) {
-    if (word in this.cache) return this.cache[word];
-    let res = null;
-    try {
-      const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 6000);
-      const r = await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(word), { signal: ctl.signal });
-      clearTimeout(tm);
-      if (r.ok) {
-        const j = await r.json();
-        const ph = [];
-        (Array.isArray(j) ? j : []).forEach(e => (e.phonetics || []).forEach(p => ph.push(p)));
-        const clips = ph.filter(p => p.audio).map(p => ({
-          url: p.audio.startsWith('//') ? 'https:' + p.audio : p.audio,
-          acc: /-uk\.mp3$/i.test(p.audio) ? 'uk' : /-us\.mp3$/i.test(p.audio) ? 'us' : /-au\.mp3$/i.test(p.audio) ? 'au' : 'other',
-          ipa: p.text || '',
-          src: p.sourceUrl || ''
-        }));
-        const ipas = { us: '', uk: '' };
-        clips.forEach(c => { if ((c.acc === 'us' || c.acc === 'uk') && c.ipa && !ipas[c.acc]) ipas[c.acc] = c.ipa; });
-        res = { clips, ipas, any: (ph.find(p => p.text) || {}).text || '' };
-      }
-    } catch (e) { res = null; }
-    this.cache[word] = res;
-    return res;
+const Player = {
+  audio: null, btn: null,
+  stop() {
+    if (this.audio) { try { this.audio.pause(); } catch (e) {} this.audio = null; }
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    if (this.btn) this.btn.classList.remove('playing');
+    this.btn = null;
   },
-  async play(word, slow) {
-    Speech.speak && ('speechSynthesis' in window) && speechSynthesis.cancel();
-    const acc = Store.d.set.accent;
-    const info = await this.find(word);
-    const clip = info && (info.clips.find(c => c.acc === acc) || info.clips.find(c => c.acc === (acc === 'us' ? 'uk' : 'us')) || info.clips[0]);
-    if (clip) {
-      this.stop();
-      const a = new Audio(clip.url);
-      a.playbackRate = slow ? 0.7 : 1;
-      if ('preservesPitch' in a) a.preservesPitch = true;
-      this.audio = a;
-      try { await a.play(); return { kind: 'rec', acc: clip.acc, info }; } catch (e) { /* 再生失敗時は合成音声へ */ }
+  // 再生中のボタンをもう一度押すと止まる
+  play(text, kind, opt = {}) {
+    const again = opt.btn && this.btn === opt.btn;
+    this.stop();
+    if (again) return { kind: 'stopped' };
+    const src = audioSrc(text, kind);
+    if (!src) {
+      const ok = Speech.speak(text, opt.slow ? 0.7 : undefined);
+      return { kind: ok ? 'tts' : 'none' };
     }
-    Speech.speak(word, slow ? 0.6 : Store.d.set.rate);
-    return { kind: 'tts', info };
+    const a = new Audio(src.url);
+    a.playbackRate = opt.slow ? 0.75 : (kind === 's' ? Store.d.set.rate : 1);
+    if ('preservesPitch' in a) a.preservesPitch = true;
+    this.audio = a; this.btn = opt.btn || null;
+    if (this.btn) this.btn.classList.add('playing');
+    a.addEventListener('ended', () => { if (this.audio === a) this.stop(); });
+    a.play().catch(() => { if (this.audio === a) { this.stop(); toast('音声を再生できませんでした'); } });
+    return { kind: 'file', acc: src.acc };
   }
 };
-
+// 見出し語として収録されていればその音声、なければ文の音声
+function sayText(text, opt) {
+  const key = normText(text).toLowerCase();
+  if (DICT[key] && audioSrc(key, 'w')) return Player.play(key, 'w', opt);
+  return Player.play(text, 's', opt);
+}
 /* ---------------- ポップオーバー ---------------- */
 const pop = document.createElement('div');
 pop.className = 'pop'; pop.setAttribute('role', 'dialog'); pop.hidden = true;
@@ -344,7 +350,7 @@ function entryHTML(key, surface, idiomKey) {
   if (idiomKey && DICT[idiomKey]) {
     const ie = DICT[idiomKey];
     h += `<div class="pop-idm"><span class="pill pill-grape">熟語</span> <b>${esc(ie.w)}</b><div class="pop-ja">${esc(ie.ja)}</div>
-      <button class="ib" data-say="${esc(ie.w)}" title="熟語を合成音声で聞く">🔊<small>合成</small></button></div>`;
+      <button class="ib" data-say="${esc(ie.w)}" title="熟語の発音を聞く">🔊</button></div>`;
   }
   if (!e) return h || '<div class="pop-none">辞書に未登録の語です</div>';
   const form = surface && surface.toLowerCase() !== key ? `<span class="pop-form">${esc(surface)} → 原形</span>` : '';
@@ -356,7 +362,7 @@ function entryHTML(key, surface, idiomKey) {
       <button class="ib" data-play="${esc(key)}" data-slow="1" title="ゆっくり聞く">🐢</button>
       <button class="ib ${Store.d.words[key] ? 'on' : ''}" data-save="${esc(key)}" title="単語帳に入れる">${Store.d.words[key] ? '★' : '☆'}</button>
     </div></div>
-    <div class="pop-ipa" data-ipa="${esc(key)}">${e.ipa ? '<span class="ipa">/' + esc(e.ipa) + '/</span>' : '<span class="muted">🔊を押すと発音記号を取得します</span>'}</div>
+    <div class="pop-ipa" data-ipa="${esc(key)}">${e.ipa ? '<span class="ipa">/' + esc(e.ipa) + '/</span>' : ''}</div>
     <div class="pop-ja"><span class="pos">${esc(POS[e.p] || e.p || '')}</span>${esc(e.ja)}</div>`;
   if (HETERO[key]) h += `<div class="alert alert-sun"><b>品詞で発音が変わる語</b>${esc(HETERO[key])}<br><small>単語だけの音声は片方の読みしか流れません。文ごと聞いて確かめてください。</small></div>`;
   if (TRAPS[key]) h += `<div class="alert alert-coral"><b>カタカナ発音の罠</b>${esc(TRAPS[key])}</div>`;
@@ -430,23 +436,19 @@ document.addEventListener('click', async ev => {
   const play = t.closest('[data-play]');
   if (play) {
     const key = play.dataset.play;
-    play.classList.add('busy');
-    const r = await Rec.play(key, !!play.dataset.slow);
-    play.classList.remove('busy');
-    const ipaBox = $(`.pop [data-ipa="${CSS.escape(key)}"]`) || $(`[data-ipa="${CSS.escape(key)}"]`);
-    if (ipaBox) {
+    const r = Player.play(key, 'w', { slow: !!play.dataset.slow, btn: play });
+    const ipaBox = $(`.pop [data-ipa="${CSS.escape(key)}"]`);
+    if (ipaBox && r.kind !== 'stopped') {
       const e = DICT[key] || {};
-      const got = r.info ? (r.info.ipas[Store.d.set.accent] || r.info.ipas.us || r.info.ipas.uk || r.info.any) : '';
-      const src = r.kind === 'rec'
-        ? `<span class="src src-rec">録音（${r.acc === 'uk' ? '英' : r.acc === 'us' ? '米' : r.acc === 'au' ? '豪' : ''}）・Wiktionary</span>`
-        : `<span class="src src-tts">合成音声（録音が見つからないため）</span>`;
-      const ipa = e.ipa ? '/' + e.ipa + '/' : (got ? got.replace(/^\/?/, '/').replace(/\/?$/, '/') : '');
-      ipaBox.innerHTML = (ipa ? `<span class="ipa">${esc(ipa)}</span>` : '') + src;
+      const src = r.kind === 'file'
+        ? `<span class="src src-rec">ニューラル音声合成（${r.acc === 'uk' ? '英' : '米'}）</span>`
+        : r.kind === 'tts' ? '<span class="src src-tts">端末の読み上げ音声（未収録のため）</span>' : '';
+      ipaBox.innerHTML = (e.ipa ? `<span class="ipa">/${esc(e.ipa)}/</span>` : '') + src;
     }
     return;
   }
   const say = t.closest('[data-say]');
-  if (say) { Speech.speak(say.dataset.say, say.dataset.slow ? 0.65 : undefined); return; }
+  if (say) { sayText(say.dataset.say, { slow: !!say.dataset.slow, btn: say }); return; }
   const save = t.closest('[data-save]');
   if (save) {
     const key = save.dataset.save;
@@ -498,7 +500,7 @@ function renderVoiceInfo() {
   const q = Speech.quality(Store.d.set.accent);
   const lab = { good: '良好', ok: '標準', low: '注意', none: '見つかりません' }[q.level];
   box.innerHTML = `<b>合成音声：</b>${q.name ? esc(q.name) : '（英語の音声がありません）'} <span class="pill ${q.level === 'good' ? 'pill-leaf' : q.level === 'ok' ? 'pill-sun' : 'pill-coral'}">${lab}</span>` +
-    (q.level === 'low' || q.level === 'none' ? '<p class="muted small">お使いの環境の合成音声は品質が低い可能性があります。単語は録音を優先して再生しますが、文の読み上げは参考程度にしてください。Chrome / Edge / Safari の最新版では、より自然な音声が使えることが多いです。</p>' : '');
+    (q.level === 'low' || q.level === 'none' ? '<p class="muted small">この端末の英語読み上げ音声は品質が低いか、見つかりません。同梱の音声はこれとは関係なく再生されます（端末の音声を使うのは、音声が未収録の文だけです）。</p>' : '');
 }
 
 /* ---------------- ルーター ---------------- */
@@ -507,8 +509,7 @@ const routes = {};
 function go(hash) { if (location.hash !== hash) location.hash = hash; else route(); }
 function route() {
   hidePop();
-  if ('speechSynthesis' in window) speechSynthesis.cancel();
-  Rec.stop();
+  Player.stop();
   const h = location.hash.replace(/^#\/?/, '') || 'home';
   const [name, arg] = h.split('/');
   $$('.nav a').forEach(a => a.classList.toggle('on', a.dataset.r === name));
@@ -558,6 +559,7 @@ routes.home = () => {
   <section class="modes">
     <a class="mode card" href="#cloze"><span class="mode-ic">✏️</span><h2>穴埋め問題</h2><p>語彙・熟語・文法・紛らわしい語の4分野 ${cz.length}問。選択肢すべての意味と、ほかの選択肢が「なぜ違うか」まで解説します。</p></a>
     <a class="mode card" href="#reading"><span class="mode-ic">📰</span><h2>長文読解</h2><p>投資・金利・暗号資産・AI・アート・映画など ${ps.length}本（計 約${words.toLocaleString()}語）。根拠の一文をハイライトし、読む速さ（語/分）も測れます。</p></a>
+    <a class="mode card" href="#grammar"><span class="mode-ic">📘</span><h2>文法解説</h2><p>仮定法・不定詞・分詞構文・冠詞など高校文法の全範囲と、TOEIC上級の語法まで${GRAM.length}単元。演習${GQ.length}問つき。</p></a>
     <a class="mode card" href="#confuse"><span class="mode-ic">🔍</span><h2>紛らわしい語ドリル</h2><p>conform / confirm のような一文字違い・似た意味の語 ${CONF.length}組。違う文字に色がつくので、目で見て区別できます。</p></a>
     <a class="mode card" href="#words"><span class="mode-ic">⭐</span><h2>単語帳と復習</h2><p>☆で入れた語と、間違えた問題の語を、忘れかけた頃に出し直します（間隔反復）。 <span class="badge" data-due hidden></span></p></a>
   </section>
@@ -565,7 +567,7 @@ routes.home = () => {
   <section class="features">
     <h2 class="sec-title">間違った発音で覚えないための工夫</h2>
     <div class="feat-grid">
-      <div class="feat card"><h3>🎙️ 人の声の録音を優先</h3><p>単語の🔊は、Wiktionary に投稿された<strong>実際の人の録音</strong>を優先して再生します。録音がない語だけ合成音声に切り替え、どちらで再生したかを必ず表示します。</p></div>
+      <div class="feat card"><h3>🎙️ すぐ鳴る、ぶれない発音</h3><p>全単語・全例文の音声を<strong>ニューラル音声合成で事前に作って同梱</strong>しています。端末の読み上げ機能に頼らないので、押した瞬間に、どの端末でも同じ発音で再生されます。</p></div>
       <div class="feat card"><h3>🔤 発音記号とアクセント</h3><p>重要語には発音記号（IPA）を収録。強く読む位置（ˈ）が一目でわかります。米音・英音も切り替えられます。</p></div>
       <div class="feat card"><h3>⚠️ カタカナ発音の罠</h3><p>label（レイベル）、vitamin（ヴァイタミン）、debt（bを読まない）など、日本語のカタカナ読みで覚えやすい語に警告を出します。</p></div>
       <div class="feat card"><h3>🔁 品詞で発音が変わる語</h3><p>record・present・contract など、名詞と動詞で強勢が移る語は両方の読みを表示し、文ごとの読み上げで確かめるよう促します。</p></div>
@@ -574,9 +576,9 @@ routes.home = () => {
 
   <section class="levels card">
     <h2 class="sec-title">レベル構成</h2>
-    <p>全${(nA + nB)}問のうち、<b>${LV.B.short}（${LV.B.ja}／${LV.B.toeic}）が${100 - pctA}%</b>、<b>${LV.A.short}（${LV.A.ja}／${LV.A.toeic}）が${pctA}%</b>です。穴埋めの「おまかせ」出題も、この比率（約85：15）で組み立てます。</p>
+    <p>穴埋め・長文の全${(nA + nB)}問のうち、<b>${LV.B.short}（${LV.B.ja}／${LV.B.toeic}）が${100 - pctA}%</b>、<b>${LV.A.short}（${LV.A.ja}／${LV.A.toeic}）が${pctA}%</b>です。穴埋めの「おまかせ」出題も、この比率（約85：15）で組み立てます。</p>
     <div class="lvbar"><span class="lvbar-b" style="width:${100 - pctA}%">${LV.B.short} ${100 - pctA}%</span><span class="lvbar-a" style="width:${pctA}%">${pctA}%</span></div>
-    <p class="muted small">※ レベル区分は、英検・TOEICの公開情報をもとに当サイトが判断した目安です。各試験の公式問題ではありません。</p>
+    <p class="muted small">※ レベル区分は、英検・TOEICの公開情報をもとに当サイトが判断した目安です。各試験の公式問題ではありません。文法解説の演習（${GQ.length}問）は土台づくりが目的のため、この比率には含めていません。</p>
     <div class="topic-chips">${Object.keys(TOPICS).filter(t => topicCount[t]).map(t => `${topicPill(t)}<small>${topicCount[t]}</small>`).join(' ')}</div>
   </section>`;
 };
@@ -650,16 +652,20 @@ function optMeaning(o) {
 function renderQ() {
   const q = quiz.list[quiz.i];
   const n = quiz.list.length;
-  const opts = q.o.map((o, i) => ({ o, i }));
+  // 選択肢の並びは毎回入れ替える（データ上の正解位置が画面に出ないように）
+  quiz.order = quiz.order || [];
+  if (!quiz.order[quiz.i]) quiz.order[quiz.i] = shuffle(q.o.map((o, i) => i));
+  const opts = quiz.order[quiz.i].map(i => ({ o: q.o[i], i }));
+  const meta = q.unit ? `<span class="pill pill-teal">${esc(q.unit)}</span>` : `${topicPill(q.tp)} <span class="pill pill-line">${CATS[q.cat]}</span>`;
   view().innerHTML = `
   <section class="qwrap">
     <div class="qtop">
       <div class="prog"><span style="width:${(quiz.i) / n * 100}%"></span></div>
-      <div class="qmeta"><span class="qnum">${quiz.i + 1} / ${n}</span> ${lvPill(q.lv)} ${topicPill(q.tp)} <span class="pill pill-line">${CATS[q.cat]}</span></div>
+      <div class="qmeta"><span class="qnum">${quiz.i + 1} / ${n}</span> ${lvPill(q.lv)} ${meta}</div>
     </div>
     <div class="qcard card" data-ctx="${esc(q.q.replace('___', q.o[q.a]))}">
       <p class="qtext">${renderText(q.q, { blank: '<span class="blank" id="blank">&emsp;&emsp;&emsp;</span>' })}</p>
-      <div class="opts">${opts.map(({ o, i }) => `<button class="opt" data-i="${i}"><span class="opt-k">${i + 1}</span><span class="opt-t">${esc(o)}</span></button>`).join('')}</div>
+      <div class="opts">${opts.map(({ o, i }, k) => `<button class="opt" data-i="${i}"><span class="opt-k">${k + 1}</span><span class="opt-t">${esc(o)}</span></button>`).join('')}</div>
       <div id="fb"></div>
     </div>
     <p class="kbd muted small">キーボード：1〜4で選択、Enterで次へ</p>
@@ -676,17 +682,19 @@ function answerQ(i) {
     const k = +b.dataset.i; b.disabled = true;
     if (k === q.a) b.classList.add('ok'); else if (k === i) b.classList.add('ng');
   });
-  $('#blank').outerHTML = `<span class="blank filled ${ok ? 'ok' : 'ng'}">${esc(q.o[q.a])}</span>`;
+  const blank = $('#blank');
+  if (blank) blank.outerHTML = `<span class="blank filled ${ok ? 'ok' : 'ng'}">${esc(q.o[q.a])}</span>`;
   // 間違えたら、正解の語を単語帳へ自動で入れる
   const hit = optMeaning(q.o[q.a]);
   if (!ok && hit) addWord(hit.key, q.q.replace('___', q.o[q.a]));
   const full = q.q.replace('___', q.o[q.a]);
-  const rows = q.o.map((o, k) => {
+  const rows = quiz.order[quiz.i].map(k => {
+    const o = q.o[k];
     const m = optMeaning(o);
     const note = q.w && q.w[k] ? q.w[k] : '';
     return `<tr class="${k === q.a ? 'is-ok' : ''}"><td class="o-w">${k === q.a ? '◎ ' : ''}${m ? `<span class="w${CONF_IDX[m.key] ? ' warn' : ''}" data-k="${esc(m.key)}">${esc(o)}</span>` : esc(o)}</td>
       <td>${m ? esc(m.e.ja) : ''}${note ? `<div class="o-note">${esc(note)}</div>` : ''}</td>
-      <td class="o-a">${m && !m.key.includes(' ') ? `<button class="ib sm" data-play="${esc(m.key)}" title="発音">🔊</button>` : `<button class="ib sm" data-say="${esc(o)}" title="合成音声">🔊</button>`}</td></tr>`;
+      <td class="o-a">${m ? `<button class="ib sm" data-play="${esc(m.key)}" title="発音">🔊</button>` : `<button class="ib sm" data-say="${esc(o)}" title="発音">🔊</button>`}</td></tr>`;
   }).join('');
   // 選択肢に紛らわしい語の組があれば差分を表示
   let confBox = '';
@@ -699,8 +707,9 @@ function answerQ(i) {
   $('#fb').innerHTML = `
     <div class="fb ${ok ? 'fb-ok' : 'fb-ng'}"><b>${ok ? '◎ ' + pickOne(CHEER_OK) : '△ ' + pickOne(CHEER_NG)}</b></div>
     <div class="exp">
-      <div class="exp-en">${renderText(full)} <button class="ib sm" data-say="${esc(full)}" title="文を合成音声で聞く">🔊<small>文</small></button></div>
+      <div class="exp-en">${renderText(full)} <button class="ib sm" data-say="${esc(full)}" title="文を聞く">🔊<small>文</small></button></div>
       <p class="exp-ja">${esc(q.ja)}</p>
+      ${q.unit ? `<p class="small"><a href="#grammar/${esc(q.uid)}">📘 「${esc(q.unit)}」の解説を読む</a></p>` : ''}
       <p class="exp-body">${esc(q.ex)}</p>
       <table class="otable"><tbody>${rows}</tbody></table>
       ${confBox}
@@ -726,20 +735,97 @@ function renderResult() {
     <p class="result-msg">${msg}</p>
     <div class="cta center">
       ${c < n ? '<button class="btn btn-coral" id="retry">間違えた問題をもう一度</button>' : ''}
-      <a class="btn btn-sun" href="#cloze">新しいセットへ</a>
+      <a class="btn btn-sun" href="${quiz.back || '#cloze'}">新しいセットへ</a>
     </div>
   </section>
   <section class="review">
     ${quiz.list.map((q, k) => { const r = quiz.res[k] || {}; return `<details class="rv card ${r.ok ? 'rv-ok' : 'rv-ng'}"><summary><span class="rv-m">${r.ok ? '◎' : '△'}</span> ${esc(q.q.replace('___', '[' + q.o[q.a] + ']'))}</summary><div class="rv-b"><p>${renderText(q.q.replace('___', q.o[q.a]))}</p><p class="exp-ja">${esc(q.ja)}</p><p>${esc(q.ex)}</p></div></details>`; }).join('')}
   </section>`;
   const rt = $('#retry');
-  if (rt) rt.addEventListener('click', () => { const wrong = quiz.list.filter((q, k) => !(quiz.res[k] || {}).ok); quiz = { list: shuffle(wrong), i: 0, res: [] }; renderQ(); });
+  if (rt) rt.addEventListener('click', () => { const wrong = quiz.list.filter((q, k) => !(quiz.res[k] || {}).ok); quiz = { list: shuffle(wrong), i: 0, res: [], back: quiz.back }; renderQ(); });
 }
 document.addEventListener('keydown', ev => {
   if (!quiz || !$('.qwrap') || ev.target.closest('input, textarea')) return;
   if (/^[1-4]$/.test(ev.key)) { const b = $$('.opt')[+ev.key - 1]; if (b && !b.disabled) b.click(); }
   if (ev.key === 'Enter' && $('#next') && document.activeElement !== $('#next')) { ev.preventDefault(); $('#next').click(); }
 });
+
+/* ---------------- 文法 ---------------- */
+const GRAM = E.GRAMMAR || [];
+// 演習問題を穴埋めと同じ形にそろえる（ランダム演習・記録で共通に使う）
+const GQ = GRAM.flatMap(u => u.qs.map((q, k) => ({ id: 'gq-' + u.id + '-' + k, lv: q.lv || 'B', cat: 'grammar', tp: 'gram', unit: u.title, uid: u.id, q: q.q, o: q.o, a: q.a, ja: q.ja, ex: q.ex })));
+function fmt(t) { return esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>'); }
+function unitScore(u) { let c = 0, n = 0; u.qs.forEach((q, k) => { const r = Store.d.q['gq-' + u.id + '-' + k]; if (r) { n++; if (r.last) c++; } }); return { c, n }; }
+let gst = null;
+routes.grammar = (id) => {
+  if (id === 'drill') return startGramDrill(false);
+  if (id === 'wrong') return startGramDrill(true);
+  if (id) return renderUnit(id);
+  const cats = [...new Set(GRAM.map(u => u.cat))];
+  const wrong = GQ.filter(q => Store.d.q[q.id] && Store.d.q[q.id].last === 0).length;
+  view().innerHTML = `
+  <section class="page-head"><h1>文法解説</h1>
+    <p>高校で学ぶ文法の全範囲と、大学・TOEIC上級で問われる語法を${GRAM.length}単元にまとめました。各単元に、解説・音声つきの例文・間違えやすい点・TOEICでの出方・演習5問（計${GQ.length}問）があります。</p>
+    <div class="cta" style="margin-top:6px"><a class="btn btn-sun" href="#grammar/drill">ランダム演習10問 →</a>${wrong ? `<a class="btn btn-coral" href="#grammar/wrong">間違えた問題（${wrong}問）</a>` : ''}</div>
+  </section>
+  <div class="card gnote"><b>TOEIC 800点をめざす方へ</b>
+    <p>TOEICはリスニング495点・リーディング495点の合計です。このサイトはリーディング（Part 5〜7）の土台づくりに特化しています。文法はPart 5の約3分の1とPart 6に直結し、Part 7の読解速度にも効きます。目安として、各単元の演習で全問正解できる状態を「文法の土台完成」と考えてください（点数を保証するものではありません）。</p></div>
+  ${cats.map(c => `<h2 class="sec-title sm gcat">${esc(c)}</h2><div class="glist">${GRAM.filter(u => u.cat === c).map(u => {
+    const s = unitScore(u);
+    return `<a class="gcard card" href="#grammar/${u.id}"><span class="gno">${u.id.slice(1)}</span><span class="gt">${esc(u.title)}</span>
+      <span class="gm">${u.lv === 'UNI' ? '<span class="pill pill-coral">大学・TOEIC上級</span>' : '<span class="pill pill-leaf">高校</span>'} ${s.n ? `<span class="gsc ${s.c === u.qs.length ? 'full' : ''}">${s.c}/${u.qs.length}</span>` : ''}</span></a>`;
+  }).join('')}</div>`).join('')}`;
+};
+function renderUnit(id) {
+  const idx = GRAM.findIndex(u => u.id === id);
+  const u = GRAM[idx];
+  if (!u) { go('#grammar'); return; }
+  if (!gst || gst.id !== id) gst = { id, ans: [], order: u.qs.map(q => shuffle(q.o.map((o, i) => i))) };
+  const prev = GRAM[idx - 1], next = GRAM[idx + 1];
+  const secs = u.sec.map(s => `<section class="gsec card"><h2>${esc(s.h)}</h2><p class="gtext">${fmt(s.t)}</p>
+    ${s.ex.length ? `<ul class="gex">${s.ex.map(([en, ja, note]) => `<li data-ctx="${esc(en)}"><div class="gex-en"><button class="ib sm" data-say="${esc(en)}" title="例文を聞く">🔊</button> <span lang="en">${renderText(en)}</span></div><div class="gex-ja">${esc(ja)}${note ? `<span class="gex-note">${esc(note)}</span>` : ''}</div></li>`).join('')}</ul>` : ''}</section>`).join('');
+  const qs = u.qs.map((q, k) => {
+    const a = gst.ans[k];
+    const full = q.q.replace('___', q.o[q.a]);
+    return `<div class="rq card ${a !== undefined ? (a === q.a ? 'rq-ok' : 'rq-ng') : ''}">
+      <p class="rq-q"><span class="rq-n evi1">Q${k + 1}</span> ${renderText(q.q, { blank: a !== undefined ? `<span class="blank filled ${a === q.a ? 'ok' : 'ng'}">${esc(q.o[q.a])}</span>` : '<span class="blank">&emsp;&emsp;</span>' })}${q.lv === 'A' ? ' <span class="pill pill-lvA">Lv.A</span>' : ''}</p>
+      <div class="opts">${gst.order[k].map((i, n) => `<button class="opt ${a !== undefined ? (i === q.a ? 'ok' : i === a ? 'ng' : '') : ''}" data-q="${k}" data-i="${i}" ${a !== undefined ? 'disabled' : ''}><span class="opt-k">${n + 1}</span><span class="opt-t">${esc(q.o[i])}</span></button>`).join('')}</div>
+      ${a !== undefined ? `<div class="exp"><div class="fb ${a === q.a ? 'fb-ok' : 'fb-ng'}"><b>${a === q.a ? '◎ ' + pickOne(CHEER_OK) : '△ 正解は「' + esc(q.o[q.a]) + '」'}</b></div>
+        ${q.q.includes('___') ? `<div class="exp-en">${renderText(full)} <button class="ib sm" data-say="${esc(full)}" title="文を聞く">🔊<small>文</small></button></div>` : ''}
+        <p class="exp-ja">${esc(q.ja)}</p><p class="exp-body">${esc(q.ex)}</p></div>` : ''}
+    </div>`;
+  }).join('');
+  const done = gst.ans.filter(x => x !== undefined).length;
+  const score = u.qs.filter((q, k) => gst.ans[k] === q.a).length;
+  view().innerHTML = `
+  <article class="gunit">
+    <a class="back" href="#grammar">← 文法の一覧へ</a>
+    <header class="p-head"><div><span class="pill pill-teal">${esc(u.cat)}</span> ${u.lv === 'UNI' ? '<span class="pill pill-coral">大学・TOEIC上級</span>' : '<span class="pill pill-leaf">高校</span>'}</div>
+      <h1 class="gh1">${esc(u.title)}</h1><p class="glead">${esc(u.lead)}</p></header>
+    ${secs}
+    <section class="gsec card gtrap"><h2>⚠️ 間違えやすいポイント</h2><ul>${u.trap.map(t => `<li>${fmt(t)}</li>`).join('')}</ul></section>
+    <section class="gsec card gtoeic"><h2>🎯 TOEIC・英検での出方</h2><p>${fmt(u.toeic)}</p></section>
+    <h2 class="sec-title">演習 <small class="muted">${done}/${u.qs.length}</small></h2>
+    <div class="gqs">${qs}</div>
+    ${done === u.qs.length ? `<div class="card p-done"><b>${score} / ${u.qs.length} 問正解</b><p>${score === u.qs.length ? 'この単元は完璧です！次の単元へ進みましょう。' : '間違えた問題は、上の解説の該当箇所を読み返してから「もう一度」で解き直すと定着します。'}</p><button class="btn btn-sun btn-sm" id="gRetry">もう一度解く</button></div>` : ''}
+    <nav class="gnav">${prev ? `<a class="btn btn-line btn-sm" href="#grammar/${prev.id}">← ${esc(prev.title)}</a>` : '<span></span>'}${next ? `<a class="btn btn-sky btn-sm" href="#grammar/${next.id}">${esc(next.title)} →</a>` : ''}</nav>
+  </article>`;
+  $$('.gqs .opt').forEach(b => b.addEventListener('click', () => {
+    const k = +b.dataset.q, i = +b.dataset.i;
+    if (gst.ans[k] !== undefined) return;
+    gst.ans[k] = i;
+    recordAnswer('gq-' + u.id + '-' + k, i === u.qs[k].a);
+    keepScroll(() => renderUnit(id));
+  }));
+  const rt = $('#gRetry'); if (rt) rt.addEventListener('click', () => { gst = null; renderUnit(id); });
+}
+function startGramDrill(onlyWrong) {
+  let pool = onlyWrong ? GQ.filter(q => Store.d.q[q.id] && Store.d.q[q.id].last === 0) : GQ;
+  if (!pool.length) { go('#grammar'); return; }
+  const fresh = q => Store.d.q[q.id] ? 1 : 0;
+  quiz = { list: shuffle(pool).sort((a, b) => fresh(a) - fresh(b)).slice(0, 10), i: 0, res: [], back: '#grammar' };
+  renderQ();
+}
 
 /* ---------------- 長文 ---------------- */
 routes.reading = (id) => {
@@ -963,6 +1049,7 @@ routes.stats = () => {
   const cz = E.CLOZE || [];
   const agg = (items) => { let n = 0, c = 0; items.forEach(id => { const r = Store.d.q[id]; if (r) { n += r.n; c += r.c; } }); return { n, c, p: n ? Math.round(c / n * 100) : null }; };
   const byCat = Object.keys(CATS).map(k => ({ l: CATS[k], ...agg(cz.filter(q => q.cat === k).map(q => q.id)) }));
+  byCat.push({ l: '文法解説の演習', ...agg(GQ.map(q => q.id)) });
   const byLv = ['B', 'A'].map(lv => ({ l: LV[lv].short + ' ' + LV[lv].ja, ...agg(cz.filter(q => q.lv === lv).map(q => q.id).concat((E.PASSAGES || []).filter(p => p.lv === lv).flatMap(p => p.qs.map((_, k) => p.id + '-' + k)))) }));
   const byTp = Object.keys(TOPICS).map(tp => ({ l: TOPICS[tp].ja, ...agg(cz.filter(q => q.tp === tp).map(q => q.id).concat((E.PASSAGES || []).filter(p => p.tp === tp).flatMap(p => p.qs.map((_, k) => p.id + '-' + k)))) }));
   const bars = rows => rows.map(r => `<div class="bar-row"><span class="bar-l">${esc(r.l)}</span><span class="bar"><span style="width:${r.p || 0}%"></span></span><span class="bar-v">${r.p === null ? '—' : r.p + '%'}<small>${r.n ? ' (' + r.c + '/' + r.n + ')' : ''}</small></span></div>`).join('');
@@ -973,7 +1060,7 @@ routes.stats = () => {
   <section class="page-head"><h1>学習記録</h1><p>記録はこのブラウザの中だけに保存されています。別の端末とは共有されません。</p></section>
   <div class="card st-card"><h2 class="sec-title sm">直近4週間 <small class="muted">${streak()}日連続</small></h2>
     <div class="heat">${days.map(x => `<span class="hc h${x.n === 0 ? 0 : x.n < 5 ? 1 : x.n < 15 ? 2 : 3}" title="${x.m}/${x.dd}：${x.n}問"></span>`).join('')}</div></div>
-  <div class="card st-card"><h2 class="sec-title sm">分野別の正答率（穴埋め）</h2>${bars(byCat)}</div>
+  <div class="card st-card"><h2 class="sec-title sm">分野別の正答率</h2>${bars(byCat)}</div>
   <div class="card st-card"><h2 class="sec-title sm">レベル別</h2>${bars(byLv)}</div>
   <div class="card st-card"><h2 class="sec-title sm">題材別</h2>${bars(byTp)}</div>
   <div class="card st-card"><h2 class="sec-title sm">長文の記録</h2>${reads.length ? `<table class="rtable"><tbody>${reads.map(([id, r]) => { const p = (E.PASSAGES || []).find(x => x.id === id); return p ? `<tr><td><a href="#reading/${id}">${esc(p.title)}</a></td><td>${r.score}/${r.total}</td><td>${r.wpm ? r.wpm + '語/分' : ''}</td></tr>` : ''; }).join('')}</tbody></table>` : '<p class="muted">まだありません。</p>'}</div>

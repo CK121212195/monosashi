@@ -13,7 +13,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>英語のものさし｜英検準1級・1級／TOEIC対策 筆記問題集（無料）</title>
-<meta name="description" content="英検2級〜1級・TOEIC600点以上をめざす人のための無料の筆記（リーディング）問題集。本文のどの単語もホバーで意味・発音記号・混同しやすい語を表示。人の声の録音を優先した発音再生、conform/confirmのような紛らわしい語のドリル、投資・金利・暗号資産・AI・アート・映画を題材にした長文読解。">
+<meta name="description" content="英検2級〜1級・TOEIC600点以上をめざす人のための無料の筆記（リーディング）問題集。本文のどの単語もホバーで意味・発音記号・混同しやすい語を表示。全単語・全例文の音声を同梱してすぐ再生、仮定法から冠詞まで高校文法を網羅した文法解説、conform/confirmのような紛らわしい語のドリル、投資・金利・暗号資産・AI・アート・映画を題材にした長文読解。">
 <link rel="canonical" href="https://kazumono.com/eigo/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="英語のものさし｜ホバーで引ける英検・TOEIC筆記問題集">
@@ -51,6 +51,7 @@
     <nav class="nav" aria-label="メニュー">
       <a href="#cloze" data-r="cloze"><span aria-hidden="true">✏️</span>穴埋め</a>
       <a href="#reading" data-r="reading"><span aria-hidden="true">📰</span>長文</a>
+      <a href="#grammar" data-r="grammar"><span aria-hidden="true">📘</span>文法</a>
       <a href="#confuse" data-r="confuse"><span aria-hidden="true">🔍</span>紛らわしい語</a>
       <a href="#words" data-r="words"><span aria-hidden="true">⭐</span>単語帳<span class="badge" data-due hidden></span></a>
       <a href="#stats" data-r="stats"><span aria-hidden="true">📈</span>記録</a>
@@ -69,25 +70,26 @@
     <label class="chip"><input type="radio" name="accent" value="us"><span>🇺🇸 アメリカ英語</span></label>
     <label class="chip"><input type="radio" name="accent" value="uk"><span>🇬🇧 イギリス英語</span></label>
   </fieldset>
-  <fieldset><legend>文を読み上げる速さ（合成音声）</legend>
+  <fieldset><legend>例文・本文を読み上げる速さ</legend>
     <label class="chip"><input type="radio" name="rate" value="0.75"><span>ゆっくり</span></label>
     <label class="chip"><input type="radio" name="rate" value="0.9"><span>やや遅め</span></label>
     <label class="chip"><input type="radio" name="rate" value="1"><span>ふつう</span></label>
   </fieldset>
   <label class="check"><input type="checkbox" name="hover"> カーソルを合わせたら訳を出す（オフにするとクリックで表示）</label>
-  <div class="voice-info" id="voiceInfo"></div>
-  <button class="btn btn-sky btn-sm" id="testVoice" type="button">🔊 合成音声を試す</button>
   <div class="dlg-note">
-    <p><b>発音について</b>：単語の🔊は、<a href="https://en.wiktionary.org/" target="_blank" rel="noopener">Wiktionary</a> に投稿された録音を <a href="https://dictionaryapi.dev/" target="_blank" rel="noopener">Free Dictionary API</a> 経由で取得して再生します（録音は各投稿者によるもので、主に CC BY-SA ライセンスです）。録音が見つからない語、熟語、文は、お使いの端末の合成音声で読み上げます。再生のたびに「録音」か「合成音声」かを表示します。</p>
-    <p>合成音声は自然さが端末によって大きく異なり、まれに強勢の位置を誤ることがあります。発音記号（IPA）とあわせて確認してください。</p>
+    <p><b>発音について</b>：単語・熟語・例文・長文の音声は、オープンソースのニューラル音声合成モデル <a href="https://huggingface.co/hexgrad/Kokoro-82M" target="_blank" rel="noopener">Kokoro-82M</a>（Apache License 2.0）で事前に作成し、このサイトに同梱しています（米音：女性の声 af_heart／英音：女性の声 bf_emma）。人間の録音ではありませんが、端末の読み上げ機能に左右されず、押した瞬間に再生されます。英音は単語のみ収録しており、例文・長文は米音です。</p>
+    <p>合成音声は、まれに強勢の位置や、品詞で読みが変わる語（record など）の読み分けを誤ることがあります。発音記号（IPA）とあわせて確認してください。</p>
+    <p>音声が未収録の文だけ、お使いの端末の英語音声で読み上げます（端末に英語音声がない場合は再生しません）。</p>
   </div>
+  <div class="voice-info" id="voiceInfo"></div>
+  <button class="btn btn-sky btn-sm" id="testVoice" type="button">🔊 端末の英語音声を試す</button>
   <button class="btn btn-sun btn-wide" id="closeSet" type="button">閉じる</button>
 </dialog>
 
 <footer class="foot">
   <div class="foot-in">
     <p>英語のものさし は <a href="/">数字のものさし</a> の無料ツールです。問題・本文はすべて当サイトのオリジナルで、英検・TOEICの公式問題ではありません。「英検」は公益財団法人 日本英語検定協会の、「TOEIC」は ETS の登録商標です。</p>
-    <p>学習記録と単語帳は、お使いのブラウザ（localStorage）にのみ保存され、外部へは送信されません。発音の録音を取得するときだけ、調べた単語が Free Dictionary API に送られます。</p>
+    <p>学習記録と単語帳は、お使いのブラウザ（localStorage）にのみ保存され、外部へは送信されません。発音の音声はこのサイト内のファイルを再生するため、調べた単語が外部に送られることはありません。音声は Kokoro-82M（Apache License 2.0）で生成しています。</p>
     <nav class="foot-links"><a href="/">トップ</a><a href="/about/">運営者情報</a><a href="/privacy/">プライバシーポリシー</a><a href="/contact/">お問い合わせ</a></nav>
   </div>
 </footer>
@@ -97,6 +99,9 @@
 <script src="data/confusables.js"></script>
 <script src="data/cloze.js"></script>
 <script src="data/passages.js"></script>
+<script src="data/grammar1.js"></script>
+<script src="data/grammar2.js"></script>
+<script src="audio/index.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
