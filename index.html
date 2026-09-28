@@ -1454,7 +1454,7 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
 </div>
 
 <script>
-/* 英語のものさしの見本：単語・文の音声を再生する（ファイルは /eigo/audio に同梱） */
+/* 英語のものさしの見本：単語・文の音声を再生する */
 (function(){var cur=null,btn=null;function stop(){if(cur){cur.pause();cur=null;}if(btn){btn.classList.remove('playing');}btn=null;}
 document.addEventListener('click',function(e){var t=e.target.closest('#eigo [data-src], .panel--eigo [data-src]');if(!t)return;
 if(t.classList.contains('ew')){document.querySelectorAll('.ew.is-open').forEach(function(x){if(x!==t)x.classList.remove('is-open');});t.classList.toggle('is-open');}

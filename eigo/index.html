@@ -81,8 +81,8 @@
   </fieldset>
   <label class="check"><input type="checkbox" name="hover"> カーソルを合わせたら訳を出す（オフにするとクリックで表示）</label>
   <div class="dlg-note">
-    <p><b>発音について</b>：単語・熟語・例文・長文の音声は、オープンソースのニューラル音声合成モデル <a href="https://huggingface.co/hexgrad/Kokoro-82M" target="_blank" rel="noopener">Kokoro-82M</a>（Apache License 2.0）で事前に作成し、このサイトに同梱しています（米音：女性の声 af_heart／英音：女性の声 bf_emma）。人間の録音ではありませんが、端末の読み上げ機能に左右されず、押した瞬間に再生されます。英音は単語のみ収録しており、例文・長文は米音です。</p>
-    <p>合成音声は、まれに強勢の位置や、品詞で読みが変わる語（record など）の読み分けを誤ることがあります。発音記号（IPA）とあわせて確認してください。</p>
+    <p><b>発音について</b>：単語・熟語・例文・長文の音声は、英語のものさしのために用意したものです。人間の録音ではありませんが、お使いの端末に左右されず、押した瞬間に、どの端末でも同じ発音で再生されます。英音は単語のみで、例文・長文は米音です。</p>
+    <p>まれに、強勢の位置や、品詞で読みが変わる語（record など）の読み分けを誤ることがあります。発音記号（IPA）とあわせて確認してください。</p>
     <p>音声が未収録の文だけ、お使いの端末の英語音声で読み上げます（端末に英語音声がない場合は再生しません）。</p>
   </div>
   <div class="voice-info" id="voiceInfo"></div>
@@ -93,7 +93,7 @@
 <footer class="foot">
   <div class="foot-in">
     <p>英語のものさし は <a href="/">数字のものさし</a> の無料ツールです。問題・本文はすべて当サイトのオリジナルで、英検・TOEICの公式問題ではありません。「英検」は公益財団法人 日本英語検定協会の、「TOEIC」は ETS の登録商標です。</p>
-    <p>学習記録と単語帳は、お使いのブラウザ（localStorage）にのみ保存され、外部へは送信されません。発音の音声はこのサイト内のファイルを再生するため、調べた単語が外部に送られることはありません。音声は Kokoro-82M（Apache License 2.0）で生成しています。</p>
+    <p>学習記録と単語帳は、お使いのブラウザ（localStorage）にのみ保存され、外部へは送信されません。調べた単語が外部に送られることはありません。</p>
     <nav class="foot-links" aria-label="教材の一覧"><a href="/eigo/bunpou/">英文法解説（全32単元）</a><a href="/eigo/chobun/">英語長文（全20本・全訳つき）</a><a href="/eigo/magirawashii/">紛らわしい英単語（69組）</a></nav>
     <nav class="foot-links"><a href="/">トップ</a><a href="/about/">運営者情報</a><a href="/privacy/">プライバシーポリシー</a><a href="/contact/">お問い合わせ</a></nav>
   </div>
@@ -108,6 +108,6 @@
 <script src="data/grammar2.js?v=1"></script>
 <script src="data/shiken-sample.js?v=1"></script>
 <script src="audio/index.js?v=1"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>
