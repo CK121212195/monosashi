@@ -934,12 +934,16 @@ function shkReturn() {
   shkUnlock(id, p.id);
 }
 const SHK_KEY = 'eigo-shiken-sets';
-const SHK_PRODUCTS = [
-  { id: 'kyotsu-01', price: 300, pitch: '掲示・ウェブページの読み取り、事実と意見の区別、出来事の順序、グラフつきの2資料の読み比べ、伝記のメモ完成、説明文の要約とスライド完成。共通テストの形式に沿った50問です。', who: '大学入学共通テストを受ける高校生・受験生' },
-  { id: 'toeic-01', price: 300, pitch: 'Part 5（短文穴埋め）34問と Part 6（長文穴埋め）4文書16問。品詞・時制・前置詞と接続詞・関係詞・語法・文の挿入まで、800点を超えるのに必要な型を網羅しました。', who: 'TOEIC 600点台から800点以上をめざす人' },
-  { id: 'kyotsu-02', price: 300, pitch: 'ビーチ清掃のちらし、レンタサイクルの料金表、学習アプリのレビュー、制服をめぐる記事、農家のブログ、駅ピアノの物語、食品ロスのグラフと報告、地域の冷蔵庫を始めた人物の伝記、先延ばしの心理学、宇宙ごみのポスター。第1回と同じ形式の新作50問です。', who: '大学入学共通テストを受ける高校生・受験生（第1回を解いた人にも）' },
-  { id: 'toeic-02', price: 300, pitch: 'Part 5 34問（前置詞と接続詞、品詞、時制、関係詞、語彙）と Part 6 4文書16問（在庫切れの連絡、駐車場工事の告知、受賞記事、在宅勤務の社内通知）。第1回と重ならない新作です。', who: 'TOEIC 600点台から800点以上をめざす人（第1回を解いた人にも）' }
+// 価格と、まだ販売していないセット（Stripe の新しい支払いリンクと Worker の設定が済んだら切り替える）
+const SHK_PRICE = 100;
+const SHK_HIDDEN = ['kyotsu-02', 'toeic-02'];
+const SHK_PRODUCTS_ALL = [
+  { id: 'kyotsu-01', price: SHK_PRICE, pitch: '掲示・ウェブページの読み取り、事実と意見の区別、出来事の順序、グラフつきの2資料の読み比べ、伝記のメモ完成、説明文の要約とスライド完成。共通テストの形式に沿った50問です。', who: '大学入学共通テストを受ける高校生・受験生' },
+  { id: 'toeic-01', price: SHK_PRICE, pitch: 'Part 5（短文穴埋め）34問と Part 6（長文穴埋め）4文書16問。品詞・時制・前置詞と接続詞・関係詞・語法・文の挿入まで、800点を超えるのに必要な型を網羅しました。', who: 'TOEIC 600点台から800点以上をめざす人' },
+  { id: 'kyotsu-02', price: SHK_PRICE, pitch: 'ビーチ清掃のちらし、レンタサイクルの料金表、学習アプリのレビュー、制服をめぐる記事、農家のブログ、駅ピアノの物語、食品ロスのグラフと報告、地域の冷蔵庫を始めた人物の伝記、先延ばしの心理学、宇宙ごみのポスター。第1回と同じ形式の新作50問です。', who: '大学入学共通テストを受ける高校生・受験生（第1回を解いた人にも）' },
+  { id: 'toeic-02', price: SHK_PRICE, pitch: 'Part 5 34問（前置詞と接続詞、品詞、時制、関係詞、語彙）と Part 6 4文書16問（在庫切れの連絡、駐車場工事の告知、受賞記事、在宅勤務の社内通知）。第1回と重ならない新作です。', who: 'TOEIC 600点台から800点以上をめざす人（第1回を解いた人にも）' }
 ];
+const SHK_PRODUCTS = SHK_PRODUCTS_ALL.filter(p => !SHK_HIDDEN.includes(p.id));
 function shkOwned() { try { return JSON.parse(localStorage.getItem(SHK_KEY)) || {}; } catch (e) { return {}; } }
 window.EIGO_SHIKEN = {
   // 決済の確認後、受け取ったセットのデータを端末に保存して開く
@@ -963,7 +967,7 @@ routes.shiken = (arg) => {
   const pend = lsGet(SHK_PEND, null);
   const note = shkNotice || (pend && pend.order && !(pend.id && owned[pend.id]) ? { kind: 'ng', text: 'お支払いから戻ってきた注文の確認が済んでいません。', order: pend.order, retry: true } : null);
   view().innerHTML = `
-  <section class="page-head"><h1>試験対策</h1><p>本番の形式に合わせた問題集です。1セット50問・300円の買い切りで、購入したセットはお使いの端末に保存され、何度でも解き直せます。どのセットも、最初の数問は無料で試せます。</p></section>
+  <section class="page-head"><h1>試験対策</h1><p>本番の形式に合わせた問題集です。1セット50問・${SHK_PRICE}円の買い切りで、購入したセットはお使いの端末に保存され、何度でも解き直せます。どのセットも、最初の数問は無料で試せます。</p></section>
   ${note ? `<div class="card shk-notice-box ${note.kind === 'busy' ? 'is-busy' : 'is-ng'}" role="status">
     <p><b>${note.kind === 'busy' ? '⏳ ' : ''}${esc(note.text)}</b></p>
     ${note.order ? `<p class="small">購入番号：<code class="shk-order">${esc(note.order)}</code></p>` : ''}

@@ -24,3 +24,7 @@
 .cg-row2{display:flex;gap:10px;align-items:baseline;margin-bottom:4px}
 .para-say{position:absolute;left:-38px;top:16px}
 @media (max-width:720px){.st-cta{flex-direction:column;align-items:stretch}.st-links{columns:1}.para-say{position:static;float:right}}
+
+/* 穴埋め問題ページの英文・単語一覧 */
+.st-qen{font-family:var(--en);font-size:17.5px;line-height:1.85;margin:8px 0 6px}
+.st-words td{vertical-align:middle}
