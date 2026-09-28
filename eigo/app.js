@@ -829,9 +829,120 @@ function startGramDrill(onlyWrong) {
 
 /* ---------------- 試験対策（有料問題集・買い切り） ----------------
    ・無料サンプルは data/shiken-sample.js（公開）
-   ・購入したセットは端末に保存（localStorage）。購入の確認とデータの受け渡しは別途
-     window.EIGO_SHIKEN.install(セットのデータ) を呼ぶ（決済の確認後に Worker から受け取ったデータ）
-   ・音声：セットの audioBase（未指定ならサイト内の audio/p/）＋ au（ハッシュ）＋ .mp3 */
+   ・購入したセットは端末に保存（localStorage）。window.EIGO_SHIKEN.install(セットのデータ) が入口
+   ・音声：セットの audioBase（未指定ならサイト内の audio/p/）＋ au（ハッシュ）＋ .mp3
+     購入したセット（鍵 key を持つもの）は、暗号化した音声 .bin を鍵で開いて再生する
+
+   購入の流れ（Stripe の支払いリンク＋Worker。リース見積診断と同じ仕組み）
+     1. 購入ボタン：Worker の /eigo/status で受付中かを確かめてから、
+        client_reference_id に「eigo_セットID」を付けて支払いリンクへ移る
+     2. 支払いが終わると、Stripe が ?session_id=cs_live_… を付けて /eigo/ へ戻す（戻り先は Stripe の管理画面で設定）
+     3. Worker の /eigo/unlock が Stripe に直接問い合わせ、支払い済み・100円・どのセットかを確かめて、そのセットの鍵を返す
+     4. サイトに置いた暗号化データ（paid/セットID/set.bin）を鍵で開き、端末に保存する
+   判断はすべて Worker が行う。鍵が無ければ、暗号化されたデータは読めない。 */
+const SHK_PAY_URL = 'https://buy.stripe.com/5kQeVe1z00D94rL3sgaR202';
+const SHK_WORKER = 'https://square-license.stats-okinawa.workers.dev';
+const SHK_PEND = 'eigo-shiken-pending';   // 支払いへ進んだセットと、戻ってきた注文番号（確認が済むまで残す）
+const SHK_ORDERS = 'eigo-shiken-orders';  // 確認が済んだ購入番号（別の端末で開くときに使う）
+function lsGet(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+function b64bytes(s) { const b = atob(s); const u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+const shkCryptoKeys = {};
+// 形式：先頭12バイトが IV、残りが AES-256-GCM の暗号文（認証タグつき）
+async function shkDecrypt(buf, keyB64) {
+  const k = shkCryptoKeys[keyB64] || (shkCryptoKeys[keyB64] = await crypto.subtle.importKey('raw', b64bytes(keyB64), 'AES-GCM', false, ['decrypt']));
+  const u = new Uint8Array(buf);
+  return crypto.subtle.decrypt({ name: 'AES-GCM', iv: u.slice(0, 12) }, k, u.slice(12));
+}
+const shkAudioUrls = {};
+async function shkAudioUrl(src, keyB64) {
+  if (shkAudioUrls[src]) return shkAudioUrls[src];
+  const r = await fetch(src);
+  if (!r.ok) throw new Error('audio ' + r.status);
+  const plain = await shkDecrypt(await r.arrayBuffer(), keyB64);
+  return (shkAudioUrls[src] = URL.createObjectURL(new Blob([plain], { type: 'audio/mpeg' })));
+}
+async function fetchJSON(url, ms) {
+  const ctl = 'AbortController' in window ? new AbortController() : null;
+  const t = ctl ? setTimeout(() => ctl.abort(), ms || 15000) : 0;
+  try {
+    const r = await fetch(url, { cache: 'no-store', signal: ctl ? ctl.signal : undefined });
+    if (!r.ok) throw new Error(url + ' ' + r.status);
+    return await r.json();
+  } finally { clearTimeout(t); }
+}
+const SHK_REASON = {
+  not_paid: 'お支払いの完了をまだ確認できません。少し待ってから「もう一度確かめる」を押してください。',
+  not_found: 'この購入番号は見つかりませんでした。番号をご確認ください。',
+  bad_order: '購入番号の形が正しくありません（cs_live_ で始まる番号です）。',
+  wrong_product: 'この購入番号は、英語の問題集のお支払いではありません。',
+  wrong_link: 'この購入番号は、英語の問題集のお支払いではありません。',
+  no_set: 'どのセットのお支払いかを確認できませんでした。お手数ですが、お問い合わせください。',
+  too_many: 'この購入番号で開ける回数の上限に達しました。お手数ですが、お問い合わせください。',
+  inactive: 'この購入番号は無効になっています。お問い合わせください。'
+};
+// 購入の確認の状態（試験対策の一覧に表示する）
+let shkNotice = null;   // { kind: 'busy' | 'ng', text, order, retry }
+let shkBuyOpen = null;  // 購入前の確認を開いているセット
+let shkRestoreVal = '';
+let shkRestoreOpen = false;  // 「別の端末で開く」の欄を開いているか（描き直しても閉じないように）
+function shkRefresh() { if (/^#shiken\/?$/.test(location.hash)) keepScroll(() => routes.shiken()); }
+async function shkUnlock(order, want) {
+  shkNotice = { kind: 'busy', text: '購入を確認しています…', order };
+  shkRefresh();
+  let j;
+  try {
+    j = await fetchJSON(`${SHK_WORKER}/eigo/unlock?order=${encodeURIComponent(order)}${want ? '&set=' + encodeURIComponent(want) : ''}`);
+  } catch (e) {
+    shkNotice = { kind: 'ng', text: '通信に失敗したため、購入を確認できませんでした。電波の良い所で「もう一度確かめる」を押してください。', order, retry: true };
+    shkRefresh(); return false;
+  }
+  if (!j.valid) {
+    shkNotice = { kind: 'ng', text: SHK_REASON[j.reason] || `購入を確認できませんでした（${j.reason}）。お手数ですが、お問い合わせください。`, order, retry: j.reason === 'not_paid' };
+    shkRefresh(); return false;
+  }
+  let set;
+  try {
+    const r = await fetch(`paid/${encodeURIComponent(j.set)}/set.bin`, { cache: 'no-cache' });
+    if (!r.ok) throw new Error('set ' + r.status);
+    set = JSON.parse(new TextDecoder().decode(await shkDecrypt(await r.arrayBuffer(), j.key)));
+  } catch (e) {
+    shkNotice = { kind: 'ng', text: 'お支払いは確認できましたが、問題データを開けませんでした。「もう一度確かめる」を押しても直らないときは、お問い合わせください（購入番号をお知らせください）。', order, retry: true };
+    shkRefresh(); return false;
+  }
+  set.key = j.key; set.order = order; set.audioBase = `paid/${j.set}/`; set.boughtAt = Date.now();
+  const orders = lsGet(SHK_ORDERS, {}); orders[order] = { set: j.set, t: Date.now() }; lsSet(SHK_ORDERS, orders);
+  const p = lsGet(SHK_PEND, null); if (p && (p.order === order || p.id === j.set)) lsDel(SHK_PEND);
+  shkNotice = null;
+  window.EIGO_SHIKEN.install(set);
+  toast('購入ありがとうございます。この端末に保存しました');
+  return true;
+}
+// 購入ボタン：受付中かを確かめてから支払いリンクへ
+async function shkPay(id, btn) {
+  if (btn) { btn.disabled = true; btn.textContent = '確認しています…'; }
+  let st = null;
+  try { st = await fetchJSON(`${SHK_WORKER}/eigo/status`, 10000); } catch (e) { st = null; }
+  if (!st || !st.ready || !(st.sets || []).includes(id)) {
+    if (btn) { btn.disabled = false; btn.textContent = '支払いへ進む'; }
+    toast(st ? 'ただいま購入の受付を準備中です。もうしばらくお待ちください' : '通信に失敗しました。電波の良い所でもう一度お試しください');
+    return;
+  }
+  lsSet(SHK_PEND, { id, t: Date.now() });
+  location.href = `${SHK_PAY_URL}?client_reference_id=${encodeURIComponent('eigo_' + id)}`;
+}
+// Stripe から戻ってきたとき：注文番号をアドレス欄から消し、確認する
+function shkReturn() {
+  const id = new URLSearchParams(location.search).get('session_id');
+  if (!id) return;
+  const u = new URL(location.href); u.searchParams.delete('session_id');
+  history.replaceState(null, '', u.pathname + u.search + '#shiken');
+  if (!/^cs_(live|test)_[A-Za-z0-9]{10,}$/.test(id)) return;
+  const p = lsGet(SHK_PEND, {}) || {}; p.order = id; lsSet(SHK_PEND, p);
+  route();
+  shkUnlock(id, p.id);
+}
 const SHK_KEY = 'eigo-shiken-sets';
 const SHK_PRODUCTS = [
   { id: 'kyotsu-01', price: 100, pitch: '掲示・ウェブページの読み取り、事実と意見の区別、出来事の順序、グラフつきの2資料の読み比べ、伝記のメモ完成、説明文の要約とスライド完成。共通テストの形式に沿った50問です。', who: '大学入学共通テストを受ける高校生・受験生' },
@@ -856,8 +967,16 @@ routes.shiken = (arg) => {
   const owned = shkOwned();
   const samples = E.SHIKEN_SAMPLE || {};
   const hist = Store.d.shiken || {};
+  // 支払いから戻ったのに確認が済んでいない注文（ページを閉じた・通信が切れた など）
+  const pend = lsGet(SHK_PEND, null);
+  const note = shkNotice || (pend && pend.order && !(pend.id && owned[pend.id]) ? { kind: 'ng', text: 'お支払いから戻ってきた注文の確認が済んでいません。', order: pend.order, retry: true } : null);
   view().innerHTML = `
   <section class="page-head"><h1>試験対策</h1><p>本番の形式に合わせた問題集です。1セット50問・100円の買い切りで、購入したセットはお使いの端末に保存され、何度でも解き直せます。どのセットも、最初の数問は無料で試せます。</p></section>
+  ${note ? `<div class="card shk-notice-box ${note.kind === 'busy' ? 'is-busy' : 'is-ng'}" role="status">
+    <p><b>${note.kind === 'busy' ? '⏳ ' : ''}${esc(note.text)}</b></p>
+    ${note.order ? `<p class="small">購入番号：<code class="shk-order">${esc(note.order)}</code></p>` : ''}
+    ${note.retry && note.kind !== 'busy' ? `<button class="btn btn-sm btn-sun" type="button" id="shkRetryUnlock">もう一度確かめる</button>` : ''}
+  </div>` : ''}
   <div class="shk-list">${SHK_PRODUCTS.map(p => {
     const s = samples[p.id] || {}; const h = hist[p.id];
     const have = !!owned[p.id];
@@ -867,17 +986,41 @@ routes.shiken = (arg) => {
       <p>${esc(p.pitch)}</p>
       <p class="small muted">こんな人に：${esc(p.who)}</p>
       ${h ? `<p class="small shk-best">これまでの最高点：<b>${h.best}</b> / ${h.total}</p>` : ''}
+      ${!have && shkBuyOpen === p.id ? `<div class="shk-buy">
+        <p><b>${esc(s.title || p.id)}（${s.total || 50}問）を ${p.price}円（税込）で購入します</b></p>
+        <ul>
+          <li>支払いは Stripe の画面で行います（クレジットカード・PayPay など）。カード番号などは当サイトに届きません。</li>
+          <li>支払いが終わるとこのページに戻り、問題がこの端末のブラウザに保存されます。<b>買い切り</b>で、期限はありません。</li>
+          <li>画面に出る<b>購入番号</b>を控えておくと、別の端末やブラウザでも開けます（1つの購入番号で最大10回まで）。</li>
+          <li>デジタルデータのため、お客様のご都合による返金はお受けできません。まず無料サンプルで形式をお確かめください。詳しくは<a href="/tokusho/">特定商取引法に基づく表記</a>をご覧ください。</li>
+        </ul>
+        <div class="shk-actions"><button class="btn btn-sun" type="button" data-pay="${p.id}">支払いへ進む</button><button class="btn btn-sm btn-line" type="button" data-buy-cancel>やめる</button></div>
+      </div>` : ''}
       <div class="shk-actions">
         ${have ? `<a class="btn btn-sun" href="#shiken/${p.id}">解く →</a><span class="pill pill-leaf">購入済み</span>`
-          : `<a class="btn btn-sky" href="#shiken/sample-${p.id}">無料サンプルを解く</a><button class="btn btn-sun" type="button" data-buy="${p.id}">${p.price}円で購入</button>`}
+          : `<a class="btn btn-sky" href="#shiken/sample-${p.id}">無料サンプルを解く</a>${shkBuyOpen === p.id ? '' : `<button class="btn btn-sun" type="button" data-buy="${p.id}">${p.price}円で購入</button>`}`}
       </div></div>`;
   }).join('')}</div>
-  <p class="muted small note">※ 問題はすべてオリジナルで、大学入試センター・ETS の公式問題ではありません。購入したデータはこの端末のブラウザに保存されます。ブラウザのデータを消去すると消えるのでご注意ください。</p>`;
-  $$('[data-buy]').forEach(b => b.addEventListener('click', () => {
-    // 購入の手続き（Stripe の支払いリンクへの移動など）は別途つなぎ込む
-    if (typeof window.EIGO_SHIKEN.buy === 'function') window.EIGO_SHIKEN.buy(b.dataset.buy);
-    else toast('購入の受付は準備中です。まずは無料サンプルをお試しください');
-  }));
+  <details class="card shk-restore"${shkRestoreOpen ? ' open' : ''}>
+    <summary>購入したセットを、別の端末・ブラウザで開く</summary>
+    <p class="small">購入したときに表示された<b>購入番号</b>（cs_live_ で始まる番号）を入れてください。購入済みのセットの画面の上部にも表示しています。</p>
+    <form id="shkRestore" class="shk-restore-f"><input type="text" name="order" inputmode="latin" autocomplete="off" spellcheck="false" placeholder="cs_live_…" aria-label="購入番号" value="${esc(shkRestoreVal)}"><button class="btn btn-sm btn-sky" type="submit">開く</button></form>
+    <p class="small muted">購入番号が分からなくなったときは、<a href="/contact/">お問い合わせ</a>から、お支払いの日時と金額、Stripe から届いた領収書のメールの内容をお知らせください。</p>
+  </details>
+  <p class="muted small note">※ 問題はすべてオリジナルで、大学入試センター・ETS の公式問題ではありません。購入したデータはこの端末のブラウザに保存されます。ブラウザのデータを消去すると消えるので、購入番号を控えておいてください。</p>`;
+  $$('[data-buy]').forEach(b => b.addEventListener('click', () => { shkBuyOpen = b.dataset.buy; keepScroll(() => routes.shiken()); }));
+  $$('[data-buy-cancel]').forEach(b => b.addEventListener('click', () => { shkBuyOpen = null; keepScroll(() => routes.shiken()); }));
+  $$('[data-pay]').forEach(b => b.addEventListener('click', () => shkPay(b.dataset.pay, b)));
+  const rt = $('#shkRetryUnlock'); if (rt) rt.addEventListener('click', () => shkUnlock(note.order, pend && pend.id));
+  $('.shk-restore').addEventListener('toggle', e => { shkRestoreOpen = e.target.open; });
+  $('#shkRestore').addEventListener('submit', e => {
+    e.preventDefault();
+    const v = e.target.order.value.trim();
+    if (!/^cs_(live|test)_[A-Za-z0-9]{10,}$/.test(v)) { toast(SHK_REASON.bad_order); return; }
+    shkRestoreOpen = true;
+    shkRestoreVal = v;
+    shkUnlock(v, null);
+  });
 };
 function renderSet(arg) {
   const isSample = arg.startsWith('sample-');
@@ -886,6 +1029,8 @@ function renderSet(arg) {
   if (!set) { go('#shiken'); return; }
   if (!shk || shk.key !== arg) shk = { key: arg, set, ans: {}, start: Date.now(), done: false, showJa: false };
   const base = set.audioBase || 'audio/p/';
+  // 購入したセットの音声は暗号化してある（鍵で開いてから再生する）
+  const ext = set.key ? '.bin' : '.mp3', encAttr = set.key ? ' data-enc="1"' : '';
   const toeic = set.kind === 'toeic';
   const label = i => toeic ? '(' + 'ABCDEF'[i] + ')' : CIRC[i];
   let qn = 0;
@@ -901,7 +1046,7 @@ function renderSet(arg) {
         let html = renderText(b, { marks: mk });
         html = html.replace(/\[(\d+)\]/g, (all, n) => { const q = blanks[n]; return `<span class="shk-blank">${shk.done && q ? esc(q.o[q.a]) : '[' + n + ']'}</span>`; });
         const au = d.au && d.au[bi];
-        return `<div class="shk-para" data-ctx="${esc(b)}">${au ? `<button class="ib sm shk-say" data-src="${esc(base + au + '.mp3')}" title="この段落を聞く">🔊</button>` : ''}<p lang="en">${html}</p>${shk.showJa && d.ja && d.ja[bi] ? `<p class="para-ja">${esc(d.ja[bi])}</p>` : ''}</div>`;
+        return `<div class="shk-para" data-ctx="${esc(b)}">${au ? `<button class="ib sm shk-say" data-src="${esc(base + au + ext)}"${encAttr} title="この段落を聞く">🔊</button>` : ''}<p lang="en">${html}</p>${shk.showJa && d.ja && d.ja[bi] ? `<p class="para-ja">${esc(d.ja[bi])}</p>` : ''}</div>`;
       }).join('')}
       ${d.table ? shkTable(d.table) : ''}
       ${shk.showJa && d.ja && d.ja.length > d.body.length ? `<p class="para-ja">${esc(d.ja.slice(d.body.length).join(' '))}</p>` : ''}
@@ -913,7 +1058,7 @@ function renderSet(arg) {
       return `<div class="card shk-q ${shk.done ? (a === q.a ? 'rq-ok' : 'rq-ng') : ''}" id="sq${n}">
         <p class="rq-q"><span class="rq-n evi1">${n}</span> ${qtext}</p>
         <div class="shk-opts">${q.o.map((o, i) => `<button class="opt ${!shk.done && a === i ? 'sel' : ''} ${shk.done ? (i === q.a ? 'ok' : i === a ? 'ng' : '') : ''}" data-n="${n}" data-i="${i}" ${shk.done ? 'disabled' : ''}><span class="opt-k">${label(i)}</span><span class="opt-t">${renderText(o)}</span></button>`).join('')}</div>
-        ${shk.done ? `<div class="exp"><div class="fb ${a === q.a ? 'fb-ok' : 'fb-ng'}"><b>${a === q.a ? '◎ 正解' : a === undefined ? '無回答：正解は ' + label(q.a) : '△ 正解は ' + label(q.a)}</b></div>${q.ja ? `<p class="exp-ja">${esc(q.ja)}</p>` : ''}<p class="exp-body">${esc(q.ex)}</p>${q.au ? `<button class="ib sm" data-src="${esc(base + q.au + '.mp3')}">🔊<small>文</small></button>` : ''}</div>` : ''}
+        ${shk.done ? `<div class="exp"><div class="fb ${a === q.a ? 'fb-ok' : 'fb-ng'}"><b>${a === q.a ? '◎ 正解' : a === undefined ? '無回答：正解は ' + label(q.a) : '△ 正解は ' + label(q.a)}</b></div>${q.ja ? `<p class="exp-ja">${esc(q.ja)}</p>` : ''}<p class="exp-body">${esc(q.ex)}</p>${q.au ? `<button class="ib sm" data-src="${esc(base + q.au + ext)}"${encAttr}>🔊<small>文</small></button>` : ''}</div>` : ''}
       </div>`;
     }).join('');
     return `<section class="card shk-part"><h2 class="shk-no">${esc(p.no)}</h2><p class="shk-lead" lang="en">${esc(p.lead)}</p><p class="shk-leadja">${esc(p.leadJa || '')}</p>${docs}<div class="shk-qs">${qs}</div></section>`;
@@ -925,7 +1070,8 @@ function renderSet(arg) {
   <article class="shk">
     <a class="back" href="#shiken">← 試験対策の一覧へ</a>
     <header class="p-head"><div>${isSample ? '<span class="pill pill-sky">無料サンプル</span>' : '<span class="pill pill-leaf">購入済み</span>'} <span class="muted small">${total}問${isSample ? `（全${set.total}問のうち）` : ''}・目安${set.minutes}分</span></div>
-      <h1 class="gh1">${esc(set.title)}</h1><p class="small muted">${esc(set.note || '')}</p></header>
+      <h1 class="gh1">${esc(set.title)}</h1><p class="small muted">${esc(set.note || '')}</p>
+      ${!isSample && set.order ? `<p class="small shk-orderline">購入番号：<code class="shk-order">${esc(set.order)}</code> <button class="ib sm" type="button" id="shkCopy">コピー</button><br><span class="muted">別の端末やブラウザで開くときに使います。控えておいてください。</span></p>` : ''}</header>
     <div class="toolbar card shk-bar">
       <div class="timer"><span class="timer-ic">⏱</span><span id="shkTm"></span></div>
       <span class="small"><b id="shkCnt">${answered}</b> / ${total} 解答</span>
@@ -963,6 +1109,11 @@ function renderSet(arg) {
   const s1 = $('#shkSubmit'), s2 = $('#shkSubmit2'); if (s1) s1.addEventListener('click', submit); if (s2) s2.addEventListener('click', submit);
   const rt = $('#shkRetry'); if (rt) rt.addEventListener('click', () => { shk = null; renderSet(arg); window.scrollTo(0, 0); });
   $('#shkJa').addEventListener('change', e => { shk.showJa = e.target.checked; keepScroll(() => renderSet(arg)); });
+  const cp = $('#shkCopy'); if (cp) cp.addEventListener('click', () => {
+    const done = () => toast('購入番号をコピーしました');
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(set.order).then(done, () => toast('コピーできませんでした。番号を長押しして選んでください'));
+    else toast('コピーできませんでした。番号を長押しして選んでください');
+  });
 }
 function shkTable(t) {
   if (t.chart === 'bar') {
@@ -978,10 +1129,16 @@ function shkMsg(r) {
   return '最初は時間を気にせず、和訳を見ながら1問ずつ根拠を確かめるのがおすすめです。2回目で得点は大きく伸びます。';
 }
 // 採点後の音声（段落・文）
-document.addEventListener('click', ev => {
+document.addEventListener('click', async ev => {
   const b = ev.target.closest('.shk [data-src]'); if (!b) return;
   const again = Player.btn === b; Player.stop(); if (again) return;
-  const a = new Audio(b.dataset.src); Player.audio = a; Player.btn = b; b.classList.add('playing');
+  Player.btn = b; b.classList.add('playing');
+  let src = b.dataset.src;
+  if (b.dataset.enc) {
+    try { src = await shkAudioUrl(src, shk.set.key); } catch (e) { if (Player.btn === b) Player.stop(); toast('音声を読み込めませんでした'); return; }
+    if (Player.btn !== b) return;   // 読み込み中に止めた・別の音声を押した
+  }
+  const a = new Audio(src); Player.audio = a;
   a.addEventListener('ended', () => { if (Player.audio === a) Player.stop(); });
   a.play().catch(() => { if (Player.audio === a) { Player.stop(); toast('音声を再生できませんでした'); } });
 });
@@ -1255,6 +1412,7 @@ function syncSettings() {
 Speech.init();
 initSettings();
 route();
+shkReturn();
 
 // 開発用：辞書の収録状況を確認する（コンソールで EIGO_DEBUG.missing() ）
 window.EIGO_DEBUG = {
