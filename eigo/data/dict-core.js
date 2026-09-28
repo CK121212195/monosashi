@@ -643,7 +643,7 @@ EIGO.IRREG = {
   set: "set", put: "put", cut: "cut", hit: "hit", shut: "shut", spread: "spread", cost: "cost", bet: "bet",
   outperformed: "outperform", mimicked: "mimic", panicked: "panic",
   forgotten: "forget", gone: "go", lying: "lie", met: "meet", spoke: "speak", spoken: "speak",
-  woke: "wake", woken: "wake", dying: "die", tying: "tie"
+  woke: "wake", woken: "wake", slept: "sleep", dying: "die", tying: "tie"
 };
 
 /* カタカナ発音の罠（日本語のカタカナ読みで覚えやすい語） */
@@ -793,5 +793,6 @@ EIGO.HETERO = {
   transplant: "名詞 /ˈtrænsplænt/（移植）、動詞 /trænsˈplænt/（移植する）。",
   frequent: "形容詞 /ˈfriːkwənt/（頻繁な）、動詞 /friˈkwent/（よく訪れる）。",
   commune: "名詞 /ˈkɑːmjuːn/（共同体）、動詞 /kəˈmjuːn/（親しく語り合う）。",
-  proceeds: "名詞 /ˈproʊsiːdz/（収益）、動詞 proceed /prəˈsiːd/（進む）の三単現。"
+  proceeds: "名詞 /ˈproʊsiːdz/（収益）、動詞 proceed /prəˈsiːd/（進む）の三単現。",
+  resume: "動詞 /rɪˈzuːm/（再開する）、名詞 /ˈrezəmeɪ/（履歴書：résumé とも書く）。"
 };
