@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <url><loc>https://kazumono.com/</loc><lastmod>2026-09-08</lastmod><priority>1.0</priority></url>
+  <url><loc>https://kazumono.com/</loc><lastmod>2026-09-28</lastmod><priority>1.0</priority></url>
   <url><loc>https://kazumono.com/credit-pro/</loc><lastmod>2026-08-27</lastmod><priority>0.9</priority></url>
   <url><loc>https://kazumono.com/kabuka/</loc><lastmod>2026-08-08</lastmod><priority>0.9</priority></url>
   <url><loc>https://kazumono.com/shaho/</loc><lastmod>2026-08-08</lastmod><priority>0.9</priority></url>
@@ -10,7 +10,6 @@
   <url><loc>https://kazumono.com/STATLAB/</loc><lastmod>2026-08-08</lastmod><priority>0.9</priority></url>
   <url><loc>https://kazumono.com/toukei2/</loc><lastmod>2026-08-14</lastmod><priority>0.9</priority></url>
   <url><loc>https://kazumono.com/toukei-j1/</loc><lastmod>2026-08-14</lastmod><priority>0.9</priority></url>
-  <url><loc>https://kazumono.com/eigo/</loc><lastmod>2026-09-28</lastmod><priority>0.9</priority></url>
   <url><loc>https://kazumono.com/bep/</loc><lastmod>2026-08-09</lastmod><priority>0.9</priority></url>
   <url><loc>https://kazumono.com/kokusai/</loc><lastmod>2026-09-08</lastmod><priority>0.9</priority></url>
   <url><loc>https://kazumono.com/kinri/</loc><lastmod>2026-08-09</lastmod><priority>0.9</priority></url>
@@ -39,5 +38,133 @@
   <url><loc>https://kazumono.com/contact/</loc><lastmod>2026-08-08</lastmod><priority>0.4</priority></url>
   <url><loc>https://kazumono.com/privacy/</loc><lastmod>2026-08-08</lastmod><priority>0.3</priority></url>
   <url><loc>https://kazumono.com/tokusho/</loc><lastmod>2026-08-27</lastmod><priority>0.3</priority></url>
+
+  <!-- eigo:start（eigo/tools/build_seo.js が自動生成） -->
+  <url><loc>https://kazumono.com/eigo/</loc><lastmod>2026-09-28</lastmod><priority>0.9</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g01/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g02/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g03/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g04/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g05/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g06/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g07/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g08/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g09/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g10/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g11/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g12/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g13/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g14/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g15/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g16/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g17/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g18/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g19/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g20/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g21/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g22/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g23/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g24/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g25/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g26/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g27/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g28/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g29/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g30/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g31/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/g32/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/bunpou/</loc><lastmod>2026-09-28</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p01/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p07/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p05/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p03/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p13/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p02/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p08/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p11/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p04/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p19/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p06/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p14/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p09/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p12/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p16/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p18/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p10/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p17/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p15/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/p20/</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
+  <url><loc>https://kazumono.com/eigo/chobun/</loc><lastmod>2026-09-28</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/conform-confirm/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/adapt-adopt-adept/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/affect-effect/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/complement-compliment/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/principal-principle/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/stationary-stationery/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/economic-economical/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/historic-historical/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/sensible-sensitive/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/respectful-respective-respectable/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/imply-infer/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/prescribe-proscribe/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/precede-proceed/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/elicit-illicit/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/eminent-imminent/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/ensure-insure/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/continual-continuous/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/deduce-deduct/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/loose-lose/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/lend-borrow/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/rise-raise/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/lie-lay/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/access-assess-excess/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/expand-expend/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/comprehensive-comprehensible/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/considerable-considerate/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/industrial-industrious/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/successful-successive/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/literal-literary-literate/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/invaluable-valueless/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/alternate-alternative/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/discreet-discrete/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/flout-flaunt/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/prosecute-persecute/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/perspective-prospective/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/collaborate-corroborate/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/accept-except/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/advise-advice/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/council-counsel/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/moral-morale/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/personal-personnel/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/device-devise/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/dividend-divided/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/asset-assert/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/depreciate-deprecate/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/compose-comprise/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/exhaustive-exhausting/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/emigrate-immigrate/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/vocation-vacation/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/statue-statute-stature/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/ingenious-ingenuous/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/credible-credulous/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/averse-adverse/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/canvas-canvass/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/sculpture-sculptor/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/effective-efficient/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/rational-rationale/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/reign-rein/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/brake-break/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/accede-exceed/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/collect-correct/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/vary-very/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/through-thorough-though/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/later-latter/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/beside-besides/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/hoard-horde/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/wander-wonder/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/precedent-president/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/bond-bound/</loc><lastmod>2026-09-28</lastmod><priority>0.6</priority></url>
+  <url><loc>https://kazumono.com/eigo/magirawashii/</loc><lastmod>2026-09-28</lastmod><priority>0.8</priority></url>
+  <!-- eigo:end -->
 
 </urlset>

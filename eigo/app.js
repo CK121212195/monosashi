@@ -799,7 +799,7 @@ function renderUnit(id) {
   const score = u.qs.filter((q, k) => gst.ans[k] === q.a).length;
   view().innerHTML = `
   <article class="gunit">
-    <a class="back" href="#grammar">← 文法の一覧へ</a>
+    <a class="back" href="#grammar">← 文法の一覧へ</a> <a class="small" href="/eigo/bunpou/${u.id}/" style="float:right">📄 1ページで読む（印刷・共有向け）</a>
     <header class="p-head"><div><span class="pill pill-teal">${esc(u.cat)}</span> ${u.lv === 'UNI' ? '<span class="pill pill-coral">大学・TOEIC上級</span>' : '<span class="pill pill-leaf">高校</span>'}</div>
       <h1 class="gh1">${esc(u.title)}</h1><p class="glead">${esc(u.lead)}</p></header>
     ${secs}
