@@ -32,3 +32,5 @@ body::before{display:none;}
 .brand span{color:var(--sun-d);}
 /* 数字の桁がそろうように（Nunito は既定だと幅が不ぞろい） */
 table,input,output,.num,[class*="kpi"],[class*="price"],[class*="result"]{font-variant-numeric:tabular-nums;}
+/* グラフ（SVG）の文字：数字は Nunito、日本語は丸ゴシック（丸ゴシックだけだと数字の間が空いて見えるため） */
+svg text{font-family:"Nunito","Zen Maru Gothic","Hiragino Sans","Yu Gothic",YuGothic,sans-serif;}
