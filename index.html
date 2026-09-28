@@ -22,6 +22,10 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta name="theme-color" content="#33526C">
+<!-- 書体：英語のものさしと同じ3書体に統一（丸ゴシック・丸みのある数字・読みやすい欧文） -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Nunito:wght@600;700;800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&display=swap" rel="stylesheet">
 
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2146116373822311" crossorigin="anonymous"></script>
@@ -741,6 +745,146 @@ input,select,textarea,button{font-weight:600}
 .eigo__door i{font-style:normal;font-size:24px}
 @media (max-width:900px){.eigo{grid-template-columns:1fr;gap:34px}.eigo__doors{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:560px){.eigo__nums{grid-template-columns:repeat(2,1fr)}.eigo__doors{grid-template-columns:1fr}.eigo__demo-en{font-size:18.5px}.eigosec{padding:60px 0}.eigo-ribbon__go{margin-left:0}.ew__tip{min-width:170px}}
+
+/* =====================================================================
+   統一テーマ（試作）：英語のものさしの書体と明るさをサイト全体へ
+   ・書体：Zen Maru Gothic（日本語）／Nunito（数字）／Literata（英文）
+   ・色：明るい紙色の土台に、サービスごとの「主役の色」を1色ずつ
+       財務でポン！＝空色　リース見積診断＝若葉の緑　英語のものさし＝陽だまりの黄
+   ===================================================================== */
+:root{
+  --paper:#FFFCF4;
+  --ink:#222B45; --ink-soft:#3D4763; --ink-faint:#56617D;
+  --line:#EDE6D6;
+  --serif:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",YuGothic,sans-serif;
+  --sans:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",YuGothic,sans-serif;
+  --num:"Nunito","Helvetica Neue",Arial,sans-serif;
+  --en:"Literata",Georgia,"Times New Roman",serif;
+  --sun:#FFC83D;  --sun-d:#B98100; --sun-s:#FFF3CC;
+  --leaf:#1FAF78; --leaf-d:#0F7D55; --leaf-s:#DDF6EA;
+  --sky2:#3B9EFF; --sky2-d:#1B6FC7; --sky2-s:#E2F0FF;
+  --coral:#FF7A59;
+}
+body{background:var(--paper);background-image:radial-gradient(circle at 8% 0%,rgba(255,200,61,.14) 0,transparent 34%),radial-gradient(circle at 96% 10%,rgba(59,158,255,.09) 0,transparent 30%);}
+body::before{display:none;}
+.masthead{background:rgba(255,252,244,.94);}
+.brand{font-weight:900;letter-spacing:.12em;}
+.brand span{color:var(--sun-d);}
+h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
+.eigo__demo-en,.ew__tip b{font-family:var(--en);}
+/* ボタン：押せそうな丸いボタン（英語のものさしと同じ形） */
+.btn{font-weight:900;letter-spacing:.05em;}
+.btn--primary{background:var(--sky2);color:#fff;box-shadow:0 5px 0 var(--sky2-d);}
+.btn--primary:hover{box-shadow:0 7px 0 var(--sky2-d);}
+.btn--lease{background:var(--leaf);color:#fff;box-shadow:0 5px 0 var(--leaf-d);}
+.btn--lease:hover{background:#27BF85;box-shadow:0 7px 0 var(--leaf-d);}
+.btn--ghost{border-color:var(--line);color:var(--ink);background:#fff;}
+/* 看板サービスの節も主役の色で */
+#pro .flow__no{background:var(--sky2);}
+#pro .price{border-color:var(--sky2);}
+#pro .price__amt b,#pro .flag__eyebrow{color:var(--sky2-d);}
+#lease-pro .flow__no{background:var(--leaf);}
+#lease-pro .price{border-color:var(--leaf);}
+#lease-pro .price__amt b,#lease-pro .flag__eyebrow{color:var(--leaf-d);}
+#lease-pro .btn--primary{background:var(--leaf);box-shadow:0 5px 0 var(--leaf-d);}
+.flagsec{background:linear-gradient(180deg,rgba(226,240,255,.7),rgba(255,252,244,0) 82%);}
+.flagsec--alt{background:linear-gradient(180deg,rgba(221,246,234,.75),rgba(255,252,244,0) 82%);}
+
+/* ===================== ヒーロー（3つの看板サービス） ===================== */
+.hero{padding:64px 0 56px;background:none;}
+.hero h1{font-weight:900;font-size:clamp(26px,3.8vw,42px);line-height:1.5;letter-spacing:.03em;margin:0 0 18px;max-width:none;}
+.hero h1 em{background:linear-gradient(transparent 60%,var(--sun) 60%,var(--sun) 92%,transparent 92%);}
+.hero__lead{max-width:40em;margin:0 0 34px !important;font-size:16px;color:var(--ink-soft) !important;}
+.eyebrow{color:var(--sun-d);font-weight:800;letter-spacing:.22em;}
+.hero__blob--a{background:var(--sun-s);}
+.hero__blob--b{background:var(--sky2-s);opacity:.9;}
+.hero__blob--c{background:var(--leaf-s);}
+
+.trio{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:18px;align-items:stretch;}
+.panel{position:relative;display:flex;flex-direction:column;background:#fff;border:1.5px solid var(--line);border-radius:26px;padding:24px 24px 22px;
+  box-shadow:0 1px 2px rgba(34,43,69,.05),0 10px 28px rgba(34,43,69,.08);transition:transform .25s,box-shadow .25s;overflow:hidden;isolation:isolate;}
+.panel::before{content:"";position:absolute;right:-46px;top:-46px;width:150px;height:150px;border-radius:50%;background:var(--pc-s);z-index:-1;transition:transform .4s;}
+.panel:hover,.panel:focus-within{transform:translateY(-6px);box-shadow:0 4px 10px rgba(34,43,69,.08),0 22px 46px rgba(34,43,69,.15);}
+.panel:hover::before,.panel:focus-within::before{transform:scale(1.25);}
+.panel--eigo{--pc:var(--sun);--pc-d:var(--sun-d);--pc-s:var(--sun-s);border-color:#F4DF9C;background:linear-gradient(180deg,#FFFBEA,#fff 55%);}
+.panel--pro{--pc:var(--sky2);--pc-d:var(--sky2-d);--pc-s:var(--sky2-s);}
+.panel--lease{--pc:var(--leaf);--pc-d:var(--leaf-d);--pc-s:var(--leaf-s);}
+/* ヒーローの段落の決まり（.hero p）がパネルの中に及ばないように戻す */
+.hero .panel p{max-width:none;margin:0;font-size:inherit;line-height:1.7;color:inherit;}
+.panel__top{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;margin:0 0 14px;}
+.panel__icon{width:44px;height:44px;border-radius:13px;background:var(--pc);box-shadow:0 4px 0 var(--pc-d);display:grid;place-items:center;font:800 21px var(--num);color:#fff;flex:none;position:relative;}
+.panel--eigo .panel__icon{color:var(--ink);}
+.panel__icon small{position:absolute;right:-7px;bottom:-7px;width:23px;height:23px;border-radius:50%;background:var(--sky2);color:#fff;font:700 12px var(--sans);display:grid;place-items:center;border:2.5px solid #fff;}
+.panel__name{font-size:17.5px;font-weight:900;letter-spacing:.03em;margin:0;white-space:nowrap;}
+.panel__price{margin-left:auto;font-size:11.5px;font-weight:800;letter-spacing:.03em;border-radius:999px;padding:3px 11px;background:var(--pc-s);color:var(--pc-d);white-space:nowrap;}
+.panel--eigo .panel__price{background:var(--leaf);color:#fff;}
+.hero .panel .panel__title{font-size:clamp(20px,1.9vw,24px);font-weight:900;line-height:1.5;margin:0 0 8px;color:var(--ink);}
+.panel__title em{font-style:normal;background:linear-gradient(transparent 62%,var(--pc-s) 62%);}
+.panel--eigo .panel__title em{background:linear-gradient(transparent 60%,var(--sun) 60%,var(--sun) 92%,transparent 92%);}
+.hero .panel .panel__lead{font-size:14px;line-height:1.85;color:var(--ink-soft);margin:0 0 14px;}
+.panel__demo{background:#FBFAF6;border:1.5px dashed var(--line);border-radius:18px;padding:14px 16px;margin:0 0 16px;flex:1;}
+.panel__demo-lab{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--pc-d);margin:0 0 6px;}
+.panel__go{margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:999px;background:var(--pc);color:#fff;font-weight:900;font-size:14.5px;letter-spacing:.04em;text-decoration:none;box-shadow:0 4px 0 var(--pc-d);transition:transform .15s;}
+.panel--eigo .panel__go{color:var(--ink);}
+.panel__go:hover{transform:translateY(-2px);}
+.panel__go span{transition:transform .2s;}
+.panel__go:hover span{transform:translateX(4px);}
+.hero .panel .panel__fine{font-size:11.5px;color:var(--ink-faint);margin:10px 0 0;line-height:1.6;}
+
+/* 英語：ホバー辞書の見本 */
+.panel .ew__tip{left:-4px;transform:translateY(4px);}
+.panel .ew:hover .ew__tip,.panel .ew:focus .ew__tip,.panel .ew.is-open .ew__tip{transform:translateY(0);}
+.hero .panel .eigo__demo-en{font-size:18px;line-height:2.05;margin:0;color:var(--ink);}
+.panel .ew__tip{min-width:180px;}
+.panel--eigo::before{right:-40px;top:-40px;}
+.panel__nums{display:flex;flex-wrap:wrap;gap:6px 14px;margin:10px 0 0;padding:0;list-style:none;font-size:12px;font-weight:700;color:var(--ink-soft);}
+.panel__nums b{font-family:var(--num);font-size:17px;color:var(--ink);margin-right:2px;}
+
+/* 財務でポン！：6軸の棒が伸びる */
+.bars{display:grid;gap:5px;margin:0;padding:0;list-style:none;}
+.bars li{display:grid;grid-template-columns:5.2em 1fr 3.2em;gap:8px;align-items:center;font-size:12px;font-weight:700;color:var(--ink-soft);}
+.bars i{display:block;height:9px;border-radius:999px;background:#EAF0F8;overflow:hidden;}
+.bars i::after{content:"";display:block;height:100%;width:var(--w);border-radius:999px;background:linear-gradient(90deg,#7CC0FF,var(--sky2));transform-origin:left;transform:scaleX(var(--k,1));transition:transform 1s cubic-bezier(.2,.8,.2,1);}
+.bars b{font-family:var(--num);font-size:12.5px;color:var(--ink);text-align:right;}
+.grade{display:flex;align-items:center;gap:10px;margin:0 0 10px;}
+.grade__rank{width:40px;height:40px;border-radius:12px;background:var(--sky2);color:#fff;display:grid;place-items:center;font:800 22px var(--num);box-shadow:0 3px 0 var(--sky2-d);}
+.grade__pt{font:800 26px var(--num);color:var(--ink);line-height:1;white-space:nowrap;}
+.grade__pt small{font-size:12px;color:var(--ink-soft);margin-left:3px;}
+.grade__note{font-size:11.5px;color:var(--ink-soft);line-height:1.5;}
+
+/* リース見積診断：金利がカウントアップ */
+.calc{display:grid;gap:4px;margin:0;}
+.calc__row{display:flex;justify-content:space-between;gap:10px;font-size:13px;font-weight:700;color:var(--ink-soft);border-bottom:1px dashed var(--line);padding:3px 0;}
+.calc__row b{font-family:var(--num);color:var(--ink);font-size:14px;}
+.calc__out{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:8px;}
+.calc__out>span:first-child{font-size:13px;font-weight:800;color:var(--leaf-d);}
+.calc__rate{font:800 38px var(--num);color:var(--leaf-d);line-height:1;letter-spacing:-.01em;}
+.calc__rate small{font-size:18px;margin-left:2px;}
+.hero .panel .calc__extra{font-size:12px;color:var(--ink-soft);margin:4px 0 0;text-align:right;}
+.calc__extra b{font-family:var(--num);color:var(--ink);}
+
+/* スマホ：3枚を横にめくる（自動では動かさない） */
+.trio__dots{display:none;}
+@media (max-width:900px){
+  .hero{padding:40px 0 36px;}
+  .trio{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0 -18px;padding:10px 18px 18px;scrollbar-width:none;}
+  .trio::-webkit-scrollbar{display:none;}
+  .panel{flex:0 0 86%;scroll-snap-align:center;padding:20px 18px 18px;}
+  .masthead{background:var(--paper);}
+  .panel__top{flex-wrap:wrap;gap:8px 10px;}
+  .panel__name{font-size:16.5px;}
+  .panel__price{margin-left:0;}
+  .hero .panel .panel__lead{font-size:13.5px;line-height:1.75;}
+  .hero .panel .eigo__demo-en{font-size:16.5px;}
+  .panel__demo{padding:12px 14px;}
+  .panel:hover,.panel:focus-within{transform:none;}
+  .trio__dots{display:flex;justify-content:center;gap:8px;margin:2px 0 0;}
+  .trio__dots button{width:9px;height:9px;padding:0;border-radius:999px;border:none;background:#DCD5C3;cursor:pointer;transition:width .2s,background .2s;}
+  .trio__dots button.on{width:24px;background:var(--ink);}
+}
+@media (prefers-reduced-motion:reduce){
+  .panel,.panel::before,.bars i::after,.panel__go{transition:none;}
+}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
@@ -780,27 +924,72 @@ input,select,textarea,button{font-weight:600}
       <span class="hero__blob hero__blob--b" aria-hidden="true"></span>
       <span class="hero__blob hero__blob--c" aria-hidden="true"></span>
       <div class="wrap">
-        <p class="eyebrow">numbers you can check yourself</p>
+        <p class="eyebrow">numbers &amp; words you can check yourself</p>
         <h1>調べても出てこない数字を、<em>その場で</em>算出します。</h1>
-        <p>非上場会社の株価算出や昇給時の社会保険料の増減額、住宅の生涯コスト、取引先の与信管理など。「立場や場合により異なります」としか判断されない数字を、条件を入れて自分で確かめられるようにしました。無料ツールは、登録不要でどなたでもお使いいただけます。</p>
-        <p class="hero__sub">財務分析について<br>決算書読み込み作業は、PDFのドラッグ＆ドロップで完了します。<a href="/credit-pro/">財務でポン！</a>なら、1社500円で財務分析と与信判定が7つの図になって出てきます。<br><br>リース料金について<br>リース見積の月額や料率から、実質金利とリース会社の利益まで<a href="/lease/">リース見積診断</a>で逆算できます。</p>
-        <div class="hero__actions">
-          <a class="btn btn--primary" href="/credit-pro/">財務でポン！を使う<span class="btn__arrow" aria-hidden="true">→</span></a>
-          <a class="btn btn--primary btn--lease" href="/lease/">リース見積診断を使う<span class="btn__arrow" aria-hidden="true">→</span></a>
-          <a class="btn btn--ghost" href="#tools">ほかのツールを見る</a>
+        <p class="hero__lead">非上場会社の株価算出や昇給時の社会保険料の増減額、住宅の生涯コスト、取引先の与信管理など。「立場や場合により異なります」としか判断されない数字を、条件を入れて自分で確かめられるようにしました。そして、英語は読みながら身につくように。無料ツールは、登録不要でどなたでもお使いいただけます。</p>
+
+        <!-- 3つの看板サービス（自動では動かさない。触れたときだけ中身が動く） -->
+        <div class="trio" id="trio" aria-label="3つの看板サービス">
+
+          <article class="panel panel--eigo" aria-labelledby="p-eigo">
+            <div class="panel__top"><span class="panel__icon" aria-hidden="true">A<small>あ</small></span><h2 class="panel__name" id="p-eigo">英語のものさし</h2><span class="panel__price">無料・登録不要</span></div>
+            <p class="panel__title">触れた単語が、<em>そのまま身につく。</em></p>
+            <p class="panel__lead">英検2級〜1級・TOEIC 600点以上をめざす人の問題集。どの単語もカーソルを合わせるだけで意味・発音記号・紛らわしい語が出て、🔊で発音も聞けます。</p>
+            <div class="panel__demo">
+              <span class="panel__demo-lab">試しに、黄色い単語へカーソルを（スマホはタップ）</span>
+              <p class="eigo__demo-en" lang="en">The central bank's decision to <span class="ew" tabindex="0" data-src="/eigo/audio/w/us/5ef9ed23.mp3">raise<span class="ew__tip"><b>raise</b><span class="ew__ipa">/reɪz/</span><br>（他動詞）～を上げる<span class="ew__warn">混同注意：rise（自動詞）上がる</span></span></span> <span class="ew" tabindex="0" data-src="/eigo/audio/w/us/a8bafcd8.mp3">interest rates<span class="ew__tip"><b>interest rates</b><br>金利（熟語として表示）</span></span> rattled the <span class="ew" tabindex="0" data-src="/eigo/audio/w/us/7f9a4c9b.mp3">stock market<span class="ew__tip"><b>stock market</b><br>株式市場</span></span>.</p>
+              <ul class="panel__nums"><li><b>151</b>穴埋め</li><li><b>20</b>長文</li><li><b>32</b>文法単元</li><li><b>2,766</b>語の音声</li></ul>
+            </div>
+            <a class="panel__go" href="/eigo/">英語のものさしを開く<span aria-hidden="true">→</span></a>
+            <p class="panel__fine">共通テスト形式・TOEIC形式の実戦問題集（1セット50問・100円）もあります。</p>
+          </article>
+
+          <article class="panel panel--pro" aria-labelledby="p-pro">
+            <div class="panel__top"><span class="panel__icon" aria-hidden="true">¥</span><h2 class="panel__name" id="p-pro">財務でポン！</h2><span class="panel__price">1社 500円</span></div>
+            <p class="panel__title">決算書PDFを置くだけで、<em>与信判定。</em></p>
+            <p class="panel__lead">数字を自動で読み取り、6軸100点満点で信用力を判定。信用程度A〜E・与信限度額の目安・7つの図とExcelが出ます。</p>
+            <div class="panel__demo" data-anim="bars">
+              <span class="panel__demo-lab">判定の見本（サンプル会社「評価の高い例」）</span>
+              <div class="grade"><span class="grade__rank">A</span><span class="grade__pt"><span data-count="88">88</span><small>/ 100点</small></span><span class="grade__note">信用程度A：積極的に取り組んで差し支えない水準</span></div>
+              <ul class="bars">
+                <li><span>業歴</span><i style="--w:100.0%"></i><b>10/10</b></li>
+                <li><span>資本構成</span><i style="--w:91.7%"></i><b>11/12</b></li>
+                <li><span>規模</span><i style="--w:38.9%"></i><b>7/18</b></li>
+                <li><span>損益</span><i style="--w:100.0%"></i><b>10/10</b></li>
+                <li><span>経営者</span><i style="--w:100.0%"></i><b>20/20</b></li>
+                <li><span>償還余力</span><i style="--w:100.0%"></i><b>30/30</b></li>
+              </ul>
+            </div>
+            <a class="panel__go" href="/credit-pro/">財務でポン！を使う<span aria-hidden="true">→</span></a>
+            <p class="panel__fine">読み取りも判定もブラウザの中だけ。決算書は送信されません。</p>
+          </article>
+
+          <article class="panel panel--lease" aria-labelledby="p-lease">
+            <div class="panel__top"><span class="panel__icon" aria-hidden="true">%</span><h2 class="panel__name" id="p-lease">リース見積診断</h2><span class="panel__price">1件 1,000円</span></div>
+            <p class="panel__title">そのリース、<em>金利は何％？</em></p>
+            <p class="panel__lead">見積書に金利は書かれていません。物件価額・回数・月額から実質年率を逆算します。金利の逆算までは無料です。</p>
+            <div class="panel__demo" data-anim="rate">
+              <span class="panel__demo-lab">計算例（期末払い・残価なし）</span>
+              <div class="calc">
+                <div class="calc__row"><span>物件価額</span><b>5,000,000円</b></div>
+                <div class="calc__row"><span>支払回数</span><b>60回</b></div>
+                <div class="calc__row"><span>月額リース料</span><b>95,000円</b></div>
+              </div>
+              <div class="calc__out"><span>実質年率（金利）</span><span class="calc__rate"><span data-count="5.28" data-dec="2">5.28</span><small>%</small></span></div>
+              <p class="calc__extra">物件価額より多く払う額 <b>700,000</b>円</p>
+            </div>
+            <a class="panel__go" href="/lease/">リース見積診断を使う<span aria-hidden="true">→</span></a>
+            <p class="panel__fine">LINEでも、数字を送るだけで計算できます。</p>
+          </article>
+
+        </div>
+        <div class="trio__dots" id="trioDots" aria-hidden="true"><button type="button" class="on" tabindex="-1"></button><button type="button" tabindex="-1"></button><button type="button" tabindex="-1"></button></div>
+
+        <div class="hero__actions" style="margin-top:26px">
+          <a class="btn btn--ghost" href="#tools">ほかの無料ツールを見る</a>
         </div>
       </div>
     </section>
-
-
-    <!-- ============ 英語のものさし：お知らせ帯 ============ -->
-    <a class="eigo-ribbon" href="#eigo">
-      <div class="wrap eigo-ribbon__in">
-        <span class="eigo-ribbon__tag">NEW</span><span class="eigo-ribbon__free">無料</span>
-        <span class="eigo-ribbon__t">英語のものさし ― 英検・TOEICの文法・長文・単語を、ホバー辞書と音声で。</span>
-        <span class="eigo-ribbon__go">くわしく見る ↓</span>
-      </div>
-    </a>
 
     <!-- ============ 主力サービス ============ -->
     <section class="flagsec" id="pro">
@@ -1266,10 +1455,40 @@ input,select,textarea,button{font-weight:600}
 <script>
 /* 英語のものさしの見本：単語・文の音声を再生する（ファイルは /eigo/audio に同梱） */
 (function(){var cur=null,btn=null;function stop(){if(cur){cur.pause();cur=null;}if(btn){btn.classList.remove('playing');}btn=null;}
-document.addEventListener('click',function(e){var t=e.target.closest('#eigo [data-src]');if(!t)return;
-if(t.classList.contains('ew')){document.querySelectorAll('#eigo .ew.is-open').forEach(function(x){if(x!==t)x.classList.remove('is-open');});t.classList.toggle('is-open');}
+document.addEventListener('click',function(e){var t=e.target.closest('#eigo [data-src], .panel--eigo [data-src]');if(!t)return;
+if(t.classList.contains('ew')){document.querySelectorAll('.ew.is-open').forEach(function(x){if(x!==t)x.classList.remove('is-open');});t.classList.toggle('is-open');}
 var again=btn===t;stop();if(again&&!t.classList.contains('ew'))return;var a=new Audio(t.getAttribute('data-src'));cur=a;btn=t;t.classList.add('playing');a.addEventListener('ended',function(){if(cur===a)stop();});a.play().catch(stop);
 try{if(typeof gtag==='function')gtag('event','eigo_demo_play');}catch(err){}});})();
+</script>
+<script>
+/* 3つの看板サービス：見えたとき・触れたときだけ中身が動く（自動で切り替えることはしない） */
+(function(){
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function fmt(v,dec){return dec?v.toFixed(dec):Math.round(v).toLocaleString('ja-JP');}
+  function play(panel){
+    if(reduce)return;
+    panel.querySelectorAll('.bars li').forEach(function(li){li.style.setProperty('--k','0');});
+    panel.querySelectorAll('[data-count]').forEach(function(el){
+      var to=parseFloat(el.getAttribute('data-count')),dec=+el.getAttribute('data-dec')||0,t0=null;
+      el.textContent=fmt(0,dec);
+      function step(t){if(t0===null)t0=t;var p=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-p,3);el.textContent=fmt(to*e,dec);if(p<1)requestAnimationFrame(step);else el.textContent=fmt(to,dec);}
+      requestAnimationFrame(step);
+    });
+    requestAnimationFrame(function(){requestAnimationFrame(function(){panel.querySelectorAll('.bars li').forEach(function(li,i){setTimeout(function(){li.style.setProperty('--k','1');},i*70);});});});
+  }
+  var panels=[].slice.call(document.querySelectorAll('.panel'));
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){play(e.target);io.unobserve(e.target);}});},{threshold:.5});
+    panels.forEach(function(p){io.observe(p);});
+  }
+  panels.forEach(function(p){var last=0;p.addEventListener('mouseenter',function(){var n=Date.now();if(n-last>2500){last=n;play(p);}});});
+  /* スマホ：いま見えている1枚を点で示す。点を押すとその1枚へ */
+  var trio=document.getElementById('trio'),dots=[].slice.call(document.querySelectorAll('#trioDots button'));
+  if(trio&&dots.length){
+    trio.addEventListener('scroll',function(){var w=trio.scrollWidth-trio.clientWidth;var i=w>0?Math.round(trio.scrollLeft/w*(dots.length-1)):0;dots.forEach(function(d,k){d.classList.toggle('on',k===i);});},{passive:true});
+    dots.forEach(function(d,k){d.addEventListener('click',function(){panels[k].scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest',inline:'center'});});});
+  }
+})();
 </script>
 <script>
 /* LINEの友だち追加ボタン：押された回数だけを計測する */
