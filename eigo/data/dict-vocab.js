@@ -2179,3 +2179,269 @@ with a view to|phr|～する目的で（＋動名詞）
 with regard to|phr|～に関して
 would rather|phr|むしろ～したい
 `);
+
+/* 有料問題集（共通テスト形式・TOEIC Part 5・6）で使う語 */
+EIGO.DICT_PARTS.push(`
+accuracy|n|正確さ
+addition|n|追加（in addition＝さらに）
+ad|n|広告（advertisement の略）
+aid|n|援助；（動詞）助ける
+aiko|pn|アイコ（人名）
+air|n|空気・大気
+alert|n|通知・警報
+alone|adv|～だけで・ひとりで
+anxious|adj|不安な・切望して|ˈæŋkʃəs
+anywhere|adv|どこへでも
+appreciation|n|感謝・価値を認めること|əˌpriːʃiˈeɪʃən|B
+artclub|n|（メールアドレスの一部）
+article|n|記事・（文法の）冠詞
+asleep|adj|眠っている（fall asleep＝寝つく）
+assign|v|割り当てる|əˈsaɪn
+assist|v|手伝う（assist 人 with 事）
+athlete|n|運動選手|ˈæθliːt
+audio|n|音声
+aware|adj|知っている・気づいている（be aware of）
+b|n|（記号）B
+bakery|n|パン屋
+bedroom|n|寝室
+bedtime|n|就寝時刻
+beginner|n|初心者
+blog|n|ブログ
+boredom|n|退屈
+brain|n|脳
+bread|n|パン
+bulletin|n|掲示・告知（bulletin board＝掲示板）
+c|n|（記号）C
+cable|n|ケーブル・電線
+cafe|n|カフェ|kæˈfeɪ
+cafeteria|n|食堂
+cake|n|ケーキ
+carbon|n|炭素（carbon emissions＝炭素排出量）
+cashless|adj|現金を使わない・キャッシュレスの
+chair|n|椅子
+chat|v|おしゃべりする・チャットする
+chen|pn|チェン（人名）
+classmate|n|同級生
+comedy|n|喜劇・コメディ
+community|n|地域社会・共同体
+concentration|n|集中
+connection|n|つながり
+construction|n|建設・工事
+convenient|adj|便利な
+conveniently|adv|便利に（conveniently located＝便利な場所にある）
+coordinate|v|調整する・取りまとめる|koʊˈɔːrdɪneɪt
+count|v|数える
+cramming|n|詰め込み勉強・一夜漬け
+credit|n|信用・クレジット
+curiosity|n|好奇心
+daniel|pn|ダニエル（人名）
+dear|adj|（手紙の書き出しで）親愛なる～様
+decrease|v|減る|dɪˈkriːs
+diane|pn|ダイアン（人名）
+die|v|死ぬ
+disagree|v|意見が合わない
+discussion|n|話し合い・討論
+donate|v|寄付する|ˈdoʊneɪt
+dr|n|～博士・～先生（Dr.）
+e|n|電子の（e-book＝電子書籍）
+east|n|東；（形容詞）東の
+ebbinghaus|pn|エビングハウス（ドイツの心理学者）
+eight|num|8
+elevator|n|エレベーター
+else|adv|ほかに
+empower|v|力を与える
+equation|n|方程式|ɪˈkweɪʒən
+evacuate|v|避難させる・避難する|ɪˈvækjueɪt|B
+everyday|adj|日常の
+exciting|adj|わくわくさせる
+exclude|v|除外する|ɪkˈskluːd
+exclusion|n|除外
+exclusive|adj|独占的な・限定の
+exhibit|n|展示（品）|ɪɡˈzɪbɪt
+extreme|adj|極端な
+farmer|n|農家
+farming|n|農業
+farm|n|農場・畑
+father|n|父
+fifteen|num|15
+fool|v|だます
+fully|adv|完全に
+generous|adj|気前のよい・寛大な
+german|adj|ドイツの
+glass|n|ガラス
+grace|pn|グレース（人名）
+grandfather|n|祖父
+grandmother|n|祖母
+greenfield|pn|グリーンフィールド（地名）
+hall|n|ホール・会館
+hannah|pn|ハンナ（人名）
+harbor|n|港
+heat|n|熱・暑さ（heat wave＝熱波）
+hermann|pn|ヘルマン（人名）
+hormone|n|ホルモン|ˈhɔːrmoʊn
+impatient|adj|せっかちな
+indifference|n|無関心|ɪnˈdɪfrəns|B
+inspect|v|点検する・検査する
+install|v|設置する
+intern|n|実習生・インターン
+interrupt|v|中断させる・邪魔する
+interval|n|間隔
+ken|pn|ケン（人名）
+lab|n|実験室・研究所（laboratory の略）
+laura|pn|ローラ（人名）
+learner|n|学習者
+library|n|図書館
+librarygo|pn|LibraryGo（架空のアプリ名）
+lobby|n|ロビー
+lopez|pn|ロペス（人名）
+loyalty|n|忠誠・愛着（customer loyalty＝顧客の愛着）
+magazine|n|雑誌
+maintenance|n|保守・点検|ˈmeɪntənəns
+maplehigh|pn|（架空の学校名）
+material|n|内容・教材・材料
+meaningless|adj|意味のない
+melatonin|n|メラトニン（眠気を促すホルモン）
+memory|n|記憶・思い出
+mendes|pn|メンデス（人名）
+mentor|n|指導役・助言者
+menu|n|メニュー
+message|n|メッセージ
+middle|adj|中間の（middle path＝中間の道）
+mika|pn|ミカ（人名）
+min|n|分（minute の略）
+misuse|n|誤用|ˌmɪsˈjuːs
+mobile|adj|移動式の・携帯の
+morning|n|朝
+nakamura|pn|中村（人名）
+naturally|adv|自然に
+nervousness|n|緊張
+night|n|夜
+noise|n|騒音
+norden|pn|ノルデン（架空の地名）
+nothing|pron|何も～ない
+numerical|adj|数値の（numerical model＝数値モデル）
+ocean|n|海
+october|pn|10月
+okafor|pn|オカフォー（人名）
+olympic|adj|オリンピックの
+opposition|n|反対
+organizer|n|主催者
+outdoor|adj|屋外の
+parent|n|親
+paulo|pn|パウロ（人名）
+photograph|n|写真|ˈfoʊtəɡræf
+phrase|n|句・言い回し
+physics|n|物理学
+planetarium|n|プラネタリウム
+plus|prep|～に加えて；（名詞）プラス
+post|n|投稿・郵便
+premium|adj|高級な・上位の|ˈpriːmiəm
+pronunciation|n|発音|prəˌnʌnsiˈeɪʃən
+provision|n|提供・供給
+psychology|n|心理学|saɪˈkɑːlədʒi
+qr|n|QR（QR code＝QRコード）
+rare|adj|まれな
+reality|n|現実（virtual reality＝仮想現実）
+recall|v|思い出す|rɪˈkɔːl
+receipt|n|領収書|rɪˈsiːt
+recycled|adj|再生利用された
+regional|adj|地域の・地方の
+related|adj|関係のある
+remove|v|取り除く
+repeatedly|adv|繰り返し
+repetition|n|繰り返し（spaced repetition＝間隔反復）
+replacement|n|交換品・代わり
+representative|n|担当者・代表者
+reread|v|読み返す
+responsibility|n|責任
+responsible|adj|責任がある（be responsible for＝～を担当する）
+responsibly|adv|責任を持って
+resume|n|履歴書|ˈrezəmeɪ
+reviewer|n|評者・レビューを書く人
+reyes|pn|レイエス（人名）
+ride|n|乗ること（bus ride＝バスに乗ること）
+riku|pn|リク（人名）
+rivera|pn|リベラ（人名）
+riverside|pn|リバーサイド（地名）
+robot|n|ロボット|ˈroʊbɑːt
+satellite|n|衛星
+satisfaction|n|満足（customer satisfaction＝顧客満足）
+sato|pn|佐藤（人名）
+saturday|pn|土曜日
+scan|v|読み取る・スキャンする
+science|n|科学
+sense|n|意味・感覚（make sense of＝～を理解する）
+sentence|n|文
+separate|adj|別の・別々の
+september|pn|9月
+serve|v|役立つ・提供する・（地域を）担当する
+session|n|（講習などの）1回・時間
+shelf|n|棚（複数形 shelves）
+ship|v|発送する
+shy|adj|内気な
+sleep|n|睡眠；（動詞）眠る（slept は過去形）
+sleepy|adj|眠い
+smile|v|ほほえむ
+society|n|社会
+sofia|pn|ソフィア（人名）
+space|n|宇宙・空間
+spaced|adj|間隔をあけた
+spacing|n|間隔をあけること
+stair|n|（stairs）階段
+storm|n|嵐
+street|n|通り
+strength|n|強み
+subscription|n|定期購入・購読
+suitable|adj|適した
+summary|n|要約
+supercomputer|n|スーパーコンピューター
+supermarket|n|スーパーマーケット
+syllable|n|音節
+tablet|n|タブレット端末
+teenager|n|10代の若者
+temperature|n|気温・温度
+thank|v|感謝する
+theft|n|盗難
+timeline|n|年表・予定表
+topic|n|話題・テーマ
+tourist|n|観光客
+twelve|num|12
+type|n|種類
+unable|adj|～できない（be unable to）
+unanimity|n|満場一致
+unanimous|adj|満場一致の|juˈnænɪməs
+unanimously|adv|満場一致で
+unanimousness|n|満場一致であること
+useless|adj|役に立たない
+usual|adj|いつもの（as usual＝いつもどおり）
+valid|adj|有効な
+video|n|動画
+virtual|adj|仮想の（virtual reality＝VR）
+vocabulary|n|語彙|voʊˈkæbjəleri
+vs|prep|対（versus の略）
+warranty|n|保証（書）|ˈwɔːrənti
+wednesday|pn|水曜日
+weekday|n|平日
+wheel|n|車輪（on wheels＝移動式の）
+winter|n|冬
+wordnest|pn|WordNest（架空のアプリ名）
+workshop|n|講習会・ワークショップ
+worthwhile|adj|価値のある
+writer|n|書き手・筆者
+yellow|adj|黄色の
+yourself|pron|あなた自身
+zone|n|区域・ゾーン
+bulletin board|phr|掲示板
+fall asleep|phr|寝つく
+free of charge|phr|無料で
+heat wave|phr|熱波
+make sense of|phr|～を理解する
+pass away|phr|亡くなる
+put off|phr|延期する
+customer satisfaction|phr|顧客満足（度）
+virtual reality|phr|仮想現実（VR）
+spaced repetition|phr|間隔反復
+pride|n|誇り
+probably|adv|たぶん
+renovation|n|改装・改修
+`);

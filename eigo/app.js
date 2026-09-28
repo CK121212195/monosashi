@@ -827,6 +827,165 @@ function startGramDrill(onlyWrong) {
   renderQ();
 }
 
+/* ---------------- 試験対策（有料問題集・買い切り） ----------------
+   ・無料サンプルは data/shiken-sample.js（公開）
+   ・購入したセットは端末に保存（localStorage）。購入の確認とデータの受け渡しは別途
+     window.EIGO_SHIKEN.install(セットのデータ) を呼ぶ（決済の確認後に Worker から受け取ったデータ）
+   ・音声：セットの audioBase（未指定ならサイト内の audio/p/）＋ au（ハッシュ）＋ .mp3 */
+const SHK_KEY = 'eigo-shiken-sets';
+const SHK_PRODUCTS = [
+  { id: 'kyotsu-01', price: 100, pitch: '掲示・ウェブページの読み取り、事実と意見の区別、出来事の順序、グラフつきの2資料の読み比べ、伝記のメモ完成、説明文の要約とスライド完成。共通テストの形式に沿った50問です。', who: '大学入学共通テストを受ける高校生・受験生' },
+  { id: 'toeic-01', price: 100, pitch: 'Part 5（短文穴埋め）34問と Part 6（長文穴埋め）4文書16問。品詞・時制・前置詞と接続詞・関係詞・語法・文の挿入まで、800点を超えるのに必要な型を網羅しました。', who: 'TOEIC 600点台から800点以上をめざす人' }
+];
+function shkOwned() { try { return JSON.parse(localStorage.getItem(SHK_KEY)) || {}; } catch (e) { return {}; } }
+window.EIGO_SHIKEN = {
+  // 決済の確認後、受け取ったセットのデータを端末に保存して開く
+  install(set) {
+    if (!set || !set.id || !Array.isArray(set.parts)) throw new Error('セットのデータが正しくありません');
+    const all = shkOwned(); all[set.id] = set;
+    try { localStorage.setItem(SHK_KEY, JSON.stringify(all)); } catch (e) { toast('端末に保存できませんでした（プライベートブラウズなど）'); }
+    go('#shiken/' + set.id);
+  },
+  owned: () => Object.keys(shkOwned()),
+  products: SHK_PRODUCTS
+};
+let shk = null;
+const CIRC = '①②③④⑤⑥';
+routes.shiken = (arg) => {
+  if (arg) return renderSet(arg);
+  const owned = shkOwned();
+  const samples = E.SHIKEN_SAMPLE || {};
+  const hist = Store.d.shiken || {};
+  view().innerHTML = `
+  <section class="page-head"><h1>試験対策</h1><p>本番の形式に合わせた問題集です。1セット50問・100円の買い切りで、購入したセットはお使いの端末に保存され、何度でも解き直せます。どのセットも、最初の数問は無料で試せます。</p></section>
+  <div class="shk-list">${SHK_PRODUCTS.map(p => {
+    const s = samples[p.id] || {}; const h = hist[p.id];
+    const have = !!owned[p.id];
+    return `<div class="card shk-card">
+      <div class="shk-card-top"><span class="pill ${s.kind === 'toeic' ? 'pill-sky' : 'pill-coral'}">${s.kind === 'toeic' ? 'TOEIC' : '共通テスト'}</span> <span class="muted small">${s.total || 50}問・目安${s.kind === 'toeic' ? 20 : 50}分</span></div>
+      <h2>${esc(s.title || p.id)}</h2>
+      <p>${esc(p.pitch)}</p>
+      <p class="small muted">こんな人に：${esc(p.who)}</p>
+      ${h ? `<p class="small shk-best">これまでの最高点：<b>${h.best}</b> / ${h.total}</p>` : ''}
+      <div class="shk-actions">
+        ${have ? `<a class="btn btn-sun" href="#shiken/${p.id}">解く →</a><span class="pill pill-leaf">購入済み</span>`
+          : `<a class="btn btn-sky" href="#shiken/sample-${p.id}">無料サンプルを解く</a><button class="btn btn-sun" type="button" data-buy="${p.id}">${p.price}円で購入</button>`}
+      </div></div>`;
+  }).join('')}</div>
+  <p class="muted small note">※ 問題はすべてオリジナルで、大学入試センター・ETS の公式問題ではありません。購入したデータはこの端末のブラウザに保存されます。ブラウザのデータを消去すると消えるのでご注意ください。</p>`;
+  $$('[data-buy]').forEach(b => b.addEventListener('click', () => {
+    // 購入の手続き（Stripe の支払いリンクへの移動など）は別途つなぎ込む
+    if (typeof window.EIGO_SHIKEN.buy === 'function') window.EIGO_SHIKEN.buy(b.dataset.buy);
+    else toast('購入の受付は準備中です。まずは無料サンプルをお試しください');
+  }));
+};
+function renderSet(arg) {
+  const isSample = arg.startsWith('sample-');
+  const id = isSample ? arg.slice(7) : arg;
+  const set = isSample ? (E.SHIKEN_SAMPLE || {})[id] : shkOwned()[id];
+  if (!set) { go('#shiken'); return; }
+  if (!shk || shk.key !== arg) shk = { key: arg, set, ans: {}, start: Date.now(), done: false, showJa: false };
+  const base = set.audioBase || 'audio/p/';
+  const toeic = set.kind === 'toeic';
+  const label = i => toeic ? '(' + 'ABCDEF'[i] + ')' : CIRC[i];
+  let qn = 0;
+  const total = set.parts.reduce((a, p) => a + p.qs.length, 0);
+  const partHTML = set.parts.map((p, pi) => {
+    // 採点後は根拠の文をハイライト
+    const marks = shk.done ? p.qs.filter(q => q.ev).map(q => q.ev) : [];
+    const blanks = {}; p.qs.forEach(q => { const m = /^\[(\d+)\]$/.exec(q.q); if (m) blanks[m[1]] = q; });
+    const docs = p.docs.map(d => `<div class="shk-doc shk-${esc(d.kind)}">
+      ${d.title ? `<h3 class="shk-doc-t">${esc(d.title)}</h3>` : ''}
+      ${d.body.map((b, bi) => {
+        const mk = marks.filter(s => b.includes(s)).map(s => ({ s, cls: 'evi evi1' }));
+        let html = renderText(b, { marks: mk });
+        html = html.replace(/\[(\d+)\]/g, (all, n) => { const q = blanks[n]; return `<span class="shk-blank">${shk.done && q ? esc(q.o[q.a]) : '[' + n + ']'}</span>`; });
+        const au = d.au && d.au[bi];
+        return `<div class="shk-para" data-ctx="${esc(b)}">${au ? `<button class="ib sm shk-say" data-src="${esc(base + au + '.mp3')}" title="この段落を聞く">🔊</button>` : ''}<p lang="en">${html}</p>${shk.showJa && d.ja && d.ja[bi] ? `<p class="para-ja">${esc(d.ja[bi])}</p>` : ''}</div>`;
+      }).join('')}
+      ${d.table ? shkTable(d.table) : ''}
+      ${shk.showJa && d.ja && d.ja.length > d.body.length ? `<p class="para-ja">${esc(d.ja.slice(d.body.length).join(' '))}</p>` : ''}
+    </div>`).join('');
+    const qs = p.qs.map(q => {
+      const n = ++qn, a = shk.ans[n];
+      const isBlank = /^\[\d+\]$/.test(q.q);
+      const qtext = isBlank ? `空所 <b>${esc(q.q)}</b> に入るもの` : renderText(q.q, { blank: '<span class="blank">&emsp;&emsp;</span>' }).replace(/\n/g, '<br>');
+      return `<div class="card shk-q ${shk.done ? (a === q.a ? 'rq-ok' : 'rq-ng') : ''}" id="sq${n}">
+        <p class="rq-q"><span class="rq-n evi1">${n}</span> ${qtext}</p>
+        <div class="shk-opts">${q.o.map((o, i) => `<button class="opt ${!shk.done && a === i ? 'sel' : ''} ${shk.done ? (i === q.a ? 'ok' : i === a ? 'ng' : '') : ''}" data-n="${n}" data-i="${i}" ${shk.done ? 'disabled' : ''}><span class="opt-k">${label(i)}</span><span class="opt-t">${renderText(o)}</span></button>`).join('')}</div>
+        ${shk.done ? `<div class="exp"><div class="fb ${a === q.a ? 'fb-ok' : 'fb-ng'}"><b>${a === q.a ? '◎ 正解' : a === undefined ? '無回答：正解は ' + label(q.a) : '△ 正解は ' + label(q.a)}</b></div>${q.ja ? `<p class="exp-ja">${esc(q.ja)}</p>` : ''}<p class="exp-body">${esc(q.ex)}</p>${q.au ? `<button class="ib sm" data-src="${esc(base + q.au + '.mp3')}">🔊<small>文</small></button>` : ''}</div>` : ''}
+      </div>`;
+    }).join('');
+    return `<section class="card shk-part"><h2 class="shk-no">${esc(p.no)}</h2><p class="shk-lead" lang="en">${esc(p.lead)}</p><p class="shk-leadja">${esc(p.leadJa || '')}</p>${docs}<div class="shk-qs">${qs}</div></section>`;
+  }).join('');
+  const answered = Object.keys(shk.ans).length;
+  let score = 0; if (shk.done) { let k = 0; set.parts.forEach(p => p.qs.forEach(q => { k++; if (shk.ans[k] === q.a) score++; })); }
+  const sheet = Array.from({ length: total }, (_, i) => { const n = i + 1; let q2; let k = 0; set.parts.some(p => p.qs.some(q => { k++; if (k === n) { q2 = q; return true; } return false; })); const cls = shk.done ? (shk.ans[n] === q2.a ? 'ok' : 'ng') : (shk.ans[n] !== undefined ? 'on' : ''); return `<a class="sh-cell ${cls}" href="#sq${n}" data-jump="${n}">${n}</a>`; }).join('');
+  view().innerHTML = `
+  <article class="shk">
+    <a class="back" href="#shiken">← 試験対策の一覧へ</a>
+    <header class="p-head"><div>${isSample ? '<span class="pill pill-sky">無料サンプル</span>' : '<span class="pill pill-leaf">購入済み</span>'} <span class="muted small">${total}問${isSample ? `（全${set.total}問のうち）` : ''}・目安${set.minutes}分</span></div>
+      <h1 class="gh1">${esc(set.title)}</h1><p class="small muted">${esc(set.note || '')}</p></header>
+    <div class="toolbar card shk-bar">
+      <div class="timer"><span class="timer-ic">⏱</span><span id="shkTm"></span></div>
+      <span class="small"><b id="shkCnt">${answered}</b> / ${total} 解答</span>
+      <label class="switch"><input type="checkbox" id="shkJa" ${shk.showJa ? 'checked' : ''}><span>和訳</span></label>
+      ${shk.done ? `<span class="wpm"><b>${score}</b> / ${total} 点</span>` : '<button class="btn btn-sm btn-sun" id="shkSubmit">採点する</button>'}
+    </div>
+    <div class="shk-sheet card">${sheet}</div>
+    ${shk.done ? `<div class="card p-done"><b>${score} / ${total} 問正解（${Math.round(score / total * 100)}%）</b><p>${shkMsg(score / total)}</p><button class="btn btn-sm btn-sun" id="shkRetry">もう一度解く</button> ${isSample ? `<a class="btn btn-sm btn-sky" href="#shiken">全${set.total}問のセットを見る</a>` : ''}</div>` : ''}
+    ${partHTML}
+    ${shk.done ? '' : '<button class="btn btn-sun btn-wide" id="shkSubmit2">採点する</button>'}
+  </article>`;
+  const tick = () => {
+    const el = $('#shkTm'); if (!el || shk.key !== arg) return false;
+    const used = (shk.done ? shk.end : Date.now()) - shk.start, left = set.minutes * 60000 - used;
+    el.textContent = shk.done ? '所要 ' + fmtTime(used) : (left >= 0 ? '残り ' + fmtTime(left) : '超過 ' + fmtTime(-left));
+    el.parentNode.classList.toggle('over', !shk.done && left < 0);
+    return true;
+  };
+  tick(); clearInterval(shk.iv); if (!shk.done) shk.iv = setInterval(() => { if (!tick()) clearInterval(shk.iv); }, 1000);
+  $$('.shk-opts .opt').forEach(b => b.addEventListener('click', () => {
+    if (shk.done) return;
+    const n = +b.dataset.n; shk.ans[n] = +b.dataset.i;
+    $$(`.opt[data-n="${n}"]`).forEach(x => x.classList.toggle('sel', x === b));
+    $(`.sh-cell[data-jump="${n}"]`).classList.add('on');
+    $('#shkCnt').textContent = Object.keys(shk.ans).length;
+  }));
+  const submit = () => {
+    const left = total - Object.keys(shk.ans).length;
+    if (left && !confirm(`まだ ${left} 問が未解答です。採点しますか？`)) return;
+    shk.done = true; shk.end = Date.now(); clearInterval(shk.iv);
+    let k = 0, sc = 0; set.parts.forEach(p => p.qs.forEach(q => { k++; const ok = shk.ans[k] === q.a; if (ok) sc++; recordAnswer('sk-' + arg + '-' + k, ok); }));
+    if (!isSample) { const h = (Store.d.shiken = Store.d.shiken || {}); const r = h[id] || { best: 0, total }; r.best = Math.max(r.best, sc); r.last = sc; r.total = total; r.t = Date.now(); h[id] = r; Store.save(); }
+    renderSet(arg); window.scrollTo(0, 0);
+  };
+  const s1 = $('#shkSubmit'), s2 = $('#shkSubmit2'); if (s1) s1.addEventListener('click', submit); if (s2) s2.addEventListener('click', submit);
+  const rt = $('#shkRetry'); if (rt) rt.addEventListener('click', () => { shk = null; renderSet(arg); window.scrollTo(0, 0); });
+  $('#shkJa').addEventListener('change', e => { shk.showJa = e.target.checked; keepScroll(() => renderSet(arg)); });
+}
+function shkTable(t) {
+  if (t.chart === 'bar') {
+    const max = Math.max(...t.rows.map(r => parseFloat(r[1]) || 0));
+    return `<figure class="shk-chart"><figcaption>${esc(t.cols[1])}</figcaption>${t.rows.map(r => `<div class="bar-row"><span class="bar-l" lang="en">${esc(r[0])}</span><span class="bar"><span style="width:${(parseFloat(r[1]) || 0) / max * 100}%"></span></span><span class="bar-v">${esc(r[1])}</span></div>`).join('')}</figure>`;
+  }
+  return `<div class="shk-tw"><table class="shk-table"><thead><tr>${t.cols.map(c => `<th lang="en">${esc(c)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map(c => `<td lang="en">${renderText(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+function shkMsg(r) {
+  if (r >= 0.9) return 'すばらしい仕上がりです。この得点を本番の時間内で出せれば、上位を狙えます。';
+  if (r >= 0.7) return '合格圏まであと一歩です。間違えた問題の根拠（黄色の部分）を読み直すと、同じ型で落とさなくなります。';
+  if (r >= 0.5) return '土台はできています。解説と和訳で「どこを読めば解けたか」を確かめ、1週間後にもう一度解きましょう。';
+  return '最初は時間を気にせず、和訳を見ながら1問ずつ根拠を確かめるのがおすすめです。2回目で得点は大きく伸びます。';
+}
+// 採点後の音声（段落・文）
+document.addEventListener('click', ev => {
+  const b = ev.target.closest('.shk [data-src]'); if (!b) return;
+  const again = Player.btn === b; Player.stop(); if (again) return;
+  const a = new Audio(b.dataset.src); Player.audio = a; Player.btn = b; b.classList.add('playing');
+  a.addEventListener('ended', () => { if (Player.audio === a) Player.stop(); });
+  a.play().catch(() => { if (Player.audio === a) { Player.stop(); toast('音声を再生できませんでした'); } });
+});
+
 /* ---------------- 長文 ---------------- */
 routes.reading = (id) => {
   if (id) return renderPassage(id);
