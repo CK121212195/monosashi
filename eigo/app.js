@@ -830,7 +830,7 @@ function startGramDrill(onlyWrong) {
 }
 
 /* ---------------- 試験対策（有料問題集・買い切り） ---------------- */
-const SHK_PAY_URL = 'https://buy.stripe.com/5kQeVe1z00D94rL3sgaR202';
+const SHK_PAY_URL = 'https://buy.stripe.com/bJe28s3H885BaQ93sgaR203';
 const SHK_WORKER = 'https://square-license.stats-okinawa.workers.dev';
 const SHK_PEND = 'eigo-shiken-pending';   // 支払いへ進んだセットと、戻ってきた注文番号（確認が済むまで残す）
 const SHK_ORDERS = 'eigo-shiken-orders';  // 確認が済んだ購入番号（別の端末で開くときに使う）
@@ -914,7 +914,8 @@ async function shkPay(id, btn) {
   if (btn) { btn.disabled = true; btn.textContent = '確認しています…'; }
   let st = null;
   try { st = await fetchJSON(`${SHK_WORKER}/eigo/status`, 10000); } catch (e) { st = null; }
-  if (!st || !st.ready || !(st.sets || []).includes(id)) {
+  // Worker が今の価格を受け付けると答えたときだけ支払いへ進む（古い Worker のままだと、払えても開けなくなるため）
+  if (!st || !st.ready || !(st.sets || []).includes(id) || !(st.amounts || []).includes(SHK_PRICE)) {
     if (btn) { btn.disabled = false; btn.textContent = '支払いへ進む'; }
     toast(st ? 'ただいま購入の受付を準備中です。もうしばらくお待ちください' : '通信に失敗しました。電波の良い所でもう一度お試しください');
     return;
@@ -935,8 +936,8 @@ function shkReturn() {
 }
 const SHK_KEY = 'eigo-shiken-sets';
 // 価格と、まだ販売していないセット（Stripe の新しい支払いリンクと Worker の設定が済んだら切り替える）
-const SHK_PRICE = 100;
-const SHK_HIDDEN = ['kyotsu-02', 'toeic-02'];
+const SHK_PRICE = 300;
+const SHK_HIDDEN = [];
 const SHK_PRODUCTS_ALL = [
   { id: 'kyotsu-01', price: SHK_PRICE, pitch: '掲示・ウェブページの読み取り、事実と意見の区別、出来事の順序、グラフつきの2資料の読み比べ、伝記のメモ完成、説明文の要約とスライド完成。共通テストの形式に沿った50問です。', who: '大学入学共通テストを受ける高校生・受験生' },
   { id: 'toeic-01', price: SHK_PRICE, pitch: 'Part 5（短文穴埋め）34問と Part 6（長文穴埋め）4文書16問。品詞・時制・前置詞と接続詞・関係詞・語法・文の挿入まで、800点を超えるのに必要な型を網羅しました。', who: 'TOEIC 600点台から800点以上をめざす人' },
