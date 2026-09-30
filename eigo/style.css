@@ -60,14 +60,6 @@ h1,h2,h3{font-weight:900;line-height:1.45;letter-spacing:.02em}
 .gbar a{padding:3px 11px;border-radius:999px;text-decoration:none;color:var(--ink);font-weight:700;background:#fff;border:1px solid var(--line);white-space:nowrap;transition:background .2s,border-color .2s}
 .gbar a:hover{background:var(--sun-s);border-color:var(--sun)}
 .gbar a.on{background:var(--ink);border-color:var(--ink);color:#fff}
-.guides{margin-top:34px}
-.guide-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.guide{display:block;padding:16px 18px;text-decoration:none;color:var(--ink);transition:transform .18s,border-color .18s}
-.guide:hover{transform:translateY(-2px);border-color:var(--sun)}
-.guide b{display:block;font-size:16px}
-.guide span{display:block;font-size:13px;color:var(--sub);margin-top:4px}
-.more-link{margin-top:18px;font-weight:700}
-.more-link a{color:var(--ink)}
 .gbar-sep{flex:none;width:1px;height:16px;background:var(--line);margin:0 6px}
 .badge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--coral);color:#fff;font-family:var(--num);font-size:12px;font-weight:800;line-height:1}
 .badge[hidden]{display:none}
@@ -440,7 +432,7 @@ legend{font-weight:900;font-size:14px;margin-bottom:8px}
   .set-btn{margin-left:auto}
   .wrap{padding:0 14px 50px}
   .stats-row{grid-template-columns:repeat(2,1fr)}
-  .modes,.feat-grid,.guide-grid{grid-template-columns:1fr}
+  .modes,.feat-grid{grid-template-columns:1fr}
   .hero{padding:32px 0 20px}
   .demo-en{font-size:18px}
   .qcard{padding:20px 16px}
