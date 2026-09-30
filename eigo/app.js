@@ -1255,12 +1255,24 @@ routes.confuse = (arg) => {
     <a class="btn btn-grape" href="#confuse/drill">ドリルを始める（15問）→</a></section>
   <div class="cgrid">${CONF.map(g => {
     const d = diffGroup(g.g);
-    return `<div class="cg card">
+    return `<div class="cg card cg-link" data-href="${cfUrl(g)}">
       ${g.g.map((w, i) => `<div class="cg-row"><span class="w cg-w" data-k="${esc(w.toLowerCase())}">${d[i]}</span><button class="ib sm" data-play="${esc(w.toLowerCase())}" title="発音">🔊</button><span class="cg-m">${esc(g.m[i])}</span></div>`).join('')}
       <p class="cg-tip">${esc(g.tip)}</p>
+      <a class="cg-more" href="${cfUrl(g)}">例文と見分けるコツを見る →</a>
     </div>`;
   }).join('')}</div>`;
+  // パネルのどこを押しても、その組の解説ページへ（単語・発音ボタン・リンクはそれぞれの動きを優先）
+  $('.cgrid').addEventListener('click', ev => {
+    const c = ev.target.closest('.cg-link');
+    if (!c || ev.target.closest('.w, button, a')) return;
+    if (!pop.hidden && !canHover) { hidePop(); return; } // スマホ：開いている意味の表示を先に閉じる
+    const sel = window.getSelection && String(window.getSelection());
+    if (sel) return; // 文字を選んでいるときは移動しない
+    location.href = c.dataset.href;
+  });
 };
+// 紛らわしい語の解説ページ（/eigo/magirawashii/<語-語>/）
+const cfUrl = g => '/eigo/magirawashii/' + g.g.join('-').toLowerCase() + '/';
 function renderDrill() {
   if (!drill || drill.fin) {
     const items = [];
@@ -1293,7 +1305,7 @@ function renderDrill() {
     $('#fb').innerHTML = `<div class="fb ${ok ? 'fb-ok' : 'fb-ng'}"><b>${ok ? '◎ ' + pickOne(CHEER_OK) : '△ ' + pickOne(CHEER_NG)}</b></div>
       <div class="exp"><div class="exp-en">${renderText(full)} <button class="ib sm" data-say="${esc(full)}">🔊<small>文</small></button></div>
       ${it.ja ? `<p class="exp-ja">${esc(it.ja)}</p>` : ''}
-      <div class="alert alert-grape"><b>見分けるコツ</b><div class="cmp">${g.g.map((w, k) => `<span class="cmp-w">${d[k]}</span><span class="cmp-m">${esc(g.m[k])}</span>`).join('')}</div><small>${esc(g.tip)}</small></div></div>
+      <div class="alert alert-grape"><b>見分けるコツ</b><div class="cmp">${g.g.map((w, k) => `<span class="cmp-w">${d[k]}</span><span class="cmp-m">${esc(g.m[k])}</span>`).join('')}</div><small>${esc(g.tip)}</small><a class="cg-more" href="${cfUrl(g)}" target="_blank" rel="noopener">この組の例文と解説を見る（別タブ）→</a></div></div>
       <button class="btn btn-grape btn-wide" id="next">${drill.i + 1 < drill.list.length ? '次へ →' : '結果を見る →'}</button>`;
     $('#next').addEventListener('click', () => {
       drill.i++;
