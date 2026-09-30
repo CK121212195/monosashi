@@ -566,6 +566,16 @@ routes.home = () => {
     <a class="mode card" href="#words"><span class="mode-ic">⭐</span><h2>単語帳と復習</h2><p>☆で入れた語と、間違えた問題の語を、忘れかけた頃に出し直します（間隔反復）。 <span class="badge" data-due hidden></span></p></a>
   </section>
 
+  <section class="guides">
+    <h2 class="sec-title">試験別の勉強法と、英単語一覧</h2>
+    <div class="guide-grid">
+      <a class="guide card" href="/eigo/eiken/"><b>🎓 英検2級〜1級の筆記対策</b><span>語彙・長文・文法・紛らわしい語を、どの順で進めるか</span></a>
+      <a class="guide card" href="/eigo/toeic/"><b>📈 TOEIC 600→800点のリーディング対策</b><span>Part 5・6・7 の解き方と、使う教材</span></a>
+      <a class="guide card" href="/eigo/kyotsu/"><b>📝 共通テスト 英語リーディング対策</b><span>80分で大量の英文を読むための練習法</span></a>
+      <a class="guide card" href="/eigo/tango/"><b>📚 英単語一覧</b><span>準1級・1級・熟語・カタカナ発音・統計。意味・発音記号・音声つき</span></a>
+    </div>
+  </section>
+
   <section class="features">
     <h2 class="sec-title">間違った発音で覚えないための工夫</h2>
     <div class="feat-grid">
@@ -968,7 +978,8 @@ routes.shiken = (arg) => {
   const pend = lsGet(SHK_PEND, null);
   const note = shkNotice || (pend && pend.order && !(pend.id && owned[pend.id]) ? { kind: 'ng', text: 'お支払いから戻ってきた注文の確認が済んでいません。', order: pend.order, retry: true } : null);
   view().innerHTML = `
-  <section class="page-head"><h1>試験対策</h1><p>本番の形式に合わせた問題集です。1セット50問・${SHK_PRICE}円の買い切りで、購入したセットはお使いの端末に保存され、何度でも解き直せます。どのセットも、最初の数問は無料で試せます。</p></section>
+  <section class="page-head"><h1>試験対策</h1><p>本番の形式に合わせた問題集です。1セット50問・${SHK_PRICE}円の買い切りで、購入したセットはお使いの端末に保存され、何度でも解き直せます。どのセットも、最初の数問は無料で試せます。</p>
+    <p class="small muted">試験ごとの勉強の進め方は、<a href="/eigo/eiken/">英検</a>・<a href="/eigo/toeic/">TOEIC</a>・<a href="/eigo/kyotsu/">共通テスト</a>のページにまとめています（無料）。</p></section>
   ${note ? `<div class="card shk-notice-box ${note.kind === 'busy' ? 'is-busy' : 'is-ng'}" role="status">
     <p><b>${note.kind === 'busy' ? '⏳ ' : ''}${esc(note.text)}</b></p>
     ${note.order ? `<p class="small">購入番号：<code class="shk-order">${esc(note.order)}</code></p>` : ''}
@@ -1338,7 +1349,8 @@ routes.words = (arg) => {
     <span class="wrow-box" title="復習段階">${'●'.repeat(v.box)}${'○'.repeat(5 - v.box)}</span>
     <span class="muted small">${v.due <= Date.now() ? '今日' : Math.ceil((v.due - Date.now()) / dayMs) + '日後'}</span>
     <button class="ib sm on" data-save="${esc(k)}" title="単語帳から外す">★</button></div>`; }).join('')}</div>`
-    : '<div class="empty card"><p>まだ単語が入っていません。</p><p class="muted">問題文や長文の単語にカーソルを合わせ、☆を押すと入ります。</p></div>'}`;
+    : '<div class="empty card"><p>まだ単語が入っていません。</p><p class="muted">問題文や長文の単語にカーソルを合わせ、☆を押すと入ります。</p></div>'}
+  <p class="more-link"><a href="/eigo/tango/">📚 レベル別の英単語一覧（準1級・1級・熟語・カタカナ発音・統計）を見る →</a></p>`;
 };
 function renderReview() {
   if (!rv || !rv.list.length || rv.done) rv = { list: shuffle(dueWords()), i: 0, flip: false, done: false, stats: [0, 0, 0] };
