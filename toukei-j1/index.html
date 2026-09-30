@@ -216,6 +216,20 @@ footer b{color:var(--ink);display:block;margin-bottom:3px;font-size:.78rem}
   border-top:1px solid var(--line);font-size:.74rem;line-height:2}
 .site-foot a{color:var(--deep);text-decoration:none;border-bottom:1px solid transparent}
 .site-foot a:hover{border-bottom-color:var(--deep)}
+
+/* 英語への案内（統計を学ぶ人向け）。配色はこのページの変数をそのまま使う */
+.xcard{background:linear-gradient(160deg,#FFF8E6 0%,#fff 70%);border-color:#F1E3B5}
+.xk{font-size:.72rem;letter-spacing:.08em;color:#8A5A00;font-weight:700;margin-bottom:2px}
+.xl{font-size:.88rem;line-height:1.85;color:var(--ink);margin:6px 0 14px}
+.xlinks{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.xlink{display:block;text-decoration:none;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;transition:border-color .2s,transform .2s}
+.xlink:hover{border-color:#FFC83D;transform:translateY(-2px)}
+.xlink b{display:block;font-size:.9rem;line-height:1.55}
+.xlink span{display:block;font-size:.76rem;color:var(--sub);line-height:1.6;margin-top:3px}
+.xnudge{display:flex;gap:12px;align-items:center;margin-top:16px;text-decoration:none;color:var(--ink);background:#FFF8E6;border:1px solid #F1E3B5;border-radius:12px;padding:12px 14px;font-size:.86rem;line-height:1.7}
+.xnudge .ic{flex:none;font-size:1.5rem}
+.xnudge u{text-decoration:none;color:var(--deep);font-weight:700;white-space:nowrap}
+@media (max-width:520px){.xlinks{grid-template-columns:1fr}}
 </style>
 <!-- 共通の書体（英語のものさしと同じ丸ゴシック）。色と配置はこのページ独自のまま -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -348,6 +362,18 @@ footer b{color:var(--ink);display:block;margin-bottom:3px;font-size:.78rem}
   </section>
 
   
+  <section class="card xcard" aria-labelledby="xT">
+      <p class="xk">統計を学ぶ人へ ─ 英語も無料です</p>
+      <h2 class="sect-t" id="xT" style="margin-top:0">統計の次は、英語も。</h2>
+      <p class="xl">準1級の範囲では、手法の原典や最新の解説の多くが英語です。同じ「数字のものさし」の英語学習ツールも、無料・登録不要で使えます。</p>
+      <div class="xlinks">
+        <a class="xlink" href="/eigo/tango/toukei/" data-x="tkj1-card-tango"><b>📊 統計の英単語 67語</b><span>mean・p-value・residual など。発音記号と音声つき</span></a>
+        <a class="xlink" href="/eigo/" data-x="tkj1-card-eigo"><b>📰 英語のものさし</b><span>英検・TOEIC・共通テスト。長文40本・穴埋め301問</span></a>
+        <a class="xlink" href="/articles/toukei-eigo/" data-x="tkj1-card-art1"><b>📖 統計の用語は、英語で読むと意味がつながる</b><span>帰無仮説・残差・有意を、英語の意味から読み直す</span></a>
+        <a class="xlink" href="/articles/eitango-hindo/" data-x="tkj1-card-art2"><b>📖 英単語は何語覚えれば読めるのか</b><span>英文40本の単語を、統計の考え方で数えてみた</span></a>
+      </div>
+  </section>
+
     <section id="guide">
       <div class="card">
         <h2 class="sect-t" style="margin-top:0">統計検定準1級は、2級と何が違うか</h2>
@@ -415,6 +441,7 @@ footer b{color:var(--ink);display:block;margin-bottom:3px;font-size:.78rem}
           <p>準1級の範囲は、手計算で追い切れないものが増えます。重回帰、主成分分析、決定木、時系列モデル。<b>実際に動かして出力を見たほうが理解が早い</b>領域です。</p>
           <p><a href="https://kazumono.com/STATLAB/" style="color:var(--deep)">統計分析ツール STATLAB</a>では、これらをブラウザ上で実行できます。データを入れて、パラメータを変えて、出力がどう変わるかを見る。<b>問題集だけでは得られない感覚が、そこで身につきます。</b></p>
           <p>p値や有意差の実務的な意味については、<a href="https://kazumono.com/articles/pchi-yuuisa/" style="color:var(--deep)">その差は偶然か｜p値の読み方と、実務的に意味のある差</a>にまとめています。統計的に有意であることと、実務的に意味があることは別だという論点は、準1級以降でこそ重要になります。</p>
+          <p>準1級の範囲では、英語の教科書や論文を読む機会も増えます。用語を英語でも押さえておくと、調べものがぐっと楽になります。<a href="/eigo/tango/toukei/" style="color:var(--deep)" data-x="tkj1-guide-tango">統計の英単語（67語・音声つき）</a>と、<a href="/articles/toukei-eigo/" style="color:var(--deep)" data-x="tkj1-guide-art1">統計の用語は、英語で読むと意味がつながる</a>をあわせてどうぞ。</p>
         </div>
       </div>
     </section>
@@ -1990,7 +2017,7 @@ function render(q){
   updateProgress();
 }
 function answer(i,skipped){
-  if(ANSWERED)return; ANSWERED=true;
+  if(ANSWERED)return; ANSWERED=true; const _pc=stats().correct;
   const q=CUR,ok=(i===q._ans)&&!skipped,prev=S.res[q.id],isFirst=!prev;
   if(!skipped){
     if(ok){COMBO++;if(COMBO>(S.maxCombo||0))S.maxCombo=COMBO;}else COMBO=0;
@@ -2016,7 +2043,7 @@ function answer(i,skipped){
      (skipped||!ok?'<button class="btn ghost" style="flex:0 0 auto" id="bRetry">もう一度</button>':'')+'</div>';
   document.getElementById("bNext").onclick=next;
   const r=document.getElementById("bRetry"); if(r)r.onclick=()=>{ANSWERED=false;render(q);};
-  drawMeter();drawRadar();drawStats();drawBadges();updateProgress();checkNewBadge();
+  drawMeter();drawRadar();drawStats();drawBadges();updateProgress();checkNewBadge();xNudge(_pc);
 }
 function updateProgress(){
   const st=stats(),p=pool();
@@ -2033,6 +2060,19 @@ let shown=new Set();
 function checkNewBadge(){const st=stats();
   BADGES.forEach(b=>{if(b.chk(st)&&!shown.has(b.id)){shown.add(b.id);
     toast(b.ic+" 称号「"+b.nm+"」を獲得しました");}});}
+const XPRE="tkj1";
+// 節目（10・25・50・75・100問正解）で、英語の案内を1つだけ出す
+const XN={10:["🍀","10問正解。ひと息つくなら、統計の用語を英語で。mean・variance・p-value…","/eigo/tango/toukei/","統計の英単語"],
+ 25:["🌊","25問突破。統計ソフトの出力の Estimate・Std. Error・Pr(>|t|)、英語のまま読めますか？","/articles/toukei-eigo/","記事を読む"],
+ 50:["⛵","折り返し地点です。英単語の出現頻度を統計で数えると、意外な分布が見えてきます。","/articles/eitango-hindo/","記事を読む"],
+ 75:["🗻","七合目。英語の長文も、単語にカーソルを合わせるだけで意味が出る「英語のものさし」でどうぞ。","/eigo/","無料で開く"],
+ 100:["👑","完全制覇、おめでとうございます。同じやり方で、英語も伸ばしてみませんか。","/eigo/","英語のものさし"]};
+function xNudge(pc){const c=stats().correct;const m=[10,25,50,75,100].find(v=>pc<v&&c>=v);if(!m)return;
+  const a=document.getElementById("after");if(!a)return;const x=XN[m];
+  a.insertAdjacentHTML("beforeend",'<a class="xnudge" href="'+x[2]+'" data-x="'+XPRE+'-nudge-'+m+'"><span class="ic">'+x[0]+'</span><span>'+x[1]+' <u>'+x[3]+' →</u></span></a>');
+  a.lastElementChild.addEventListener("click",xTrack);}
+function xTrack(e){try{gtag("event","select_content",{content_type:"cross_link",item_id:e.currentTarget.getAttribute("data-x")});}catch(_){}}
+document.querySelectorAll("[data-x]").forEach(a=>a.addEventListener("click",xTrack));
 function toast(m){const t=document.getElementById("toast");
   t.textContent=m;t.classList.add("on");clearTimeout(t._h);
   t._h=setTimeout(()=>t.classList.remove("on"),2600);}

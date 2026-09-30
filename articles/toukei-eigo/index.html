@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<script>if(location.protocol==='http:'){location.replace('https://'+location.host+location.pathname+location.search+location.hash);}</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>統計の用語は、英語で読むと意味がつながる｜mean・residual・null・significant</title>
+<meta name="description" content="帰無仮説、残差、標準誤差、有意。統計の漢字の用語は、もとの英語を知ると「なぜその名前なのか」が分かります。統計検定2級の範囲の用語を英語の意味から読み直し、統計ソフトの出力を英語のまま読むところまで、学生向けに解説します。">
+<link rel="canonical" href="https://kazumono.com/articles/toukei-eigo/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="統計の用語は、英語で読むと意味がつながる｜mean・residual・null・significant">
+<meta property="og:description" content="帰無仮説、残差、標準誤差、有意。統計の漢字の用語は、もとの英語を知ると「なぜその名前なのか」が分かります。統計検定2級の範囲の用語を英語の意味から読み直し、統計ソフトの出力を英語のまま読むところまで、学生向けに解説します。">
+<meta property="og:url" content="https://kazumono.com/articles/toukei-eigo/">
+<meta name="twitter:card" content="summary_large_image">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2146116373822311" crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#33526C">
+<meta property="og:site_name" content="数字のものさし">
+<meta property="og:image" content="https://kazumono.com/assets/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "統計の用語は、英語で読むと意味がつながる｜mean・residual・null・significant",
+  "description": "帰無仮説、残差、標準誤差、有意。統計の漢字の用語は、もとの英語を知ると「なぜその名前なのか」が分かります。統計検定2級の範囲の用語を英語の意味から読み直し、統計ソフトの出力を英語のまま読むところまで、学生向けに解説します。",
+  "datePublished": "2026-09-30",
+  "dateModified": "2026-09-30",
+  "author": {
+    "@type": "Person",
+    "name": "エリエール"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "数字のものさし"
+  },
+  "mainEntityOfPage": "https://kazumono.com/articles/toukei-eigo/",
+  "inLanguage": "ja",
+  "audience": {
+    "@type": "EducationalAudience",
+    "educationalRole": "student"
+  }
+}
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-BETYS4R53Y');
+</script>
+
+<style>
+:root{
+  --paper:#FAF9F6; --card:#FFFFFF;
+  --ink:#18262F; --ink-soft:#33495B; --ink-faint:#5B7085;
+  --sea-deep:#33526C; --sea:#527695; --sky:#84D2F5; --aqua:#B0F1F0; --mist:#DFF6F1;
+  --dawn:#FEEEDF; --rose:#F4C3D3; --bloom:#F8A3BF; --plum:#B67AB4;
+  --peridot:#82B33A; --lime:#D4E157; --mint:#E8F5E9;
+  --line:rgba(24,38,47,.18);
+  --shadow:0 1px 2px rgba(35,53,67,.05), 0 10px 26px rgba(35,53,67,.07);
+  --serif:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Times New Roman",serif;
+  --sans:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Noto Sans JP",sans-serif;
+  --num:"Helvetica Neue",Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:16.5px;line-height:1.98;letter-spacing:.015em;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.26;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23g)' opacity='0.22'/></svg>");
+}
+.page{position:relative;z-index:1;}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 24px;}
+.column{width:100%;max-width:720px;margin:0 auto;padding:0 24px;}
+a{color:inherit;}
+:focus-visible{outline:2.5px solid var(--sea);outline-offset:3px;border-radius:4px;}
+.skip{position:absolute;left:-9999px;background:var(--sea);color:#fff;padding:12px 20px;z-index:99;}
+.skip:focus{left:0;}
+
+/* ヘッダー */
+.masthead{position:sticky;top:0;z-index:20;background:rgba(250,249,246,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.masthead__inner{display:flex;align-items:center;justify-content:space-between;gap:24px;height:68px;}
+.brand{font-family:var(--serif);font-size:19px;letter-spacing:.22em;text-decoration:none;white-space:nowrap;}
+.brand span{color:var(--sea);}
+.nav{display:flex;gap:26px;}
+.nav a{font-size:14px;font-weight:500;letter-spacing:.1em;text-decoration:none;color:var(--ink-soft);border-bottom:1.5px solid transparent;padding:6px 0;transition:color .2s,border-color .2s;}
+.nav a:hover{color:var(--ink);border-bottom-color:var(--bloom);}
+
+
+/* 記事ヘッダー */
+.crumbs{font-size:13px;color:var(--ink-soft);letter-spacing:.08em;margin:34px 0 0;}
+.crumbs a{text-decoration:none;}
+.crumbs a:hover{color:var(--ink);}
+
+.head{padding:26px 0 44px;position:relative;}
+.head__mark{
+  position:absolute;top:-10px;right:-20px;width:150px;height:150px;border-radius:50%;
+  background:var(--mist);opacity:.7;pointer-events:none;
+}
+.tag{display:inline-block;font-size:11.5px;letter-spacing:.14em;padding:5px 14px;border-radius:999px;background:var(--mist);position:relative;}
+.head h1{
+  font-family:var(--serif);font-weight:600;
+  font-size:clamp(25px,4.2vw,37px);line-height:1.68;letter-spacing:.04em;
+  margin:20px 0 18px;position:relative;
+}
+.head__meta{font-family:var(--num);font-size:12.5px;color:var(--ink-faint);letter-spacing:.1em;margin:0;position:relative;}
+.head__lead{
+  margin:26px 0 0;font-size:16.5px;line-height:2;color:var(--ink);
+  border-left:3px solid var(--rose);padding-left:20px;position:relative;
+}
+
+/* 目次 */
+.toc{
+  background:var(--card);border:1px solid var(--line);border-radius:20px;
+  padding:26px 30px;margin:0 0 52px;box-shadow:var(--shadow);
+}
+.toc h2{font-family:var(--serif);font-weight:600;font-size:15px;letter-spacing:.18em;margin:0 0 14px;}
+.toc ol{margin:0;padding-left:1.3em;}
+.toc li{margin:8px 0;font-size:15px;}
+.toc a{text-decoration:none;color:var(--ink);}
+.toc a:hover{color:var(--ink);text-decoration:underline;text-decoration-color:var(--sky);text-underline-offset:4px;}
+
+/* 本文 */
+.body h2{
+  font-family:var(--serif);font-weight:600;font-size:clamp(21px,3vw,26px);
+  letter-spacing:.06em;line-height:1.66;
+  margin:64px 0 22px;padding-bottom:14px;border-bottom:1px solid var(--line);
+}
+.body h3{
+  font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:.08em;
+  margin:44px 0 14px;
+}
+.body h3::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--bloom);margin-right:11px;vertical-align:middle;}
+.body p{margin:0 0 24px;}
+.body ul,.body ol{margin:0 0 24px;padding-left:1.4em;}
+.body li{margin:9px 0;}
+.body strong{background:linear-gradient(transparent 64%,var(--rose) 64%);font-weight:600;}
+.body a{color:var(--sea-deep);font-weight:600;text-underline-offset:4px;text-decoration-color:var(--sky);}
+
+table{width:100%;border-collapse:collapse;margin:0 0 28px;font-size:14.5px;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
+th,td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--line);}
+th{background:var(--mist);font-weight:600;letter-spacing:.06em;}
+td{font-variant-numeric:tabular-nums;}
+tr:last-child td{border-bottom:none;}
+
+/* 補足ボックス */
+.callout{
+  background:rgba(232,245,233,.6);border-left:3px solid var(--peridot);
+  border-radius:0 16px 16px 0;padding:22px 26px;margin:0 0 30px;
+}
+.callout p:last-child{margin-bottom:0;}
+.callout strong{background:none;}
+
+/* 関連ツール */
+.toolcta{
+  position:relative;overflow:hidden;
+  display:block;text-decoration:none;
+  background:var(--card);border:1px solid var(--line);border-radius:22px;
+  padding:32px 30px;margin:56px 0;box-shadow:var(--shadow);
+  transition:transform .26s,box-shadow .26s;
+}
+.toolcta::after{
+  content:"";position:absolute;top:-40px;right:-40px;width:130px;height:130px;border-radius:50%;
+  background:var(--sky);opacity:.85;transition:transform .38s;
+}
+.toolcta:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(47,66,87,.12);}
+.toolcta:hover::after{transform:scale(1.4);}
+.toolcta__label{position:relative;font-family:var(--num);font-size:11px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 12px;}
+.toolcta__name{position:relative;font-family:var(--serif);font-size:21px;letter-spacing:.08em;margin:0 0 10px;}
+.toolcta__desc{position:relative;font-size:14.5px;color:var(--ink-soft);margin:0 0 16px;max-width:26em;}
+.toolcta__go{position:relative;font-size:14.5px;font-weight:600;letter-spacing:.08em;color:var(--sea-deep);}
+
+/* 出典・免責 */
+.sources{margin:60px 0 0;border-top:1px solid var(--line);padding-top:30px;}
+.sources h2{font-family:var(--serif);font-weight:600;font-size:16px;letter-spacing:.16em;margin:0 0 14px;}
+.sources ul{list-style:none;margin:0;padding:0;}
+.sources li{font-size:14px;line-height:1.9;color:var(--ink-soft);margin:0 0 8px;padding-left:18px;position:relative;}
+.sources li::before{content:"";position:absolute;left:0;top:.85em;width:6px;height:6px;border-radius:50%;background:var(--peridot);}
+
+.disclaimer{
+  margin:30px 0 0;border-left:4px solid var(--peridot);background:rgba(232,245,233,.55);
+  border-radius:0 16px 16px 0;padding:22px 26px;
+}
+.disclaimer p{margin:0;font-size:14px;line-height:1.92;color:var(--ink-soft);}
+
+/* 執筆者 */
+.byline{
+  display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;
+  background:var(--card);border:1px solid var(--line);border-radius:22px;
+  padding:28px;margin:44px 0 0;box-shadow:var(--shadow);
+}
+.byline__mark{width:66px;height:66px;border-radius:50%;background:linear-gradient(135deg,var(--bloom),var(--plum));display:grid;place-items:center;font-family:var(--serif);font-weight:600;font-size:22px;color:#fff;}
+.byline h3{font-family:var(--serif);font-weight:600;font-size:17px;letter-spacing:.1em;margin:0 0 6px;}
+.byline p{margin:0;font-size:14.5px;line-height:1.88;color:var(--ink-soft);}
+
+/* 前後の記事 */
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:48px 0 0;}
+.pager a{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;
+  text-decoration:none;transition:transform .22s,border-color .22s;
+}
+.pager a:hover{transform:translateY(-3px);border-color:var(--sky);}
+.pager span{display:block;font-family:var(--num);font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px;}
+.pager strong{font-family:var(--serif);font-weight:600;font-size:15px;line-height:1.7;letter-spacing:.05em;}
+
+/* 広告枠 */
+/* フッター */
+.foot{margin-top:90px;border-top:1px solid var(--line);padding:44px 0 56px;}
+.foot__inner{display:flex;flex-wrap:wrap;gap:26px;justify-content:space-between;align-items:center;}
+.foot__links{display:flex;flex-wrap:wrap;gap:26px;}
+.foot__links a{font-size:14px;font-weight:500;letter-spacing:.08em;color:var(--ink-soft);text-decoration:none;}
+.foot__links a:hover{color:var(--ink);}
+.copy{font-family:var(--num);font-size:12.5px;color:var(--ink-faint);letter-spacing:.08em;margin:0;}
+
+@media (max-width:820px){
+  .nav a:nth-child(n+3){display:none;}
+  .head__mark{display:none;}
+  .byline{grid-template-columns:1fr;text-align:left;}
+  .pager{grid-template-columns:1fr;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important;}}
+
+/* ===== 表の横スクロール ===== */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 28px;}
+.tw table{margin-bottom:0;min-width:420px;}
+
+/* ===== アバター ===== */
+.pic{display:block;border-radius:50%;background:linear-gradient(135deg,var(--dawn),var(--rose));object-fit:cover;}
+.pic--l{width:96px;height:96px;}
+.pic--s{width:66px;height:66px;}
+
+/* ===== モバイル最適化 ===== */
+@media (max-width:820px){
+  body::before{display:none;}
+  .masthead{background:var(--paper);backdrop-filter:none;-webkit-backdrop-filter:none;}
+  .masthead__inner{height:auto;min-height:58px;padding:10px 0;flex-wrap:wrap;gap:6px 16px;}
+  .brand{font-size:17px;letter-spacing:.1em;}
+  .nav{gap:16px;flex-wrap:wrap;}
+  .nav a{font-size:12.5px;letter-spacing:.02em;padding:2px 0;border-bottom-width:2px;}
+  .nav a:nth-child(n+3){display:inline-block;}
+  .wrap,.column{padding-left:18px;padding-right:18px;}
+  h1,h2,h3,p,li,td,th,.post__title,.tool__name,.shop__name{overflow-wrap:anywhere;}
+  .tools,.shop,.channels{grid-template-columns:1fr;}
+  .toc{padding:22px 20px;}
+  .btn{padding:14px 22px;font-size:14px;}
+  .grid{grid-template-columns:1fr;}
+  .actions{gap:10px;}
+  .btn-run,.btn-sample{width:100%;justify-content:center;}
+}
+@media (max-width:400px){
+  .brand{font-size:16px;letter-spacing:.06em;}
+  .nav{gap:12px;}
+  .nav a{font-size:11.5px;}
+}
+
+/* ===== 装飾円を文字の背面へ ===== */
+.hero{isolation:isolate;}
+.hero__blob{z-index:-1;}
+.hero .wrap{position:relative;z-index:1;}
+.head__mark{z-index:-1;}
+.head{isolation:isolate;}
+
+/* ===== モバイルの装飾円 ===== */
+@media (max-width:820px){
+  .hero__blob--a{width:190px;height:190px;top:-70px;right:-70px;opacity:.55;}
+  .hero__blob--b{display:none;}
+  .hero__blob--c{width:80px;height:80px;bottom:-24px;left:-30px;opacity:.6;}
+  .hero{padding:52px 0 46px;}
+  .hero h1{font-size:clamp(25px,7.2vw,34px);line-height:1.5;max-width:none;}
+  .hero p{font-size:15px;}
+  .eyebrow{font-size:10.5px;letter-spacing:.22em;word-break:break-word;}
+}
+@media (max-width:400px){
+  .hero__blob--a{width:150px;height:150px;top:-60px;right:-60px;}
+  .hero h1{font-size:24px;letter-spacing:.02em;}
+}
+
+/* ===== 図・出力・追加の案内（統計×英語の記事） ===== */
+.fig{margin:8px 0 34px;}
+.fig__plot{position:relative;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 10px 6px;box-shadow:var(--shadow);}
+.fig__svg{display:block;width:100%;height:auto;}
+.fig__svg text{font-family:var(--sans);}
+.fig__svg .hit circle{cursor:pointer;}
+.fig__tip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-size:13.5px;line-height:1.6;color:var(--ink);box-shadow:0 8px 20px rgba(34,43,69,.14);white-space:nowrap;opacity:0;transition:opacity .12s;}
+.fig__tip.on{opacity:1;}
+.fig__scroll{display:none;font-size:12px;color:var(--ink-faint);margin:0 0 4px 6px;}
+@media (max-width:640px){.fig__plot{overflow-x:auto;-webkit-overflow-scrolling:touch;}.fig__svg{width:600px;max-width:none;}.fig__scroll{display:block;}}
+.fig figcaption{font-size:13.5px;color:var(--ink-soft);line-height:1.8;margin-top:10px;}
+pre.rout{background:#1F2A37;color:#E8EEF3;border-radius:14px;padding:18px 20px;margin:0 0 26px;overflow-x:auto;font:13px/1.6 ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;white-space:pre;}
+.body code{font:0.92em ui-monospace,Menlo,Consolas,monospace;background:rgba(34,43,69,.06);border-radius:6px;padding:1px 6px;}
+.toolcta--sub{margin-top:-30px;}
+.toolcta--sub::after{background:#FFC83D;}
+</style>
+<!-- 共通テーマ：英語のものさしと同じ書体・明るさ（/assets/theme.css） -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Nunito:wght@600;700;800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/theme.css?v=1">
+</head>
+<body>
+
+<a class="skip" href="#main">本文へ移動</a>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="wrap masthead__inner">
+      <a class="brand" href="/">数字の<span>ものさし</span></a>
+      <nav class="nav" aria-label="サイト内">
+        <a href="/credit-pro/">財務でポン！</a>
+        <a href="/lease/">リース見積診断</a>
+        <a href="/eigo/" style="background:#FFF3CC;color:#8A5A00;border-radius:999px;padding:4px 12px;font-weight:700;">英語のものさし</a>
+        <a href="/#tools">ツール</a>
+        <a href="/articles/">読みもの</a>
+        <a href="/#excel">Excel版</a>
+        <a href="/contact/">お問い合わせ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="column">
+
+      <p class="crumbs"><a href="/">ホーム</a> ／ <a href="/articles/">読みもの</a> ／ 統計×英語</p>
+
+      <header class="head">
+        <span class="head__mark" aria-hidden="true"></span>
+        <span class="tag">統計×英語</span>
+        <h1>統計の用語は、英語で読むと意味がつながる｜mean・residual・null・significant</h1>
+        <p class="head__meta">2026.09.30 公開 ／ 2026.09.30 更新</p>
+        <p class="head__lead">帰無仮説、不偏分散、残差、決定係数。字面から意味が浮かばず、丸暗記するしかないと感じたことはありませんか。統計の用語の多くは、英語の意味を知ると名前の理由が見えてきます。統計ソフトの出力も、英語のまま読めるようになります。</p>
+      </header>
+
+      <nav class="toc" aria-label="目次">
+        <h2>目次</h2>
+        <ol>
+          <li><a href="#s1">漢字の用語が、頭に入ってこない理由</a></li>
+          <li><a href="#s2">ばらつきの言葉：deviation と error</a></li>
+          <li><a href="#s3">検定の言葉：null・significant・reject</a></li>
+          <li><a href="#s4">推定の言葉：estimate と confidence</a></li>
+          <li><a href="#s5">回帰の言葉：regression と residual</a></li>
+          <li><a href="#s6">統計ソフトの出力を、英語のまま読む</a></li>
+          <li><a href="#s7">用語は英語とセットで、声に出して覚える</a></li>
+        </ol>
+      </nav>
+
+      <div class="body">
+
+        <h2 id="s1">漢字の用語が、頭に入ってこない理由</h2>
+        <p>帰無仮説、不偏分散、残差、決定係数。統計の授業や統計検定の勉強を始めると、見慣れない漢字の用語が次々に出てきます。字面から意味を想像しにくく、定義を丸暗記するしかない、と感じた人も多いはずです。</p>
+        <p>これらの用語の多くは、英語などで生まれた概念に、あとから日本語をあてたものです。だから、<strong>もとの英語を知ると「なぜその名前なのか」が見えてきます。</strong>名前の理由が分かれば、定義は覚えるものではなく、読めば分かるものに変わります。</p>
+        <p>もう一つ、実用的な理由もあります。統計ソフトの出力、海外の教科書、論文、オンラインの解説。<strong>統計を使う場面の多くは、最初から英語です。</strong>統計検定2級でも、統計ソフトの出力を読み取る問題が出ます。英語の用語に慣れておくことは、試験対策としても遠回りではありません。</p>
+        <p>この記事では、統計検定2級の範囲で特に大事な用語を、英語の意味から読み直します。</p>
+
+        <h2 id="s2">ばらつきの言葉：deviation と error</h2>
+        <h3>deviation：道から外れる</h3>
+        <p>標準偏差は <span lang="en">standard deviation</span> です。<span lang="en">deviate</span> は、ラテン語の <span lang="en">de</span>（離れて）と <span lang="en">via</span>（道）からできた語で、「道から外れる」という意味です。</p>
+        <p>ここでいう道は、平均です。<strong>各データが平均という道からどれだけ外れているか</strong>。その外れ具合（偏差）を2乗して平均したものが分散（<span lang="en">variance</span>）、その平方根が標準偏差です。<span lang="en">variance</span> は <span lang="en">vary</span>（変わる・ばらつく）の名詞形なので、こちらもそのまま「ばらつき」です。</p>
+
+        <h3>error：間違いではなく「ずれ」</h3>
+        <p>標準誤差は <span lang="en">standard error</span>。<span lang="en">error</span> は日常語では「間違い」ですが、統計では<strong>推定した値と本当の値のずれ</strong>を指します。誰かがミスをしたわけではありません。</p>
+        <p>統計検定2級で最も取り違えやすいのが、この2つです。</p>
+        <div class="tw"><table>
+          <thead><tr><th>英語</th><th>日本語</th><th>何のばらつきか</th></tr></thead>
+          <tbody>
+            <tr><td lang="en">standard deviation</td><td>標準偏差</td><td>データそのもののばらつき</td></tr>
+            <tr><td lang="en">standard error</td><td>標準誤差</td><td>標本平均などの推定値のばらつき（標本を取り直すたびに変わる幅）</td></tr>
+          </tbody>
+        </table></div>
+        <p>標本平均の標準誤差は、標準偏差を√n で割った値です。<span lang="en">deviation</span> は「データが道から外れる」、<span lang="en">error</span> は「推定が真の値からずれる」。<strong>何がずれているのかを英語で言い分けられれば、式の√n がどこから来るのかも迷わなくなります。</strong></p>
+
+        <h2 id="s3">検定の言葉：null・significant・reject</h2>
+        <h3>hypothesis：下に置くもの</h3>
+        <p>仮説は <span lang="en">hypothesis</span>。ギリシャ語の <span lang="en">hypo</span>（下に）と <span lang="en">thesis</span>（置くもの）からできた語で、<strong>議論の下に置く前提</strong>という意味です。複数形は <span lang="en">hypotheses</span>（ハイポセシーズ）です。</p>
+
+        <h3>null hypothesis：「何もない」という仮説</h3>
+        <p>帰無仮説は <span lang="en">null hypothesis</span>。<span lang="en">null</span> は「ゼロ・何もない」という意味です。つまり帰無仮説とは、<strong>「差はない」「効果はない」という、何も起きていない状態を仮に置く仮説</strong>です。この用語は、統計学者フィッシャーが1935年の著書『実験計画法（The Design of Experiments）』で使ったものが広まりました。</p>
+        <p>日本語の「帰無」も「無に帰する」と読めば同じ意味ですが、英語の <span lang="en">null</span> のほうが直感的です。記号は H₀ と書き、英語では「エイチ・ノート」や「エイチ・ゼロ」と読みます。対立仮説は <span lang="en">alternative hypothesis</span>（代わりの仮説）で、H₁ と書きます。</p>
+
+        <h3>significant：「重要」ではなく「示された」</h3>
+        <p>「有意な差」は <span lang="en">statistically significant</span>。<span lang="en">significant</span> は日常語では「重要な・大きな」という意味で使われますが、もとは <span lang="en">signify</span>（示す・意味する）の形容詞です。</p>
+        <p>統計で <span lang="en">significant</span> と言うときは、<strong>「偶然だけでは説明しにくい差が、データに示された」</strong>という意味です。差が大きいとも、重要だとも言っていません。件数が多ければ、ごく小さな差でも有意になります。この点は<a href="/articles/pchi-yuuisa/">その差は偶然か｜p値の読み方と、実務的に意味のある差</a>で、計算例を使って詳しく書いています。</p>
+
+        <h3>reject と fail to reject</h3>
+        <p>帰無仮説を棄却することは <span lang="en">reject the null hypothesis</span>。棄却できなかったときは、英語では <span lang="en">fail to reject</span>（棄却に失敗する）と言います。</p>
+        <p>ここに、とても大事な考え方が表れています。<strong>棄却できなかったことは、帰無仮説が正しいと示されたことではありません。</strong>証拠が足りなかっただけです。「有意差なし＝差がない」と読んではいけない理由が、英語の言い回しにそのまま入っています。</p>
+
+        <h3>Type I error と Type II error</h3>
+        <p>第1種の過誤は <span lang="en">Type I error</span>、第2種の過誤は <span lang="en">Type II error</span>。I と II はローマ数字なので、「タイプ・ワン」「タイプ・ツー」と読みます。</p>
+        <ul>
+          <li><span lang="en">Type I error</span>：本当は差がないのに、差があると判断してしまう（正しい帰無仮説を棄却する）</li>
+          <li><span lang="en">Type II error</span>：本当は差があるのに、見逃してしまう（誤った帰無仮説を棄却できない）</li>
+        </ul>
+        <p>差があるときに正しく見つけられる確率を検出力（<span lang="en">power</span>）と言い、1 −（第2種の過誤の確率）で表します。</p>
+
+        <h2 id="s4">推定の言葉：estimate と confidence</h2>
+        <h3>estimate と estimator</h3>
+        <p>推定値は <span lang="en">estimate</span>、推定量は <span lang="en">estimator</span> です。<span lang="en">estimator</span> は「推定に使う計算の決まり（式）」、そこに実際のデータを入れて出てきた数が <span lang="en">estimate</span> です。日本語の「推定量」と「推定値」の区別が、英語では語尾の違いとして現れます。</p>
+        <p>発音にも注意が必要です。<span lang="en">estimate</span> は、名詞なら語末が「メット」（/ˈestɪmət/）、動詞の「推定する」なら「メイト」（/ˈestɪmeɪt/）に近い音になります。</p>
+
+        <h3>confidence interval：何に「信頼」しているのか</h3>
+        <p>信頼区間は <span lang="en">confidence interval</span>。<span lang="en">interval</span> は「区間」です。</p>
+        <p>95%信頼区間は、よく「本当の値が95%の確率でこの区間に入る」と説明されますが、これは正確ではありません。本当の値（母数）は1つに決まっていて、確率的に動くのは区間のほうだからです。正しくは、<strong>同じ手順で標本を取り、区間を作ることを何度も繰り返すと、そのうち約95%の区間が本当の値を含む</strong>、という意味です。<span lang="en">confidence</span>（信頼）は、1つの区間ではなく、区間を作る手順に対する信頼です。</p>
+
+        <h3>degrees of freedom</h3>
+        <p>自由度は <span lang="en">degrees of freedom</span>。自由に動ける値の個数です。統計ソフトの出力では df や Df と略され、<span lang="en">on 18 degrees of freedom</span> のように書かれます。</p>
+
+        <h2 id="s5">回帰の言葉：regression と residual</h2>
+        <h3>regression：後戻りする</h3>
+        <p>回帰は <span lang="en">regression</span>。<span lang="en">regress</span> は「後戻りする」という意味です。</p>
+        <p>なぜ「後戻り」なのか。19世紀の終わりにゴルトンが親子の身長を調べたところ、とても背の高い親の子は、親ほどは背が高くならない傾向がありました。子の身長が平均のほうへ「戻る」。ゴルトンはこれを <span lang="en">regression towards mediocrity</span>（平凡への回帰）と呼び、ここから <span lang="en">regression</span> という名前が、直線を当てはめる方法そのものの名前として残りました。</p>
+        <p>今では、名前の由来とは関係なく、<strong>ある変数で別の変数を説明する式を求める方法</strong>全般を回帰と呼んでいます。</p>
+
+        <h3>residual：残りもの</h3>
+        <p>残差は <span lang="en">residual</span>。「残りもの」という意味です。実際の値から、回帰式で当てはめた値（<span lang="en">fitted value</span>）を引いた残りが残差です。<strong>式で説明しきれずに残った部分</strong>と読めば、名前のとおりです。</p>
+        <p>最小二乗法（<span lang="en">least squares</span>）は、この残差の2乗（<span lang="en">squares</span>）の合計を最も小さく（<span lang="en">least</span>）する方法。英語をそのまま訳すと、方法の中身が説明になっています。</p>
+
+        <h3>intercept・slope・coefficient</h3>
+        <ul>
+          <li><span lang="en">intercept</span>：切片。直線が y 軸を「横切る（さえぎる）」点です。名詞は前を強く、イ́ンターセプトと読みます</li>
+          <li><span lang="en">slope</span>：傾き。日常語では「坂」です</li>
+          <li><span lang="en">coefficient</span>：係数。回帰式で変数にかかる数で、切片や傾きをまとめてこう呼びます</li>
+        </ul>
+
+        <h2 id="s6">統計ソフトの出力を、英語のまま読む</h2>
+        <p>ここまでの単語がそろうと、統計ソフトの出力がそのまま読めるようになります。次は、20人の「1週間の勉強時間（hours）」と「模試の得点（score）」の架空のデータで単回帰分析をした結果です。統計ソフトRの <code>summary(lm(score ~ hours))</code> と同じ形式にそろえて示しています。</p>
+<pre class="rout" lang="en">Residuals:
+    Min      1Q  Median      3Q     Max
+-5.1007 -2.4117 -0.8065  3.3359  6.0667
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)  44.6031     1.9701  22.640 1.12e-14 ***
+hours         2.4163     0.2298  10.515 4.10e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.657 on 18 degrees of freedom
+Multiple R-squared:   0.86,	Adjusted R-squared:  0.8522
+F-statistic: 110.6 on 1 and 18 DF,  p-value: 4.103e-09</pre>
+        <p>上から順に、英語のまま読んでいきます。</p>
+        <div class="tw"><table>
+          <thead><tr><th>出力の英語</th><th>意味</th><th>この例での読み方</th></tr></thead>
+          <tbody>
+            <tr><td lang="en">Residuals</td><td>残差</td><td>当てはめた直線から、各人の得点がどれだけ上下にずれたか。最小 −5.1点、最大 +6.1点</td></tr>
+            <tr><td lang="en">Estimate</td><td>推定値</td><td>切片 44.6、傾き 2.42。勉強時間が1時間多いと、得点が約2.4点高い傾向</td></tr>
+            <tr><td lang="en">Std. Error</td><td>標準誤差</td><td>傾き 2.42 は、標本が変われば 0.23 程度はぶれうる</td></tr>
+            <tr><td lang="en">t value</td><td>t 値</td><td>推定値 ÷ 標準誤差。2.4163 ÷ 0.2298 ≒ 10.5</td></tr>
+            <tr><td lang="en">Pr(&gt;|t|)</td><td>p 値</td><td>「傾きは0（関係なし）」という帰無仮説のもとで、|t| が10.5以上になる確率。ほぼ0</td></tr>
+            <tr><td lang="en">on 18 degrees of freedom</td><td>自由度18</td><td>単回帰の残差の自由度は n − 2。ここから n = 20 と逆算できる</td></tr>
+            <tr><td lang="en">Multiple R-squared</td><td>決定係数</td><td>得点のばらつきの86%を、勉強時間で説明できている</td></tr>
+            <tr><td lang="en">F-statistic</td><td>F 統計量</td><td>単回帰では t 値の2乗と一致する。10.515² ≒ 110.6</td></tr>
+          </tbody>
+        </table></div>
+        <p>出力の数字は、互いにつながっています。t 値は推定値を標準誤差で割ったもの、F 統計量は（単回帰なら）t 値の2乗、決定係数は（単回帰なら）相関係数の2乗です。<strong>1つの数字の意味が英語で分かれば、残りは計算で確かめられます。</strong></p>
+
+        <div class="callout">
+          <p><strong>読み違えやすいところ</strong>：この結果は「勉強時間を1時間増やせば、得点が2.4点上がる」という意味ではありません。データは観察しただけのもので、勉強時間の長い人は、ほかの面でも得点につながる条件を持っているかもしれないからです。<span lang="en">Correlation does not imply causation</span>（相関は因果を意味しない）。英語でも日本語でも、統計の授業で繰り返し出てくる一文です。</p>
+        </div>
+
+        <h2 id="s7">用語は英語とセットで、声に出して覚える</h2>
+        <p>統計の用語を覚えるときは、日本語と英語をセットにして、1つの語につき次の3つを確かめるのがおすすめです。</p>
+        <ol>
+          <li><strong>英語の意味</strong>：<span lang="en">residual</span> なら「残りもの」。名前の理由がここで分かります</li>
+          <li><strong>日本語の用語</strong>：残差。英語の意味と結びつけて覚えます</li>
+          <li><strong>発音</strong>：音で覚えると、英語の講義や動画でも聞き取れるようになります</li>
+        </ol>
+        <p>この記事で取り上げた語を含め、統計検定2級の範囲の用語を英語でまとめた単語一覧を用意しました。すべての語に意味・発音記号・ひとことメモ・音声がついています。</p>
+
+        <a class="toolcta" href="/eigo/tango/toukei/" data-x="art1-tango">
+          <p class="toolcta__label">word list</p>
+          <h2 class="toolcta__name" style="border:none;padding:0;margin:0 0 10px;">統計の英単語（67語）｜英語のものさし</h2>
+          <p class="toolcta__desc">mean・variance・null hypothesis・residual など、統計検定2級の範囲の用語を分野別に。発音記号と音声つき、統計ソフトの出力に出る英語の一覧もあります。無料です。</p>
+          <span class="toolcta__go">単語一覧を開く →</span>
+        </a>
+
+        <a class="toolcta toolcta--sub" href="/toukei2/" data-x="art1-toukei2">
+          <p class="toolcta__label">practice</p>
+          <h2 class="toolcta__name" style="border:none;padding:0;margin:0 0 10px;">統計検定2級 実戦100問｜統計のものさし</h2>
+          <p class="toolcta__desc">統計ソフトの出力を読む問題も含む、出題形式に合わせたオリジナル100問。1問ごとに解き方の手順と、引っかかりどころを解説します。無料・登録不要です。</p>
+          <span class="toolcta__go">問題を解く →</span>
+        </a>
+
+      </div>
+
+      <section class="sources">
+        <h2>参照した資料</h2>
+        <ul>
+          <li>F. Galton "Regression towards Mediocrity in Hereditary Stature", Journal of the Anthropological Institute of Great Britain and Ireland, 15 (1886)</li>
+          <li>R. A. Fisher "The Design of Experiments", Oliver and Boyd (1935)</li>
+          <li>語の成り立ち（deviate・hypothesis・residual など）は、一般的な英語辞典の語源の記述によります。</li>
+          <li>掲載した回帰分析の結果は、説明のために作った架空のデータ（20人分）から計算したものです。</li>
+        </ul>
+        <div class="disclaimer">
+          <p>本記事は学習の手助けを目的とした一般的な解説です。「統計検定」は一般財団法人統計質保証推進協会の登録商標です。試験の出題範囲・形式は、公式サイトで最新の情報をご確認ください。</p>
+        </div>
+      </section>
+
+      <div class="byline">
+        <div class="byline__mark" aria-hidden="true">数</div>
+        <div>
+          <h3>エリエール</h3>
+          <p>財務経理、金融機関での法人営業・制度対応、企業信用調査を経て独立。会社の数字を作る側、貸す側、調べる側の三方向から決算書を見てきました。</p>
+        </div>
+      </div>
+
+      <nav class="pager" aria-label="前後の記事">
+        <a href="/articles/pchi-yuuisa/"><span>前の記事</span><strong>その差は偶然か｜p値の読み方と、実務的に意味のある差</strong></a>
+        <a href="/articles/eitango-hindo/"><span>次の記事</span><strong>英単語は何語覚えれば読めるのか｜40本の英文で数えた、出現頻度のかたより</strong></a>
+      </nav>
+
+</div>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__inner">
+      <nav class="foot__links" aria-label="フッター">
+        <a href="/about/">運営者情報</a>
+        <a href="/privacy/">プライバシーポリシー</a>
+        <a href="/tokusho/">特定商取引法に基づく表記</a>
+        <a href="/contact/">お問い合わせ</a>
+        <a href="/sitemap.xml">サイトマップ</a>
+      </nav>
+      <p class="copy">© 2026 数字のものさし</p>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  // 図のツールチップ（図1：上位40語／図2：覚えた語数と割合）
+  document.querySelectorAll('.fig__plot').forEach(function(box){
+    var svg=box.querySelector('svg'),tip=box.querySelector('.fig__tip');if(!svg||!tip)return;
+    function place(cx,cy,html){tip.innerHTML=html;tip.classList.add('on');var b=box.getBoundingClientRect(),w=tip.offsetWidth;
+      var x=Math.min(Math.max(cx-b.left-w/2,6),b.width-w-6)+box.scrollLeft;tip.style.left=x+'px';tip.style.top=Math.max(cy-b.top-48,4)+'px';}
+    function hide(){tip.classList.remove('on');}
+    if(box.dataset.tip==='fig1'){
+      svg.querySelectorAll('.hit circle').forEach(function(c){
+        function on(){var r=c.getBoundingClientRect();place(r.left+r.width/2,r.top,c.getAttribute('data-t'));}
+        c.addEventListener('mouseenter',on);c.addEventListener('click',on);c.addEventListener('mouseleave',hide);});
+    }else{
+      var cov=svg.getAttribute('data-cov').split(',').map(Number),hit=svg.querySelector('.hitarea'),xh=svg.querySelector('.xh'),xd=svg.querySelector('.xd');
+      var X0=+hit.getAttribute('x'),PW=+hit.getAttribute('width'),Y0=+hit.getAttribute('y'),PH=+hit.getAttribute('height');
+      function move(e){var pt=svg.createSVGPoint();var s=e.touches?e.touches[0]:e;pt.x=s.clientX;pt.y=s.clientY;var p=pt.matrixTransform(svg.getScreenCTM().inverse());
+        var k=Math.round((p.x-X0)/PW*2500);k=Math.max(1,Math.min(cov.length-1,k));var x=X0+k/2500*PW,y=Y0+PH-cov[k]/100*PH;
+        xh.setAttribute('x1',x);xh.setAttribute('x2',x);xh.setAttribute('visibility','visible');xd.setAttribute('cx',x);xd.setAttribute('cy',y);xd.setAttribute('visibility','visible');
+        var r=xd.getBoundingClientRect();place(r.left+r.width/2,r.top,'多い順に <b>'+k.toLocaleString()+'語</b> → 本文の <b>'+cov[k].toFixed(1)+'%</b>');}
+      function out(){hide();xh.setAttribute('visibility','hidden');xd.setAttribute('visibility','hidden');}
+      hit.addEventListener('mousemove',move);hit.addEventListener('touchstart',move,{passive:true});hit.addEventListener('touchmove',move,{passive:true});hit.addEventListener('mouseleave',out);
+    }
+  });
+  // 回遊の計測（どの案内から移ったか）
+  document.querySelectorAll('[data-x]').forEach(function(a){a.addEventListener('click',function(){
+    try{gtag('event','select_content',{content_type:'cross_link',item_id:a.getAttribute('data-x')});}catch(e){}});});
+})();
+</script>
+</body>
+</html>
