@@ -183,7 +183,12 @@ input,select,textarea,button{font-weight:600}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-<style>body{font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",sans-serif;}.header-title{font-family:"Nunito","Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",sans-serif;font-weight:800;}</style>
+<style>body{font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",sans-serif;}.header-title{font-family:"Nunito","Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",sans-serif;font-weight:800;}/* スマホでは解説の吹き出しを画面の下に固定して出す（隠れている吹き出しが横幅を押し広げないように） */
+@media(max-width:640px){
+  .tooltip .tooltip-text{position:fixed;left:16px;right:16px;bottom:16px;width:auto;transform:none;max-height:45vh;overflow:auto}
+  .tooltip .tooltip-text::after{display:none}
+}
+</style>
 </head>
 <body>
 <div style="background:#1F3251;color:#EAEDF0;font:500 13px/1.5 -apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',sans-serif;padding:11px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:relative;z-index:99999">

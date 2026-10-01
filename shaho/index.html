@@ -386,6 +386,9 @@ input,select,textarea,button{font-weight:600}
   border-top:1px solid var(--rule-soft,var(--rule));font-size:12px;line-height:2}
 .site-foot a{color:var(--sea-deep);text-decoration:none;border-bottom:1px solid transparent}
 .site-foot a:hover{border-bottom-color:var(--sea-deep)}
+/* スマホで横にはみ出さないように：入力欄は画面幅まで縮め、広い表は枠の中で横に動かす */
+.wrap>*{min-width:0}fieldset{min-width:0}
+@media(max-width:1060px){.panel table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}}
 </style>
 <!-- 共通テーマ：英語のものさしと同じ書体・明るさ（/assets/theme.css） -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
