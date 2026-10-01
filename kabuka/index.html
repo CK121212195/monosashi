@@ -5,7 +5,7 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>自社株評価シミュレーター｜相続税評価とM&A価格・Excel版あり</title>
+<title>自社株評価のものさし｜自社株評価シミュレーター・相続税評価とM&A価格・Excel版あり</title>
 <meta name="description" content="取引相場のない株式（自社株）の相続税評価額を、会社規模判定・類似業種比準価額・純資産価額・配当還元・特定の評価会社の判定まで含めて自動計算。DCF法・時価純資産法などによるM&A評価も同時に表示。計算過程まで追えるExcel（エクセル）版もあります。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -394,11 +394,15 @@ input,select,textarea,button{font-weight:600}
   border-top:1px solid var(--rule-soft,var(--rule));font-size:12px;line-height:2}
 .site-foot a{color:var(--sea-deep);text-decoration:none;border-bottom:1px solid transparent}
 .site-foot a:hover{border-bottom-color:var(--sea-deep)}
+/* スマホで横にはみ出さないように：入力欄は画面幅まで縮め、広い表は枠の中で横に動かす */
+.wrap>*{min-width:0}fieldset{min-width:0}
+.step>*{min-width:0}
+@media(max-width:1060px){.panel table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}}
 </style>
 <link rel="canonical" href="https://kazumono.com/kabuka/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="数字のものさし">
-<meta property="og:title" content="自社株評価シミュレーター｜相続税評価とM&A価格・Excel版あり">
+<meta property="og:title" content="自社株評価のものさし｜自社株評価シミュレーター・相続税評価とM&A価格・Excel版あり">
 <meta property="og:description" content="取引相場のない株式（自社株）の相続税評価額を、会社規模判定・類似業種比準価額・純資産価額・配当還元・特定の評価会社の判定まで含めて自動計算。DCF法・時価純資産法などによるM&A評価も同時に表示。計算過程まで追えるExcel（エクセル）版もあります。">
 <meta property="og:image" content="https://kazumono.com/assets/ogp.png">
 <meta property="og:image:width" content="1200">
@@ -430,8 +434,8 @@ input,select,textarea,button{font-weight:600}
 <div class="sitehead__inner">
 <a class="brand" href="/">数字の<span>ものさし</span></a>
 <nav class="sitenav" aria-label="サイト内">
-        <a href="/credit-pro/">財務でポン！</a>
-        <a href="/lease/">リース見積診断</a>
+        <a href="/credit-pro/">財務のものさし</a>
+        <a href="/lease/">リースのものさし</a>
         <a href="/eigo/" style="background:#FFF3CC;color:#8A5A00;border-radius:999px;padding:4px 12px;font-weight:700;">英語のものさし</a>
         <a href="/#tools">ツール</a>
         <a href="/articles/">読みもの</a>
@@ -443,7 +447,7 @@ input,select,textarea,button{font-weight:600}
 <header class="masthead">
   <div class="masthead-in">
     <div>
-      <span class="mark">Private Company Share Valuation / 非上場株式 株価算定</span>
+      <span class="mark">自社株評価のものさし ／ Private Company Share Valuation</span>
       <h1>相続税評価<span class="slash">／</span>M&amp;A評価<br>株価算定シミュレーター</h1>
       <p class="sub">会社規模の判定から、類似業種比準価額・純資産価額・配当還元価額・特定の評価会社の判定まで。
         あわせてDCF法・時価純資産法・年買法・EBITDAマルチプル法によるM&amp;A価格も同時に試算します。計算過程はすべて画面に表示します。</p>
@@ -714,7 +718,7 @@ input,select,textarea,button{font-weight:600}
 </div>
 
 <footer>
-  非上場株式 株価算定シミュレーター　—　入力値はブラウザ内でのみ計算され、どこにも送信されません。
+  自社株評価のものさし　—　入力値はブラウザ内でのみ計算され、どこにも送信されません。
   <nav class="site-foot" aria-label="サイト共通"><a href="/">数字のものさし</a><a href="/about/">運営者情報</a><a href="/privacy/">プライバシーポリシー</a><a href="/tokusho/">特定商取引法に基づく表記</a><a href="/contact/">お問い合わせ</a></nav>
 </footer>
 

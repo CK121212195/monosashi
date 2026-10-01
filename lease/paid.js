@@ -32,7 +32,7 @@ const P = { quote: null, life: null, lifeTouched: false, snap: null, over: {}, c
   show: { A: true, D: true, C: true, B: true } };
 
 /* ============================================================ Excelのシート見本（自動で流れる）
- * 財務でポン！で検証済みの仕組みを、そのまま使っている */
+ * 財務のものさしで検証済みの仕組みを、そのまま使っている */
 const SHOTS = [
   ["./assets/lease-1-dashboard.jpg?v=2", "①ダッシュボード",
    "月額・金利・リース会社の利益と、4つのグラフを1枚に。A4縦1枚で印刷して、そのまま稟議に添付できます。"],
@@ -126,7 +126,7 @@ function initShots() {
     stopShotTick();
     if (shotUI.root) shotUI.root.classList.remove("is-auto");
     if (shotUI.play) shotUI.play.remove();
-    console.warn("[リース見積診断] 見本の自動切り替えを止めました（タブの手動切り替えは使えます）", err);
+    console.warn("[リースのものさし] 見本の自動切り替えを止めました（タブの手動切り替えは使えます）", err);
   }
 }
 
@@ -576,7 +576,7 @@ function leftText(t) {
 export function initPaid() {
   P.snap = readSnap();
   renderSamples();
-  try { initShots(); } catch (e) { console.warn("[リース見積診断] シート見本を動かせませんでした", e); }
+  try { initShots(); } catch (e) { console.warn("[リースのものさし] シート見本を動かせませんでした", e); }
 
   $("lifeChips").addEventListener("click", (e) => {
     const b = e.target.closest("[data-life]"); if (!b) return;
@@ -629,7 +629,7 @@ export function initPaid() {
     t = setTimeout(() => { const c = compact().compact; if (c !== wasCompact && P.snap) { wasCompact = c; paintOpen(); } }, 150);
   });
   paintAll();
-  resumePurchase().catch((e) => console.warn("[リース見積診断] 購入の確認でつまずきました", e));
+  resumePurchase().catch((e) => console.warn("[リースのものさし] 購入の確認でつまずきました", e));
 }
 
 /** 無料ツールで計算するたびに呼ばれる。quote は計算できないとき null */
@@ -805,7 +805,7 @@ async function onDownload() {
     const figs = [];
     const X = { excel: true };   // Excel には、そろった大きさ（520×300）で描いたグラフを貼る
     for (const [key, markup] of [["donut", donutMarkup(r, X)], ["compare", lineCompare(r, undefined, X)], ["remaining", areaRemaining(r, P.cancelAt, X)], ["expense", barsExpense(r, X)]]) {
-      try { figs.push({ key, ...(await toPng(markup)) }); } catch (e) { console.warn("[リース見積診断] グラフを画像にできませんでした", key, e); }
+      try { figs.push({ key, ...(await toPng(markup)) }); } catch (e) { console.warn("[リースのものさし] グラフを画像にできませんでした", key, e); }
     }
     await downloadLeaseXlsx(r, figs);
     track("lease_download");

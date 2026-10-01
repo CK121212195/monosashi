@@ -20,18 +20,17 @@
   
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>社会保険料シミュレーター｜4〜6月の残業で決まる標準報酬月額</title>
+<title>社会保険料のものさし｜社会保険料シミュレーター・4〜6月の残業で決まる標準報酬月額</title>
 <meta name="description" content="健康保険料・厚生年金保険料・所得税・住民税・手取りを概算するシミュレーター。4月〜6月の残業時間を動かすと、9月からの標準報酬月額と年間保険料が段差で動くのが見えます。令和8年度の料率に準拠。Excel（エクセル）版もあります。">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kazumono.com/shaho/">
-<meta property="og:site_name" content="社会保険料・手取り 簡易シミュレーター">
-<meta property="og:title" content="社会保険料シミュレーター｜4〜6月の残業で決まる標準報酬月額">
+<meta property="og:title" content="社会保険料のものさし｜社会保険料シミュレーター・4〜6月の残業で決まる標準報酬月額">
 <meta property="og:description" content="健康保険料・厚生年金保険料・所得税・住民税・手取りを概算するシミュレーター。4月〜6月の残業時間を動かすと、9月からの標準報酬月額と年間保険料が段差で動くのが見えます。令和8年度の料率に準拠。Excel（エクセル）版もあります。">
 <meta property="og:image" content="https://kazumono.com/assets/ogp.png">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="社会保険料シミュレーター｜4〜6月の残業で決まる標準報酬月額">
+<meta name="twitter:title" content="社会保険料のものさし｜社会保険料シミュレーター・4〜6月の残業で決まる標準報酬月額">
 <meta name="twitter:description" content="健康保険料・厚生年金保険料・所得税・住民税・手取りを概算するシミュレーター。4月〜6月の残業時間を動かすと、9月からの標準報酬月額と年間保険料が段差で動くのが見えます。令和8年度の料率に準拠。Excel（エクセル）版もあります。">
 <meta name="twitter:image" content="https://kazumono.com/assets/ogp.png">
 
@@ -387,6 +386,9 @@ input,select,textarea,button{font-weight:600}
   border-top:1px solid var(--rule-soft,var(--rule));font-size:12px;line-height:2}
 .site-foot a{color:var(--sea-deep);text-decoration:none;border-bottom:1px solid transparent}
 .site-foot a:hover{border-bottom-color:var(--sea-deep)}
+/* スマホで横にはみ出さないように：入力欄は画面幅まで縮め、広い表は枠の中で横に動かす */
+.wrap>*{min-width:0}fieldset{min-width:0}
+@media(max-width:1060px){.panel table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}}
 </style>
 <!-- 共通テーマ：英語のものさしと同じ書体・明るさ（/assets/theme.css） -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -399,8 +401,8 @@ input,select,textarea,button{font-weight:600}
 <div class="sitehead__inner">
 <a class="brand" href="/">数字の<span>ものさし</span></a>
 <nav class="sitenav" aria-label="サイト内">
-        <a href="/credit-pro/">財務でポン！</a>
-        <a href="/lease/">リース見積診断</a>
+        <a href="/credit-pro/">財務のものさし</a>
+        <a href="/lease/">リースのものさし</a>
         <a href="/eigo/" style="background:#FFF3CC;color:#8A5A00;border-radius:999px;padding:4px 12px;font-weight:700;">英語のものさし</a>
         <a href="/#tools">ツール</a>
         <a href="/articles/">読みもの</a>
@@ -412,7 +414,7 @@ input,select,textarea,button{font-weight:600}
 <header class="masthead">
   <div class="masthead-in">
     <div>
-      <span class="mark">Social Insurance &amp; Take-home / 社会保険料・手取り 簡易試算</span>
+      <span class="mark">社会保険料のものさし ／ Social Insurance &amp; Take-home</span>
       <h1>社会保険料<span class="slash">／</span>手取り<br>簡易シミュレーター</h1>
       <p class="sub">所得税は年末調整で精算されます。社会保険料は精算されません。<b>4月・5月・6月</b>の3か月で決まった等級が、その年の9月から翌年8月まで12か月間そのまま適用されます。左の残業時間を動かして、段差の位置を確かめてください。</p>
     </div>
@@ -593,7 +595,7 @@ input,select,textarea,button{font-weight:600}
 </div>
 
 <footer>
-  社会保険料・手取り 簡易シミュレーター　—　入力値はブラウザ内でのみ計算され、どこにも送信されません。
+  社会保険料のものさし　—　入力値はブラウザ内でのみ計算され、どこにも送信されません。
   <nav class="site-foot" aria-label="サイト共通"><a href="/">数字のものさし</a><a href="/about/">運営者情報</a><a href="/privacy/">プライバシーポリシー</a><a href="/tokusho/">特定商取引法に基づく表記</a><a href="/contact/">お問い合わせ</a></nav>
 </footer>
 

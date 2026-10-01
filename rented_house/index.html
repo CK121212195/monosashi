@@ -19,19 +19,18 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>賃貸vs持ち家シミュレーター｜生涯コストと相続・Excel版あり</title>
+<title>賃貸vs持ち家の比較のものさし｜賃貸vs持ち家シミュレーター・生涯コストと相続・Excel版あり</title>
 <meta name="description" content="賃貸と持ち家の生涯コストを、住宅ローン控除・固定資産税・団信・相続税・贈与税まで含めて年次で比較。死亡年齢を動かすと相続税と遺族の手取りが即座に再計算されます。2026年7月時点の税制準拠。Excel（エクセル）版もあります。">
 
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kazumono.com/rented_house/">
-<meta property="og:site_name" content="賃貸 vs 持ち家 生涯コスト比較シミュレーター">
-<meta property="og:title" content="賃貸vs持ち家シミュレーター｜生涯コストと相続・Excel版あり">
+<meta property="og:title" content="賃貸vs持ち家の比較のものさし｜賃貸vs持ち家シミュレーター・生涯コストと相続・Excel版あり">
 <meta property="og:description" content="賃貸と持ち家の生涯コストを、住宅ローン控除・固定資産税・団信・相続税・贈与税まで含めて年次で比較。死亡年齢を動かすと相続税と遺族の手取りが即座に再計算されます。2026年7月時点の税制準拠。Excel（エクセル）版もあります。">
 <meta property="og:image" content="https://kazumono.com/assets/ogp.png">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="賃貸vs持ち家シミュレーター｜生涯コストと相続・Excel版あり">
+<meta name="twitter:title" content="賃貸vs持ち家の比較のものさし｜賃貸vs持ち家シミュレーター・生涯コストと相続・Excel版あり">
 <meta name="twitter:description" content="賃貸と持ち家の生涯コストを、住宅ローン控除・固定資産税・団信・相続税・贈与税まで含めて年次で比較。死亡年齢を動かすと相続税と遺族の手取りが即座に再計算されます。2026年7月時点の税制準拠。Excel（エクセル）版もあります。">
 <meta name="twitter:image" content="https://kazumono.com/assets/ogp.png">
 
@@ -371,6 +370,9 @@ input,select,textarea,button{font-weight:600}
   border-top:1px solid var(--rule-soft,var(--rule));font-size:12px;line-height:2}
 .site-foot a{color:var(--sea-deep);text-decoration:none;border-bottom:1px solid transparent}
 .site-foot a:hover{border-bottom-color:var(--sea-deep)}
+/* スマホで横にはみ出さないように：入力欄は画面幅まで縮め、広い表は枠の中で横に動かす */
+.wrap>*{min-width:0}fieldset{min-width:0}
+@media(max-width:1060px){.panel table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}}
 </style>
 <!-- 共通テーマ：英語のものさしと同じ書体・明るさ（/assets/theme.css） -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -383,8 +385,8 @@ input,select,textarea,button{font-weight:600}
 <div class="sitehead__inner">
 <a class="brand" href="/">数字の<span>ものさし</span></a>
 <nav class="sitenav" aria-label="サイト内">
-        <a href="/credit-pro/">財務でポン！</a>
-        <a href="/lease/">リース見積診断</a>
+        <a href="/credit-pro/">財務のものさし</a>
+        <a href="/lease/">リースのものさし</a>
         <a href="/eigo/" style="background:#FFF3CC;color:#8A5A00;border-radius:999px;padding:4px 12px;font-weight:700;">英語のものさし</a>
         <a href="/#tools">ツール</a>
         <a href="/articles/">読みもの</a>
@@ -397,7 +399,7 @@ input,select,textarea,button{font-weight:600}
 <header class="masthead">
   <div class="masthead-in">
     <div>
-      <span class="mark">Lifetime Housing Cost / 生涯住居費 通算試算</span>
+      <span class="mark">賃貸vs持ち家の比較のものさし ／ Lifetime Housing Cost</span>
       <h1>賃貸<span class="slash">／</span>持ち家<br>生涯コスト比較</h1>
       <p class="sub">支払い終わった後も、支払い途中で亡くなった場合も、相続税・贈与税まで通算して比べます。「毎月いくら」ではなく「死ぬまでに、そして遺族にいくら残るか」で判定します。</p>
     </div>
@@ -640,7 +642,7 @@ input,select,textarea,button{font-weight:600}
 </div>
 
 <footer>
-  賃貸／持ち家 生涯コスト比較シミュレーター　—　入力値はブラウザ内でのみ計算され、どこにも送信されません。
+  賃貸vs持ち家の比較のものさし　—　入力値はブラウザ内でのみ計算され、どこにも送信されません。
   <nav class="site-foot" aria-label="サイト共通"><a href="/">数字のものさし</a><a href="/about/">運営者情報</a><a href="/privacy/">プライバシーポリシー</a><a href="/tokusho/">特定商取引法に基づく表記</a><a href="/contact/">お問い合わせ</a></nav>
 </footer>
 

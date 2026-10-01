@@ -12,7 +12,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>実質時給シミュレーター｜手取りを残業と通勤込みの時間で割る</title>
+<title>時給計算のものさし｜実質時給シミュレーター・手取りを残業と通勤込みの時間で割る</title>
 <meta name="description" content="年収から社会保険料・所得税・住民税を差し引き、残業と通勤を含めた拘束時間で割って「実質時給」を出します。協会けんぽの都道府県別料率、標準報酬月額の等級表に対応。その支出が労働何時間分かも換算します。令和8年度の料率・令和8年分の税制に準拠した概算。">
 <meta name="author" content="数字のものさし">
 <link rel="canonical" href="https://kazumono.com/jikyu/">
@@ -23,12 +23,12 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kazumono.com/jikyu/">
 <meta property="og:site_name" content="数字のものさし">
-<meta property="og:title" content="実質時給シミュレーター｜手取りを残業と通勤込みの時間で割る">
+<meta property="og:title" content="時給計算のものさし｜実質時給シミュレーター・手取りを残業と通勤込みの時間で割る">
 <meta property="og:description" content="社会保険料・所得税・住民税を引いたあとの手取りを、残業と通勤を含めた拘束時間で割る。額面時給と実質時給の差を出します。令和8年度版。">
 <meta property="og:image" content="https://kazumono.com/assets/ogp.png">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="実質時給シミュレーター｜手取りを残業と通勤込みの時間で割る">
+<meta name="twitter:title" content="時給計算のものさし｜実質時給シミュレーター・手取りを残業と通勤込みの時間で割る">
 <meta name="twitter:description" content="社会保険料・所得税・住民税を引いたあとの手取りを、残業と通勤を含めた拘束時間で割る。額面時給と実質時給の差を出します。">
 <meta name="twitter:image" content="https://kazumono.com/assets/ogp.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,7 +36,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication",
-"name":"実質時給 計算ツール",
+"name":"時給計算のものさし",
 "description":"年収から社会保険料・所得税・住民税を差し引き、残業と通勤を含めた拘束時間で割って実質時給を算出するツール。令和8年度の協会けんぽ都道府県別料率、令和8年分の所得税・住民税に対応した概算。",
 "applicationCategory":"FinanceApplication","operatingSystem":"Web browser","inLanguage":"ja",
 "offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},
@@ -339,8 +339,8 @@ input,select,textarea,button{font-weight:600}
 <div class="sitehead__inner">
 <a class="brand" href="/">数字の<span>ものさし</span></a>
 <nav class="sitenav" aria-label="サイト内">
-        <a href="/credit-pro/">財務でポン！</a>
-        <a href="/lease/">リース見積診断</a>
+        <a href="/credit-pro/">財務のものさし</a>
+        <a href="/lease/">リースのものさし</a>
         <a href="/eigo/" style="background:#FFF3CC;color:#8A5A00;border-radius:999px;padding:4px 12px;font-weight:700;">英語のものさし</a>
         <a href="/#tools">ツール</a>
         <a href="/articles/">読みもの</a>
@@ -352,7 +352,7 @@ input,select,textarea,button{font-weight:600}
 </header>
 <header class="masthead">
   <div class="masthead-in">
-    <span class="mark">Real Hourly Wage / 実質時給の試算</span>
+    <span class="mark">時給計算のものさし ／ Real Hourly Wage</span>
     <h1>実質時給<span class="slash">／</span>あなたの1時間は<br>いくらになっているか</h1>
     <p class="sub">年収を、社会保険料と税を引いたあとの手取りに直し、残業と通勤を含めた拘束時間で割ります。額面の時給と、実際に手元に残る1時間あたりの金額は、かなり違います。</p>
     <div class="dot"></div>
@@ -472,9 +472,9 @@ input,select,textarea,button{font-weight:600}
     <li><b>住居費を含めて生涯で判断したい</b>なら、賃貸と持ち家を相続まで通算して比べられます</li>
     <li><b>ローンの金利負担</b>を見たいなら、返済方式ごとの総利息と繰上返済の効果を試算できます</li>
   </ul>
-  <a class="btn" href="/shaho/">社会保険料シミュレーター</a>
-  <a class="btn" href="/rented_house/">賃貸／持ち家 比較</a>
-  <a class="btn" href="/kinri/">ローン返済シミュレーター</a>
+  <a class="btn" href="/shaho/">社会保険料のものさし</a>
+  <a class="btn" href="/rented_house/">賃貸vs持ち家の比較のものさし</a>
+  <a class="btn" href="/kinri/">返せる住宅ローンのものさし</a>
 </div>
 
 <section class="prose">
@@ -487,7 +487,7 @@ input,select,textarea,button{font-weight:600}
   <h2>分子の側：手取りはどう決まるか</h2>
   <h3>社会保険料は、給与そのものではなく「等級」で決まる</h3>
   <p>健康保険料と厚生年金保険料は、毎月の給与額に直接料率を掛けるのではありません。給与額を等級表に当てはめて標準報酬月額という区切りのいい数字に置き換え、それに料率を掛けます。等級は第1級から第50級まであり、健康保険は58,000円から1,390,000円まで、厚生年金は88,000円から650,000円までの範囲で決まります。</p>
-  <p>この仕組みには段差があります。給与が少し上がっただけで等級がひとつ上がると、保険料が階段状に増える。逆に、等級の中に収まっている限りは給与が増えても保険料は変わりません。標準報酬月額がどう決まるか、4月から6月の残業が9月以降の保険料をどう左右するかについては、<a href="/shaho/">社会保険料・手取り 簡易シミュレーター</a>で段差の動きを見ることができます。</p>
+  <p>この仕組みには段差があります。給与が少し上がっただけで等級がひとつ上がると、保険料が階段状に増える。逆に、等級の中に収まっている限りは給与が増えても保険料は変わりません。標準報酬月額がどう決まるか、4月から6月の残業が9月以降の保険料をどう左右するかについては、<a href="/shaho/">社会保険料のものさし</a>で段差の動きを見ることができます。</p>
 
   <h3>健康保険料率は都道府県で1%以上違う</h3>
   <p>協会けんぽの健康保険料率は都道府県ごとに算出されます。令和8年度は全国平均9.90%で、最も高い佐賀県が10.55%、最も低い新潟県が9.21%。1.34ポイントの差があります。年収500万円なら、この差だけで年間3万円前後の違いが出ます。勤務先がどこの支部に加入しているかで、同じ給与でも手取りが変わるということです。</p>
@@ -546,7 +546,7 @@ input,select,textarea,button{font-weight:600}
   <p>令和8年度の料率・令和8年分の税制に準拠した概算ツールです。年度が変わると料率と控除額が変わるため、結果も変わります。</p>
   <p style="margin-top:10px">
     <a href="/">数字のものさし</a>　
-    <a href="/shaho/">社会保険料シミュレーター</a>　
+    <a href="/shaho/">社会保険料のものさし</a>　
     <a href="/articles/">読みもの</a>　
     <a href="/privacy/">プライバシーポリシー</a>
         <a href="/tokusho/">特定商取引法に基づく表記</a>　

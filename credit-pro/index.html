@@ -5,11 +5,11 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>財務でポン！｜決算書PDFから自動で財務分析・与信判定・Excel出力</title>
-<meta name="description" content="「財務でポン！」は決算書3期分を入力するだけで、取引先の信用力を業歴・資本構成・規模・損益・経営者・償還余力の6軸100点満点で判定します。信用程度A〜Eと与信限度額の目安、稟議に添付できるExcel（エクセル）ファイルまで自動作成。業種別の基準値は財務省の法人企業統計調査に準拠。計算はブラウザ内で完結し、入力内容は送信されません。">
+<title>財務のものさし｜決算書PDFから自動で財務分析・与信判定・Excel出力</title>
+<meta name="description" content="「財務のものさし」（旧称：財務でポン！）は決算書3期分を入力するだけで、取引先の信用力を業歴・資本構成・規模・損益・経営者・償還余力の6軸100点満点で判定します。信用程度A〜Eと与信限度額の目安、稟議に添付できるExcel（エクセル）ファイルまで自動作成。業種別の基準値は財務省の法人企業統計調査に準拠。計算はブラウザ内で完結し、入力内容は送信されません。">
 <link rel="canonical" href="https://kazumono.com/credit-pro/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="財務でポン！｜決算書を入れるだけで決算分析と与信判定・Excel出力">
+<meta property="og:title" content="財務のものさし｜決算書を入れるだけで決算分析と与信判定・Excel出力">
 <meta property="og:description" content="決算書3期分を入力すると、取引先の信用力を業歴・資本構成・規模・損益・経営者・償還余力の6軸100点満点で判定します。信用程度A〜Eと与信限度額の目安、稟議に添付できるExcel（エクセル）ファイルまで自動作成。業種別の基準値は財務省の法人企業統計調査に準拠。計算はブラウザ内で完結し、入力内容は送信されません。">
 <meta property="og:url" content="https://kazumono.com/credit-pro/">
 <meta property="og:image" content="https://kazumono.com/assets/ogp.png">
@@ -607,7 +607,8 @@ body.has-freebar .masthead{top:46px;}
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "財務でポン！",
+  "name": "財務のものさし",
+  "alternateName": "財務でポン！",
   "url": "https://kazumono.com/credit-pro/",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Web",
@@ -632,8 +633,8 @@ body.has-freebar .masthead{top:46px;}
     <div class="wrap masthead__inner">
       <a class="brand" href="/">数字の<span>ものさし</span></a>
       <nav class="nav" aria-label="サイト内">
-        <a href="/credit-pro/" aria-current="page">財務でポン！</a>
-        <a href="/lease/">リース見積診断</a>
+        <a href="/credit-pro/" aria-current="page">財務のものさし</a>
+        <a href="/lease/">リースのものさし</a>
         <a href="/eigo/" style="background:#FFF3CC;color:#8A5A00;border-radius:999px;padding:4px 12px;font-weight:700;">英語のものさし</a>
         <a href="/#tools">ツール</a>
         <a href="/articles/">読みもの</a>
@@ -646,14 +647,15 @@ body.has-freebar .masthead{top:46px;}
   <main id="main">
     <div class="column">
 
-      <p class="crumbs"><a href="/">ホーム</a> ／ <a href="/#tools">ツール</a> ／ 財務でポン！</p>
+      <p class="crumbs"><a href="/">ホーム</a> ／ <a href="/#tools">ツール</a> ／ 財務のものさし</p>
 
       <header class="head">
         <span class="head__mark" aria-hidden="true"></span>
         <span class="badge">CREDIT ASSESSMENT PRO</span>
-        <h1>財務でポン！<br><span class="h1sub">決算書を入れるだけで、財務分析と与信判定</span></h1>
+        <h1>財務のものさし<br><span class="h1sub">決算書を入れるだけで、財務分析と与信判定</span></h1>
         <p>決算書のPDFを置くだけで、自動分析してExcel形式で出力。取引先の信用力を6軸100点満点で判定し、稟議にそのまま添付できるレポートを作成します。信用程度A〜E、与信限度額の目安、主要財務指標14種まで自動で計算します。</p>
         <p class="head__safe">ファイルはブラウザの中だけで処理され、どこにも送信されません。</p>
+        <p style="margin:10px 0 0;font-size:13px;color:var(--ink-soft,#3D4763)">2026年10月に「財務でポン！」から名前を変えました。中身と料金は変わりません。</p>
       </header>
 
       <section class="step" id="step1">
@@ -990,7 +992,7 @@ body.has-freebar .masthead{top:46px;}
         <li><a href="/credit/">与信判定シミュレーター（無料・1期版）</a>　直近1期だけで、4軸60点のかんたん判定ができます。まずはこちらで感触をつかむのもおすすめです。</li>
         <li><a href="/articles/kessansho-yoshin/">決算書のどこを見て与信を判断するか</a>　このツールが見ている観点を、決算書の読み方として解説しています。</li>
         <li><a href="/articles/funshoku/">粉飾の兆候は数字のどこに出るか</a>　数字が実態と乖離しているとき、どこに歪みが出るのかをまとめています。</li>
-        <li><a href="/bep/">損益分岐点シミュレーター</a>　相手の収益構造を、固定費と変動費の面から確かめたいときに。</li>
+        <li><a href="/bep/">損益分岐点のものさし</a>　相手の収益構造を、固定費と変動費の面から確かめたいときに。</li>
       </ul>
 
       </div>

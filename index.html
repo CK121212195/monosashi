@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>数字のものさし『KAZUMONO』｜社会保険や与信管理などの実務ツール集</title>
-<meta name="description" content="取引先の決算書PDFを置くだけで与信を判定する「財務でポン！」（1社500円）。ほか社会保険料、手取り、住宅コストなど、実務で使う数字を自分で出せるツールと解説記事。">
+<meta name="description" content="取引先の決算書PDFを置くだけで与信を判定する「財務のものさし」（1社500円）。ほか社会保険料、手取り、住宅コストなど、実務で使う数字を自分で出せるツールと解説記事。">
 <link rel="canonical" href="https://kazumono.com/">
 
 <meta property="og:type" content="website">
@@ -635,13 +635,13 @@ input,select,textarea,button{font-weight:600}
 .flag__fine a{color:var(--sea-deep);font-weight:700;}
 
 .flag__shot{margin:0;}
-/* 2つ目の看板（リース見積診断）は、図を左に置いて並びを変える */
+/* 2つ目の看板（リースのものさし）は、図を左に置いて並びを変える */
 .flag--rev{grid-template-columns:296px 1fr;}
 .flag--rev .flag__side{order:-1;}
 .flagsec--alt{background:linear-gradient(180deg,rgba(223,246,241,.60),rgba(250,249,246,0) 82%);}
 @media (max-width:880px){.flag--rev{grid-template-columns:1fr;}.flag--rev .flag__side{order:0;}}
 
-/* LINEでも使える（リース見積診断の左の列。図の下の空きに置く） */
+/* LINEでも使える（リースのものさしの左の列。図の下の空きに置く） */
 .flag__side{display:grid;gap:26px;align-content:start;}
 .linecard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px 20px;box-shadow:var(--shadow);text-align:center;}
 .linecard__eyebrow{margin:0 0 6px;font-family:var(--num);font-size:11.5px;font-weight:700;letter-spacing:.3em;color:#00843A;}
@@ -753,7 +753,7 @@ input,select,textarea,button{font-weight:600}
    統一テーマ（試作）：英語のものさしの書体と明るさをサイト全体へ
    ・書体：Zen Maru Gothic（日本語）／Nunito（数字）／Literata（英文）
    ・色：明るい紙色の土台に、サービスごとの「主役の色」を1色ずつ
-       財務でポン！＝空色　リース見積診断＝若葉の緑　英語のものさし＝陽だまりの黄
+       財務のものさし＝空色　リースのものさし＝若葉の緑　英語のものさし＝陽だまりの黄
    ===================================================================== */
 :root{
   --paper:#FFFCF4;
@@ -843,7 +843,7 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
 .panel__nums{display:flex;flex-wrap:wrap;gap:6px 14px;margin:10px 0 0;padding:0;list-style:none;font-size:12px;font-weight:700;color:var(--ink-soft);}
 .panel__nums b{font-family:var(--num);font-size:17px;color:var(--ink);margin-right:2px;}
 
-/* 財務でポン！：6軸の棒が伸びる */
+/* 財務のものさし：6軸の棒が伸びる */
 .bars{display:grid;gap:5px;margin:0;padding:0;list-style:none;}
 .bars li{display:grid;grid-template-columns:5.2em 1fr 3.2em;gap:8px;align-items:center;font-size:12px;font-weight:700;color:var(--ink-soft);}
 .bars i{display:block;height:9px;border-radius:999px;background:#EAF0F8;overflow:hidden;}
@@ -855,7 +855,7 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
 .grade__pt small{font-size:12px;color:var(--ink-soft);margin-left:3px;}
 .grade__note{font-size:11.5px;color:var(--ink-soft);line-height:1.5;}
 
-/* リース見積診断：金利がカウントアップ */
+/* リースのものさし：金利がカウントアップ */
 .calc{display:grid;gap:4px;margin:0;}
 .calc__row{display:flex;justify-content:space-between;gap:10px;font-size:13px;font-weight:700;color:var(--ink-soft);border-bottom:1px dashed var(--line);padding:3px 0;}
 .calc__row b{font-family:var(--num);color:var(--ink);font-size:14px;}
@@ -888,6 +888,7 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
 @media (prefers-reduced-motion:reduce){
   .panel,.panel::before,.bars i::after,.panel__go{transition:none;}
 }
+.tool__name{word-break:keep-all;overflow-wrap:anywhere}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BETYS4R53Y"></script>
@@ -909,8 +910,8 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
     <div class="wrap masthead__inner">
       <a class="brand" href="/">数字の<span>ものさし</span></a>
       <nav class="nav" aria-label="サイト内">
-        <a href="/credit-pro/">財務でポン！</a>
-        <a href="/lease/">リース見積診断</a>
+        <a href="/credit-pro/">財務のものさし</a>
+        <a href="/lease/">リースのものさし</a>
         <a href="/eigo/" class="is-eigo">英語のものさし</a>
         <a href="#tools">ツール</a>
         <a href="/articles/">読みもの</a>
@@ -949,7 +950,7 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
           </article>
 
           <article class="panel panel--pro" aria-labelledby="p-pro">
-            <div class="panel__top"><span class="panel__icon" aria-hidden="true">¥</span><h2 class="panel__name" id="p-pro">財務でポン！</h2><span class="panel__price">1社 500円</span></div>
+            <div class="panel__top"><span class="panel__icon" aria-hidden="true">¥</span><h2 class="panel__name" id="p-pro">財務のものさし</h2><span class="panel__price">1社 500円</span></div>
             <p class="panel__title">決算書PDFを置くだけで、<em>与信判定。</em></p>
             <p class="panel__lead">数字を自動で読み取り、6軸100点満点で信用力を判定。信用程度A〜E・与信限度額の目安・7つの図とExcelが出ます。</p>
             <div class="panel__demo" data-anim="bars">
@@ -964,12 +965,12 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
                 <li><span>償還余力</span><i style="--w:100.0%"></i><b>30/30</b></li>
               </ul>
             </div>
-            <a class="panel__go" href="/credit-pro/">財務でポン！を使う<span aria-hidden="true">→</span></a>
+            <a class="panel__go" href="/credit-pro/">財務のものさしを使う<span aria-hidden="true">→</span></a>
             <p class="panel__fine">読み取りも判定もブラウザの中だけ。決算書は送信されません。</p>
           </article>
 
           <article class="panel panel--lease" aria-labelledby="p-lease">
-            <div class="panel__top"><span class="panel__icon" aria-hidden="true">%</span><h2 class="panel__name" id="p-lease">リース見積診断</h2><span class="panel__price">1件 1,000円</span></div>
+            <div class="panel__top"><span class="panel__icon" aria-hidden="true">%</span><h2 class="panel__name" id="p-lease">リースのものさし</h2><span class="panel__price">1件 1,000円</span></div>
             <p class="panel__title">そのリース、<em>金利は何％？</em></p>
             <p class="panel__lead">見積書に金利は書かれていません。物件価額・回数・月額から実質年率を逆算します。金利の逆算までは無料です。</p>
             <div class="panel__demo" data-anim="rate">
@@ -982,7 +983,7 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
               <div class="calc__out"><span>実質年率（金利）</span><span class="calc__rate"><span data-count="5.28" data-dec="2">5.28</span><small>%</small></span></div>
               <p class="calc__extra">物件価額より多く払う額 <b>700,000</b>円</p>
             </div>
-            <a class="panel__go" href="/lease/">リース見積診断を使う<span aria-hidden="true">→</span></a>
+            <a class="panel__go" href="/lease/">リースのものさしを使う<span aria-hidden="true">→</span></a>
             <p class="panel__fine">LINEでも、数字を送るだけで計算できます。</p>
           </article>
 
@@ -1025,7 +1026,7 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
               <div class="compare__col" style="--accent:#33526C">
                 <p class="compare__tag">Web版　500円 / 1社</p>
                 <p class="compare__d"><strong>1〜2社を、いま見たいとき。</strong>入力の手間がありません。お渡しするのは判定結果と7つの図、そしてダッシュボード付きの6シート、1社分の記録です。</p>
-                <a class="compare__go" href="/credit-pro/">財務でポン！を使う &#8594;</a>
+                <a class="compare__go" href="/credit-pro/">財務のものさしを使う &#8594;</a>
               </div>
               <div class="compare__col" style="--accent:#82B33A">
                 <p class="compare__tag">Excel版　note</p>
@@ -1072,7 +1073,7 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
               <div class="compare__col" style="--accent:#B67AB4">
                 <p class="compare__tag">Web版　1,000円 / 見積1件</p>
                 <p class="compare__d"><strong>目の前の1件を、いま判断したいとき。</strong>入力は月額と期間だけ。動かせるグラフ4つと、ダッシュボード付き7シートのExcelをお渡しします。</p>
-                <a class="compare__go" href="/lease/">リース見積診断を使う &#8594;</a>
+                <a class="compare__go" href="/lease/">リースのものさしを使う &#8594;</a>
               </div>
               <div class="compare__col" style="--accent:#82B33A">
                 <p class="compare__tag">Excel版　note</p>
@@ -1084,7 +1085,7 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
 
           <div class="flag__side">
             <figure class="flag__shot">
-              <img src="/lease/assets/lease-1-dashboard.jpg" width="1400" height="1828" alt="リース見積診断が出力するExcelのダッシュボード。月額・金利・リース会社の利益と、4つのグラフが1枚にまとまっている。" loading="lazy">
+              <img src="/lease/assets/lease-1-dashboard.jpg" width="1400" height="1828" alt="リースのものさしが出力するExcelのダッシュボード。月額・金利・リース会社の利益と、4つのグラフが1枚にまとまっている。" loading="lazy">
               <figcaption>受け取るExcelの1シート目（ダッシュボード）</figcaption>
             </figure>
 
@@ -1157,77 +1158,77 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
 
           <a class="tool" href="/kabuka/" style="--dot:#527695">
             <p class="tool__kind">business succession</p>
-            <h3 class="tool__name">非上場株式 株価算定シミュレーター</h3>
+            <h3 class="tool__name">自社株評価<wbr>のものさし</h3>
             <p class="tool__desc">自社株の相続税評価額を、会社規模判定・類似業種比準・純資産価額・配当還元まで自動計算。DCF法など第三者間売買での評価も同時に表示します。</p>
             <span class="tool__go">算定する →</span>
           </a>
 
           <a class="tool" href="/shaho/" style="--dot:#84D2F5">
             <p class="tool__kind">social insurance</p>
-            <h3 class="tool__name">社会保険料・税金最適化シミュレーター</h3>
+            <h3 class="tool__name">社会保険料<wbr>のものさし</h3>
             <p class="tool__desc">4〜6月の残業時間を動かすと、9月からの標準報酬月額と年間保険料がどう変わるかを見られます。</p>
             <span class="tool__go">計算する →</span>
           </a>
 
           <a class="tool" href="/jikyu/" style="--dot:#17635C">
             <p class="tool__kind">salary</p>
-            <h3 class="tool__name">実質時給 計算ツール</h3>
+            <h3 class="tool__name">時給計算<wbr>のものさし</h3>
             <p class="tool__desc">社会保険料と税を引いた手取りを、残業・通勤・休憩を含めた拘束時間で割ります。額面時給との差と、その支出が労働何時間分かを表示します。</p>
             <span class="tool__go">計算する →</span>
           </a>
 
           <a class="tool" href="/rented_house/" style="--dot:#F8A3BF">
             <p class="tool__kind">housing</p>
-            <h3 class="tool__name">賃貸 vs 持ち家 生涯コスト比較</h3>
+            <h3 class="tool__name">賃貸vs持ち家<wbr>の比較<wbr>のものさし</h3>
             <p class="tool__desc">団信、相続税、途中で亡くなった場合まで含めて、生涯の支出総額を並べます。</p>
             <span class="tool__go">計算する →</span>
           </a>
 
           <a class="tool" href="/kinri/" style="--dot:#B0F1F0">
             <p class="tool__kind">interest</p>
-            <h3 class="tool__name">住宅ローン・預金金利シミュレーター</h3>
+            <h3 class="tool__name">返せる住宅ローン<wbr>のものさし</h3>
             <p class="tool__desc">返済スケジュールと繰上返済の効果、返済負担率の判定。預金は税引後とインフレ調整後の実質価値まで出します。</p>
             <span class="tool__go">計算する →</span>
           </a>
 
           <a class="tool" href="/kokusai/" style="--dot:#B67AB4">
             <p class="tool__kind">bond ／ 金利</p>
-            <h3 class="tool__name">個人向け国債と債券価格シミュレーター</h3>
+            <h3 class="tool__name">個人向け国債<wbr>のものさし</h3>
             <p class="tool__desc">つまみを1本動かすと、個人向け国債・10年国債・30年国債・債券ファンド・株・ビットコインが同時に動きます。個人向け国債が元本割れしない理由も財務省の計算式から説明します。</p>
             <span class="tool__go">動かしてみる →</span>
           </a>
 
           <a class="tool" href="/bep/" style="--dot:#FEEEDF">
             <p class="tool__kind">break-even ／ ゲーム</p>
-            <h3 class="tool__name">損益分岐点ゲーム</h3>
+            <h3 class="tool__name">損益分岐点<wbr>のものさし</h3>
             <p class="tool__desc">単価・変動費・固定費を動かすと、損益分岐点と利益がその場で変わります。感度分析と目標利益マトリクスつき。</p>
             <span class="tool__go">動かしてみる →</span>
           </a>
 
           <a class="tool" href="/STATLAB/" style="--dot:#82B33A">
             <p class="tool__kind">statistics</p>
-            <h3 class="tool__name">STATLAB 統計分析ダッシュボード</h3>
+            <h3 class="tool__name">データ分析<wbr>のものさし</h3>
             <p class="tool__desc">検定・分散分析・回帰・決定木・時系列・ディープラーニングまでブラウザ内で完結。結果の読み方の解説つき。</p>
             <span class="tool__go">分析する →</span>
           </a>
 
           <a class="tool" href="/toukei2/" style="--dot:#84D2F5">
             <p class="tool__kind">statistics ／ 試験対策</p>
-            <h3 class="tool__name">統計検定2級レベル 実戦100問</h3>
+            <h3 class="tool__name">統計<wbr>のものさし<wbr> 統計検定2級 実戦100問</h3>
             <p class="tool__desc">統計ソフトの出力読解、数式を選ぶ設問、記述の正誤判定まで本番の出題形式で100問。1問ごとに解法の手順を分解して解説します。</p>
             <span class="tool__go">解いてみる →</span>
           </a>
 
           <a class="tool" href="/toukei-j1/" style="--dot:#E8799F">
             <p class="tool__kind">statistics ／ 試験対策</p>
-            <h3 class="tool__name">統計検定準1級レベル 実戦100問</h3>
+            <h3 class="tool__name">統計<wbr>のものさし<wbr> 統計検定準1級 実戦100問</h3>
             <p class="tool__desc">確率・漸近理論・多変量解析・時系列・ベイズ法・因果推論まで準1級の全分野を網羅した100問。解法の手順と考え方を1問ずつ解説します。</p>
             <span class="tool__go">解いてみる →</span>
           </a>
 
           <a class="tool" href="/eigo/" style="--dot:#FFC83D">
             <p class="tool__kind">english ／ 試験対策</p>
-            <h3 class="tool__name">英語のものさし 英検・TOEIC筆記問題集</h3>
+            <h3 class="tool__name">英語<wbr>のものさし<wbr> 英検・TOEIC筆記問題集</h3>
             <p class="tool__desc">英検2級〜1級レベルの穴埋め301問、長文40本、高校〜TOEIC上級の文法解説32単元。本文の単語はホバーで意味・発音記号・紛らわしい語を表示し、全単語・全例文の音声をすぐ再生できます。</p>
             <span class="tool__go">解いてみる →</span>
           </a>
@@ -1241,14 +1242,14 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
 
           <a class="tool" href="/lease/" style="--dot:#B67AB4">
             <p class="tool__kind">lease ／ 無料</p>
-            <h3 class="tool__name">リース料の計算と逆算</h3>
-            <p class="tool__desc">物件価額・期間・金利から月額リース料を計算します。見積の月額やリース料率からは、実質年率（金利）を逆算。リース会社の利益と4つの買い方の比較は、リース見積診断で。</p>
+            <h3 class="tool__name">リース<wbr>のものさし</h3>
+            <p class="tool__desc">物件価額・期間・金利から月額リース料を計算します。見積の月額やリース料率からは、実質年率（金利）を逆算。リース会社の利益と4つの買い方の比較は、有料版（1件1,000円）で。</p>
             <span class="tool__go">計算する →</span>
           </a>
 
           <a class="tool" href="/lease-fo/" style="--dot:#B0F1F0">
             <p class="tool__kind">lease ／ 簡易版</p>
-            <h3 class="tool__name">リース FO判定 簡易版</h3>
+            <h3 class="tool__name">リース会計基準<wbr>のものさし</h3>
             <p class="tool__desc">現在価値基準と経済的耐用年数基準で、ファイナンスかオペレーティングかを判定します。</p>
             <span class="tool__go">判定する →</span>
           </a>
@@ -1264,7 +1265,7 @@ h1,h2,h3,.flag__title,.section__title,.eigo__title{font-weight:900;}
         <div class="section__head">
           <p class="section__label">excel workbooks</p>
           <h2 class="section__title">実務でそのまま使う人へ</h2>
-          <p class="section__note">上のツールは「あたりを付ける」ためのものです。稟議や社内資料にそのまま載せる必要がある方向けに、計算過程まで追えるExcel版をnoteで販売しています。1社だけ今すぐ見たい、という場合は<a href="/credit-pro/" style="color:var(--sea-deep);font-weight:700;">財務でポン！（1社500円）</a>のほうが手早く済みます。</p>
+          <p class="section__note">上のツールは「あたりを付ける」ためのものです。稟議や社内資料にそのまま載せる必要がある方向けに、計算過程まで追えるExcel版をnoteで販売しています。1社だけ今すぐ見たい、という場合は<a href="/credit-pro/" style="color:var(--sea-deep);font-weight:700;">財務のものさし（1社500円）</a>のほうが手早く済みます。</p>
         </div>
 
         <div class="shop">
