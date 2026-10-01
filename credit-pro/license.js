@@ -17,7 +17,7 @@
 
 const WORKER = "https://square-license.stats-okinawa.workers.dev";
 
-/* ★★ Stripe の支払いリンク（財務でポン！・500円）★★
+/* ★★ Stripe の支払いリンク（財務のものさし・500円）★★
    支払い完了後の戻り先は、Stripe の管理画面（支払いリンク → 支払い完了ページ →「確認ページを表示しない」）で設定する。
      テスト中 : https://pythonddd.github.io/test_credit_test/credit-pro/?session_id={CHECKOUT_SESSION_ID}
      公開後   : https://kazumono.com/credit-pro/?session_id={CHECKOUT_SESSION_ID}

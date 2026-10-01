@@ -18,14 +18,14 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>無料の統計分析ツール｜検定・回帰・決定木がブラウザで動く</title>
+<title>データ分析のものさし｜無料の統計分析ツール・検定・回帰・決定木がブラウザで動く</title>
 <meta name="description" content="CSV を読み込むか数値を貼り付けるだけで、記述統計・仮説検定・分散分析・回帰・ロジスティック回帰・ポアソン回帰・決定木・時系列・多層パーセプトロンまで実行。結果の読み方の解説と、初学者向けの手法診断ナビつき。データは外部に送信されません。">
 <meta name="author" content="Mini statistic">
 <meta name="theme-color" content="#070a14">
 <link rel="canonical" href="https://kazumono.com/STATLAB/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="STATLAB 統計分析ダッシュボード">
-<meta property="og:title" content="無料の統計分析ツール｜検定・回帰・決定木がブラウザで動く">
+<meta property="og:site_name" content="データ分析のものさし">
+<meta property="og:title" content="データ分析のものさし｜無料の統計分析ツール・検定・回帰・決定木がブラウザで動く">
 <meta property="og:description" content="記述統計から仮説検定・分散分析・回帰・決定木・時系列・ディープラーニングまでブラウザ内で完結。結果の読み方の解説と手法診断ナビつき。データは外部に送信されません。">
 <meta property="og:url" content="https://kazumono.com/STATLAB/">
 <meta property="og:image" content="https://kazumono.com/assets/ogp.png">
@@ -33,7 +33,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="無料の統計分析ツール｜検定・回帰・決定木がブラウザで動く">
+<meta name="twitter:title" content="データ分析のものさし｜無料の統計分析ツール・検定・回帰・決定木がブラウザで動く">
 <meta name="twitter:description" content="記述統計から仮説検定・分散分析・回帰・決定木・時系列・ディープラーニングまでブラウザ内で完結。結果の読み方の解説と手法診断ナビつき。">
 <meta name="twitter:image" content="https://kazumono.com/assets/ogp.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23070a14'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23440154' stroke-width='1.6'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%232a788e' stroke-width='1.6'/%3E%3Ccircle cx='16' cy='16' r='5' fill='none' stroke='%2322a884' stroke-width='1.6'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23fde725'/%3E%3C/svg%3E">
@@ -54,8 +54,8 @@
 <div style="background:#1F3251;color:#EAEDF0;font:500 13px/1.5 -apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',sans-serif;padding:11px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:relative;z-index:99999">
 <a href="/" style="color:#EAEDF0;text-decoration:none;letter-spacing:.12em">← 数字のものさし</a>
 <a href="/#tools" style="color:#A8862F;text-decoration:none">ほかのツール</a>
-<a href="/credit-pro/" style="color:#A8862F;text-decoration:none">財務でポン！</a>
-<a href="/lease/" style="color:#A8862F;text-decoration:none">リース見積診断</a>
+<a href="/credit-pro/" style="color:#A8862F;text-decoration:none">財務のものさし</a>
+<a href="/lease/" style="color:#A8862F;text-decoration:none">リースのものさし</a>
 <a href="/eigo/" style="color:#A8862F;text-decoration:none;background:#FFF3CC;color:#8A5A00;border-radius:999px;padding:4px 12px;font-weight:700;">英語のものさし</a>
 <a href="/articles/" style="color:#A8862F;text-decoration:none">読みもの</a>
 <a href="/#excel" style="color:#A8862F;text-decoration:none">Excel版</a>
@@ -67,7 +67,7 @@
 <div class="shell">
   <!-- ============ サイドバー ============ -->
   <nav class="rail" id="rail" aria-label="解析メニュー">
-    <div class="brand"><h1>STATLAB</h1><small>v1.0</small></div>
+    <div class="brand" style="flex-wrap:wrap"><h1 style="font-size:17px;letter-spacing:0;white-space:nowrap">データ分析のものさし</h1><small>v1.0</small></div>
     <p class="rail-sub">ブラウザ内で完結。データは<br>どこにも送信されません。</p>
     <button class="btn ghost railToggle" id="railToggle">メニュー</button>
 
@@ -592,7 +592,7 @@
       </div>
       <div class="panel">
         <h3>やりたいことから手法を診断する</h3>
-        <p class="hint">質問に答えていくと、使う手法・STATLAB のどの画面を開くか・結果のどこを見るかまで案内します。統計の用語を知らなくても進めます。</p>
+        <p class="hint">質問に答えていくと、使う手法・このツールのどの画面を開くか・結果のどこを見るかまで案内します。統計の用語を知らなくても進めます。</p>
         <div id="navi_wizard"></div>
       </div>
       <div class="panel">

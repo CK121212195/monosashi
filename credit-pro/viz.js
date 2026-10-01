@@ -646,7 +646,7 @@ export async function renderFigures(r, f, scale = 2) {
   // 1枚も作れなかったときは黙って落とさない。原因が分からなくなるため。
   if (!out.length) throw new Error("図を画像にできませんでした（" + failed.join("／") + "）");
   if (failed.length && typeof console !== "undefined") {
-    console.warn("[財務でポン] 画像化できなかった図:", failed.join("／"));
+    console.warn("[財務のものさし] 画像化できなかった図:", failed.join("／"));
   }
   return out;
 }

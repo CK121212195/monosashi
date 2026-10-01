@@ -10,11 +10,11 @@
 (function(){try{var m=location.hash.match(/^#(reverse|calc)&(.*)$/);if(!m)return;var o={mode:m[1]};m[2].split("&").forEach(function(kv){var p=kv.split("=");if(/^(price|months|pay|rate|misc)$/.test(p[0]))o[p[0]]=p[1];});window.__leasePrefill=o;history.replaceState(null,"",location.pathname+location.search+(m[1]==="reverse"?"#reverse":""));}catch(e){}})();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>リース料の計算と逆算｜リース会社の利益まで分かる・Excel版あり</title>
-<meta name="description" content="物件価額・リース期間・金利・残価から月額リース料とリース料率を計算。見積の月額やリース料率からは実質年率（金利）を逆算し、支払総額のうち元本・金利・その他費用の内訳を表示します。リース会社の利益はExcel（エクセル）版で分解できます。無料・登録不要。">
+<title>リースのものさし｜リース料の計算と逆算・リース会社の利益まで分かる・Excel版あり</title>
+<meta name="description" content="リースのものさし（旧称：リース見積診断）。物件価額・リース期間・金利・残価から月額リース料とリース料率を計算。見積の月額やリース料率からは実質年率（金利）を逆算し、支払総額のうち元本・金利・その他費用の内訳を表示します。リース会社の利益はExcel（エクセル）版で分解できます。無料・登録不要。">
 <link rel="canonical" href="https://kazumono.com/lease/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="リース料の計算と逆算｜リース会社の利益まで分かる・Excel版あり">
+<meta property="og:title" content="リースのものさし｜リース料の計算と逆算・リース会社の利益まで分かる・Excel版あり">
 <meta property="og:description" content="物件価額・リース期間・金利・残価から月額リース料とリース料率を計算。見積の月額やリース料率からは実質年率（金利）を逆算し、支払総額のうち元本・金利・その他費用の内訳を表示します。リース会社の利益はExcel（エクセル）版で分解できます。無料・登録不要。">
 <meta property="og:url" content="https://kazumono.com/lease/">
 <meta property="og:image" content="https://kazumono.com/assets/ogp.png">
@@ -236,7 +236,7 @@ h1,h2,h3,h4{font-weight:700}
 input,select,textarea,button{font-weight:600}
 
 /* ======================================================================
- * リース料の計算と逆算／リース見積診断（ここから下は、このページで足した部品）
+ * リース料の計算と逆算／リースのものさし（ここから下は、このページで足した部品）
  * ====================================================================== */
 [hidden]{display:none !important;}
 .headtag{display:flex;align-items:center;gap:10px;margin:0 0 16px;position:relative;}
@@ -397,7 +397,7 @@ input,select,textarea,button{font-weight:600}
 .cmp2 em{font-style:normal;font-size:11px;font-weight:700;margin-left:8px;padding:2px 8px;border-radius:999px;background:var(--sea-deep);color:#fff;white-space:nowrap;}
 .linkbtn{border:none;background:none;padding:0;font-family:var(--sans);font-size:13px;font-weight:700;color:var(--sea-deep);text-decoration:underline;cursor:pointer;}
 
-/* Excelのシート見本（財務でポン！と同じ部品） */
+/* Excelのシート見本（財務のものさしと同じ部品） */
 .shot{border:1.5px solid var(--line);border-radius:18px;background:var(--card);box-shadow:var(--shadow);overflow:hidden;}
 .shot__tabs{display:flex;gap:2px;padding:10px 10px 0;flex-wrap:wrap;background:#EDEBE4;border-bottom:1px solid var(--line);}
 .shot__tabs button{font-family:var(--sans);font-size:12.5px;font-weight:700;color:var(--ink-soft);
@@ -484,8 +484,8 @@ input,select,textarea,button{font-weight:600}
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "リース見積診断",
-  "alternateName": "リース料の計算と逆算",
+  "name": "リースのものさし",
+  "alternateName": ["リース料の計算と逆算", "リース見積診断"],
   "url": "https://kazumono.com/lease/",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Web",
@@ -511,8 +511,8 @@ input,select,textarea,button{font-weight:600}
     <div class="wrap masthead__inner">
       <a class="brand" href="/">数字の<span>ものさし</span></a>
       <nav class="nav" aria-label="サイト内">
-        <a href="/credit-pro/">財務でポン！</a>
-        <a href="/lease/" aria-current="page">リース見積診断</a>
+        <a href="/credit-pro/">財務のものさし</a>
+        <a href="/lease/" aria-current="page">リースのものさし</a>
         <a href="/eigo/" style="background:#FFF3CC;color:#8A5A00;border-radius:999px;padding:4px 12px;font-weight:700;">英語のものさし</a>
         <a href="/#tools">ツール</a>
         <a href="/articles/">読みもの</a>
@@ -529,10 +529,11 @@ input,select,textarea,button{font-weight:600}
 
       <header class="head">
         <span class="head__mark" aria-hidden="true"></span>
-        <p class="headtag"><span class="svcname">リース見積診断</span></p>
+        <p class="headtag"><span class="svcname">リースのものさし</span></p>
         <h1>リース料の計算と逆算<span class="h1sub">見積の月額や料率から、実質金利とリース会社の利益まで</span></h1>
         <p>物件価額・期間・金利を入れればリース料を。見積の月額やリース料率を入れれば、実質年率（金利）を。残価が設定されていた場合の金利まで、その場で分かります。</p>
         <span class="head__safe">入力内容は送信されません。すべてブラウザの中で計算します</span>
+        <p style="margin:10px 0 0;font-size:13px;color:var(--ink-soft,#3D4763)">2026年10月に「リース見積診断」から名前を変えました。中身と料金は変わりません。</p>
       </header>
 
       <div class="paynote" id="payNote" role="status" aria-live="polite" hidden>
@@ -634,7 +635,7 @@ input,select,textarea,button{font-weight:600}
 
       <!-- ============ 有料版：購入前の案内 ============ -->
       <section class="paid" id="paid" aria-labelledby="paidH" hidden>
-        <span class="paid__badge">リース見積診断 ／ グラフ＋Excel</span>
+        <span class="paid__badge">リースのものさし ／ グラフ＋Excel</span>
         <h2 class="paid__h" id="paidH">リース契約の前に、あと5つ確かめてみませんか？</h2>
         <p class="paid__lead">無料で分かったのは、月額と金利までです。この見積にサインすると、これから <b id="paidTotal">—</b> を払うことになります。その中身を、1,000円で最後まで開けます。</p>
 
@@ -872,9 +873,9 @@ input,select,textarea,button{font-weight:600}
         <p>いずれも見積書には書かれていませんが、聞けば答えてもらえます。<strong>金額の交渉より、この4つを確認するほうが実際の損得に効くことが多い</strong>というのが、見てきた印象です。</p>
 
         <h2>無料版・Excel版・note版の違い</h2>
-        <p>リース料と金利の計算は、すべて無料で何度でも使えます。目の前の見積の中身を知りたいときはリース見積診断（グラフ＋Excel）を、数式を自分で動かしながら何件も試したいときはnote版を選んでください。</p>
+        <p>リース料と金利の計算は、すべて無料で何度でも使えます。目の前の見積の中身を知りたいときはリースのものさし（グラフ＋Excel）を、数式を自分で動かしながら何件も試したいときはnote版を選んでください。</p>
         <div class="tw"><table class="cmp">
-          <thead><tr><th></th><th>無料（このページ）</th><th>リース見積診断（1,000円）</th><th>note版（5,000円）</th></tr></thead>
+          <thead><tr><th></th><th>無料（このページ）</th><th>リースのものさし（1,000円）</th><th>note版（5,000円）</th></tr></thead>
           <tbody>
             <tr><th>分かること</th><td>リース料、実質年率（金利）、残価の影響</td><td>リース会社の利益、割賦・銀行借入・現金との比較、途中解約の残り、年ごとの経費と税金</td><td>リース会社の利益、現金・銀行借入との比較、年ごとの税金と償却（割賦との比較と、動かせるグラフはなし）</td></tr>
             <tr><th>形</th><td>このページ</td><td>このページのグラフ＋Excel 7シート（数式なし）</td><td>数式入りのExcel</td></tr>

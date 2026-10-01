@@ -347,8 +347,8 @@ function showLicenseDiag(st, order, reason, expiresAt) {
     not_found: "決済の記録が見つかりません。決済直後の場合、記録が届くまで数十秒かかります。少しお待ちください。",
     no_fingerprint: "会社名が未入力です。会社の基本情報に会社名をご入力ください。",
     not_paid: "お支払いがまだ完了していないようです。完了していれば、少し待ってから「購入状況をもう一度確認する」を押してください。",
-    wrong_product: "この注文番号は、財務でポン！のお支払いではないようです。お支払い済みの場合は、領収メールを添えてお問い合わせください。",
-    wrong_link: "この注文番号は、財務でポン！のお支払いではないようです。お支払い済みの場合は、領収メールを添えてお問い合わせください。",
+    wrong_product: "この注文番号は、財務のものさしのお支払いではないようです。お支払い済みの場合は、領収メールを添えてお問い合わせください。",
+    wrong_link: "この注文番号は、財務のものさしのお支払いではないようです。お支払い済みの場合は、領収メールを添えてお問い合わせください。",
     bad_order: "注文番号の形が正しくありません。お支払い済みの場合は、領収メールを添えてお問い合わせください。",
     stripe_auth: "決済の確認先で問題が起きています。時間をおいて「購入状況をもう一度確認する」を押してください。",
     stripe_error: "決済の確認先で問題が起きています。時間をおいて「購入状況をもう一度確認する」を押してください。",
@@ -752,7 +752,7 @@ async function onSample() {
     // 画面で選んでいる単位（千円／百万円）をそのままサンプルにも反映する
     const f = { yenU, U_LABEL, pct };
     const figs = await renderFigures(r, f, 2);
-    await downloadXlsx(r, "財務でポン_サンプル.xlsx", UNITS[dispUnit], figs, readingLines(r, f));
+    await downloadXlsx(r, "財務のものさし_サンプル.xlsx", UNITS[dispUnit], figs, readingLines(r, f));
     note.textContent = `ダウンロードしました（単位：${U_LABEL()}）。⑥ダッシュボードのシートに図が入っています。`;
     if (window.gtag) gtag("event", "xlsx_sample", { tool: "credit-pro" });
   } catch (e) {
@@ -1112,7 +1112,7 @@ function initShots() {
     stopShotTick();
     if (shotUI.root) shotUI.root.classList.remove("is-auto");
     if (shotUI.play) shotUI.play.remove();
-    console.warn("[財務でポン] 見本の自動切り替えを止めました（タブの手動切り替えは使えます）", err);
+    console.warn("[財務のものさし] 見本の自動切り替えを止めました（タブの手動切り替えは使えます）", err);
   }
 }
 

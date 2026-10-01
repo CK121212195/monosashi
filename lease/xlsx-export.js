@@ -4,7 +4,7 @@
  * 方針
  *   ・数式を一切書き込まない（値のみ）。数式入りの note 版と役割を分けるため
  *   ・参照表（償却率・減価残存率）や、入力シートは入れない
- *   ・見た目は Web 版（リース料の計算と逆算／リース見積診断）の色に揃える
+ *   ・見た目は Web 版（リース料の計算と逆算／リースのものさし）の色に揃える
  *   ・ブラウザの中で作ってダウンロードする。サーバーには何も送らない
  * ========================================================================== */
 let _ExcelJS = null;
@@ -107,7 +107,7 @@ function sheet(wb, name, title, r, widths, { landscape = false, onePage = false 
   const last = widths.length - 1;   // 最後の列は右の余白。見出しの帯は表の右端までにそろえる
   ws.getRow(1).height = 8;
   ws.getRow(2).height = 30;
-  band(ws, 2, 2, last, `リース見積診断　${title}`, { font: font(15, true, C.white), fill: C.deep, border: false });
+  band(ws, 2, 2, last, `リースのものさし　${title}`, { font: font(15, true, C.white), fill: C.deep, border: false });
   ws.getRow(3).height = 20;
   band(ws, 3, 2, last, quoteLine(r), { font: font(9.5, false, C.sub), fill: C.deep, border: false });
   ws.getRow(4).height = 10;
@@ -425,7 +425,7 @@ export async function buildWorkbook(r, figs = [], opts = {}) {
   const ExcelJS = await getExcelJS();
   const wb = new ExcelJS.Workbook();
   wb.creator = "数字のものさし";
-  wb.title = "リース見積診断";
+  wb.title = "リースのものさし";
   wb.created = new Date();
   dashboard(wb, r, figs);
   costSheet(wb, r);
@@ -448,7 +448,7 @@ export async function buildWorkbook(r, figs = [], opts = {}) {
 export async function downloadLeaseXlsx(r, figs, filename) {
   const wb = await buildWorkbook(r, figs);
   const buf = await wb.xlsx.writeBuffer();
-  const name = filename || `リース見積診断_${r.input.price}円_${r.input.months}か月.xlsx`;
+  const name = filename || `リースのものさし_${r.input.price}円_${r.input.months}か月.xlsx`;
   const url = URL.createObjectURL(new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
   const a = document.createElement("a");
   a.href = url; a.download = name; a.click();
