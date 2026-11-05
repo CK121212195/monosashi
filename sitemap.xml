@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <url><loc>https://kazumono.com/</loc><lastmod>2026-09-28</lastmod><priority>1.0</priority></url>
+  <url><loc>https://kazumono.com/</loc><lastmod>2026-11-05</lastmod><priority>1.0</priority></url>
   <url><loc>https://kazumono.com/credit-pro/</loc><lastmod>2026-08-27</lastmod><priority>0.9</priority></url>
   <url><loc>https://kazumono.com/kabuka/</loc><lastmod>2026-08-08</lastmod><priority>0.9</priority></url>
   <url><loc>https://kazumono.com/shaho/</loc><lastmod>2026-08-08</lastmod><priority>0.9</priority></url>
@@ -16,7 +16,10 @@
   <url><loc>https://kazumono.com/credit/</loc><lastmod>2026-08-08</lastmod><priority>0.9</priority></url>
   <url><loc>https://kazumono.com/lease/</loc><lastmod>2026-08-08</lastmod><priority>0.9</priority></url>
   <url><loc>https://kazumono.com/lease-fo/</loc><lastmod>2026-08-08</lastmod><priority>0.9</priority></url>
-  <url><loc>https://kazumono.com/articles/</loc><lastmod>2026-09-30</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kazumono.com/articles/</loc><lastmod>2026-11-05</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kazumono.com/articles/kousui-kakuritsu/</loc><lastmod>2026-11-05</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kazumono.com/articles/shomi-kigen/</loc><lastmod>2026-11-05</lastmod><priority>0.8</priority></url>
+  <url><loc>https://kazumono.com/articles/edo-ichiryo/</loc><lastmod>2026-11-05</lastmod><priority>0.8</priority></url>
   <url><loc>https://kazumono.com/articles/toukei-eigo/</loc><lastmod>2026-09-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://kazumono.com/articles/eitango-hindo/</loc><lastmod>2026-09-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://kazumono.com/articles/hendo-kinri-shikumi/</loc><lastmod>2026-08-17</lastmod><priority>0.8</priority></url>
