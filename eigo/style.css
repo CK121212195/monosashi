@@ -508,3 +508,9 @@ legend{font-weight:900;font-size:14px;margin-bottom:8px}
 .shk-restore-f input{flex:1 1 220px;min-width:0;font:inherit;font-family:var(--num);font-size:14px;padding:8px 12px;border:1.5px solid var(--line2);border-radius:10px}
 .shk-restore-f input:focus{border-color:var(--sky);outline:none}
 @media (max-width:720px){.shk-opts{grid-template-columns:1fr}.shk-part{padding:14px}.shk-doc{padding:12px}.shk-bar{top:96px}}
+/* 文法：問題の型・下線部・基礎／発展へのリンク */
+.qkind{display:inline-block;margin:0 0 8px;padding:2px 10px;border-radius:999px;background:var(--grape-s);color:var(--grape-d);font-family:var(--ui);font-size:12px;font-weight:700;letter-spacing:.02em}
+.exp-en .qkind{margin:0 4px 0 0;vertical-align:2px}
+.eu{text-decoration:underline;text-decoration-color:var(--coral);text-decoration-thickness:2px;text-underline-offset:5px}
+.gbase{margin:2px 0 16px;font-size:14.5px;line-height:1.8}
+.glv-route{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 2px;font-size:14px}

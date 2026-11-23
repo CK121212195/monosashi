@@ -38,6 +38,8 @@ const LV = {
   B: { short: 'Lv.B', ja: '英検2級〜準1級', toeic: 'TOEIC 600〜750 相当' },
   A: { short: 'Lv.A', ja: '英検1級',       toeic: 'TOEIC 751〜990 相当' }
 };
+// 単語のレベル（単語一覧の区分）
+const WLV = { C: ['pill-leaf', '2級語彙'], B: ['pill-sky', '準1級語彙'], A: ['pill-coral', '1級語彙'] };
 const POS = { n: '名', v: '動', adj: '形', adv: '副', prep: '前', conj: '接', pron: '代', det: '限', aux: '助', phr: '句', num: '数', pn: '固', int: '間' };
 
 /* ---------------- 保存 ---------------- */
@@ -356,7 +358,8 @@ function entryHTML(key, surface, idiomKey) {
   }
   if (!e) return h || '<div class="pop-none">辞書に未登録の語です</div>';
   const form = surface && surface.toLowerCase() !== key ? `<span class="pop-form">${esc(surface)} → 原形</span>` : '';
-  const lv = e.lv ? `<span class="pill ${e.lv === 'A' ? 'pill-coral' : 'pill-sky'}">${e.lv === 'A' ? '1級語彙' : '準1級語彙'}</span>` : '';
+  const lvw = WLV[e.lv];
+  const lv = lvw ? `<span class="pill ${lvw[0]}">${lvw[1]}</span>` : '';
   h += `<div class="pop-head">
     <div><div class="pop-w">${esc(e.w)} ${lv}</div>${form}</div>
     <div class="pop-btns">
@@ -561,7 +564,7 @@ routes.home = () => {
   <section class="modes">
     <a class="mode card" href="#cloze"><span class="mode-ic">✏️</span><h2>穴埋め問題</h2><p>語彙・熟語・文法・紛らわしい語の4分野 ${cz.length}問。選択肢すべての意味と、ほかの選択肢が「なぜ違うか」まで解説します。</p></a>
     <a class="mode card" href="#reading"><span class="mode-ic">📰</span><h2>長文読解</h2><p>投資・金利・暗号資産・AI・アート・映画など ${ps.length}本（計 約${words.toLocaleString()}語）。根拠の一文をハイライトし、読む速さ（語/分）も測れます。</p></a>
-    <a class="mode card" href="#grammar"><span class="mode-ic">📘</span><h2>文法解説</h2><p>仮定法・不定詞・分詞構文・冠詞など高校文法の全範囲と、TOEIC上級の語法まで${GRAM.length}単元。演習${GQ.length}問つき。</p></a>
+    <a class="mode card" href="#grammar"><span class="mode-ic">📘</span><h2>文法解説</h2><p>高校文法の全範囲から、TOEIC上級の語法、難関大・東大レベルの読解・和訳・英作文まで${GRAM.length}単元。演習${GQ.length}問つき。</p></a>
     <a class="mode card" href="#confuse"><span class="mode-ic">🔍</span><h2>紛らわしい語ドリル</h2><p>conform / confirm のような一文字違い・似た意味の語 ${CONF.length}組。違う文字に色がつくので、目で見て区別できます。</p></a>
     <a class="mode card" href="#words"><span class="mode-ic">⭐</span><h2>単語帳と復習</h2><p>☆で入れた語と、間違えた問題の語を、忘れかけた頃に出し直します（間隔反復）。 <span class="badge" data-due hidden></span></p></a>
   </section>
@@ -659,14 +662,15 @@ function renderQ() {
   if (!quiz.order[quiz.i]) quiz.order[quiz.i] = shuffle(q.o.map((o, i) => i));
   const opts = quiz.order[quiz.i].map(i => ({ o: q.o[i], i }));
   const meta = q.unit ? `<span class="pill pill-teal">${esc(q.unit)}</span>` : `${topicPill(q.tp)} <span class="pill pill-line">${CATS[q.cat]}</span>`;
+  const lvTag = q.ulv === 'ADV' ? glvPill('ADV') : lvPill(q.lv);
   view().innerHTML = `
   <section class="qwrap">
     <div class="qtop">
       <div class="prog"><span style="width:${(quiz.i) / n * 100}%"></span></div>
-      <div class="qmeta"><span class="qnum">${quiz.i + 1} / ${n}</span> ${lvPill(q.lv)} ${meta}</div>
+      <div class="qmeta"><span class="qnum">${quiz.i + 1} / ${n}</span> ${lvTag} ${meta}</div>
     </div>
-    <div class="qcard card" data-ctx="${esc(q.q.replace('___', q.o[q.a]))}">
-      <p class="qtext">${renderText(q.q, { blank: '<span class="blank" id="blank">&emsp;&emsp;&emsp;</span>' })}</p>
+    <div class="qcard card" data-ctx="${esc(qFull(q))}">
+      ${q.unit ? qKind(q) : ''}<p class="qtext">${q.unit ? qText(q, '<span class="blank" id="blank">&emsp;&emsp;&emsp;</span>') : renderText(q.q, { blank: '<span class="blank" id="blank">&emsp;&emsp;&emsp;</span>' })}</p>
       <div class="opts">${opts.map(({ o, i }, k) => `<button class="opt" data-i="${i}"><span class="opt-k">${k + 1}</span><span class="opt-t">${esc(o)}</span></button>`).join('')}</div>
       <div id="fb"></div>
     </div>
@@ -687,16 +691,17 @@ function answerQ(i) {
   const blank = $('#blank');
   if (blank) blank.outerHTML = `<span class="blank filled ${ok ? 'ok' : 'ng'}">${esc(q.o[q.a])}</span>`;
   // 間違えたら、正解の語を単語帳へ自動で入れる
-  const hit = optMeaning(q.o[q.a]);
-  if (!ok && hit) addWord(hit.key, q.q.replace('___', q.o[q.a]));
-  const full = q.q.replace('___', q.o[q.a]);
+  const full = q.unit ? qFull(q) : q.q.replace('___', q.o[q.a]);
+  // 和訳を選ぶ問題・誤りを選ぶ問題では、選択肢は単語ではないので単語帳に入れない
+  const hit = q.fix || !/[A-Za-z]/.test(q.o[q.a]) ? null : optMeaning(q.o[q.a]);
+  if (!ok && hit) addWord(hit.key, full);
   const rows = quiz.order[quiz.i].map(k => {
     const o = q.o[k];
-    const m = optMeaning(o);
+    const m = q.fix || !/[A-Za-z]/.test(o) ? null : optMeaning(o);
     const note = q.w && q.w[k] ? q.w[k] : '';
     return `<tr class="${k === q.a ? 'is-ok' : ''}"><td class="o-w">${k === q.a ? '◎ ' : ''}${m ? `<span class="w${CONF_IDX[m.key] ? ' warn' : ''}" data-k="${esc(m.key)}">${esc(o)}</span>` : esc(o)}</td>
       <td>${m ? esc(m.e.ja) : ''}${note ? `<div class="o-note">${esc(note)}</div>` : ''}</td>
-      <td class="o-a">${m ? `<button class="ib sm" data-play="${esc(m.key)}" title="発音">🔊</button>` : `<button class="ib sm" data-say="${esc(o)}" title="発音">🔊</button>`}</td></tr>`;
+      <td class="o-a">${m ? `<button class="ib sm" data-play="${esc(m.key)}" title="発音">🔊</button>` : /[A-Za-z]/.test(o) ? `<button class="ib sm" data-say="${esc(o)}" title="発音">🔊</button>` : ''}</td></tr>`;
   }).join('');
   // 選択肢に紛らわしい語の組があれば差分を表示
   let confBox = '';
@@ -709,11 +714,11 @@ function answerQ(i) {
   $('#fb').innerHTML = `
     <div class="fb ${ok ? 'fb-ok' : 'fb-ng'}"><b>${ok ? '◎ ' + pickOne(CHEER_OK) : '△ ' + pickOne(CHEER_NG)}</b></div>
     <div class="exp">
-      <div class="exp-en">${renderText(full)} <button class="ib sm" data-say="${esc(full)}" title="文を聞く">🔊<small>文</small></button></div>
+      <div class="exp-en">${q.fix ? '<span class="qkind">正しい文</span> ' : ''}${renderText(full)} <button class="ib sm" data-say="${esc(full)}" title="文を聞く">🔊<small>文</small></button></div>
       <p class="exp-ja">${esc(q.ja)}</p>
       ${q.unit ? `<p class="small"><a href="#grammar/${esc(q.uid)}">📘 「${esc(q.unit)}」の解説を読む</a></p>` : ''}
       <p class="exp-body">${esc(q.ex)}</p>
-      <table class="otable"><tbody>${rows}</tbody></table>
+      ${q.fix || !q.o.some(o => /[A-Za-z]/.test(o)) ? '' : `<table class="otable"><tbody>${rows}</tbody></table>`}
       ${confBox}
       ${!ok && hit ? '<p class="muted small">正解の語を単語帳に入れました。明日から復習に出てきます。</p>' : ''}
     </div>
@@ -741,7 +746,7 @@ function renderResult() {
     </div>
   </section>
   <section class="review">
-    ${quiz.list.map((q, k) => { const r = quiz.res[k] || {}; return `<details class="rv card ${r.ok ? 'rv-ok' : 'rv-ng'}"><summary><span class="rv-m">${r.ok ? '◎' : '△'}</span> ${esc(q.q.replace('___', '[' + q.o[q.a] + ']'))}</summary><div class="rv-b"><p>${renderText(q.q.replace('___', q.o[q.a]))}</p><p class="exp-ja">${esc(q.ja)}</p><p>${esc(q.ex)}</p></div></details>`; }).join('')}
+    ${quiz.list.map((q, k) => { const r = quiz.res[k] || {}; return `<details class="rv card ${r.ok ? 'rv-ok' : 'rv-ng'}"><summary><span class="rv-m">${r.ok ? '◎' : '△'}</span> ${esc(q.fix ? q.fix : q.q.replace('___', '[' + q.o[q.a] + ']'))}</summary><div class="rv-b"><p>${renderText(q.fix || q.q.replace('___', q.o[q.a]))}</p><p class="exp-ja">${esc(q.ja)}</p><p>${esc(q.ex)}</p></div></details>`; }).join('')}
   </section>`;
   const rt = $('#retry');
   if (rt) rt.addEventListener('click', () => { const wrong = quiz.list.filter((q, k) => !(quiz.res[k] || {}).ok); quiz = { list: shuffle(wrong), i: 0, res: [], back: quiz.back }; renderQ(); });
@@ -755,27 +760,39 @@ document.addEventListener('keydown', ev => {
 /* ---------------- 文法 ---------------- */
 const GRAM = E.GRAMMAR || [];
 // 演習問題を穴埋めと同じ形にそろえる（ランダム演習・記録で共通に使う）
-const GQ = GRAM.flatMap(u => u.qs.map((q, k) => ({ id: 'gq-' + u.id + '-' + k, lv: q.lv || 'B', cat: 'grammar', tp: 'gram', unit: u.title, uid: u.id, q: q.q, o: q.o, a: q.a, ja: q.ja, ex: q.ex })));
+const GQ = GRAM.flatMap(u => u.qs.map((q, k) => ({ id: 'gq-' + u.id + '-' + k, lv: q.lv || 'B', cat: 'grammar', tp: 'gram', unit: u.title, uid: u.id, ulv: u.lv, q: q.q, o: q.o, a: q.a, ja: q.ja, ex: q.ex, fix: q.fix })));
+// 単元のレベル
+const GLV = { HS: ['pill-leaf', '高校'], UNI: ['pill-coral', '大学・TOEIC上級'], ADV: ['pill-grape', '難関大・東大'] };
+function glvPill(lv) { const g = GLV[lv] || GLV.HS; return `<span class="pill ${g[0]}">${g[1]}</span>`; }
+// 問題の型：穴埋め（___ あり）／誤りを含む箇所を選ぶ（fix あり）／英文の意味を選ぶ（どちらもなし）
+function qFull(q) { return q.fix || q.q.replace('___', q.o[q.a]); }
+function qKind(q) { return q.q.includes('___') ? '' : q.fix ? '<span class="qkind">誤りを含む下線部を選ぶ</span>' : '<span class="qkind">英文の意味として最も適切なものを選ぶ</span>'; }
+function qText(q, blank) { return renderText(q.q, { blank, marks: q.fix ? q.o.map(s => ({ s, cls: 'eu' })) : [] }); }
 function fmt(t) { return esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>'); }
 function unitScore(u) { let c = 0, n = 0; u.qs.forEach((q, k) => { const r = Store.d.q['gq-' + u.id + '-' + k]; if (r) { n++; if (r.last) c++; } }); return { c, n }; }
 let gst = null;
 routes.grammar = (id) => {
-  if (id === 'drill') return startGramDrill(false);
+  if (id === 'drill') return startGramDrill(false, false);
+  if (id === 'drill-adv') return startGramDrill(false, true);
   if (id === 'wrong') return startGramDrill(true);
   if (id) return renderUnit(id);
   const cats = [...new Set(GRAM.map(u => u.cat))];
   const wrong = GQ.filter(q => Store.d.q[q.id] && Store.d.q[q.id].last === 0).length;
+  const nLv = lv => GRAM.filter(u => u.lv === lv).length;
   view().innerHTML = `
   <section class="page-head"><h1>文法解説</h1>
-    <p>高校で学ぶ文法の全範囲と、大学・TOEIC上級で問われる語法を${GRAM.length}単元にまとめました。各単元に、解説・音声つきの例文・間違えやすい点・TOEICでの出方・演習5問（計${GQ.length}問）があります。</p>
-    <div class="cta" style="margin-top:6px"><a class="btn btn-sun" href="#grammar/drill">ランダム演習10問 →</a>${wrong ? `<a class="btn btn-coral" href="#grammar/wrong">間違えた問題（${wrong}問）</a>` : ''}</div>
+    <p>高校で学ぶ文法の全範囲、大学・TOEIC上級で問われる語法、難関大・東大レベルの読解・和訳・英作文に必要な文法を、${GRAM.length}単元にまとめました。各単元に、解説・音声つきの例文・間違えやすい点・試験での出方・演習（計${GQ.length}問）があります。</p>
+    <p class="glv-route">${glvPill('HS')} ${nLv('HS')}単元 → ${glvPill('UNI')} ${nLv('UNI')}単元 → ${glvPill('ADV')} ${nLv('ADV')}単元</p>
+    <div class="cta" style="margin-top:6px"><a class="btn btn-sun" href="#grammar/drill">ランダム演習10問（高校〜大学）→</a><a class="btn btn-grape" href="#grammar/drill-adv">難関大・東大の演習10問 →</a>${wrong ? `<a class="btn btn-coral" href="#grammar/wrong">間違えた問題（${wrong}問）</a>` : ''}</div>
   </section>
+  <div class="card gnote"><b>どこから始めればいい？</b>
+    <p>まずは「高校」の単元から始めてください。「難関大・東大」の単元は、高校の文法を一通り学んだ人が、長い英文の構造をつかむ力・和訳・英作文・誤りを見抜く力を伸ばすためのものです。各単元の最初に、先に確認したい基礎の単元を示しています。</p></div>
   <div class="card gnote"><b>TOEIC 800点をめざす方へ</b>
     <p>TOEICはリスニング495点・リーディング495点の合計です。このサイトはリーディング（Part 5〜7）の土台づくりに特化しています。文法はPart 5の約3分の1とPart 6に直結し、Part 7の読解速度にも効きます。目安として、各単元の演習で全問正解できる状態を「文法の土台完成」と考えてください（点数を保証するものではありません）。</p></div>
   ${cats.map(c => `<h2 class="sec-title sm gcat">${esc(c)}</h2><div class="glist">${GRAM.filter(u => u.cat === c).map(u => {
     const s = unitScore(u);
     return `<a class="gcard card" href="#grammar/${u.id}"><span class="gno">${u.id.slice(1)}</span><span class="gt">${esc(u.title)}</span>
-      <span class="gm">${u.lv === 'UNI' ? '<span class="pill pill-coral">大学・TOEIC上級</span>' : '<span class="pill pill-leaf">高校</span>'} ${s.n ? `<span class="gsc ${s.c === u.qs.length ? 'full' : ''}">${s.c}/${u.qs.length}</span>` : ''}</span></a>`;
+      <span class="gm">${glvPill(u.lv)} ${s.n ? `<span class="gsc ${s.c === u.qs.length ? 'full' : ''}">${s.c}/${u.qs.length}</span>` : ''}</span></a>`;
   }).join('')}</div>`).join('')}`;
 };
 function renderUnit(id) {
@@ -788,28 +805,33 @@ function renderUnit(id) {
     ${s.ex.length ? `<ul class="gex">${s.ex.map(([en, ja, note]) => `<li data-ctx="${esc(en)}"><div class="gex-en"><button class="ib sm" data-say="${esc(en)}" title="例文を聞く">🔊</button> <span lang="en">${renderText(en)}</span></div><div class="gex-ja">${esc(ja)}${note ? `<span class="gex-note">${esc(note)}</span>` : ''}</div></li>`).join('')}</ul>` : ''}</section>`).join('');
   const qs = u.qs.map((q, k) => {
     const a = gst.ans[k];
-    const full = q.q.replace('___', q.o[q.a]);
+    const full = qFull(q);
     return `<div class="rq card ${a !== undefined ? (a === q.a ? 'rq-ok' : 'rq-ng') : ''}">
-      <p class="rq-q"><span class="rq-n evi1">Q${k + 1}</span> ${renderText(q.q, { blank: a !== undefined ? `<span class="blank filled ${a === q.a ? 'ok' : 'ng'}">${esc(q.o[q.a])}</span>` : '<span class="blank">&emsp;&emsp;</span>' })}${q.lv === 'A' ? ' <span class="pill pill-lvA">Lv.A</span>' : ''}</p>
+      ${qKind(q)}<p class="rq-q"><span class="rq-n evi1">Q${k + 1}</span> ${qText(q, a !== undefined ? `<span class="blank filled ${a === q.a ? 'ok' : 'ng'}">${esc(q.o[q.a])}</span>` : '<span class="blank">&emsp;&emsp;</span>')}${q.lv === 'A' ? ' <span class="pill pill-lvA">Lv.A</span>' : ''}</p>
       <div class="opts">${gst.order[k].map((i, n) => `<button class="opt ${a !== undefined ? (i === q.a ? 'ok' : i === a ? 'ng' : '') : ''}" data-q="${k}" data-i="${i}" ${a !== undefined ? 'disabled' : ''}><span class="opt-k">${n + 1}</span><span class="opt-t">${esc(q.o[i])}</span></button>`).join('')}</div>
       ${a !== undefined ? `<div class="exp"><div class="fb ${a === q.a ? 'fb-ok' : 'fb-ng'}"><b>${a === q.a ? '◎ ' + pickOne(CHEER_OK) : '△ 正解は「' + esc(q.o[q.a]) + '」'}</b></div>
-        ${q.q.includes('___') ? `<div class="exp-en">${renderText(full)} <button class="ib sm" data-say="${esc(full)}" title="文を聞く">🔊<small>文</small></button></div>` : ''}
+        <div class="exp-en">${q.fix ? '<span class="qkind">正しい文</span> ' : ''}${renderText(full)} <button class="ib sm" data-say="${esc(full)}" title="文を聞く">🔊<small>文</small></button></div>
         <p class="exp-ja">${esc(q.ja)}</p><p class="exp-body">${esc(q.ex)}</p></div>` : ''}
     </div>`;
   }).join('');
   const done = gst.ans.filter(x => x !== undefined).length;
   const score = u.qs.filter((q, k) => gst.ans[k] === q.a).length;
+  const unitLink = x => `<a href="#grammar/${x.id}">${esc(x.title)}</a>`;
+  const bases = (u.base || []).map(b => GRAM.find(x => x.id === b)).filter(Boolean);
+  const advs = GRAM.filter(x => (x.base || []).includes(u.id));
   view().innerHTML = `
   <article class="gunit">
     <a class="back" href="#grammar">← 文法の一覧へ</a> <a class="small" href="/eigo/bunpou/${u.id}/" style="float:right">📄 1ページで読む（印刷・共有向け）</a>
-    <header class="p-head"><div><span class="pill pill-teal">${esc(u.cat)}</span> ${u.lv === 'UNI' ? '<span class="pill pill-coral">大学・TOEIC上級</span>' : '<span class="pill pill-leaf">高校</span>'}</div>
+    <header class="p-head"><div><span class="pill pill-teal">${esc(u.cat)}</span> ${glvPill(u.lv)}</div>
       <h1 class="gh1">${esc(u.title)}</h1><p class="glead">${esc(u.lead)}</p></header>
+    ${bases.length ? `<p class="gbase">📗 先に確認したい基礎：${bases.map(unitLink).join('、')}</p>` : ''}
     ${secs}
     <section class="gsec card gtrap"><h2>⚠️ 間違えやすいポイント</h2><ul>${u.trap.map(t => `<li>${fmt(t)}</li>`).join('')}</ul></section>
-    <section class="gsec card gtoeic"><h2>🎯 TOEIC・英検での出方</h2><p>${fmt(u.toeic)}</p></section>
+    <section class="gsec card gtoeic"><h2>${u.lv === 'ADV' ? '🎯 入試（難関大・東大）での出方' : '🎯 TOEIC・英検での出方'}</h2><p>${fmt(u.exam || u.toeic)}</p></section>
     <h2 class="sec-title">演習 <small class="muted">${done}/${u.qs.length}</small></h2>
     <div class="gqs">${qs}</div>
     ${done === u.qs.length ? `<div class="card p-done"><b>${score} / ${u.qs.length} 問正解</b><p>${score === u.qs.length ? 'この単元は完璧です！次の単元へ進みましょう。' : '間違えた問題は、上の解説の該当箇所を読み返してから「もう一度」で解き直すと定着します。'}</p><button class="btn btn-sun btn-sm" id="gRetry">もう一度解く</button></div>` : ''}
+    ${advs.length ? `<p class="gbase">🚀 この先の発展（難関大・東大）：${advs.map(unitLink).join('、')}</p>` : ''}
     <nav class="gnav">${prev ? `<a class="btn btn-line btn-sm" href="#grammar/${prev.id}">← ${esc(prev.title)}</a>` : '<span></span>'}${next ? `<a class="btn btn-sky btn-sm" href="#grammar/${next.id}">${esc(next.title)} →</a>` : ''}</nav>
   </article>`;
   $$('.gqs .opt').forEach(b => b.addEventListener('click', () => {
@@ -821,8 +843,9 @@ function renderUnit(id) {
   }));
   const rt = $('#gRetry'); if (rt) rt.addEventListener('click', () => { gst = null; renderUnit(id); });
 }
-function startGramDrill(onlyWrong) {
-  let pool = onlyWrong ? GQ.filter(q => Store.d.q[q.id] && Store.d.q[q.id].last === 0) : GQ;
+function startGramDrill(onlyWrong, adv) {
+  // ランダム演習は「高校〜大学」と「難関大・東大」を分ける（基礎の演習に難しい問題が混ざらないように）
+  let pool = onlyWrong ? GQ.filter(q => Store.d.q[q.id] && Store.d.q[q.id].last === 0) : GQ.filter(q => adv ? q.ulv === 'ADV' : q.ulv !== 'ADV');
   if (!pool.length) { go('#grammar'); return; }
   const fresh = q => Store.d.q[q.id] ? 1 : 0;
   quiz = { list: shuffle(pool).sort((a, b) => fresh(a) - fresh(b)).slice(0, 10), i: 0, res: [], back: '#grammar' };

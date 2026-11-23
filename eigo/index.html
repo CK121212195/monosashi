@@ -13,7 +13,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>英語のものさし｜英検準1級・1級／TOEIC対策の無料英語問題集（文法解説・長文・音声つき）</title>
-<meta name="description" content="英検2級〜1級・TOEIC600点以上をめざす人のための無料の筆記（リーディング）問題集。本文のどの単語もホバーで意味・発音記号・混同しやすい語を表示。全単語・全例文の音声を同梱してすぐ再生、仮定法から冠詞まで高校文法を網羅した文法解説、conform/confirmのような紛らわしい語のドリル、投資・金利・暗号資産・AI・アート・映画を題材にした長文読解。">
+<meta name="description" content="英検2級〜1級・TOEIC600点以上をめざす人のための無料の筆記（リーディング）問題集。本文のどの単語もホバーで意味・発音記号・混同しやすい語を表示。全単語・全例文の音声を同梱してすぐ再生、仮定法から冠詞まで高校文法を網羅し、難関大・東大レベルの構文・和訳・英作文まで扱う文法解説、conform/confirmのような紛らわしい語のドリル、投資・金利・暗号資産・AI・アート・映画を題材にした長文読解。">
 <link rel="canonical" href="https://kazumono.com/eigo/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="英語のものさし｜ホバーで引ける英検・TOEIC筆記問題集">
@@ -32,11 +32,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Nunito:wght@600;700;800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"WebApplication","name":"英語のものさし","url":"https://kazumono.com/eigo/","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":["ja","en"],"isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},
-"description":"英検2級〜1級・TOEIC600点以上をめざす人のための無料の英語問題集。穴埋め301問、長文40本、文法解説32単元（演習160問）、紛らわしい語120組。全単語にホバー辞書と音声つき。",
+"description":"英検2級〜1級・TOEIC600点以上をめざす人のための無料の英語問題集。穴埋め301問、長文40本、文法解説48単元（演習256問）、紛らわしい語120組。全単語にホバー辞書と音声つき。",
 "image":"https://kazumono.com/assets/eigo-ogp.png","provider":{"@type":"Organization","name":"数字のものさし","url":"https://kazumono.com/"}},
 {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"数字のものさし","item":"https://kazumono.com/"},{"@type":"ListItem","position":2,"name":"英語のものさし","item":"https://kazumono.com/eigo/"}]}
 ]}
@@ -63,7 +63,7 @@
     <button class="ib set-btn" id="openSet" aria-label="発音と表示の設定" title="発音と表示の設定">⚙️</button>
   </div>
 </header>
-<nav class="gbar" aria-label="試験別の勉強法と単語一覧"><div class="gbar-in"><span class="gbar-l">試験別の勉強法</span><a href="/eigo/eiken/">英検</a><a href="/eigo/toeic/">TOEIC</a><a href="/eigo/kyotsu/">共通テスト</a><span class="gbar-sep" aria-hidden="true"></span><span class="gbar-l">単語一覧</span><a href="/eigo/tango/">すべて</a><a href="/eigo/tango/jun1/">準1級</a><a href="/eigo/tango/1kyu/">1級</a><a href="/eigo/tango/jukugo/">熟語</a><a href="/eigo/tango/katakana/">カタカナ発音</a><a href="/eigo/tango/toukei/">統計</a></div></nav>
+<nav class="gbar" aria-label="試験別の勉強法と単語一覧"><div class="gbar-in"><span class="gbar-l">試験別の勉強法</span><a href="/eigo/eiken/">英検</a><a href="/eigo/toeic/">TOEIC</a><a href="/eigo/kyotsu/">共通テスト</a><a href="/eigo/nankan/">難関大</a><span class="gbar-sep" aria-hidden="true"></span><span class="gbar-l">単語一覧</span><a href="/eigo/tango/">すべて</a><a href="/eigo/tango/2kyu/">2級</a><a href="/eigo/tango/jun1/">準1級</a><a href="/eigo/tango/1kyu/">1級</a><a href="/eigo/tango/jukugo/">熟語</a><a href="/eigo/tango/katakana/">カタカナ発音</a><a href="/eigo/tango/toukei/">統計</a></div></nav>
 
 <main id="view" class="wrap" tabindex="-1">
   <noscript><p class="card" style="padding:20px">このツールは JavaScript を使って動作します。ブラウザの設定で JavaScript を有効にしてください。</p></noscript>
@@ -95,14 +95,15 @@
   <div class="foot-in">
     <p>英語のものさし は <a href="/">数字のものさし</a> の無料ツールです。問題・本文はすべて当サイトのオリジナルで、英検・TOEICの公式問題ではありません。「英検」は公益財団法人 日本英語検定協会の、「TOEIC」は ETS の登録商標です。</p>
     <p>学習記録と単語帳は、お使いのブラウザにのみ保存され、外部へは送信されません。調べた単語が外部に送られることはありません。</p>
-    <nav class="foot-links" aria-label="教材の一覧"><a href="/eigo/eiken/">英検対策</a><a href="/eigo/toeic/">TOEIC対策</a><a href="/eigo/kyotsu/">共通テスト対策</a><a href="/eigo/anaume/">穴埋め問題（全301問）</a><a href="/eigo/bunpou/">英文法解説（全32単元）</a><a href="/eigo/chobun/">英語長文（全40本・全訳つき）</a><a href="/eigo/magirawashii/">紛らわしい英単語（120組）</a><a href="/eigo/tango/">英単語一覧</a></nav>
+    <nav class="foot-links" aria-label="教材の一覧"><a href="/eigo/eiken/">英検対策</a><a href="/eigo/toeic/">TOEIC対策</a><a href="/eigo/kyotsu/">共通テスト対策</a><a href="/eigo/nankan/">難関大・東大対策</a><a href="/eigo/anaume/">穴埋め問題（全301問）</a><a href="/eigo/bunpou/">英文法解説（全48単元）</a><a href="/eigo/chobun/">英語長文（全40本・全訳つき）</a><a href="/eigo/magirawashii/">紛らわしい英単語（120組）</a><a href="/eigo/tango/">英単語一覧</a></nav>
     <nav class="foot-links"><a href="/">トップ</a><a href="/about/">運営者情報</a><a href="/privacy/">プライバシーポリシー</a><a href="/contact/">お問い合わせ</a></nav>
   </div>
 </footer>
 
-<script src="data/dict-core.js?v=1"></script>
-<script src="data/dict-vocab.js?v=1"></script>
-<script src="data/dict-vocab2.js?v=1"></script>
+<script src="data/dict-core.js?v=2"></script>
+<script src="data/dict-vocab.js?v=2"></script>
+<script src="data/dict-vocab2.js?v=2"></script>
+<script src="data/dict-vocab3.js?v=1"></script>
 <script src="data/confusables.js?v=1"></script>
 <script src="data/confusables2.js?v=1"></script>
 <script src="data/cloze.js?v=1"></script>
@@ -116,8 +117,10 @@
 <script src="data/passages2d.js?v=1"></script>
 <script src="data/grammar1.js?v=1"></script>
 <script src="data/grammar2.js?v=1"></script>
+<script src="data/grammar3.js?v=1"></script>
+<script src="data/grammar4.js?v=1"></script>
 <script src="data/shiken-sample.js?v=1"></script>
-<script src="audio/index.js?v=1"></script>
-<script src="app.js?v=9"></script>
+<script src="audio/index.js?v=2"></script>
+<script src="app.js?v=10"></script>
 </body>
 </html>
