@@ -2,6 +2,10 @@
    書式は dict-vocab.js と同じ： 見出し語|品詞|意味|発音記号（任意）|レベル（任意：C=2級, B=準1級, A=1級） */
 window.EIGO = window.EIGO || {};
 EIGO.DICT_PARTS = EIGO.DICT_PARTS || [];
+// 不規則な活用形（例文で使う語）
+Object.assign(EIGO.IRREG, {
+  misled: "mislead"
+});
 EIGO.DICT_PARTS.push(`
 abate|v|（勢い・痛みが）和らぐ・弱まる|əˈbeɪt|A
 aberration|n|逸脱・異常|ˌæbəˈreɪʃən|A
