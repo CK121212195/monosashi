@@ -600,7 +600,7 @@ bitcoin|n|ビットコイン
 ai|n|AI・人工知能|ˌeɪˈaɪ
 ceo|n|最高経営責任者（CEO）|ˌsiː iː ˈoʊ
 bull|n|雄牛；（市場の）強気
-bear|n|熊；（市場の）弱気；（動詞）耐える・負う|ber|C
+bear|v|耐える・（重さ・責任を）負う；（名詞）熊・（市場の）弱気|ber|C
 lamb|n|子羊|læm
 hawk|n|タカ；（金融政策の）タカ派
 village|n|村

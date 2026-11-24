@@ -55,6 +55,7 @@ const Store = {
     d.read = d.read || {};   // 長文ID -> {score, total, wpm, t}
     d.set = Object.assign({ accent: 'us', rate: 1, hover: true }, d.set || {});
     d.gram = d.gram || {};   // 文法単元ID -> 学習済みの印
+    d.vq = d.vq || {};       // 単語4択：見出し語 -> {n:回数, c:正解数, s:連続正解, last:正誤, t:時刻}
     return d;
   },
   save() { try { localStorage.setItem(KEY, JSON.stringify(this.d)); } catch (e) { /* 保存できない環境でも動かす */ } }
@@ -257,10 +258,10 @@ function normText(t) { return String(t).replace(/[‘’]/g, "'").replace(/[“�
 // 音声ファイルの名前（文字列から決まる）
 function audioHash(t) { let h = 0x811c9dc5; for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
 const AUD = (() => { const src = E.AUDIO || {}; const set = k => new Set(String(src[k] || '').split(',').filter(Boolean)); return { 'w/us': set('w/us'), 'w/uk': set('w/uk'), 's/us': set('s/us') }; })();
-function audioSrc(text, kind) {
+function audioSrc(text, kind, accOpt) {
   const h = audioHash(normText(text));
   if (kind === 'w') {
-    const acc = Store.d.set.accent, other = acc === 'us' ? 'uk' : 'us';
+    const acc = accOpt || Store.d.set.accent, other = acc === 'us' ? 'uk' : 'us';
     if (AUD['w/' + acc].has(h)) return { url: 'audio/w/' + acc + '/' + h + '.mp3', acc };
     if (AUD['w/' + other].has(h)) return { url: 'audio/w/' + other + '/' + h + '.mp3', acc: other };
     return null;
@@ -321,7 +322,7 @@ const Player = {
     const again = opt.btn && this.btn === opt.btn;
     this.stop();
     if (again) return { kind: 'stopped' };
-    const src = audioSrc(text, kind);
+    const src = audioSrc(text, kind, opt.acc);
     if (!src) {
       const ok = Speech.speak(text, opt.slow ? 0.7 : undefined);
       return { kind: ok ? 'tts' : 'none' };
@@ -332,7 +333,7 @@ const Player = {
     this.audio = a; this.btn = opt.btn || null;
     if (this.btn) this.btn.classList.add('playing');
     a.addEventListener('ended', () => { if (this.audio === a) this.stop(); });
-    a.play().catch(() => { if (this.audio === a) { this.stop(); toast('音声を再生できませんでした'); } });
+    a.play().catch(() => { if (this.audio === a) { this.stop(); if (!opt.quiet) toast('音声を再生できませんでした'); } });
     return { kind: 'file', acc: src.acc };
   }
 };
@@ -441,7 +442,7 @@ document.addEventListener('click', async ev => {
   const play = t.closest('[data-play]');
   if (play) {
     const key = play.dataset.play;
-    const r = Player.play(key, 'w', { slow: !!play.dataset.slow, btn: play });
+    const r = Player.play(key, 'w', { slow: !!play.dataset.slow, btn: play, acc: play.dataset.acc });
     const ipaBox = $(`.pop [data-ipa="${CSS.escape(key)}"]`);
     if (ipaBox && r.kind !== 'stopped') {
       const e = DICT[key] || {};
@@ -457,7 +458,8 @@ document.addEventListener('click', async ev => {
   const save = t.closest('[data-save]');
   if (save) {
     const key = save.dataset.save;
-    const ctx = popFor ? (popFor.closest('[data-ctx]') || {}).dataset?.ctx || '' : '';
+    const holder = (popFor || save).closest('[data-ctx]');
+    const ctx = holder ? holder.dataset.ctx || '' : '';
     toggleWord(key, ctx);
     const on = !!Store.d.words[key];
     $$(`[data-save="${CSS.escape(key)}"]`).forEach(b => { b.classList.toggle('on', on); if (b.classList.contains('ib')) b.textContent = on ? '★' : '☆'; });
@@ -548,8 +550,9 @@ routes.home = () => {
         <p class="demo-hint"><span class="w warn demo-key">点線の語</span>は、混同しやすい語・カタカナ発音の罠がある語です。</p>
       </div>
       <div class="cta">
-        <a class="btn btn-sun" href="#cloze">穴埋め問題をはじめる →</a>
-        <a class="btn btn-sky" href="#reading">長文を読む →</a>
+        <a class="btn btn-sun" href="#vocab">単語4択をはじめる →</a>
+        <a class="btn btn-sky" href="#cloze">穴埋め問題 →</a>
+        <a class="btn btn-line" href="#reading">長文を読む →</a>
       </div>
     </div>
   </section>
@@ -562,6 +565,7 @@ routes.home = () => {
   </section>
 
   <section class="modes">
+    <a class="mode card mode-hot" href="#vocab"><span class="mode-ic">⚡</span><h2>単語4択</h2><p>英検2級・準1級・1級・熟語の${Object.values(vLists()).reduce((s, a) => s + a.length, 0).toLocaleString()}語を4択で。答えるたびに発音（米・英）と例文（和訳・音声つき）を確認でき、間違えた語は単語帳で復習できます。</p></a>
     <a class="mode card" href="#cloze"><span class="mode-ic">✏️</span><h2>穴埋め問題</h2><p>語彙・熟語・文法・紛らわしい語の4分野 ${cz.length}問。選択肢すべての意味と、ほかの選択肢が「なぜ違うか」まで解説します。</p></a>
     <a class="mode card" href="#reading"><span class="mode-ic">📰</span><h2>長文読解</h2><p>投資・金利・暗号資産・AI・アート・映画など ${ps.length}本（計 約${words.toLocaleString()}語）。根拠の一文をハイライトし、読む速さ（語/分）も測れます。</p></a>
     <a class="mode card" href="#grammar"><span class="mode-ic">📘</span><h2>文法解説</h2><p>高校文法の全範囲から、TOEIC上級の語法、難関大・東大レベルの読解・和訳・英作文まで${GRAM.length}単元。演習${GQ.length}問つき。</p></a>
@@ -851,6 +855,233 @@ function startGramDrill(onlyWrong, adv) {
   quiz = { list: shuffle(pool).sort((a, b) => fresh(a) - fresh(b)).slice(0, 10), i: 0, res: [], back: '#grammar' };
   renderQ();
 }
+
+/* ---------------- 単語4択 ---------------- */
+// 区分は単語一覧（/eigo/tango/）と同じ。アルファベット順に50語ずつのステージに分ける
+const VLV = [
+  { id: 'C', name: '英検2級・共通テスト', short: '2級', pill: 'pill-leaf', page: '2kyu' },
+  { id: 'B', name: '英検準1級', short: '準1級', pill: 'pill-sky', page: 'jun1' },
+  { id: 'A', name: '英検1級', short: '1級', pill: 'pill-coral', page: '1kyu' },
+  { id: 'P', name: '熟語・句動詞', short: '熟語', pill: 'pill-grape', page: 'jukugo' }
+];
+const VSTAGE = 50;
+const VMODES = { ej: '英語 → 意味', je: '意味 → 英語', li: '聞いて選ぶ' };
+const EX_FILES = ['data/ex-c.js?v=1', 'data/ex-b.js?v=1', 'data/ex-a.js?v=1', 'data/ex-p.js?v=1'];
+let VLIST = null;
+let vq = null;   // いま解いているセット
+function vLists() {
+  if (VLIST) return VLIST;
+  VLIST = { C: [], B: [], A: [], P: [] };
+  Object.keys(DICT).forEach(k => {
+    const e = DICT[k];
+    if (e.p === 'phr') { if (k.includes(' ')) VLIST.P.push(k); }
+    else if (VLIST[e.lv]) VLIST[e.lv].push(k);
+  });
+  Object.values(VLIST).forEach(a => a.sort((x, y) => x.localeCompare(y)));
+  return VLIST;
+}
+// 例文は単語4択を開いたときに読み込む（最初の表示を軽くするため）
+let exLoading = null, exReady = false;
+function loadEx() {
+  if (!exLoading) exLoading = Promise.all(EX_FILES.map(src => new Promise(res => {
+    const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = res; document.head.appendChild(s);
+  }))).then(() => { exReady = true; });   // 読み込みに失敗しても、例文なしで動かす
+  return exLoading;
+}
+function exOf(k) {
+  const x = (window.EIGO.EX || {})[k];
+  if (!x) return null;
+  const m = x[0].match(/^(.*?)\*\*(.+?)\*\*(.*)$/);
+  return { ja: x[1], plain: x[0].replace(/\*\*/g, ''), pre: m ? m[1] : x[0], hl: m ? m[2] : '', post: m ? m[3] : '' };
+}
+function exHTML(k) {
+  const x = exOf(k);
+  if (!x) return '';
+  return `<div class="vq-ex" data-ctx="${esc(x.plain)}"><p class="vq-ex-lab">例文</p>
+    <p class="vq-ex-en" lang="en">${renderText(x.pre)}${x.hl ? `<b class="ex-hl">${renderText(x.hl)}</b>` : ''}${renderText(x.post)} <button class="ib sm" data-say="${esc(x.plain)}" title="例文を聞く">🔊<small>文</small></button></p>
+    <p class="vq-ex-ja">${esc(x.ja)}</p></div>`;
+}
+const vShort = e => e.ja.split('；')[0];
+// 意味が重なる選択肢を避ける（hinder と hamper のように同じ訳の語が並ぶと正解が2つになるため）
+function vParts(s) { return s.replace(/（[^）]*）/g, '').split(/[・、,／]/).map(x => x.replace(/[～〜\s]/g, '')).filter(Boolean); }
+function vClash(a, b) { const A = vParts(a), B = vParts(b); return !A.length || !B.length || A.some(x => B.some(y => x.includes(y) || y.includes(x))); }
+function vOptions(key, lvId) {
+  const L = vLists()[lvId], e = DICT[key], m = vShort(e);
+  const same = L.filter(k => k !== key && (lvId === 'P' || DICT[k].p === e.p));
+  const pool = same.length >= 12 ? same : L.filter(k => k !== key);
+  const picks = [];
+  for (const k of shuffle(pool)) {
+    const m2 = vShort(DICT[k]);
+    if (vClash(m, m2) || picks.some(p => vClash(vShort(DICT[p]), m2))) continue;
+    picks.push(k);
+    if (picks.length === 3) break;
+  }
+  return shuffle([key].concat(picks));
+}
+const vSt = k => Store.d.vq[k];
+const vKnown = k => { const s = vSt(k); return !!(s && s.s >= 2); };   // 2回続けて正解したら「覚えた」
+function vCount(keys) {
+  let known = 0, doing = 0;
+  keys.forEach(k => { const s = vSt(k); if (!s) return; if (s.s >= 2) known++; else doing++; });
+  return { known, doing, fresh: keys.length - known - doing, all: keys.length };
+}
+// まだ覚えていない語を優先：前回まちがえた語 → 未学習 → 学習中。全部覚えていたら復習として出す
+function vPick(keys, n) {
+  const wrong = [], fresh = [], doing = [];
+  keys.forEach(k => { const s = vSt(k); if (!s) fresh.push(k); else if (s.s >= 2) return; else if (s.last === 0) wrong.push(k); else doing.push(k); });
+  let list = shuffle(wrong).concat(shuffle(fresh), shuffle(doing)).slice(0, n);
+  if (list.length < n) list = list.concat(shuffle(keys.filter(k => !list.includes(k))).slice(0, n - list.length));
+  return shuffle(list);
+}
+function vSet() { return Object.assign({ mode: 'ej', n: 10, fast: false, auto: true }, Store.d.set.vq || {}); }
+function vSource(lvId, type, stage) {
+  const L = vLists()[lvId];
+  if (type === 'stage') return L.slice(stage * VSTAGE, (stage + 1) * VSTAGE);
+  if (type === 'wrong') return L.filter(k => { const s = vSt(k); return s && s.last === 0; });
+  return L;
+}
+function vStart(lvId, type, stage, list) {
+  const set = vSet();
+  const keys = list || vPick(vSource(lvId, type, stage), set.n);
+  if (!keys.length) { toast('出題できる語がありません'); return; }
+  vq = { lv: lvId, type, stage, mode: set.mode, list: keys, i: 0, res: [], opts: [] };
+  go('#vocab/play');
+}
+function vPlayBtns(k) {
+  return `<button class="ib" data-play="${esc(k)}" data-acc="us" title="米音で聞く">🔊<small>米</small></button><button class="ib" data-play="${esc(k)}" data-acc="uk" title="英音で聞く">🔊<small>英</small></button><button class="ib" data-play="${esc(k)}" data-slow="1" title="ゆっくり聞く">🐢</button>`;
+}
+routes.vocab = (arg) => {
+  if (!exReady) {
+    view().innerHTML = '<p class="center muted" style="padding:40px 0">読み込んでいます…</p>';
+    loadEx().then(() => { const h = location.hash.replace(/^#\/?/, '').split('/'); if (h[0] === 'vocab') routes.vocab(h[1]); });
+    return;
+  }
+  if (arg === 'play') return vq ? vRender() : go('#vocab');
+  if (arg === 'result') return vq ? vResult() : go('#vocab');
+  if (VLV.some(x => x.id === arg)) return vLevel(arg);
+  const L = vLists();
+  view().innerHTML = `
+  <section class="page-head"><h1>単語4択</h1>
+    <p>英単語を見て、4つの中から意味を選ぶドリルです。答えるたびに、発音（米音・英音）と例文（和訳・音声つき）を確かめられます。2回続けて正解した語は「覚えた」になり、間違えた語は単語帳に入って、忘れかけたころに復習が出ます。</p></section>
+  <div class="vlv-grid">${VLV.map(v => { const c = vCount(L[v.id]); const p = c.all ? Math.round(c.known / c.all * 100) : 0; return `<a class="vlv card" href="#vocab/${v.id}">
+    <span class="pill ${v.pill}">${esc(v.short)}</span><span class="vlv-name">${esc(v.name)}</span>
+    <span class="vlv-n"><b>${c.all.toLocaleString()}</b>語</span>
+    <span class="vbar"><span style="width:${p}%"></span></span>
+    <span class="vlv-st">覚えた ${c.known.toLocaleString()}語・学習中 ${c.doing.toLocaleString()}語</span></a>`; }).join('')}</div>
+  <p class="muted small">※ レベル区分は当サイトの判断による目安です。単語の一覧は <a href="/eigo/tango/">英単語一覧</a> でも見られます。</p>`;
+};
+function vLevel(lvId) {
+  const v = VLV.find(x => x.id === lvId), L = vLists()[lvId], set = vSet();
+  const c = vCount(L), wrongN = vSource(lvId, 'wrong').length;
+  const stages = [];
+  for (let i = 0; i * VSTAGE < L.length; i++) stages.push(L.slice(i * VSTAGE, (i + 1) * VSTAGE));
+  view().innerHTML = `
+  <a class="back" href="#vocab">← 単語4択のトップへ</a>
+  <section class="page-head"><h1>単語4択：${esc(v.name)}</h1>
+    <p>${L.length.toLocaleString()}語・覚えた ${c.known.toLocaleString()}語（${L.length ? Math.round(c.known / L.length * 100) : 0}%）・学習中 ${c.doing.toLocaleString()}語・未学習 ${c.fresh.toLocaleString()}語</p></section>
+  <form class="card vq-setf" id="vqf">
+    <div class="vq-row"><span class="vq-lab">出題のしかた</span>${Object.entries(VMODES).map(([k, t]) => `<label class="chip"><input type="radio" name="mode" value="${k}" ${set.mode === k ? 'checked' : ''}><span>${t}</span></label>`).join('')}</div>
+    <div class="vq-row"><span class="vq-lab">1回の問題数</span>${[10, 20].map(n => `<label class="chip"><input type="radio" name="n" value="${n}" ${set.n === n ? 'checked' : ''}><span>${n}問</span></label>`).join('')}</div>
+    <div class="vq-row"><label class="chk"><input type="checkbox" name="auto" ${set.auto ? 'checked' : ''}> 出題と同時に発音を流す</label><label class="chk"><input type="checkbox" name="fast" ${set.fast ? 'checked' : ''}> 正解したら自動で次へ（テンポ重視）</label></div>
+  </form>
+  <div class="cta"><button class="btn btn-sun" data-vgo="auto">おまかせ${set.n}問（まだ覚えていない語から）→</button>${wrongN ? `<button class="btn btn-coral" data-vgo="wrong">前回まちがえた語（${wrongN}語）</button>` : ''}</div>
+  <h2 class="sec-title sm">ステージを選ぶ（${VSTAGE}語ずつ・アルファベット順）</h2>
+  <div class="vstages">${stages.map((s, i) => { const sc = vCount(s); const p = Math.round(sc.known / sc.all * 100); return `<button class="vstage card" data-vstage="${i}">
+    <span class="vst-no">${i * VSTAGE + 1}〜${i * VSTAGE + s.length}</span><span class="vst-w" lang="en">${esc(DICT[s[0]].w)} 〜 ${esc(DICT[s[s.length - 1]].w)}</span>
+    <span class="vbar"><span style="width:${p}%"></span></span><span class="vst-st">覚えた ${sc.known}/${sc.all}</span></button>`; }).join('')}</div>
+  <p class="small"><a href="/eigo/tango/${v.page}/">📄 ${esc(v.name)}レベルの英単語の一覧（意味・発音記号・音声つき）</a></p>`;
+  $('#vqf').addEventListener('change', () => {
+    const f = new FormData($('#vqf'));
+    Store.d.set.vq = { mode: f.get('mode'), n: +f.get('n'), auto: !!f.get('auto'), fast: !!f.get('fast') };
+    Store.save(); vLevel(lvId);
+  });
+  $$('[data-vgo]').forEach(b => b.addEventListener('click', () => vStart(lvId, b.dataset.vgo)));
+  $$('[data-vstage]').forEach(b => b.addEventListener('click', () => vStart(lvId, 'stage', +b.dataset.vstage)));
+}
+function vRender() {
+  const k = vq.list[vq.i], e = DICT[k], n = vq.list.length, v = VLV.find(x => x.id === vq.lv);
+  if (!vq.opts[vq.i]) vq.opts[vq.i] = vOptions(k, vq.lv);
+  const opts = vq.opts[vq.i], r = vq.res[vq.i], done = r !== undefined;
+  const optText = o => vq.mode === 'je' ? DICT[o].w : vShort(DICT[o]);
+  const optSub = o => vq.mode === 'je' ? vShort(DICT[o]) : DICT[o].w;
+  let prompt;
+  if (vq.mode === 'je') prompt = `<p class="vq-ask">${esc(vShort(e))}</p><p class="vq-sub">${esc(POS[e.p] || '')}　この意味の英語は？</p>`;
+  else if (vq.mode === 'li' && !done) prompt = `<button class="vq-listen" data-play="${esc(k)}" title="もう一度聞く">🔊</button><p class="vq-sub">音声を聞いて、意味を選んでください（ボタンでもう一度聞けます）</p>`;
+  else prompt = `<div class="vq-w" lang="en">${esc(e.w)}</div>${e.ipa ? `<div class="vq-ipa" lang="en">/${esc(e.ipa)}/</div>` : ''}<div class="vq-btns">${vPlayBtns(k)}</div>`;
+  view().innerHTML = `
+  <section class="vqwrap">
+    <div class="qtop">
+      <div class="prog"><span style="width:${vq.i / n * 100}%"></span></div>
+      <div class="qmeta"><span class="qnum">${vq.i + 1} / ${n}</span> <span class="pill ${v.pill}">${esc(v.short)}</span> <span class="pill pill-line">${VMODES[vq.mode]}</span></div>
+    </div>
+    <div class="qcard card vq-card" data-ctx="${esc((exOf(k) || {}).plain || '')}">
+      <div class="vq-prompt">${prompt}</div>
+      <div class="opts ${vq.mode === 'je' ? '' : 'opts-ja'}">${opts.map((o, i) => `<button class="opt vopt ${done ? (o === k ? 'ok' : o === r.pick ? 'ng' : '') : ''}" data-o="${esc(o)}" ${done ? 'disabled' : ''}><span class="opt-k">${i + 1}</span><span class="opt-t">${esc(optText(o))}${done ? `<small class="opt-sub" ${vq.mode === 'je' ? '' : 'lang="en"'}>${esc(optSub(o))}</small>` : ''}</span></button>`).join('')}</div>
+      ${done ? '' : '<button class="btn btn-line btn-sm vq-skip" id="vskip">わからない（答えを見る）</button>'}
+      ${done ? `<div class="fb ${r.ok ? 'fb-ok' : 'fb-ng'}"><b>${r.ok ? '◎ ' + pickOne(CHEER_OK) : r.pick ? '△ 正解は「' + esc(vq.mode === 'je' ? e.w : vShort(e)) + '」' : '答えを確認しましょう'}</b></div>
+      <div class="vq-ans">
+        <div class="vq-ans-h"><span class="vq-ans-w" lang="en">${esc(e.w)}</span>${e.ipa ? `<span class="vq-ipa" lang="en">/${esc(e.ipa)}/</span>` : ''}</div>
+        <div class="vq-btns">${vPlayBtns(k)}<button class="ib ${Store.d.words[k] ? 'on' : ''}" data-save="${esc(k)}" title="単語帳に入れる">${Store.d.words[k] ? '★' : '☆'}</button></div>
+        <p class="vq-mean"><span class="pos">${esc(POS[e.p] || '')}</span>${esc(e.ja)}</p>
+        ${exHTML(k)}
+      </div>
+      <button class="btn btn-sun btn-wide" id="vnext">${vq.i + 1 < n ? '次の問題へ →' : '結果を見る →'}</button>` : ''}
+    </div>
+    <p class="kbd muted small">キーボード：1〜4で選択、0でわからない、Enterで次へ、Spaceで発音</p>
+  </section>`;
+  $$('.vopt').forEach(b => b.addEventListener('click', () => vAnswer(b.dataset.o)));
+  const sk = $('#vskip'); if (sk) sk.addEventListener('click', () => vAnswer(null));
+  const nx = $('#vnext'); if (nx) { nx.addEventListener('click', vNext); nx.focus({ preventScroll: true }); }
+  if (!done && (vSet().auto || vq.mode === 'li') && vq.mode !== 'je') setTimeout(() => { if (vq && vq.res[vq.i] === undefined && $('.vqwrap')) Player.play(k, 'w', { quiet: true }); }, 120);
+}
+function vAnswer(pick) {
+  if (!vq || vq.res[vq.i] !== undefined) return;
+  const k = vq.list[vq.i], ok = pick === k;
+  vq.res[vq.i] = { pick, ok };
+  const s = Store.d.vq[k] || { n: 0, c: 0, s: 0 };
+  s.n++; if (ok) { s.c++; s.s++; } else s.s = 0;
+  s.last = ok ? 1 : 0; s.t = Date.now();
+  Store.d.vq[k] = s;
+  const t = today(); Store.d.days[t] = (Store.d.days[t] || 0) + 1;
+  // 間違えた語は単語帳へ（例文を文脈として残す）
+  if (!ok) addWord(k, (exOf(k) || {}).plain || '');
+  Store.save(); updateBadges();
+  vRender();
+  if (vq.mode !== 'ej' || !vSet().auto) Player.play(k, 'w', { quiet: true });
+  if (ok && vSet().fast) { const i = vq.i; setTimeout(() => { if (vq && vq.i === i && $('#vnext')) vNext(); }, 1100); }
+}
+function vNext() {
+  if (!vq) return;
+  if (vq.i + 1 < vq.list.length) { vq.i++; vRender(); window.scrollTo(0, 0); }
+  else go('#vocab/result');
+}
+function vResult() {
+  const n = vq.list.length, c = vq.res.filter(r => r && r.ok).length, pct = Math.round(c / n * 100);
+  const wrong = vq.list.filter((k, i) => !(vq.res[i] || {}).ok);
+  const msg = pct === 100 ? '全問正解！この調子で次のセットへ。' : pct >= 70 ? 'いい流れです。間違えた語だけもう一度解くと定着します。' : '間違えた語は単語帳に入りました。もう一度解いて覚えてしまいましょう。';
+  view().innerHTML = `
+  <section class="result card">
+    <p class="eyebrow">Result</p>
+    <div class="ring" style="--p:${pct}"><span>${c}<small>/${n}</small></span></div>
+    <p class="result-msg">${msg}</p>
+    ${wrong.length ? '<p class="muted small">間違えた語は単語帳に入れました。忘れかけたころに「単語帳と復習」で出てきます。</p>' : ''}
+    <div class="cta center">
+      ${wrong.length ? '<button class="btn btn-coral" id="vretry">間違えた語をもう一度</button>' : ''}
+      <button class="btn btn-sun" id="vmore">続けて${vSet().n}問 →</button>
+      <a class="btn btn-line" href="#vocab/${vq.lv}">ステージ一覧へ</a>
+    </div>
+  </section>
+  <section class="vq-review">${vq.list.map((k, i) => { const r = vq.res[i] || {}, e = DICT[k]; return `<div class="vq-rv card ${r.ok ? 'rv-ok' : 'rv-ng'}"><span class="rv-m">${r.ok ? '◎' : '△'}</span><span class="vq-rv-w" lang="en">${esc(e.w)}</span><button class="ib sm" data-play="${esc(k)}" title="発音">🔊</button><span class="vq-rv-m">${esc(vShort(e))}</span><span class="vq-rv-st">${vKnown(k) ? '覚えた' : ''}</span></div>`; }).join('')}</section>`;
+  const rt = $('#vretry'); if (rt) rt.addEventListener('click', () => vStart(vq.lv, vq.type, vq.stage, shuffle(wrong)));
+  $('#vmore').addEventListener('click', () => vStart(vq.lv, vq.type, vq.stage));
+}
+document.addEventListener('keydown', ev => {
+  if (!vq || !$('.vqwrap') || ev.target.closest('input, textarea, select') || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+  if (/^[1-4]$/.test(ev.key)) { const b = $$('.vopt')[+ev.key - 1]; if (b && !b.disabled) b.click(); }
+  else if (ev.key === '0') { const b = $('#vskip'); if (b) b.click(); }
+  else if (ev.key === 'Enter' && $('#vnext') && document.activeElement !== $('#vnext')) { ev.preventDefault(); $('#vnext').click(); }
+  else if (ev.key === ' ') { ev.preventDefault(); if (vq.mode !== 'je' || vq.res[vq.i] !== undefined) Player.play(vq.list[vq.i], 'w'); }
+});
 
 /* ---------------- 試験対策（有料問題集・買い切り） ---------------- */
 const SHK_PAY_URL = 'https://buy.stripe.com/bJe28s3H885BaQ93sgaR203';
@@ -1408,6 +1639,7 @@ routes.stats = () => {
   <section class="page-head"><h1>学習記録</h1><p>記録はこのブラウザの中だけに保存されています。別の端末とは共有されません。</p></section>
   <div class="card st-card"><h2 class="sec-title sm">直近4週間 <small class="muted">${streak()}日連続</small></h2>
     <div class="heat">${days.map(x => `<span class="hc h${x.n === 0 ? 0 : x.n < 5 ? 1 : x.n < 15 ? 2 : 3}" title="${x.m}/${x.dd}：${x.n}問"></span>`).join('')}</div></div>
+  <div class="card st-card"><h2 class="sec-title sm">単語4択 <small class="muted">2回続けて正解した語を「覚えた」と数えます</small></h2>${VLV.map(v => { const c = vCount(vLists()[v.id]); const p = c.all ? Math.round(c.known / c.all * 100) : 0; return `<div class="bar-row"><span class="bar-l">${esc(v.short)}（${c.all.toLocaleString()}語）</span><span class="bar"><span style="width:${p}%"></span></span><span class="bar-v">${p}%<small> (${c.known}/${c.all})</small></span></div>`; }).join('')}</div>
   <div class="card st-card"><h2 class="sec-title sm">分野別の正答率</h2>${bars(byCat)}</div>
   <div class="card st-card"><h2 class="sec-title sm">レベル別</h2>${bars(byLv)}</div>
   <div class="card st-card"><h2 class="sec-title sm">題材別</h2>${bars(byTp)}</div>
