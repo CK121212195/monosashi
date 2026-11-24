@@ -4,7 +4,7 @@ window.EIGO = window.EIGO || {};
 EIGO.DICT_PARTS = EIGO.DICT_PARTS || [];
 // 不規則な活用形（例文で使う語）
 Object.assign(EIGO.IRREG, {
-  misled: "mislead"
+  misled: "mislead", criteria: "criterion", phenomena: "phenomenon"
 });
 EIGO.DICT_PARTS.push(`
 abate|v|（勢い・痛みが）和らぐ・弱まる|əˈbeɪt|A
