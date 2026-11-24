@@ -4,7 +4,8 @@ window.EIGO = window.EIGO || {};
 EIGO.DICT_PARTS = EIGO.DICT_PARTS || [];
 // 不規則な活用形（例文で使う語）
 Object.assign(EIGO.IRREG, {
-  misled: "mislead", criteria: "criterion", phenomena: "phenomenon"
+  misled: "mislead", criteria: "criterion", phenomena: "phenomenon",
+  wore: "wear", biggest: "big", proven: "prove"
 });
 EIGO.DICT_PARTS.push(`
 abate|v|（勢い・痛みが）和らぐ・弱まる|əˈbeɪt|A
@@ -1093,4 +1094,232 @@ work out|phr|解決する・（計画を）練る・うまくいく・運動す�
 worship|n|崇拝・礼拝|ˈwɝːʃɪp|C
 worthy|adj|（of ～に）値する|ˈwɝːði|C
 wound|n|傷；（動詞）傷つける|wuːnd|C
+`);
+// 単語4択の例文に出てくる基本語・固有名詞など（4択の出題には使わない）
+EIGO.DICT_PARTS.push(`
+abide|v|（abide by で）従う・守る|əˈbaɪd
+accusation|n|非難・告発|ˌækjuˈzeɪʃən
+actress|n|女優|ˈæktrəs
+africa|pn|アフリカ
+airline|n|航空会社|ˈerlaɪn
+album|n|アルバム|ˈælbəm
+amazing|adj|驚くべき・すばらしい|əˈmeɪzɪŋ
+american|adj|アメリカの；（名詞）アメリカ人|əˈmerɪkən
+annoy|v|いらいらさせる|əˈnɔɪ
+apology|n|謝罪・おわび|əˈpɑːlədʒi
+apple|n|リンゴ|ˈæpəl
+aquarium|n|水族館|əˈkweriəm
+army|n|軍隊・陸軍|ˈɑːrmi
+arrest|v|逮捕する；（名詞）逮捕|əˈrest
+athletic|adj|運動の・運動能力の高い|æθˈletɪk
+aunt|n|おば|ænt
+baby|n|赤ちゃん|ˈbeɪbi
+balloon|n|風船|bəˈluːn
+band|n|バンド・楽団|bænd
+basement|n|地下室|ˈbeɪsmənt
+bath|n|入浴・風呂|bæθ
+beauty|n|美しさ|ˈbjuːti
+belt|n|ベルト（seat belt＝シートベルト）|belt
+birth|n|誕生・出産|bɝːθ
+blind|adj|目の見えない|blaɪnd
+blood|n|血液|blʌd
+boat|n|ボート・小舟|boʊt
+bookstore|n|書店|ˈbʊkstɔːr
+boot|n|ブーツ・長靴|buːt
+boy|n|男の子|bɔɪ
+bravery|n|勇敢さ|ˈbreɪvəri
+britain|pn|イギリス
+brother|n|兄弟|ˈbrʌðɚ
+businesswoman|n|女性実業家|ˈbɪznəsˌwʊmən
+butterfly|n|チョウ|ˈbʌtɚflaɪ
+camp|n|キャンプ・収容所（refugee camp＝難民キャンプ）|kæmp
+cancer|n|がん|ˈkænsɚ
+captain|n|主将・船長|ˈkæptən
+carelessness|n|不注意|ˈkerləsnəs
+carpet|n|じゅうたん|ˈkɑːrpɪt
+cartoon|n|漫画・アニメ|kɑːrˈtuːn
+cat|n|猫|kæt
+championship|n|選手権（大会）|ˈtʃæmpiənʃɪp
+charm|n|魅力|tʃɑːrm
+cheerful|adj|陽気な・明るい|ˈtʃɪrfəl
+chess|n|チェス|tʃes
+cliff|n|がけ|klɪf
+cloud|n|雲|klaʊd
+clown|n|道化師・ピエロ|klaʊn
+coach|n|コーチ・指導者|koʊtʃ
+coaster|n|（roller coaster で）ジェットコースター|ˈkoʊstɚ
+contest|n|コンテスト・競争|ˈkɑːntest
+couldn't|aux|～できなかった（could not）
+craft|n|工芸・技術|kræft
+darwin|pn|ダーウィン（進化論を唱えた学者）
+death|n|死|deθ
+dentist|n|歯医者|ˈdentɪst
+dinner|n|夕食|ˈdɪnɚ
+dinosaur|n|恐竜|ˈdaɪnəsɔːr
+dioxide|n|二酸化物（carbon dioxide＝二酸化炭素）|daɪˈɑːksaɪd
+dog|n|犬|dɔːɡ
+dove|n|ハト（平和の象徴）|dʌv
+dream|n|夢；（動詞）夢を見る|driːm
+dress|n|ドレス・服装；（動詞）服を着る|dres
+drunk|adj|酒に酔った（drunk driving＝飲酒運転）|drʌŋk
+dust|n|ほこり・ちり|dʌst
+editor|n|編集者|ˈedɪtɚ
+egypt|pn|エジプト
+eighth|num|8番目の|eɪtθ
+einstein|pn|アインシュタイン（物理学者）
+eleven|num|11|ɪˈlevən
+entitle|v|（to ～の）権利［資格］を与える（be entitled to＝～の権利がある）|ɪnˈtaɪtəl
+euro|n|ユーロ（通貨）|ˈjʊroʊ
+excellent|adj|優れた・すばらしい|ˈeksələnt
+fever|n|熱・発熱|ˈfiːvɚ
+fiction|n|小説・作り話（science fiction＝SF）|ˈfɪkʃən
+fingerprint|n|指紋|ˈfɪŋɡɚprɪnt
+fire|n|火・火事；（動詞）解雇する|ˈfaɪɚ
+firefighter|n|消防士|ˈfaɪɚfaɪtɚ
+flower|n|花|ˈflaʊɚ
+fly|v|飛ぶ・飛行機で行く|flaɪ
+foot|n|足|fʊt
+france|pn|フランス
+freeze|v|凍る・凍らせる|friːz
+friendship|n|友情|ˈfrendʃɪp
+furniture|n|家具|ˈfɝːnɪtʃɚ
+gambling|n|ギャンブル・賭け事|ˈɡæmblɪŋ
+gentleman|n|紳士|ˈdʒentəlmən
+ghost|n|幽霊|ɡoʊst
+girl|n|女の子|ɡɝːl
+globalization|n|グローバル化|ˌɡloʊbələˈzeɪʃən
+goldfish|n|金魚|ˈɡoʊldfɪʃ
+golf|n|ゴルフ|ɡɑːlf
+gossip|n|うわさ話|ˈɡɑːsɪp
+grandparent|n|祖父母（の一人）|ˈɡrænperənt
+ground|n|地面・根拠（on the grounds that＝～という理由で）|ɡraʊnd
+gun|n|銃|ɡʌn
+hay|n|干し草|heɪ
+hero|n|英雄・憧れの人|ˈhɪroʊ
+hole|n|穴|hoʊl
+honey|n|はちみつ|ˈhʌni
+hood|n|フード・ずきん|hʊd
+hunt|v|狩りをする|hʌnt
+hydrogen|n|水素|ˈhaɪdrədʒən
+i'd|pron|I would / I had の短縮形
+i'll|pron|I will の短縮形
+i've|pron|I have の短縮形
+importance|n|重要性|ɪmˈpɔːrtəns
+insult|n|侮辱；（動詞）侮辱する|ˈɪnsʌlt
+irish|adj|アイルランドの|ˈaɪrɪʃ
+italian|adj|イタリアの；（名詞）イタリア人|ɪˈtæljən
+jacket|n|上着・ジャケット|ˈdʒækɪt
+jeans|n|ジーンズ|dʒiːnz
+juice|n|ジュース|dʒuːs
+jury|n|陪審（員）|ˈdʒʊri
+kid|n|子ども|kɪd
+kindness|n|親切・優しさ|ˈkaɪndnəs
+king|n|王|kɪŋ
+knee|n|ひざ|niː
+koala|n|コアラ|koʊˈɑːlə
+lake|n|湖|leɪk
+land|n|土地・陸地|lænd
+lantern|n|ちょうちん・ランタン|ˈlæntɚn
+latin|n|ラテン語|ˈlætən
+lawyer|n|弁護士|ˈlɔːjɚ
+lazy|adj|怠惰な|ˈleɪzi
+leader|n|指導者|ˈliːdɚ
+leather|n|革|ˈleðɚ
+lens|n|レンズ|lenz
+license|n|免許（証）|ˈlaɪsəns
+lifestyle|n|生活様式|ˈlaɪfstaɪl
+lion|n|ライオン|ˈlaɪən
+loud|adj|（声・音が）大きい|laʊd
+luck|n|運・幸運|lʌk
+mainland|n|本土|ˈmeɪnlænd
+marriage|n|結婚|ˈmerɪdʒ
+mathematics|n|数学|ˌmæθəˈmætɪks
+meantime|n|（in the meantime で）その間|ˈmiːntaɪm
+meat|n|肉|miːt
+meter|n|メートル|ˈmiːtɚ
+monk|n|修道士・僧|mʌŋk
+mosquito|n|蚊|məˈskiːtoʊ
+mother|n|母|ˈmʌðɚ
+mozart|pn|モーツァルト（作曲家）
+murder|n|殺人|ˈmɝːdɚ
+musical|adj|音楽の；（名詞）ミュージカル|ˈmjuːzɪkəl
+musician|n|音楽家|mjuˈzɪʃən
+nest|n|巣|nest
+nod|v|うなずく；（名詞）うなずき|nɑːd
+northern|adj|北の|ˈnɔːrðɚn
+orange|n|オレンジ|ˈɔːrɪndʒ
+oxygen|n|酸素|ˈɑːksɪdʒən
+panda|n|パンダ|ˈpændə
+peace|n|平和|piːs
+picnic|n|ピクニック|ˈpɪknɪk
+pilot|n|パイロット・操縦士|ˈpaɪlət
+plenty|pron|たくさん（plenty of＝たくさんの）|ˈplenti
+poem|n|詩|ˈpoʊəm
+pole|n|極（the North Pole＝北極）・棒|poʊl
+politician|n|政治家|ˌpɑːləˈtɪʃən
+pollute|v|汚染する|pəˈluːt
+prisoner|n|囚人・捕虜|ˈprɪzənɚ
+protester|n|抗議する人|prəˈtestɚ
+pump|n|ポンプ|pʌmp
+railway|n|鉄道|ˈreɪlweɪ
+recipe|n|料理法・レシピ|ˈresəpi
+relativity|n|相対性（theory of relativity＝相対性理論）|ˌreləˈtɪvəti
+reporter|n|記者|rɪˈpɔːrtɚ
+residential|adj|住宅の|ˌrezɪˈdenʃəl
+roman|adj|ローマの|ˈroʊmən
+rome|pn|ローマ
+rude|adj|失礼な|ruːd
+runner|n|走者・ランナー|ˈrʌnɚ
+sake|n|（for the sake of で）ため・利益|seɪk
+seed|n|種|siːd
+shed|v|（光・涙を）注ぐ・落とす（shed light on＝～を解明する）|ʃed
+shoe|n|靴|ʃuː
+sink|v|沈む|sɪŋk
+sky|n|空|skaɪ
+slave|n|奴隷|sleɪv
+sleeve|n|袖|sliːv
+smallpox|n|天然痘|ˈsmɔːlpɑːks
+smart|adj|頭のよい|smɑːrt
+smell|n|におい；（動詞）においがする|smel
+soldier|n|兵士|ˈsoʊldʒɚ
+son|n|息子|sʌn
+spicy|adj|辛い・香辛料のきいた|ˈspaɪsi
+spill|n|流出（oil spill＝石油流出）；（動詞）こぼす|spɪl
+sport|n|スポーツ|spɔːrt
+spray|n|スプレー；（動詞）吹きかける|spreɪ
+star|n|星・スター|stɑːr
+steel|n|鋼鉄|stiːl
+stone|n|石|stoʊn
+stressful|adj|ストレスの多い|ˈstresfəl
+survivor|n|生存者|sɚˈvaɪvɚ
+sweater|n|セーター|ˈswetɚ
+switzerland|pn|スイス
+temple|n|寺|ˈtempəl
+throne|n|王位・王座|θroʊn
+thunder|n|雷（の音）|ˈθʌndɚ
+tie|n|ネクタイ・つながり；（動詞）結ぶ|taɪ
+tonight|adv|今夜|təˈnaɪt
+tower|n|塔|ˈtaʊɚ
+troop|n|（複数形で）軍隊・部隊|truːp
+truck|n|トラック|trʌk
+twin|n|双子（の一人）|twɪn
+unchanged|adj|変わらない|ʌnˈtʃeɪndʒd
+unequal|adj|不平等な・等しくない|ʌnˈiːkwəl
+victory|n|勝利|ˈvɪktəri
+vietnam|pn|ベトナム
+villager|n|村人|ˈvɪlɪdʒɚ
+vitamin|n|ビタミン|ˈvaɪtəmɪn
+volcano|n|火山|vɑːlˈkeɪnoʊ
+waterfall|n|滝|ˈwɑːtɚfɔːl
+we'll|pron|we will の短縮形
+we've|pron|we have の短縮形
+wheelchair|n|車いす|ˈwiːltʃer
+witty|adj|機知に富んだ・気の利いた|ˈwɪti
+won't|aux|～しないだろう（will not）
+wood|n|木材・（woods で）森|wʊd
+wooden|adj|木製の|ˈwʊdən
+yard|n|庭・ヤード（長さの単位）|jɑːrd
+you'll|pron|you will の短縮形
+you're|pron|you are の短縮形
+zoo|n|動物園|zuː
 `);
