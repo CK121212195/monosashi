@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <script>
 /* LINEなどから、数字つきで開かれたとき（#reverse&price=…&months=…&pay=… ／ #calc&price=…&months=…&rate=…&misc=…）。
-   #の後ろはサーバーに送られない。さらに広告やアクセス解析が読む前に、ここでURLから外し、画面の計算にだけ使う */
+   #の後ろはサーバーに送られない。さらにアクセス解析が読む前に、ここでURLから外し、画面の計算にだけ使う */
 (function(){try{var m=location.hash.match(/^#(reverse|calc)&(.*)$/);if(!m)return;var o={mode:m[1]};m[2].split("&").forEach(function(kv){var p=kv.split("=");if(/^(price|months|pay|rate|misc)$/.test(p[0]))o[p[0]]=p[1];});window.__leasePrefill=o;history.replaceState(null,"",location.pathname+location.search+(m[1]==="reverse"?"#reverse":""));}catch(e){}})();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,7 +28,6 @@
 <meta name="theme-color" content="#33526C">
 
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2146116373822311" crossorigin="anonymous"></script>
 
 <style>
 :root{
